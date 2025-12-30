@@ -1,0 +1,15 @@
+Language: Cpp
+IndentWidth: 4
+PointerAlignment: Right
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterFunction: true
+    AfterCaseLabel: false
+    AfterControlStatement: Never
+    AfterEnum: false
+    AfterStruct: false
+    BeforeWhile: false
+    IndentBraces: false
+
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Empty
