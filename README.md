@@ -15,7 +15,7 @@ only for myself so it will not be as thorough as one might be in a professional 
 | build/ 			| Build output (object files + executables)								|
 | docs/ 			| Documentation (ex. coding standards,images)							|
 | external/ 		| External dependencies													|
-| src/				| Source files (.c/.h)													|
+| src/				| Source files (.c/.h) and linker script and startup file               |
 | src/app/			| Source files for application layer									|
 | src/bsp/			| Source files for other modules and chips (board support package layer)|
 | src/drivers/		| Source files for drivers layer										|
@@ -26,10 +26,10 @@ only for myself so it will not be as thorough as one might be in a professional 
 The two ways I will be building this project is through a makefile and through an IDE (STM32CubeIDE in this case). The IDE is easier to debug and test the code 
 while the makefile is useful to integrate into the CI system.
  
-## Make (Makefile)
+### Make (Makefile)
 WIP
 
-## IDE
+### IDE
 WIP
 
 ## Tests
@@ -58,6 +58,10 @@ UART drivers are required for GPS locator <br>
 n/a <br>
 "
 	
+* \<type> - List of types
+    * feat
+    * fix
+    * modify
 
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
