@@ -5,9 +5,8 @@ various interfaces to get information and control the telescope. Specifically, i
 the current location in latitude and longitude, the orientation of the telescope tube, and control 
 the telescope to not only find different objects but track them as well. With that information and 
 the current time, it will calculate and display on a small screen what constellations, planets or 
-other points of interest are above you. In addition, I will be using git/github and docker to create 
-a CI (continuous integration) system. This CI system will just be for gaining experience with it and 
-only for myself so it will not be as thorough as one might be in a professional setting.
+other points of interest are above you. In addition, I will be using git/github to track my progress
+and keep the history of my project.
 
 ## Directory Structure
 | Directory 		| Description															|
@@ -35,8 +34,17 @@ WIP
 ## Tests
 WIP
 
-## Pushing a new change or feature
-WIP
+## Pushing a new change or addition
+1. Create a local branch
+2. Make code changes
+3. Build code
+4. Flash and test code
+5. Format code
+6. Static analyze code
+7. Commit code
+8. Push the branch to GitHub
+9. Open pull-request
+10. Merge pull-request
 
 ## Commit message
 * One change per commit:
@@ -59,9 +67,10 @@ n/a <br>
 "
 	
 * \<type> - List of types
-    * feat
+    * add
     * fix
     * modify
+    * del
 
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
