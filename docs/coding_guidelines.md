@@ -52,13 +52,24 @@ void gpio_init(gpio_handler gpio_settings) {
 }
 ```
 
-# Defines
+# Defines/macros
 * Define constant variables and use comments if it is unclear where it comes from
 * Prefer to use enums where possible
 * Use static inline functions instead of macro functions as they are less error prone and easier to read.
 * Always use paranthesis (even for single numbers) to avoid unexpected macro expansion 
 ``` C
 #define CONSTANT_NUMBER (1) 
+```
+* Some macros act like functions and use a do {} while (0) statement like below and can be used as one with a semi-colon following it.
+``` C
+#define UNUSED(x) void(x)
+// Or
+#define ASSERT(expression)          \   
+        do {                        \
+            if(!(expression)) {     \
+                assert_handler();   \
+            }                       \
+        } while(0)                  \
 ```
 
 # Header files
