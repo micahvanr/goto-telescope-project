@@ -37,7 +37,8 @@ This is a multi-line
 comment
 */
 ```
-* Comment a block before each function giving a brief overview, what parameters it has, what it returns, and any notes. Use None if it nothing applies to that section.
+## Source file comments
+* Before each function there should be a short function block. It should contain a brief overview, what parameters it has, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
 /*
 Function: gpio_init
@@ -51,6 +52,23 @@ void gpio_init(gpio_handler gpio_settings) {
     // ... 
 }
 ```
+## Header file comments
+* Each section of the header file should have headings that title each section
+``` C
+/****************************************************************************************************
+                                            Heading 1
+****************************************************************************************************/
+
+/*****************************************************************
+                            Heading 2
+*****************************************************************/
+
+/*****                      Heading 3                       *****/
+
+// Header 4 & basic comment
+```
+## Other comments
+* Apart from the comments defined above I will add other comments here and there if something requires more explaination
 
 # Defines/macros
 * Define constant variables and use comments if it is unclear where it comes from
