@@ -19,18 +19,17 @@ CPPCHECK = cppcheck
 FORMAT = clang-format
 
 # Files
-TARGET = $(BIN_DIR)/blink
+TARGET = $(BIN_DIR)/main
 
 ## .c/.h will be added to each one when compiled and linked
-C_FILES =	main \
-			toggle_led 
+C_FILES =	main		
 
 STARTUP = $(SRC_DIR)/stm32_startup.c
 
 ## Prefixes with driver path and .c for corresponding files
 SOURCES = $(patsubst %, $(DRIVER_DIR)/%.c, $(C_FILES)) 
 ## Prefixes with object path and .o for corresponding files
-OBJECTS = $(patsubst %, $(OBJ_DIR)/%.o, $(C_FILES)) 
+OBJECTS = $(patsubst %, $(OBJ_DIR)/%.o, $(C_FILES)) $(patsubst %, $(OBJ_DIR)/%.o, $(H_FILES)) 
 
 LINKER = $(SRC_DIR)/stm32_ls.ld
 
