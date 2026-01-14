@@ -29,13 +29,13 @@ DRIVER_FILES =	main \
 				gpio \
 				stm32f4xx 
 
-#COMMON_FILES
+COMMON_FILES = assert_handler
 
 #APP_FILES = 
 
 #BSP_FILES = 
 
-SOURCE_FILES = $(DRIVER_FILES) #$(COMMON_FILES) $(APP_FILES) $(BSP_FILES)
+SOURCE_FILES = $(DRIVER_FILES) $(COMMON_FILES) #$(APP_FILES) $(BSP_FILES)
 
 STARTUP = $(SRC_DIR)/stm32_startup.c
 
@@ -48,7 +48,8 @@ LINKER = $(SRC_DIR)/stm32_ls.ld
 
 
 # CPPCheck Suppressions
-SUPPRESSIONS = --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember
+SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember \
+			   	--suppress=staticFunction:main.c:87
 
 # General Flags
 MACH = cortex-m4

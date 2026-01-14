@@ -1,3 +1,4 @@
+#include "../common/assert_handler.h"
 #include "gpio.h"
 #include "stm32f4xx.h"
 #include <stdint.h>
@@ -83,11 +84,17 @@ void test_gpio_it(void)
     while (1);
 }
 
+void test_assert(void) {
+    ASSERT(1);
+    ASSERT(0);
+}
+
 int main(void)
 {
     //test_gpio_blink_led();
     //test_gpio_read_write();
     //test_gpio_it();
+    test_assert();
     return 0;
 }
 
