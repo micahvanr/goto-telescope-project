@@ -5,9 +5,14 @@
 *****************************************************************/
 static inline uint8_t map_gpio_ports(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
-// GPIO Port Clock Enable
+
+
+static inline gpio_modes_e gpio_get_pin_mode(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
+static inline bool_e gpio_verify_pin_output(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
+static inline bool_e gpio_verify_pin_input(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
+
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
-// GPIO Port Clock Disable
+
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
 
 /****************************************************************************************************
@@ -121,6 +126,7 @@ Note: None
 ***************************************************************************/
 void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
 {
+    ASSERT(gpio_verify_pin_output(p_gpiox, pin_no));
     switch (pin_level) {
     case HIGH:
         p_gpiox->ODR |= (1 << pin_no);
@@ -143,6 +149,7 @@ Note: None
 ***************************************************************************/
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no)
 {
+    ASSERT(gpio_verify_pin_input(p_gpiox, pin_no));
     return (pin_logic_level_e)(p_gpiox->IDR & (1 << pin_no));
 }
 
@@ -182,14 +189,6 @@ static inline uint8_t map_gpio_ports(gpio_reg_def const *const p_gpiox)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
 {
-    // IRQ_NO_6_EXTI0      = 6,
-    // IRQ_NO_7_EXTI1      = 7,
-    // IRQ_NO_8_EXTI2      = 8,
-    // IRQ_NO_9_EXTI3      = 9,
-    // IRQ_NO_10_EXTI4     = 10,
-    // IRQ_NO_23_EXTI9_5   = 23,
-    // IRQ_NO_40_EXTI15_10 = 40,
-
     return (line_num == EXTI_LINE_NO_0)                                     ? IRQ_NO_6_EXTI0
          : (line_num == EXTI_LINE_NO_1)                                     ? IRQ_NO_7_EXTI1
          : (line_num == EXTI_LINE_NO_2)                                     ? IRQ_NO_8_EXTI2
@@ -198,6 +197,32 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
          : ((line_num >= EXTI_LINE_NO_5) && (line_num <= EXTI_LINE_NO_9))   ? IRQ_NO_23_EXTI9_5
          : ((line_num >= EXTI_LINE_NO_10) && (line_num <= EXTI_LINE_NO_15)) ? IRQ_NO_40_EXTI15_10
                                                                             : 0;
+}
+
+static inline gpio_modes_e gpio_get_pin_mode(gpio_reg_def const *const p_gpiox, pin_number_e pin_no) {
+    uint32_t pin_mode_num = (2 * pin_no);
+    gpio_modes_e pin_mode = ((p_gpiox->MODER & (0b11 << pin_mode_num)) >> pin_mode_num);
+    switch (pin_mode) {
+    case GPIO_MODE_INPUT:
+        return GPIO_MODE_INPUT;
+    case GPIO_MODE_OUTPUT:
+        return GPIO_MODE_OUTPUT;
+    case GPIO_MODE_ALT_FN:
+        return GPIO_MODE_ALT_FN;
+    case GPIO_MODE_ANALOG:
+        return GPIO_MODE_ANALOG;
+    }
+    return GPIO_MODE_INPUT;
+}
+
+static inline bool_e gpio_verify_pin_output(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
+{
+    return (gpio_get_pin_mode(p_gpiox, pin_no) == GPIO_MODE_OUTPUT) ? TRUE : FALSE;
+}
+
+static inline bool_e gpio_verify_pin_input(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
+{
+    return (gpio_get_pin_mode(p_gpiox, pin_no) == GPIO_MODE_INPUT) ? TRUE : FALSE;
 }
 
 // GPIO Port Clock Enable

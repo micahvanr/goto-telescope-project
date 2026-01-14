@@ -1,7 +1,7 @@
 #ifndef STM32F4XX_H
 #define STM32F4XX_H
 
-#include <stdio.h>
+#include <stdint.h>
 
 /****************************************************************************************************
                                         Address Definitions
@@ -23,7 +23,6 @@
 ****************************************************************************************************/
 
 // Enums
-
 typedef enum {
     PIN_NO_0 = 0,
     PIN_NO_1,
@@ -47,6 +46,11 @@ typedef enum {
     HIGH = 1,
     LOW  = 0
 } pin_logic_level_e;
+
+typedef enum {
+    FALSE = 0,
+    TRUE  = 1
+} bool_e;
 
 typedef enum {
     ENABLE  = 1,
@@ -182,5 +186,7 @@ typedef volatile struct {
 
 void irq_config(irq_number_e irq_num, togglable_e toggle);
 void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
+
+#include "../common/assert_handler.h"
 
 #endif
