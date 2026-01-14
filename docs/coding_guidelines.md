@@ -5,7 +5,8 @@ This document contains the coding guidelines I will follow in order to keep the 
 * I will be using snake case in all cases except macros and enum values. Macros and enum values will be in all caps.
 ``` C
 #define THIS_IS_A_MACRO (50)
-void this_is_a_function(void) {
+void this_is_a_function(void) 
+{
     uint8_t this_is_a_variable;
 }
 ```
@@ -16,6 +17,12 @@ void this_is_a_function(void) {
 * Enums should be typedefined and suffixed with _e (e.g. gpio_mode_values_e)
 * Include units in the name if applicable (e.g. delay_seconds)
 * Prefix module names their corresponding module (e.g. gpio_init) except for helper functions 
+
+### Register structures:
+* Each register structure definition will be in the format of the register it corresponds to. 
+* Most will be in all caps and abbreviated to some degree. 
+* This is to signify you are modifying a register and for consistency between the register and the referance manual
+
 ### Other naming conventions:
 * One code module per header and source file
     * A module being something that makes sense as a single sections (e.g. uart.c/uart.h, i2c.c/i2c.h)
@@ -40,14 +47,15 @@ comment
 ## Source file comments
 * Before each function there should be a short function block. It should contain a brief overview, what parameters it has, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
-/*
+/***************************************************************************
 Function: gpio_init
 Overview: Initilizes the given GPIO port with the settings provided in the structure
 Parameters:
-    gpio_settings   - The handler structure with the configuration settings to be applied              
-Return: None
+    gpio_settings - The handler structure with the configuration settings to be applied              
+Return: 
+    None
 Note: None
-*/
+***************************************************************************/
 void gpio_init(gpio_handler gpio_settings) {
     // ... 
 }
@@ -56,7 +64,7 @@ void gpio_init(gpio_handler gpio_settings) {
 * Each section of the header file should have headings that title each section
 ``` C
 /****************************************************************************************************
-                                            Heading 1
+                                        Heading 1
 ****************************************************************************************************/
 
 /*****************************************************************
@@ -87,7 +95,7 @@ void gpio_init(gpio_handler gpio_settings) {
             if(!(expression)) {     \
                 assert_handler();   \
             }                       \
-        } while(0)                  \
+        } while(0)                  
 ```
 
 # Header files
@@ -98,11 +106,11 @@ void gpio_init(gpio_handler gpio_settings) {
 #endif
 ```
 
-* Include header files in order from global to local
+* Include header files in order from local to global
 ``` C
-#include "stm32f407xx.h"
 #include "common/defines.h"
 #include "drivers/uart.h"
+#include "stm32f407xx.h"
 ```
 
 # Switch statements
@@ -126,18 +134,18 @@ static inline void helper_function(void) {
 
 # Data types
 ## Typedef
-* Don't typedef structs so it is clear whether a variable is an enum or struct
+* Structures can be type defined
 * Enums can be typedefined so we don't have to put enum before each one but ensure to suffix enum definitions with _e as stated in the naming section
 * Enum values should also be all uppercase
 ``` C
 typedef enum {
     GPIO_A,
     GPIO_B
-}gpio_ports_e;
+} gpio_ports_e;
 
-struct gpio_handle {
+typedef struct {
     uint8_t gpio_pin_number;
-}
+} gpio_handle;
 ```
 
 ## stdint.h
