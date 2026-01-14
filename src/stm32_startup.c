@@ -34,7 +34,8 @@ void SysTick_Handler  				(void) __attribute__ ((weak, alias("Default_Handler"))
 void WWDG_IRQHandler 				(void) __attribute__ ((weak, alias("Default_Handler")));
 void PVD_IRQHandler 				(void) __attribute__ ((weak, alias("Default_Handler")));             
 void TAMP_STAMP_IRQHandler 			(void) __attribute__ ((weak, alias("Default_Handler")));      
-void RTC_WKUP_IRQHandler 			(void) __attribute__ ((weak, alias("Default_Handler")));                               
+void RTC_WKUP_IRQHandler 			(void) __attribute__ ((weak, alias("Default_Handler"))); 
+void FLASH_Handler					(void) __attribute__ ((weak, alias("Default_Handler"))); 
 void RCC_IRQHandler 				(void) __attribute__ ((weak, alias("Default_Handler")));             
 void EXTI0_IRQHandler 				(void) __attribute__ ((weak, alias("Default_Handler")));           
 void EXTI1_IRQHandler 				(void) __attribute__ ((weak, alias("Default_Handler")));           
@@ -116,11 +117,11 @@ void FPU_IRQHandler              	(void) __attribute__ ((weak, alias("Default_Ha
 uint32_t vectors[] __attribute__ ((section (".isr_vector"))) = {
 	STACK_START,
 	(uint32_t) &Reset_Handler,
+	(uint32_t) &HardFault_Handler,
 	(uint32_t) &NMI_Handler,
 	(uint32_t) &MemManage_Handler,
 	(uint32_t) &BusFault_Handler,
 	(uint32_t) &UsageFault_Handler,
-	0,
 	0,
 	0,
 	0,
@@ -134,6 +135,7 @@ uint32_t vectors[] __attribute__ ((section (".isr_vector"))) = {
 	(uint32_t) &PVD_IRQHandler,
 	(uint32_t) &TAMP_STAMP_IRQHandler,
 	(uint32_t) &RTC_WKUP_IRQHandler,
+	(uint32_t) &FLASH_Handler,
 	(uint32_t) &RCC_IRQHandler,
 	(uint32_t) &EXTI0_IRQHandler,
 	(uint32_t) &EXTI1_IRQHandler,
