@@ -13,6 +13,7 @@ void assert_handler(void)
     blink_led();
 }
 
+// Blink LED to signify error
 static void blink_led(void)
 {
     // Blink LED
