@@ -48,8 +48,7 @@ LINKER = $(SRC_DIR)/stm32_ls.ld
 
 
 # CPPCheck Suppressions
-SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember \
-			   	--suppress=staticFunction:main.c:87
+SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember
 
 # General Flags
 MACH = cortex-m4
@@ -92,7 +91,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash
+.PHONY: all clean plus cppcheck flash remake
 
 all: $(TARGET).elf
 
@@ -100,6 +99,8 @@ plus: $(TARGET)_plus.elf
 
 clean:
 	-$(RM) -r $(OBJ_DIR) $(BIN_DIR) $(BUILD_DIR)/asm.s
+
+remake: clean all
 	
 flash:
 	openocd -f board/stm32f4discovery.cfg \

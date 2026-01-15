@@ -75,8 +75,8 @@ typedef enum {
 } gpio_pullup_pulldown_e;
 
 typedef enum {
-    GPIO_INITIALIZED   = 0,
-    GPIO_UNINITIALIZED = 1
+    GPIO_UNINITIALIZED = 0,
+    GPIO_INITIALIZED   = 1
 } gpio_initialization_e;
 
 typedef enum {
@@ -140,6 +140,21 @@ typedef struct {
     gpio_config gpio_conf;
 } gpio_handle;
 
+/*
+Initialization structure. Each bit represents a pin and when it is zero it means the pin has not been initialized.
+Otherwise a one means it has been initialized. This is used to ensure initialization of a pin before using it.
+*/
+typedef struct {
+    uint16_t gpio_a_pin_init;
+    uint16_t gpio_b_pin_init;
+    uint16_t gpio_c_pin_init;
+    uint16_t gpio_d_pin_init;
+    uint16_t gpio_e_pin_init;
+    uint16_t gpio_f_pin_init;
+    uint16_t gpio_g_pin_init;
+    uint16_t gpio_h_pin_init;
+} gpio_pin_init;
+
 /****************************************************************************************************
                                     Peripheral Structure Definitions
 ****************************************************************************************************/
@@ -157,13 +172,14 @@ typedef struct {
                                     Peripheral Function APIs
 ****************************************************************************************************/
 
-void gpio_init(gpio_handle *const gpio_handle);
+void gpio_init(gpio_handle *const p_gpio_handle);
 void gpio_reset(gpio_reg_def const *const p_gpiox);
 
 void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level);
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no);
 void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no);
 
+void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e toggle);
 void gpio_handler(exti_lines_e exti_line);
 
 #endif
