@@ -62,27 +62,24 @@ WIP
 * One change per commit:
     * Each commit should make one change or addition in order for them to be organized well and the commits will be clear.
 * Commits should build (if applicable):
-    * Each commit should be able to be built. 
-* Commit messages should have the following structures:
+
+### Commit Structure:
 Subject Line - 		{\<type>:\<scope>:\<description>}	(Describe solution not problem)  <br>	
 Blank Line - 		{\n}  <br>
 Body - 		   		{Explain what and why}  <br>
 Blank Line - 		{\n}  <br>
-Optional Footer - 	{Any additional comments or what it connects to}  <br>
- <br>
-Ex commit:  <br>
+Optional Footer - 	{Any additional comments or what it connects to} 
+
+### Ex commit:  
 git -commit -m "feat(UART): Add UART drivers  <br>
  <br>
-UART drivers are required for GPS locator <br>
- <br>
-n/a <br>
-"
+UART drivers are required for GPS locator"
 	
-* \<type> - List of types
-    * add
-    * fix
-    * modify
-    * del
+### List of types - \<type>  
+* add
+* fix
+* modify
+* del
 
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
