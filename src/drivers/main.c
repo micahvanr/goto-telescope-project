@@ -61,11 +61,11 @@ void test_gpio_read_write(void)
 
 void test_gpio_it(void)
 {
-    // Create settings for PD14 (LED)
+    // Create settings for PD13 (LED)
     gpio_handle gpio_test = {0};
 
     gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_no          = PIN_NO_14;
+    gpio_test.gpio_conf.pin_no          = PIN_NO_13;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
@@ -96,12 +96,13 @@ int main(void)
     //test_gpio_read_write();
     //test_gpio_it();
     //test_assert();
+    while (1);
     return 0;
 }
 
 void EXTI0_IRQHandler(void)
 {
-    gpio_toggle(GPIOD, PIN_NO_14);
+    gpio_toggle(GPIOD, PIN_NO_13);
 
     for (uint32_t i = 0; i < 500000; i++);
 

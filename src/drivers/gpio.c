@@ -3,10 +3,9 @@
 /*****************************************************************
                         Helper Function Prototypes
 *****************************************************************/
-static inline uint8_t map_gpio_ports(gpio_reg_def const *const p_gpiox);
+static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
-
-
+static inline bool_e gpio_verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no);
 static inline gpio_modes_e gpio_get_pin_mode(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
 static inline bool_e gpio_verify_pin_output(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
 static inline bool_e gpio_verify_pin_input(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
@@ -14,6 +13,11 @@ static inline bool_e gpio_verify_pin_input(gpio_reg_def const *const p_gpiox, pi
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
 
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
+
+/*****************************************************************
+                        Global variables
+*****************************************************************/
+uint16_t g_gpio_pin_init[8] = {0};
 
 /****************************************************************************************************
                                     Peripheral Function API Implementation
@@ -30,10 +34,13 @@ Note: None
 ***************************************************************************/
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
-    gpio_clock_enable(p_gpio_handle->p_gpiox);
-
     pin_number_e pin_no = p_gpio_handle->gpio_conf.pin_no;
 
+    // TODO initialize gpio pin init structure
+    g_gpio_pin_init[map_gpio_ports_to_num(p_gpio_handle->p_gpiox)] |= (1 << pin_no);
+
+    // Enable RCC clock for peripheral port
+    gpio_clock_enable(p_gpio_handle->p_gpiox);
     // Set gpio mode
     p_gpio_handle->p_gpiox->MODER |= (p_gpio_handle->gpio_conf.mode << (2 * pin_no));
 
@@ -54,14 +61,46 @@ void gpio_init(gpio_handle *const p_gpio_handle)
 
     // Set interrupt mode
     if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA) {
-        uint8_t exti_cr_reg_num    = pin_no / 4;
-        exti_lines_e exti_line_num = (exti_lines_e)pin_no;
+        gpio_it_config(p_gpio_handle, ENABLE);
+    }
+}
 
+/***************************************************************************
+Function: gpio_reset
+Overview: Takes a given GPIO port and resets it using the RCC
+Parameters:
+    p_gpiox - Port register strucutre that needs to be reset
+Return: 
+    None
+Note: None
+***************************************************************************/
+void gpio_reset(gpio_reg_def const *const p_gpiox)
+{
+    RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
+}
+
+/***************************************************************************
+Function: gpio_it_config
+Overview: Takes a given GPIO handle structure with the pin number within it and enables or disables the interrupt for it
+Parameters:
+    p_gpiox - Port register strucutre that needs to be reset
+Return: 
+    None
+Note: None
+***************************************************************************/
+void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e toggle)
+{
+    uint8_t pin_no             = p_gpio_handle->gpio_conf.pin_no;
+    uint8_t exti_cr_reg_num    = pin_no / 4;
+    exti_lines_e exti_line_num = (exti_lines_e)pin_no;
+
+    switch (toggle) {
+    case ENABLE:
         // Enable the SYSCFG clock in RCC
         RCC->APB2ENR |= (1 << RCC_APB2ENR_SYSCFG_BIT);
 
         // Enable the corresponding EXTI line in the EXTI control register of SYSCFG
-        SYSCFG->EXTICR[exti_cr_reg_num] |= (map_gpio_ports(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
+        SYSCFG->EXTICR[exti_cr_reg_num] |= (map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
 
         // Enable the interrupt
         EXTI->IMR |= (1 << exti_line_num);
@@ -81,21 +120,19 @@ void gpio_init(gpio_handle *const p_gpio_handle)
             break;
         }
         irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
-    }
-}
+        break;
 
-/***************************************************************************
-Function: gpio_reset
-Overview: Takes a given GPIO port and resets it using the RCC
-Parameters:
-    p_gpiox - Port register strucutre that needs to be reset
-Return: 
-    None
-Note: None
-***************************************************************************/
-void gpio_reset(gpio_reg_def const *const p_gpiox)
-{
-    RCC->AHB1ENR |= (1 << map_gpio_ports(p_gpiox));
+    case DISABLE:
+        // Disable the corresponding EXTI line in the EXTI control register of SYSCFG
+        SYSCFG->EXTICR[exti_cr_reg_num] &=
+            ~(map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
+        // Disable the rising edge and falling edge interrupts
+        EXTI->RTSR &= ~(1 << exti_line_num);
+        EXTI->FTSR &= ~(1 << exti_line_num);
+        // Disable the interrupt in the processor
+        irq_config(map_exti_to_irq_num(exti_line_num), DISABLE);
+        break;
+    }
 }
 
 /***************************************************************************
@@ -126,7 +163,7 @@ Note: None
 ***************************************************************************/
 void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
 {
-    ASSERT(gpio_verify_pin_output(p_gpiox, pin_no));
+    gpio_verify_pin_initialized(p_gpiox, pin_no);
     switch (pin_level) {
     case HIGH:
         p_gpiox->ODR |= (1 << pin_no);
@@ -149,7 +186,7 @@ Note: None
 ***************************************************************************/
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no)
 {
-    ASSERT(gpio_verify_pin_input(p_gpiox, pin_no));
+    gpio_verify_pin_initialized(p_gpiox, pin_no);
     return (pin_logic_level_e)(p_gpiox->IDR & (1 << pin_no));
 }
 
@@ -165,6 +202,7 @@ Note: None
 ***************************************************************************/
 void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no)
 {
+    ASSERT(gpio_verify_pin_initialized(p_gpiox, pin_no));
     p_gpiox->ODR ^= (1 << pin_no);
 }
 
@@ -173,7 +211,7 @@ void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no)
 ****************************************************************************************************/
 
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
-static inline uint8_t map_gpio_ports(gpio_reg_def const *const p_gpiox)
+static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 {
     return (p_gpiox == GPIOA) ? 0
          : (p_gpiox == GPIOB) ? 1
@@ -199,7 +237,19 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
                                                                             : 0;
 }
 
-static inline gpio_modes_e gpio_get_pin_mode(gpio_reg_def const *const p_gpiox, pin_number_e pin_no) {
+static inline bool_e gpio_verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no)
+{
+    // Get port initialization pins from list
+    uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpio)];
+    // Mask the port to get the bit for the pin number
+    uint8_t pin_initialized = ((port_init & (1 << pin_no)) >> pin_no);
+
+    return ((pin_initialized == GPIO_INITIALIZED) ? TRUE : FALSE);
+}
+
+// Potentially unused functions: gpio_get_pin_mode, gpio_verify_pin_output, gpio_verify_pin_input
+static inline gpio_modes_e gpio_get_pin_mode(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
+{
     uint32_t pin_mode_num = (2 * pin_no);
     gpio_modes_e pin_mode = ((p_gpiox->MODER & (0b11 << pin_mode_num)) >> pin_mode_num);
     switch (pin_mode) {
@@ -225,14 +275,12 @@ static inline bool_e gpio_verify_pin_input(gpio_reg_def const *const p_gpiox, pi
     return (gpio_get_pin_mode(p_gpiox, pin_no) == GPIO_MODE_INPUT) ? TRUE : FALSE;
 }
 
-// GPIO Port Clock Enable
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox)
 {
-    RCC->AHB1ENR |= (1 << map_gpio_ports(p_gpiox));
+    RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
 }
 
-// GPIO Port Clock Disable
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox)
 {
-    RCC->AHB1ENR &= ~(1 << map_gpio_ports(p_gpiox));
+    RCC->AHB1ENR &= ~(1 << map_gpio_ports_to_num(p_gpiox));
 }
