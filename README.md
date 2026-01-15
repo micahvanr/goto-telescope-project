@@ -1,12 +1,31 @@
 # Goto Telescope Project
 
+## Intro
 The goal of this project is to create a microcontroller that will interact with other modules through 
 various interfaces to get information and control the telescope. Specifically, it will get the time, 
 the current location in latitude and longitude, the orientation of the telescope tube, and control 
 the telescope to not only find different objects but track them as well. With that information and 
 the current time, it will calculate and display on a small screen what constellations, planets or 
-other points of interest are above you. In addition, I will be using git/github to track my progress
-and keep the history of my project.
+other points of interest are above you. The project will be developed in two parts: first the controller and then the telescope.
+
+## Outline
+* Custom controller and telescope "harness" to control telescope
+* Driver, application, linker script, and startup code written from scratch
+* Building with Makefile
+* Static analysis using cppcheck
+* Formatting using clang-format
+* Git version control
+
+### Controller 
+* Bulk of the development. I will be creating a small controller with a 4 x 20 LCD screen, GPS locator, and sliders and buttons for input.
+* Custom PCB with an STM32F407 MCU.
+* Custom 3D printed controller enclosure and buttons.
+* The controller should have the hardware support for the telescope features so I can use the same PCB.
+
+### Telescope
+* Custom 3D printed telescope "harness" to attach to the telescope with no drilling into telescope required.
+* Motor controller driver to control motors through PWM signal.
+* Gyroscope to provide controller with orientation of optical tube.
 
 ## Directory Structure
 | Directory 		| Description															|
@@ -14,7 +33,7 @@ and keep the history of my project.
 | build/ 			| Build output (object files + executables)								|
 | docs/ 			| Documentation (ex. coding standards,images)							|
 | external/ 		| External dependencies													|
-| src/				| Source files (.c/.h) and linker script and startup file               |
+| src/				| Source files (.c/.h) contains linker script and startup file          |
 | src/app/			| Source files for application layer									|
 | src/bsp/			| Source files for other modules and chips (board support package layer)|
 | src/drivers/		| Source files for drivers layer										|
@@ -22,15 +41,8 @@ and keep the history of my project.
 | src/test/			| Source files for test code											|
 
 ## Build
-The two ways I will be building this project is through a makefile and through an IDE (STM32CubeIDE in this case). The IDE is easier to debug and test the code 
-while the makefile is useful to integrate into the CI system.
+The way I will be building the project is through a Makefile. I will be debugging the code through vscode with the cortex-debug extension. This will allow me to use vscode with most if not all the debugging tools as a standard IDE would. In addition, I will then still be able to use make to build my project the way I want to.
  
-### Make (Makefile)
-WIP
-
-### IDE
-WIP
-
 ## Tests
 WIP
 
