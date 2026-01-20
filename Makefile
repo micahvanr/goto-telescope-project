@@ -1,5 +1,5 @@
 # Directories
-ROOT_SRC_DIR = A:/Astronomy_MCU_Project/goto_telescope_project
+ROOT_SRC_DIR = $(CURDIR)
 
 ## Build dir
 BUILD_DIR = $(ROOT_SRC_DIR)/build

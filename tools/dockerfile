@@ -1,0 +1,9 @@
+FROM ubuntu:22.04
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y wget bzip2 make unzip cppcheck gcc llvm gcc-arm-none-eabi
+
+RUN useradd -rm -d /home/test -s /bin/bash -g root -G sudo -u 1001 test
+
+USER test
+
+WORKDIR /home/test
