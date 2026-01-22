@@ -1,0 +1,12 @@
+on: [push]
+jobs:
+    build_and_test:
+        runs-on: ubuntu-latest
+        container:
+            image: micahvanr/project_builder:latest
+        steps:
+            - name: Checkout the repository 
+              uses: actions/checkout@v3
+            - run: make
+            - run: make cppcheck
+    

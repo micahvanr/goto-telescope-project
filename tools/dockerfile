@@ -1,0 +1,10 @@
+FROM ubuntu:22.04
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -y make cppcheck cpputest gcc-arm-none-eabi
+
+RUN useradd -rm -d /home/build -s /bin/bash -g root -G sudo -u 1001 build
+
+USER build
+
+WORKDIR /home/build
