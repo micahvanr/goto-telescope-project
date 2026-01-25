@@ -13,6 +13,7 @@ other points of interest are above you. The project will be developed in two par
 * Driver, application, linker script, and startup code written from scratch
 * Building with Makefile
 * Static analysis using cppcheck
+* Unit testing with the Unity framework
 * Formatting using clang-format
 * Git version control
 
@@ -28,23 +29,25 @@ other points of interest are above you. The project will be developed in two par
 * Gyroscope to provide controller with orientation of optical tube.
 
 ## Directory Structure
+Based on the pitchfork layout
+
 | Directory 		| Description															|
 |-------------------|-----------------------------------------------------------------------|
 | build/ 			| Build output (object files + executables)								|
-| docs/ 			| Documentation (ex. coding standards,images)							|
+| docs/ 			| Documentation (ex. coding standards, images)							|
 | external/ 		| External dependencies													|
 | src/				| Source files (.c/.h) contains linker script and startup file          |
 | src/app/			| Source files for application layer									|
 | src/bsp/			| Source files for other modules and chips (board support package layer)|
 | src/drivers/		| Source files for drivers layer										|
 | src/common/		| Source files for code that drivers and app use						|
-| src/test/			| Source files for test code											|
+| test/             | Makefile with test source files                                       |
 
 ## Build
 The way I will be building the project is through a Makefile. I will be debugging the code through vscode with the cortex-debug extension. This will allow me to use vscode with most if not all the debugging tools as a standard IDE would. In addition, I will then still be able to use make to build my project the way I want to.
  
 ## Tests
-WIP
+I will be performing unit testing using the Unity framework. The Unity is an all C testing framework made for the embedded field.
 
 ## Pushing a new change or addition
 1. Create a local branch
@@ -55,8 +58,9 @@ WIP
 6. Static analyze code
 7. Commit code
 8. Push the branch to GitHub
-9. Open pull-request
-10. Merge pull-request
+9. Pass CI/CD system (if fail rework code till it passes)
+10. Open pull-request
+11. Merge pull-request
 
 ## Commit message
 * One change per commit:
