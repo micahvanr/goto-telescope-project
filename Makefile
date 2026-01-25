@@ -14,6 +14,9 @@ BSP_DIR = $(ROOT_SRC_DIR)/src/bsp
 COMMON_DIR = $(ROOT_SRC_DIR)/src/common
 SRC_DIR = $(ROOT_SRC_DIR)/src
 
+## Test dir
+TEST_DIR = $(ROOT_SRC_DIR)/test
+
 # Toolchain
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
@@ -87,18 +90,19 @@ $(OBJ_DIR)%.o: $(COMMON_DIR)%.c
 # Debug
 asm:
 	@mkdir -p $(dir $(ASM_DIR))
-	$(OBJDUMP) -d $(BIN_DIR)/blink.elf > $(ASM_DIR).s
+	$(OBJDUMP) -d $(TARGET).elf > $(ASM_DIR).s
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake
+.PHONY: all clean plus cppcheck flash remake test test_clean
 
 all: $(TARGET).elf
 
 plus: $(TARGET)_plus.elf
 
 clean:
-	-$(RM) -r $(OBJ_DIR) $(BIN_DIR) $(BUILD_DIR)/asm.s
+	-$(RM) -r $(OBJ_DIR)/*.o
+	-$(RM) -r $(TARGET).elf
 
 remake: clean all
 	
@@ -111,3 +115,10 @@ cppcheck:
 
 format:
 	$(FORMAT) -i $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c
+
+# Unity testing commands
+test:
+	make -C $(TEST_DIR) 
+
+test_clean:
+	make -C $(TEST_DIR) clean
