@@ -17,19 +17,17 @@ endif
 .PHONY: clean
 .PHONY: test
 
-PROJECT_DIR = $(subst $(notdir $(CURDIR)),,$(CURDIR))
-#$(error $(PROJECT_DIR))
-PATHU = $(PROJECT_DIR)tools/unity/src
+PATHU = ../tools/unity/src
 #PATH_APP = ../src/app
 #PATH_BSP = ../src/bsp
 #PATH_COMMON = ../src/common
 #PATH_DRIVERS = ../src/drivers
-PATHS = $(PROJECT_DIR)src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
+PATHS = ../src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
 PATHT = .
-PATHB = $(PROJECT_DIR)build/bin
+PATHB = ../build/bin
 #PATHD = ../build/depends
-PATHO = $(PROJECT_DIR)build/obj_test
-PATHR = $(PROJECT_DIR)build/results
+PATHO = ../build/obj_test
+PATHR = ../build/results
 
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
