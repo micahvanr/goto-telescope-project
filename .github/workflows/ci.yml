@@ -5,8 +5,10 @@ jobs:
         container:
             image: micahvanr/project_builder:latest
         steps:
-            - name: Checkout the repository 
-              uses: actions/checkout@v3
+            - name: Checkout repo 
+              uses: actions/checkout@v6
+              with:
+                submodules: "true"
             - run: make
             - run: make cppcheck
             - run: make test
