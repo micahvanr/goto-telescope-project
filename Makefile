@@ -2,20 +2,20 @@
 ROOT_SRC_DIR = $(CURDIR)
 
 ## Build dir
-BUILD_DIR = $(ROOT_SRC_DIR)/build
+BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
 ASM_DIR = $(BUILD_DIR)/asm
 
 ## Source dir
-DRIVER_DIR = $(ROOT_SRC_DIR)/src/drivers
-APP_DIR = $(ROOT_SRC_DIR)/src/app
-BSP_DIR = $(ROOT_SRC_DIR)/src/bsp
-COMMON_DIR = $(ROOT_SRC_DIR)/src/common
-SRC_DIR = $(ROOT_SRC_DIR)/src
+DRIVER_DIR = ./src/drivers
+APP_DIR = ./src/app
+BSP_DIR = ./src/bsp
+COMMON_DIR = ./src/common
+SRC_DIR = ./src
 
 ## Test dir
-TEST_DIR = $(ROOT_SRC_DIR)/test
+TEST_DIR = test
 
 # Toolchain
 CC = arm-none-eabi-gcc
