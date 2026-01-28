@@ -47,7 +47,7 @@ Based on the pitchfork layout
 The way I will be building the project is through a Makefile. I will be debugging the code through vscode with the cortex-debug extension. This will allow me to use vscode with most if not all the debugging tools as a standard IDE would. In addition, I will then still be able to use make to build my project the way I want to.
  
 ## Tests
-I will be performing unit testing using the Unity framework. The Unity is an all C testing framework made for the embedded field.
+I will be performing unit testing using the Unity framework with the Fake Function Framework (FFF) to create mocks. The Unity is an all C testing framework made for the embedded field. FFF similiar in that it is a simple C header implementation. I will not be performing unit tests on driver layer code. Instead I will be relying on integration and system tests to ensure the drivers work properly. 
 
 ## Pushing a new change or addition
 1. Create a local branch
