@@ -16,6 +16,8 @@ endif
 
 .PHONY: clean
 .PHONY: test
+.PHONY: check_errors
+.PHONY: test_ci
 
 PATHU = ../tools/unity/src
 #PATH_APP = ../src/app
@@ -44,16 +46,15 @@ PASSED = `grep -s PASS $(PATHR)/*.txt`
 FAIL = `grep -s FAIL $(PATHR)/*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)/*.txt`
 
-test: $(BUILD_PATHS) $(RESULTS)
-	@echo "-----------------------\nIGNORES:\n-----------------------"
-	@echo "$(IGNORE)"
-	@echo "-----------------------\nFAILURES:\n-----------------------"
-	@echo "$(FAIL)"
-	@echo "-----------------------\nPASSED:\n-----------------------"
+test: $(BUILD_PATHS) $(RESULTS)	
+	@echo "-----------------------PASSED:-----------------------"
 	@echo "$(PASSED)"
-	@echo "\nDONE"
-
-#$(error $(PATHR))
+	@echo "-----------------------FAILURES:-----------------------"
+	@echo "$(FAIL)"
+	@echo "-----------------------IGNORES:-----------------------"
+	@echo "$(IGNORE)"
+	@echo "DONE"
+	make -C . check_errors
 
 $(PATHR)/%.txt: $(PATHB)/%.$(TARGET_EXTENSION)
 	-./$< > $@ 2>&1
@@ -84,6 +85,13 @@ $(PATHO):
 
 $(PATHR):
 	$(MKDIR) $(PATHR)
+
+check_errors: 
+ifneq ( , $(findstring FAIL, $(shell grep -s FAIL $(PATHR)/*.txt)))
+	$(error Fail found)
+else
+	@echo No fails found
+endif
 
 clean:
 	$(CLEANUP) $(PATHO)/*.o
