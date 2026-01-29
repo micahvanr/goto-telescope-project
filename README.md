@@ -42,6 +42,7 @@ Based on the pitchfork layout
 | src/drivers/		| Source files for drivers layer										|
 | src/common/		| Source files for code that drivers and app use						|
 | test/             | Makefile with test source files                                       |
+| tools/            | Any tools used such as dockerfile and unit testing frameworks         |
 
 ## Build
 The way I will be building the project is through a Makefile. I will be debugging the code through vscode with the cortex-debug extension. This will allow me to use vscode with most if not all the debugging tools as a standard IDE would. In addition, I will then still be able to use make to build my project the way I want to.
