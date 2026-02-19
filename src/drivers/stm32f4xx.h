@@ -18,6 +18,13 @@
 #define NVIC_IABR_BASE_ADDR (0xE000E300ul)
 #define NVIC_IPR_BASE_ADDR  (0xE000E400ul)
 
+#define APB1_BASE_ADDR (0x40000000ul)
+#define APB2_BASE_ADDR (0x40010000ul)
+#define AHB1_BASE_ADDR (0x40020000ul)
+#define AHB2_BASE_ADDR (0x50000000ul)
+
+#define __vo volatile
+
 /****************************************************************************************************
                                                 Macros and Other Enums
 ****************************************************************************************************/
@@ -114,7 +121,7 @@ typedef enum {
 // clang-format off
 
 // RCC Register Definition Structure
-typedef volatile struct {
+typedef __vo struct {
 	uint32_t CR;				// RCC clock control register										Offset: 0x00
 	uint32_t PLLCFGR;			// RCC PLL configuration register									Offset: 0x04
 	uint32_t CFGR;				// RCC clock configuration register									Offset: 0x08
@@ -152,7 +159,7 @@ typedef volatile struct {
 
 }rcc_reg_def;
 
-typedef volatile struct {
+typedef __vo struct {
 	uint32_t IMR;				// Interrupt mask register											Offset: 0x00
 	uint32_t EMR;				// Event mask register												Offset: 0x04
 	uint32_t RTSR;				// Rising trigger selection register								Offset: 0x08
@@ -161,7 +168,7 @@ typedef volatile struct {
 	uint32_t PR;				// Pending register													Offset: 0x14
 } exti_reg_def;
 
-typedef volatile struct {
+typedef __vo struct {
 	uint32_t MEMRMP;			// SYSCFG memory remap register										Offset: 0x00
 	uint32_t PMC;				// SYSCFG peripheral mode configuration register 					Offset: 0x04
 	uint32_t EXTICR[4];			// SYSCFG external interrupt configuration register 1-4				Offset: 0x08

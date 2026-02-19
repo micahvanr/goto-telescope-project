@@ -7,14 +7,14 @@
                                     Address Definitions
 ****************************************************************************************************/
 
-#define GPIOA_BASE_ADDR (0x40020000ul)
-#define GPIOB_BASE_ADDR (0x40020400ul)
-#define GPIOC_BASE_ADDR (0x40020800ul)
-#define GPIOD_BASE_ADDR (0x40020C00ul)
-#define GPIOE_BASE_ADDR (0x40021000ul)
-#define GPIOF_BASE_ADDR (0x40021400ul)
-#define GPIOG_BASE_ADDR (0x40021800ul)
-#define GPIOH_BASE_ADDR (0x40021C00ul)
+#define GPIOA_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0000u))
+#define GPIOB_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0400u))
+#define GPIOC_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0800u))
+#define GPIOD_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0C00u))
+#define GPIOE_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1000u))
+#define GPIOF_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1400u))
+#define GPIOG_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1800u))
+#define GPIOH_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1C00u))
 
 /****************************************************************************************************
                                     Macros and Other Enums
@@ -110,7 +110,7 @@ typedef enum {
 ****************************************************************************************************/
 
 // Register definition
-typedef volatile struct {
+typedef __vo struct {
     uint32_t MODER;   // GPIO port mode register                  Offset: 0x00
     uint32_t OTYPER;  // GPIO port output type register           Offset: 0x04
     uint32_t OSPEEDR; // GPIO port output speed register          Offset: 0x08
