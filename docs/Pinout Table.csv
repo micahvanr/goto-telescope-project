@@ -1,0 +1,15 @@
+Peripheral,Number of Pins,Pin Number,Port/Pin num,Used for
+ADC1_IN0,1,,,Horizontal Telescope Speed
+ADC1_IN1,1,,,Vertical Telescope Speed
+ADC1_IN2,1,,,Horizontal Joystick Movement
+ADC1_IN3,1,,,Vertical Joystick Movement
+USART1_TX,1,,,GPS Locator
+USART1_RX,1,,,GPS Locator
+I2C1_SDA,1,,,LCD Screen / Gyroscope
+I2C1_SCL,1,,,LCD Screen / Gyroscope
+GPIO_A1,1,,,Horizontal Button Matrix A
+GPIO_A2,1,,,Horizontal Button Matrix A
+GPIO_B1,1,,,Vertical Button Matrix B
+GPIO_B2,1,,,Vertical Button Matrix B
+GPIO_B3,1,,,Vertical Button Matrix B
+Total,13,,,

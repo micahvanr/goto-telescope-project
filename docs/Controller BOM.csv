@@ -1,0 +1,7 @@
+Common Name,Part Number,Description,Manufacturer,Package,Designator,Quantity,Price,Total Price,Url
+MCU,497-11605-ND,IC MCU 32BIT 1MB FLASH 100LQFP,STM,100-LQFP,,1,$11.87 ,$11.87 ,https://www.digikey.com/en/products/detail/stmicroelectronics/STM32F407VGT6/2747117
+4x20 LCD Screen,4411-CN0296D-ND,2004 I2C LCD,SunFounder,N/A,N/A,1,$13.30,$13.30,https://www.digikey.com/en/products/detail/sunfounder/CN0296D/18668625
+Slider Pot,PTA6043-2015CPB103-ND,SLIDE POT 10K OHM 0.25W TOP 60MM,Bournes,N/A,,2,$1.92 ,$3.84 ,https://www.digikey.com/en/products/detail/bourns-inc/PTA6043-2015CPB103/3781230
+Joystick,1568-09032-ND,SWITCH JOYSTICK ANALOG,Sparkfun,N/A,,1,$5.25 ,$5.25 ,https://www.digikey.com/en/products/detail/sparkfun-electronics/09032/6823623
+Push Button,EG6117-ND,SWITCH TACTILE SPST-NO 0.05A 12V,E-Switch,N/A,,6,$1.02,$6.12,https://www.digikey.com/en/products/detail/e-switch/TL6300AF260QP/9991376
+Slide Switch,Need current measurement ,,,,,,,,
