@@ -131,7 +131,6 @@ typedef struct {
     gpio_pullup_pulldown_e pullup_pulldown;
     gpio_alt_fn_e alt_fn_no;
     gpio_it_trigger_e it_trigger;
-    gpio_initialization_e initialized;
 } gpio_config;
 
 // Handle definition (used to configure and handle the gpio features)

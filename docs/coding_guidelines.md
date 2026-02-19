@@ -45,18 +45,24 @@ comment
 */
 ```
 ## Source file comments
-* Before each function there should be a short function block. It should contain a brief overview, what parameters it has, what it returns, and any notes. Use None if it nothing applies to that section.
+* Before each function there should be a short function block. It should contain a brief overview, what parameters it has, the values those parameters can be, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
 /***************************************************************************
-Function: gpio_init
-Overview: Initilizes the given GPIO port with the settings provided in the structure
+Function: gpio_write
+Overview: Sets a pin on a given port to high or low
 Parameters:
-    gpio_settings - The handler structure with the configuration settings to be applied              
+    p_gpiox: Register structure for the GPIO port
+    pin_no: Pin number for to be changed
+        PIN_NO_x (0-15)
+    pin_level: Pin logic level
+        HIGH (1) 
+        LOW (0)
 Return: 
     None
 Note: None
 ***************************************************************************/
-void gpio_init(gpio_handler gpio_settings) {
+void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
+{
     // ... 
 }
 ```

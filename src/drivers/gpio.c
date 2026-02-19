@@ -154,16 +154,19 @@ void gpio_handler(exti_lines_e exti_line)
 Function: gpio_write
 Overview: Sets a pin on a given port to high or low
 Parameters:
-    p_gpiox     - Register structure for the GPIO port
-    pin_no      - Pin number for to be changed
-    pin_level   - HIGH (1) or LOW (0)
+    p_gpiox: Register structure for the GPIO port
+    pin_no: Pin number for to be changed
+        PIN_NO_x (0-15)
+    pin_level: Pin logic level
+        HIGH (1) 
+        LOW (0)
 Return: 
     None
 Note: None
 ***************************************************************************/
 void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
 {
-    gpio_verify_pin_initialized(p_gpiox, pin_no);
+    ASSERT(gpio_verify_pin_initialized(p_gpiox, pin_no));
     switch (pin_level) {
     case HIGH:
         p_gpiox->ODR |= (1 << pin_no);
@@ -186,7 +189,7 @@ Note: None
 ***************************************************************************/
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no)
 {
-    gpio_verify_pin_initialized(p_gpiox, pin_no);
+    ASSERT(gpio_verify_pin_initialized(p_gpiox, pin_no));
     return (pin_logic_level_e)(p_gpiox->IDR & (1 << pin_no));
 }
 
@@ -227,13 +230,13 @@ static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
 {
-    return (line_num == EXTI_LINE_NO_0)                                     ? IRQ_NO_6_EXTI0
-         : (line_num == EXTI_LINE_NO_1)                                     ? IRQ_NO_7_EXTI1
-         : (line_num == EXTI_LINE_NO_2)                                     ? IRQ_NO_8_EXTI2
-         : (line_num == EXTI_LINE_NO_3)                                     ? IRQ_NO_9_EXTI3
-         : (line_num == EXTI_LINE_NO_4)                                     ? IRQ_NO_9_EXTI3
-         : ((line_num >= EXTI_LINE_NO_5) && (line_num <= EXTI_LINE_NO_9))   ? IRQ_NO_23_EXTI9_5
-         : ((line_num >= EXTI_LINE_NO_10) && (line_num <= EXTI_LINE_NO_15)) ? IRQ_NO_40_EXTI15_10
+    return (line_num == EXTI_LINE_NO_0)                                     ? EXTI0_IRQ_NO_6
+         : (line_num == EXTI_LINE_NO_1)                                     ? EXTI1_IRQ_NO_7
+         : (line_num == EXTI_LINE_NO_2)                                     ? EXTI2_IRQ_NO_8
+         : (line_num == EXTI_LINE_NO_3)                                     ? EXTI3_IRQ_NO_9
+         : (line_num == EXTI_LINE_NO_4)                                     ? EXTI3_IRQ_NO_9
+         : ((line_num >= EXTI_LINE_NO_5) && (line_num <= EXTI_LINE_NO_9))   ? EXTI9_5_IRQ_NO_23
+         : ((line_num >= EXTI_LINE_NO_10) && (line_num <= EXTI_LINE_NO_15)) ? EXTI15_10_IRQ_NO_40
                                                                             : 0;
 }
 

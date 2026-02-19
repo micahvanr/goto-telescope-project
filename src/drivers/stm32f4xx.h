@@ -59,13 +59,13 @@ typedef enum {
 
 // Only adding IRQ numbers when they are needed
 typedef enum {
-    IRQ_NO_6_EXTI0      = 6,
-    IRQ_NO_7_EXTI1      = 7,
-    IRQ_NO_8_EXTI2      = 8,
-    IRQ_NO_9_EXTI3      = 9,
-    IRQ_NO_10_EXTI4     = 10,
-    IRQ_NO_23_EXTI9_5   = 23,
-    IRQ_NO_40_EXTI15_10 = 40,
+    EXTI0_IRQ_NO_6      = 6,
+    EXTI1_IRQ_NO_7      = 7,
+    EXTI2_IRQ_NO_8      = 8,
+    EXTI3_IRQ_NO_9      = 9,
+    EXTI4_IRQ_NO_10     = 10,
+    EXTI9_5_IRQ_NO_23   = 23,
+    EXTI15_10_IRQ_NO_40 = 40,
 } irq_number_e;
 
 // Lower number means higher priority
