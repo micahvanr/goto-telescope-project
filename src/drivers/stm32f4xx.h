@@ -3,11 +3,37 @@
 
 #include <stdint.h>
 
+// TODO: Think about changing comment sections
+//====================================================================//
+//  Address Definitions
+//====================================================================//
+
 /****************************************************************************************************
                                         Address Definitions
 ****************************************************************************************************/
 
-#define RCC_BASE_ADDR    (0x40023800ul)
+typedef enum {
+    EXTI_BASE_ADDR   = (0x40013C00ul),
+    SYSCFG_BASE_ADDR = (0x40013800ul),
+} misc_base_addr_e;
+
+typedef enum {
+    NVIC_ISER_BASE_ADDR = (0xE000E100ul),
+    NVIC_ICER_BASE_ADDR = (0xE000E180ul),
+    NVIC_ISPR_BASE_ADDR = (0xE000E200ul),
+    NVIC_ICPR_BASE_ADDR = (0xE000E280ul),
+    NVIC_IABR_BASE_ADDR = (0xE000E300ul),
+    NVIC_IPR_BASE_ADDR  = (0xE000E400ul),
+} nvic_base_addr_e;
+
+typedef enum {
+    APB1_BASE_ADDR = (0x40000000ul),
+    APB2_BASE_ADDR = (0x40010000ul),
+    AHB1_BASE_ADDR = (0x40020000ul),
+    AHB2_BASE_ADDR = (0x50000000ul),
+} bus_base_addr_e;
+
+#ifdef MACRO
 #define EXTI_BASE_ADDR   (0x40013C00ul)
 #define SYSCFG_BASE_ADDR (0x40013800ul)
 
@@ -22,31 +48,31 @@
 #define APB2_BASE_ADDR (0x40010000ul)
 #define AHB1_BASE_ADDR (0x40020000ul)
 #define AHB2_BASE_ADDR (0x50000000ul)
-
-#define __vo volatile
+#endif
 
 /****************************************************************************************************
                                                 Macros and Other Enums
 ****************************************************************************************************/
 
 // Enums
+// General
 typedef enum {
-    PIN_NO_0 = 0,
-    PIN_NO_1,
-    PIN_NO_2,
-    PIN_NO_3,
-    PIN_NO_4,
-    PIN_NO_5,
-    PIN_NO_6,
-    PIN_NO_7,
-    PIN_NO_8,
-    PIN_NO_9,
-    PIN_NO_10,
-    PIN_NO_11,
-    PIN_NO_12,
-    PIN_NO_13,
-    PIN_NO_14,
-    PIN_NO_15
+    PIN_NO_0  = 0,
+    PIN_NO_1  = 1,
+    PIN_NO_2  = 2,
+    PIN_NO_3  = 3,
+    PIN_NO_4  = 4,
+    PIN_NO_5  = 5,
+    PIN_NO_6  = 6,
+    PIN_NO_7  = 7,
+    PIN_NO_8  = 8,
+    PIN_NO_9  = 9,
+    PIN_NO_10 = 10,
+    PIN_NO_11 = 11,
+    PIN_NO_12 = 12,
+    PIN_NO_13 = 13,
+    PIN_NO_14 = 14,
+    PIN_NO_15 = 15,
 } pin_number_e;
 
 typedef enum {
@@ -61,7 +87,7 @@ typedef enum {
 
 typedef enum {
     ENABLE  = 1,
-    DISABLE = 0
+    DISABLE = 0,
 } togglable_e;
 
 // Only adding IRQ numbers when they are needed
@@ -72,7 +98,13 @@ typedef enum {
     EXTI3_IRQ_NO_9      = 9,
     EXTI4_IRQ_NO_10     = 10,
     EXTI9_5_IRQ_NO_23   = 23,
+    USART1_IRQ_NO_37    = 37,
+    USART2_IRQ_NO_38    = 38,
+    USART3_IRQ_NO_39    = 39,
     EXTI15_10_IRQ_NO_40 = 40,
+    UART4_IRQ_NO_52     = 52,
+    UART5_IRQ_NO_53     = 53,
+    USART6_IRQ_NO_71    = 71,
 } irq_number_e;
 
 // Lower number means higher priority
@@ -97,22 +129,25 @@ typedef enum {
 } irq_priority_e;
 
 typedef enum {
-    RCC_APB2ENR_SYSCFG_BIT = 14
-} rcc_apb2enr_bits_e;
+    LED_GREEN_PIN  = 12,
+    LED_ORANGE_PIN = 13,
+    LED_RED_PIN    = 14,
+    LED_BLUE_PIN   = 15,
+} hardware_pin_assignment_e;
+
+// Ports mapped to integers A->0, B->1, C->2... etc.
+typedef enum {
+    LED_GREEN_PORT  = 3u, // Port D
+    LED_ORANGE_PORT = 3u,
+    LED_RED_PORT    = 3u,
+    LED_BLUE_PORT   = 3u,
+} hardware_port_assignment_e;
 
 // Macros
 
-// Ports mapped to integers A->0, B->1, C->2... etc.
-#define LED_GREEN_PIN   12u
-#define LED_GREEN_PORT  3u
-#define LED_ORANGE_PIN  13u
-#define LED_ORANGE_PORT 3u
-#define LED_RED_PIN     14u
-#define LED_RED_PORT    3u
-#define LED_BLUE_PIN    15u
-#define LED_BLUE_PORT   3u
-
 #define UNUSED(x) (void)(x)
+
+#define __vo volatile
 
 /****************************************************************************************************
                                         Register Structure Definitions
