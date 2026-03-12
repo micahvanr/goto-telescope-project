@@ -1,0 +1,19 @@
+#ifndef TEST_TYPES_H
+#define TEST_TYPES_H
+
+typedef enum {
+    // GPIO tests options
+    GPIO_TEST_BLINK_LED,
+    GPIO_TEST_READ_WRITE,
+    GPIO_TEST_IT,
+    // USART tests options
+    USART_TEST_WRITE,
+    USART_TEST_READ,
+    USART_TEST_WRITE_IT,
+    USART_TEST_READ_IT,
+    // Misc tests options
+    MISC_TEST_ASSERT,
+    MISC_TEST_GET_CLOCK,
+} test_type_e;
+
+#endif
