@@ -238,7 +238,7 @@ void usart_init(usart_handle *const p_usart_handle);
 void usart_reset(usart_reg_def const *const p_usartx);
 
 // Write/read blocking or polling
-void usart_write(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length);
+void usart_write(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length);
 void usart_read(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length);
 
 // Write/read interrupt

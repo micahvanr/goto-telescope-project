@@ -5,6 +5,8 @@
 #include "usart.h"
 #include <stdint.h>
 
+usart_handle g_usart_test = {0};
+
 void test_gpio_blink_led(void)
 {
     gpio_handle gpio_test = {0};
@@ -122,7 +124,6 @@ void test_usart(void)
 {
     usart_gpio_init();
 
-    usart_handle g_usart_test                 = {0};
     g_usart_test.p_usartx                     = USART2;
     g_usart_test.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
     g_usart_test.usart_conf.baudrate          = USART_BAUDRATE_57600;
@@ -158,14 +159,12 @@ void test_usart(void)
 
 #endif
 }
-#include <string.h>
-usart_handle g_usart_test = {0};
+
 
 void test_usart_it(void)
 {
     usart_gpio_init();
 
-    //usart_handle usart_test                 = {0};
     g_usart_test.p_usartx                     = USART2;
     g_usart_test.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
     g_usart_test.usart_conf.baudrate          = USART_BAUDRATE_57600;

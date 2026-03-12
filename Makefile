@@ -113,7 +113,7 @@ flash:
 	-c "init"
 
 cppcheck:
-	@$(CPPCHECK) $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c --enable=all $(SUPPRESSIONS)
+	@$(CPPCHECK) $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c --enable=all $(SUPPRESSIONS) 
 
 format:
 	$(FORMAT) -i $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c

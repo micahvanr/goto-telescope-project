@@ -192,7 +192,7 @@ Note:
     9 Bit write with no parity not implemented.
     If sending string, ensure the size does not include the '\0' character. 
 ***************************************************************************/
-void usart_write(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length)
+void usart_write(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length)
 {
     ASSERT(verify_port_initialized(p_usartx));
     p_usartx->CR1 |= USART_CR1_TE;

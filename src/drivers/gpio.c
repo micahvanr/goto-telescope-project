@@ -43,7 +43,7 @@ Note:
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
     pin_number_e pin_no = p_gpio_handle->gpio_conf.pin_no;
-    uint8_t afr_reg;
+    
 
     // Ensure handle structure values are valid
     gpio_init_asserts(p_gpio_handle);
@@ -68,6 +68,7 @@ void gpio_init(gpio_handle *const p_gpio_handle)
 
     // Set alternate function mode
     if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
+        uint8_t afr_reg;
         afr_reg = pin_no / 8;
         p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * pin_no));
     }

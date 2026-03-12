@@ -17,7 +17,7 @@ uint32_t rcc_get_pll_freq(void)
     uint8_t plln;
 
     uint8_t pllp_reg;
-    uint8_t pllp_values[] = {2, 4, 6, 8};
+    uint8_t const pllp_values[] = {2, 4, 6, 8};
     uint8_t pllp;
 
     clock_sources_e pll_src;
@@ -91,8 +91,8 @@ Note: None
 ***************************************************************************/
 uint32_t rcc_get_bus_clock_freq(bus_types bus)
 {
-    uint16_t ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
-    uint16_t apb_clock_prescaler[] = {2, 4, 8, 16};
+    uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
+    uint16_t const apb_clock_prescaler[] = {2, 4, 8, 16};
 
     uint32_t sysclock_freq;
 
