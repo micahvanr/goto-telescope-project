@@ -16,6 +16,7 @@ SRC_DIR = ./src
 
 ## Test dir
 TEST_DIR = test
+MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
 
 # Toolchain
 CC = arm-none-eabi-gcc
@@ -34,13 +35,19 @@ DRIVER_FILES =	stm32f4xx \
 				usart \
 				rcc
 
+
+MANUAL_TEST_FILES = gpio_test \
+					usart_test \
+					misc_test \
+
+
 COMMON_FILES = assert_handler
 
 #APP_FILES = 
 
 #BSP_FILES = 
 
-SOURCE_FILES = $(DRIVER_FILES) $(COMMON_FILES) #$(APP_FILES) $(BSP_FILES)
+SOURCE_FILES = $(DRIVER_FILES) $(COMMON_FILES) $(MANUAL_TEST_FILES) #$(APP_FILES) $(BSP_FILES)
 
 STARTUP = $(SRC_DIR)/stm32_startup.c
 
@@ -49,11 +56,12 @@ SOURCES = $(patsubst %, $(DRIVER_DIR)/%.c, $(SOURCE_FILES))
 ## Prefixes with object path and .o for corresponding files
 OBJECTS = $(patsubst %, $(OBJ_DIR)/%.o, $(SOURCE_FILES)) 
 
+
 LINKER = $(SRC_DIR)/stm32_ls.ld
 
 
 # CPPCheck Suppressions
-SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember
+SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction #--suppress=unusedStructMember
 
 # General Flags
 MACH = cortex-m4
@@ -68,7 +76,7 @@ LDFLAGSPLUS = $(LDFLAGS) -Wl,-Map=$(TARGET).map
 
 # Build
 ## Linking
-$(TARGET).elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
+$(TARGET).elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o#$(TEST_OBJ)
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^ 
 
@@ -79,6 +87,9 @@ $(TARGET)_plus.elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
 	
 ## Compiling
 $(OBJ_DIR)/stm32_startup.o: $(STARTUP)
+	$(CC) $(CFLAGS) -c -o $@ $^
+
+$(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 $(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
@@ -113,10 +124,10 @@ flash:
 	-c "init"
 
 cppcheck:
-	@$(CPPCHECK) $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c --enable=all $(SUPPRESSIONS) 
+	@$(CPPCHECK) $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c --enable=all $(SUPPRESSIONS) 
 
 format:
-	$(FORMAT) -i $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c
+	$(FORMAT) -i $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
 
 # Unity testing commands
 test:
