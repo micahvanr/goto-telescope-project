@@ -11,6 +11,11 @@ typedef enum {
     USART_TEST_READ,
     USART_TEST_WRITE_IT,
     USART_TEST_READ_IT,
+    // I2C test options
+    I2C_TEST_WRITE,
+    I2C_TEST_READ,
+    I2C_TEST_WRITE_IT,
+    I2C_TEST_READ_IT,
     // Misc tests options
     MISC_TEST_ASSERT,
     MISC_TEST_GET_CLOCK,

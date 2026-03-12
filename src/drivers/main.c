@@ -34,7 +34,12 @@ int main(void)
     case USART_TEST_READ_IT:
         usart_tests(test);
     break;
-    
+    // I2C tests
+    case I2C_TEST_WRITE:
+    case I2C_TEST_READ:
+    case I2C_TEST_WRITE_IT:
+    case I2C_TEST_READ_IT:
+        i2c_tests(test);
     // Misc tests
     case MISC_TEST_ASSERT:
     case MISC_TEST_GET_CLOCK:
