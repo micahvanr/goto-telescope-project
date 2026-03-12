@@ -28,9 +28,11 @@ FORMAT = clang-format
 TARGET = $(BIN_DIR)/main
 
 ## .c/.h will be added to each one when compiled and linked
-DRIVER_FILES =	main \
+DRIVER_FILES =	stm32f4xx \
+				main \
 				gpio \
-				stm32f4xx 
+				usart \
+				rcc
 
 COMMON_FILES = assert_handler
 

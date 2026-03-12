@@ -16,6 +16,12 @@ AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements: 
+    Enabled: true
+    AcrossEmptyLines: true
+    AcrossComments: true
+    AlignCaseColons: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AlignConsecutiveMacros: true
 AlignConsecutiveAssignments: true

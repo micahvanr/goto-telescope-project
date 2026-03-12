@@ -129,24 +129,30 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 * Ternary if statements are okay but should not be overused
 
 # Functions
-* Helper functions that will only be used inside a single module should be defined as static and defined at the top of their corresponding .c file.
-* Very short functions should be defined as static inline
+* Driver functions should be prefixed with the peripheral they correspond to.
 * Include void as parameter when there are no parameters. This is because in C, empty parameters can take any number of unknown types.
+* Very short functions should be defined as static inline
 ``` C
 static inline void helper_function(void) {
     // ...
 }
 ```
+### Helper functions
+* Should only be used inside a single module should be defined as static and defined at the top of their corresponding .c file.
+* Names should not contain a peripheral prefix to indicate they are a helper function and should not be used outside the file.
+* Do not require a comment block above function. The function name should explain what it does.
+
 
 # Data types
 ## Typedef
 * Structures can be type defined
 * Enums can be typedefined so we don't have to put enum before each one but ensure to suffix enum definitions with _e as stated in the naming section
-* Enum values should also be all uppercase
+* Enum member names should also be all uppercase
+* Enum values should be explicitly stated if they are used as that value. If the value does not matter it should not be stated and let the compiler autofill the values.
 ``` C
 typedef enum {
     GPIO_A,
-    GPIO_B
+    GPIO_B,
 } gpio_ports_e;
 
 typedef struct {
