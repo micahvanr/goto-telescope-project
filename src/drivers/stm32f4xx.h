@@ -154,46 +154,6 @@ typedef enum {
 ****************************************************************************************************/
 
 // clang-format off
-
-// RCC Register Definition Structure
-typedef __vo struct {
-	uint32_t CR;				// RCC clock control register										Offset: 0x00
-	uint32_t PLLCFGR;			// RCC PLL configuration register									Offset: 0x04
-	uint32_t CFGR;				// RCC clock configuration register									Offset: 0x08
-	uint32_t CIR;				// RCC clock interrupt register										Offset: 0x0C
-	uint32_t AHB1RSTR;			// RCC AHB1 peripheral reset register								Offset: 0x10
-	uint32_t AHB2RSTR;			// RCC AHB2 peripheral reset register								Offset: 0x14
-	uint32_t AHB3RSTR;			// RCC AHB3 peripheral reset register								Offset: 0x18
-	uint32_t RESERVED0;			// Reserved 0x1C
-	uint32_t APB1RSTR;			// RCC APB1 peripheral reset register								Offset: 0x20
-	uint32_t APB2RSTR;			// RCC APB2 peripheral reset register								Offset: 0x24
-	uint32_t RESERVED1;			// Reserved 0x28
-	uint32_t RESERVED2;			// Reserved 0x2C
-	uint32_t AHB1ENR;			// RCC AHB1 peripheral clock enable register						Offset: 0x30
-	uint32_t AHB2ENR;			// RCC AHB2 peripheral clock enable register						Offset: 0x34
-	uint32_t AHB3ENR;			// RCC AHB3 peripheral clock enable register						Offset: 0x38
-	uint32_t RESERVED3;			// Reserved 0x3C
-	uint32_t APB1ENR;			// RCC APB1 peripheral clock enable register						Offset: 0x40
-	uint32_t APB2ENR;			// RCC APB2 peripheral clock enable register						Offset: 0x44
-	uint32_t RESERVED4;			// Reserved 0x48
-	uint32_t RESERVED5;			// Reserved 0x4C
-	uint32_t AHB1LPENR;		    // RCC AHB1 peripheral clock enable in low power mode register		Offset: 0x50
-	uint32_t AHB2LPENR;		    // RCC AHB2 peripheral clock enable in low power mode register		Offset: 0x54
-	uint32_t AHB3LPENR;		    // RCC AHB3 peripheral clock enable in low power mode register		Offset: 0x58
-	uint32_t RESERVED6;			// Reserved 0x5C
-	uint32_t APB1LPENR;		    // RCC APB1 peripheral clock enable in low power mode register		Offset: 0x60
-	uint32_t APB2LPENR;		    // RCC APB2 peripheral clock enabled in low power mode 				Offset: 0x64
-	uint32_t RESERVED7;			// Reserved 0x68
-	uint32_t RESERVED8;			// Reserved 0x6C
-	uint32_t RCC_BDCR;			// RCC Backup domain control register								Offset: 0x70
-	uint32_t RCC_CSR;			// RCC clock control & status register								Offset: 0x74
-	uint32_t RESERVED9;			// Reserved 0x78
-	uint32_t RESERVED10;		// Reserved 0x7C
-	uint32_t RCC_SSCGR;		    // RCC spread spectrum clock generation register					Offset: 0x80
-	uint32_t PLLI2SCFGR;		// RCC PLLI2S configuration register								Offset: 0x84
-
-}rcc_reg_def;
-
 typedef __vo struct {
 	uint32_t IMR;				// Interrupt mask register											Offset: 0x00
 	uint32_t EMR;				// Event mask register												Offset: 0x04
@@ -218,7 +178,6 @@ typedef __vo struct {
                                     Peripheral Structure Definitions
 ****************************************************************************************************/
 
-#define RCC    ((rcc_reg_def *)RCC_BASE_ADDR)
 #define EXTI   ((exti_reg_def *)EXTI_BASE_ADDR)
 #define SYSCFG ((syscfg_reg_def *)SYSCFG_BASE_ADDR)
 

@@ -37,15 +37,9 @@ uint32_t rcc_get_pll_freq(void)
 
     // Select PLL clock source frequency
     switch (pll_src) {
-    case CLOCK_SRC_HSI:
-        pll_input_clk_freq = HSI_CLOCK_FREQ;
-        break;
-    case CLOCK_SRC_HSE:
-        pll_input_clk_freq = HSE_CLOCK_FREQ;
-        break;
-    default:
-        ASSERT(FALSE);
-        break;
+    case CLOCK_SRC_HSI: pll_input_clk_freq = HSI_CLOCK_FREQ; break;
+    case CLOCK_SRC_HSE: pll_input_clk_freq = HSE_CLOCK_FREQ; break;
+    default:            ASSERT(FALSE); break;
     }
 
     // Calculations of PLL output frequency
@@ -72,18 +66,13 @@ uint32_t rcc_get_sys_clock_freq(void)
 
     // Return clock depending on what the source is
     switch (clock_source) {
-    case CLOCK_SRC_HSI:
-        return HSI_CLOCK_FREQ;
+    case CLOCK_SRC_HSI: return HSI_CLOCK_FREQ;
 
-    case CLOCK_SRC_HSE:
-        return HSE_CLOCK_FREQ;
+    case CLOCK_SRC_HSE: return HSE_CLOCK_FREQ;
 
-    case CLOCK_SRC_PLL:
-        return rcc_get_pll_freq();
+    case CLOCK_SRC_PLL: return rcc_get_pll_freq();
 
-    default:
-        ASSERT(FALSE);
-        return 0;
+    default:            ASSERT(FALSE); return 0;
     }
 }
 
@@ -133,8 +122,7 @@ uint32_t rcc_get_bus_clock_freq(bus_types bus)
 
     switch (bus) {
     case AHB1_BUS:
-    case AHB2_BUS:
-        return ahb_clock;
+    case AHB2_BUS: return ahb_clock;
 
     case APB1_BUS:
         apb1_ppre1_reg = ((RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK);
@@ -148,8 +136,6 @@ uint32_t rcc_get_bus_clock_freq(bus_types bus)
         apb2_clock     = ahb_clock / apb2_prescaler;
         return apb2_clock;
 
-    default:
-        ASSERT(FALSE);
-        return 0;
+    default: ASSERT(FALSE); return 0;
     }
 }
