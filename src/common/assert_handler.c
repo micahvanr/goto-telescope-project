@@ -4,9 +4,9 @@ static void blink_led(void);
 
 void assert_handler(void)
 {
-    // TODO: Turn off telescope motors
-    // TODO: Log to console
-
+    // TODO: Assert - Turn off telescope motors
+    // TODO: Assert - Log to console
+    // TODO: Assert - Change to hardfault
     // Breakpoint
     __asm volatile("BKPT");
 
@@ -35,6 +35,6 @@ static void blink_led(void)
     // Toggle LED
     while (1) {
         *p_gpio_led_reg ^= (1 << LED_RED_PIN);
-        for (uint32_t i = 0; i < 500000; i++) {}
+        for (uint32_t i = 0; i < 1000000; i++) {}
     }
 }

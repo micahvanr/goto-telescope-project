@@ -45,18 +45,24 @@ comment
 */
 ```
 ## Source file comments
-* Before each function there should be a short function block. It should contain a brief overview, what parameters it has, what it returns, and any notes. Use None if it nothing applies to that section.
+* Before each function there should be a short function block. It should contain a brief overview, what parameters it has, the values those parameters can be, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
 /***************************************************************************
-Function: gpio_init
-Overview: Initilizes the given GPIO port with the settings provided in the structure
+Function: gpio_write
+Overview: Sets a pin on a given port to high or low
 Parameters:
-    gpio_settings - The handler structure with the configuration settings to be applied              
+    p_gpiox: Register structure for the GPIO port
+    pin_no: Pin number for to be changed
+        PIN_NO_x (0-15)
+    pin_level: Pin logic level
+        HIGH (1) 
+        LOW (0)
 Return: 
     None
 Note: None
 ***************************************************************************/
-void gpio_init(gpio_handler gpio_settings) {
+void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
+{
     // ... 
 }
 ```
@@ -123,24 +129,30 @@ void gpio_init(gpio_handler gpio_settings) {
 * Ternary if statements are okay but should not be overused
 
 # Functions
-* Helper functions that will only be used inside a single module should be defined as static and defined at the top of their corresponding .c file.
-* Very short functions should be defined as static inline
+* Driver functions should be prefixed with the peripheral they correspond to.
 * Include void as parameter when there are no parameters. This is because in C, empty parameters can take any number of unknown types.
+* Very short functions should be defined as static inline
 ``` C
 static inline void helper_function(void) {
     // ...
 }
 ```
+### Helper functions
+* Should only be used inside a single module should be defined as static and defined at the top of their corresponding .c file.
+* Names should not contain a peripheral prefix to indicate they are a helper function and should not be used outside the file.
+* Do not require a comment block above function. The function name should explain what it does.
+
 
 # Data types
 ## Typedef
 * Structures can be type defined
 * Enums can be typedefined so we don't have to put enum before each one but ensure to suffix enum definitions with _e as stated in the naming section
-* Enum values should also be all uppercase
+* Enum member names should also be all uppercase
+* Enum values should be explicitly stated if they are used as that value. If the value does not matter it should not be stated and let the compiler autofill the values.
 ``` C
 typedef enum {
     GPIO_A,
-    GPIO_B
+    GPIO_B,
 } gpio_ports_e;
 
 typedef struct {
