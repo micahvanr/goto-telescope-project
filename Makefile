@@ -24,9 +24,12 @@ OBJDUMP = arm-none-eabi-objdump
 RM = rm
 CPPCHECK = cppcheck
 FORMAT = clang-format
+COMP_COM_GEN = compiledb # compile_commands.json file generator
 
 # Files
 TARGET = $(BIN_DIR)/main
+
+ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
 
 ## .c/.h will be added to each one when compiled and linked
 DRIVER_FILES =	main \
@@ -40,6 +43,7 @@ DRIVER_FILES =	main \
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \
+					i2c_test \
 					misc_test \
 
 
@@ -109,7 +113,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake test test_clean
+.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen
 
 all: $(TARGET).elf
 
@@ -121,15 +125,20 @@ clean:
 
 remake: clean all
 	
+# Used to generate compile commands for clang LSP and potential other tools
+cc_gen: 
+	$(COMP_COM_GEN) make	
+
 flash:
-	openocd -f board/stm32f4discovery.cfg \
-	-c "init"
+	openocd -f interface/stlink.cfg \
+			-f board/stm32f4discovery.cfg \
+			-c "program build/bin/main.elf"
 
 cppcheck:
-	@$(CPPCHECK) $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c --enable=all $(SUPPRESSIONS) 
+	@$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
-	$(FORMAT) -i $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
+	$(FORMAT) -i $(ALL_FILES)
 
 # Unity testing commands
 test:
