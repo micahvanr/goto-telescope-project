@@ -2,10 +2,10 @@
 
 static void usart_gpio_init(void);
 static void usart2_init(void);
-static void test_usart_write(void);
-static void test_usart_read(void);
-static void test_usart_write_it(void);
-static void test_usart_read_it(void);
+static void test_usart_transmit(void);
+static void test_usart_receive(void);
+static void test_usart_transmit_it(void);
+static void test_usart_receive_it(void);
 
 usart_handle g_usart_test = {0};
 
@@ -15,10 +15,10 @@ void usart_tests(test_type_e test)
     usart2_init();
 
     switch (test) {
-    case USART_TEST_WRITE:    test_usart_write(); break;
-    case USART_TEST_READ:     test_usart_read(); break;
-    case USART_TEST_WRITE_IT: test_usart_write_it(); break;
-    case USART_TEST_READ_IT:  test_usart_read_it(); break;
+    case USART_TEST_WRITE:    test_usart_transmit(); break;
+    case USART_TEST_READ:     test_usart_receive(); break;
+    case USART_TEST_WRITE_IT: test_usart_transmit_it(); break;
+    case USART_TEST_READ_IT:  test_usart_receive_it(); break;
     default:                  ASSERT(FALSE);
     }
 
@@ -53,55 +53,55 @@ static void usart2_init(void)
     usart_init(&g_usart_test);
 }
 
-static void test_usart_write(void)
+static void test_usart_transmit(void)
 {
     uint8_t write_data[]  = "testing\r\n";
     uint32_t size_of_data = 0;
     size_of_data          = sizeof(write_data) - 1;
     while (1) {
-        usart_write(g_usart_test.p_usartx, write_data, sizeof(write_data));
+        usart_transmit(g_usart_test.p_usartx, write_data, sizeof(write_data));
         for (uint32_t i = 0; i < 500000; i++); // Delay
     }
     UNUSED(size_of_data);
 }
 
-static void test_usart_read(void)
+static void test_usart_receive(void)
 {
     uint8_t size_of_data;
     uint8_t data[50];
 
     while (1) {
         // Get length
-        usart_read(g_usart_test.p_usartx, &size_of_data, 1);
-        usart_read(g_usart_test.p_usartx, data, size_of_data);
+        usart_receive(g_usart_test.p_usartx, &size_of_data, 1);
+        usart_receive(g_usart_test.p_usartx, data, size_of_data);
         for (uint32_t i = 0; i < 500000; i++); // Delay
     }
 }
 
-static void test_usart_write_it(void)
+static void test_usart_transmit_it(void)
 {
     static uint8_t write_data[] = "testing\r\n"; // Make static otherwise the data will get corrupted
     uint32_t size_of_data       = 0;
     size_of_data                = (sizeof(write_data) - 1);
     while (1) {
-        usart_write_it(&g_usart_test, write_data, size_of_data);
+        usart_transmit_it(&g_usart_test, write_data, size_of_data);
         write_data[0] = 'b';
         // for (uint32_t i = 0; i < 500000; i++); // Delay
-        usart_write_it(&g_usart_test, write_data, size_of_data);
+        usart_transmit_it(&g_usart_test, write_data, size_of_data);
         write_data[0] = 't';
 
         for (uint32_t i = 0; i < 500000; i++); // Delay
     }
 }
-static void test_usart_read_it(void)
+static void test_usart_receive_it(void)
 {
     static uint8_t read_data[3]; // Make static otherwise the data will get corrupted
     uint32_t size_of_data = 0;
     size_of_data          = sizeof(read_data);
     while (1) {
-        usart_read_it(&g_usart_test, read_data, size_of_data);
+        usart_receive_it(&g_usart_test, read_data, size_of_data);
         for (uint32_t i = 0; i < 5000000; i++); // Delay
-        usart_write_it(&g_usart_test, read_data, size_of_data);
+        usart_transmit_it(&g_usart_test, read_data, size_of_data);
         for (uint32_t i = 0; i < 1000000; i++); // Delay
     }
 }
