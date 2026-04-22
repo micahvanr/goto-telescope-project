@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// TODO: Think about changing comment sections
+// TODO: Think about changing comment sections with macros
 //====================================================================//
 //  Address Definitions
 //====================================================================//
@@ -98,6 +98,10 @@ typedef enum {
     EXTI3_IRQ_NO_9      = 9,
     EXTI4_IRQ_NO_10     = 10,
     EXTI9_5_IRQ_NO_23   = 23,
+    I2C1_EV_IRQ_NO_31   = 31,
+    I2C1_ER_IRQ_NO_32   = 32,
+    I2C2_EV_IRQ_NO_33   = 33,
+    I2C2_ER_IRQ_NO_34   = 34,
     USART1_IRQ_NO_37    = 37,
     USART2_IRQ_NO_38    = 38,
     USART3_IRQ_NO_39    = 39,
@@ -105,6 +109,8 @@ typedef enum {
     UART4_IRQ_NO_52     = 52,
     UART5_IRQ_NO_53     = 53,
     USART6_IRQ_NO_71    = 71,
+    I2C3_EV_IRQ_NO_72   = 72,
+    I2C3_ER_IRQ_NO_73   = 73,
 } irq_number_e;
 
 // Lower number means higher priority

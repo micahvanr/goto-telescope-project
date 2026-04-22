@@ -12,8 +12,10 @@ typedef enum {
     USART_TEST_WRITE_IT,
     USART_TEST_READ_IT,
     // I2C test options
-    I2C_TEST_WRITE,
-    I2C_TEST_READ,
+    I2C_TEST_MASTER_TRANSMIT,
+    I2C_TEST_MASTER_RECEIVE,
+    I2C_TEST_SLAVE_TRANSMIT,
+    I2C_TEST_SLAVE_RECEIVE,
     I2C_TEST_WRITE_IT,
     I2C_TEST_READ_IT,
     // Misc tests options

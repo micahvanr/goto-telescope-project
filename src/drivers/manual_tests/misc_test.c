@@ -20,9 +20,9 @@ static void test_assert(void)
 
 static void test_get_clock(void)
 {
-    uint32_t ahb1_freq = rcc_get_bus_clock_freq(AHB1_BUS);
-    uint32_t apb1_freq = rcc_get_bus_clock_freq(APB1_BUS);
-    uint32_t apb2_freq = rcc_get_bus_clock_freq(APB2_BUS);
+    uint32_t ahb1_freq = rcc_get_bus_clock_freq_hz(AHB1_BUS);
+    uint32_t apb1_freq = rcc_get_bus_clock_freq_hz(APB1_BUS);
+    uint32_t apb2_freq = rcc_get_bus_clock_freq_hz(APB2_BUS);
     UNUSED(ahb1_freq);
     UNUSED(apb1_freq);
     UNUSED(apb2_freq);
