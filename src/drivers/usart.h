@@ -206,17 +206,19 @@ typedef struct {
     usart_parity_select_e parity_select;
     usart_stop_bits_e stop_bits;
     usart_baudrate_e baudrate;
-    togglable_e it_config;
 } usart_config;
+
+typedef struct {
+    uint8_t *txrx_buffer;
+    uint32_t txrx_length;
+    usart_mode_e mode;
+    __vo usart_status_e status;
+} usart_it_data;
 
 typedef struct {
     usart_reg_def *p_usartx;
     usart_config usart_conf;
-    uint8_t *rx_buffer;
-    uint8_t *tx_buffer;
-    uint32_t txrx_length;
-    usart_mode_e mode;
-    __vo usart_status_e status;
+	usart_it_data usart_it_data;
 } usart_handle;
 
 /****************************************************************************************************
@@ -238,12 +240,12 @@ void usart_init(usart_handle *const p_usart_handle);
 void usart_reset(usart_reg_def const *const p_usartx);
 
 // Write/read blocking or polling
-void usart_write(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length);
-void usart_read(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length);
+void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length);
+void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length);
 
 // Write/read interrupt
-void usart_write_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
-void usart_read_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
+void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
+void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
 
 // Interrupt handling
 void usart_it_config(usart_reg_def const *const p_usartx, togglable_e toggle);
