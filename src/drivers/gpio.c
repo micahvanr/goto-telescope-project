@@ -43,7 +43,6 @@ Note:
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
     pin_number_e pin_no = p_gpio_handle->gpio_conf.pin_no;
-    
 
     // Ensure handle structure values are valid
     gpio_init_asserts(p_gpio_handle);
@@ -70,7 +69,7 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
         uint8_t afr_reg;
         afr_reg = pin_no / 8;
-        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * pin_no));
+        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
     }
 
     // Set interrupt mode
@@ -328,7 +327,7 @@ static void gpio_init_asserts(gpio_handle const *const p_gpio_handle)
     // Pullup/pulldown type check
     found_setting = FALSE;
     switch (p_gpio_handle->gpio_conf.pullup_pulldown) {
-    case GPIO_NO_PUPD:   found_setting = TRUE; break;
+    case GPIO_PUPD_NO:   found_setting = TRUE; break;
     case GPIO_PULL_UP:   found_setting = TRUE; break;
     case GPIO_PULL_DOWN: found_setting = TRUE; break;
     }

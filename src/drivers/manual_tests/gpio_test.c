@@ -26,7 +26,7 @@ static void test_gpio_blink_led(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
 
@@ -48,7 +48,7 @@ static void test_gpio_read_write(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
@@ -82,7 +82,7 @@ static void test_gpio_it(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);

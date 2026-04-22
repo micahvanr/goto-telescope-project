@@ -82,7 +82,7 @@ typedef enum {
 } gpio_output_speed_e;
 
 typedef enum {
-    GPIO_NO_PUPD   = 0, // Default
+    GPIO_PUPD_NO   = 0, // Default
     GPIO_PULL_UP   = 1,
     GPIO_PULL_DOWN = 2,
 } gpio_pullup_pulldown_e;
