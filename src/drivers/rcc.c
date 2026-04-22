@@ -1,15 +1,23 @@
 #include "rcc.h"
+#include "gpio.h"
+#include "stm32f4xx.h"
+#include <stdint.h>
+
+/*****************************************************************
+                        Helper Function Prototypes
+*****************************************************************/
+static void mco_gpio_pin_init(rcc_mco_sel_e mco_select);
 
 /***************************************************************************
-Function: rcc_get_pll_freq
+Function: rcc_get_pll_freq_hz
 Overview: Gets the PLL clock frequency from the PLL register in RCC
 Parameters:
     None
 Return: 
-    PLL clock frequency
+    PLL clock frequency (hz)
 Note: None
 ***************************************************************************/
-uint32_t rcc_get_pll_freq(void)
+uint32_t rcc_get_pll_freq_hz(void)
 {
     uint32_t rcc_pllcfgr_reg;
 
@@ -23,7 +31,7 @@ uint32_t rcc_get_pll_freq(void)
     clock_sources_e pll_src;
 
     uint32_t vco_clk_freq;
-    uint32_t pll_input_clk_freq;
+    uint32_t pll_input_clk_freq = 0;
     uint32_t pll_output_clk_freq;
 
     // Get register values
@@ -50,15 +58,15 @@ uint32_t rcc_get_pll_freq(void)
 }
 
 /***************************************************************************
-Function: rcc_get_sys_clock_freq
+Function: rcc_get_sys_clock_freq_hz
 Overview: Gets the system clock frequency depending on what the current clock source is
 Parameters:
     None
 Return: 
-    System clock frequency
+    System clock frequency (hz)
 Note: None
 ***************************************************************************/
-uint32_t rcc_get_sys_clock_freq(void)
+uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL)
     clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS_POS) & RCC_CFGR_SWS_MASK);
@@ -67,17 +75,14 @@ uint32_t rcc_get_sys_clock_freq(void)
     // Return clock depending on what the source is
     switch (clock_source) {
     case CLOCK_SRC_HSI: return HSI_CLOCK_FREQ;
-
     case CLOCK_SRC_HSE: return HSE_CLOCK_FREQ;
-
-    case CLOCK_SRC_PLL: return rcc_get_pll_freq();
-
+    case CLOCK_SRC_PLL: return rcc_get_pll_freq_hz();
     default:            ASSERT(FALSE); return 0;
     }
 }
 
 /***************************************************************************
-Function: rcc_get_bus_clock_freq
+Function: rcc_get_bus_clock_freq_hz
 Overview: Gets the given bus clock frequency depending on what the system clock is and what the prescaler values are set to
 Parameters:
     bus: Different bus options to be returned
@@ -86,10 +91,10 @@ Parameters:
         APB1_BUS
         APB2_BUS
 Return: 
-    Clock frequency for the given bus
+    Clock frequency (hz) for the given bus
 Note: None
 ***************************************************************************/
-uint32_t rcc_get_bus_clock_freq(bus_types bus)
+uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
 {
     uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
     uint16_t const apb_clock_prescaler[] = {2, 4, 8, 16};
@@ -112,7 +117,7 @@ uint32_t rcc_get_bus_clock_freq(bus_types bus)
     // Calculate different clocks (AHB1/AHB2/APB1/APB2) from prescalers
 
     // Get active system clock source (HSI/HSE/PLL) - Use function to get the clock for that source
-    sysclock_freq = rcc_get_sys_clock_freq();
+    sysclock_freq = rcc_get_sys_clock_freq_hz();
 
     // Calculate AHB clock
     ahb_prescaler = ((RCC->CFGR >> RCC_CFGR_HPRE_POS) & RCC_CFGR_HPRE_MASK);
@@ -123,13 +128,11 @@ uint32_t rcc_get_bus_clock_freq(bus_types bus)
     switch (bus) {
     case AHB1_BUS:
     case AHB2_BUS: return ahb_clock;
-
     case APB1_BUS:
         apb1_ppre1_reg = ((RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK);
         apb1_prescaler = ((apb1_ppre1_reg & 0b100) != 0) ? apb_clock_prescaler[apb1_ppre1_reg & ~(0b100)] : 1;
         apb1_clock     = ahb_clock / apb1_prescaler;
         return apb1_clock;
-
     case APB2_BUS:
         apb2_ppre2_reg = ((RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK);
         apb2_prescaler = ((apb2_ppre2_reg & 0b100) != 0) ? apb_clock_prescaler[apb2_ppre2_reg & ~(0b100)] : 1;
@@ -138,4 +141,68 @@ uint32_t rcc_get_bus_clock_freq(bus_types bus)
 
     default: ASSERT(FALSE); return 0;
     }
+}
+
+void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler)
+{
+
+    switch (mco_clk_src) {
+
+    case RCC_MCO1_HSI_SRC:
+    case RCC_MCO1_LSE_SRC:
+    case RCC_MCO1_HSE_SRC:
+    case RCC_MCO1_PLL_SRC:
+        RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
+        if (mco_prescaler == RCC_MCO_PRE_1) {
+            RCC->CFGR &= ~(RCC_CFGR_MCO1_PRE_MASK << RCC_CFGR_MCO1_PRE_POS);
+        } else {
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1_PRE_POS;
+        }
+        mco_gpio_pin_init(RCC_MCO1_SEL);
+        break;
+    case RCC_MCO2_SYSCLK_SRC:
+    case RCC_MCO2_PLLI2S_SRC:
+    case RCC_MCO2_HSE_SRC:
+    case RCC_MCO2_PLL_SRC:
+        RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
+        if (mco_prescaler == RCC_MCO_PRE_1) {
+            RCC->CFGR &= ~(RCC_CFGR_MCO2_PRE_MASK << RCC_CFGR_MCO2_PRE_POS);
+        } else {
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2_PRE_POS;
+        }
+        mco_gpio_pin_init(RCC_MCO2_SEL);
+        break;
+    default: ASSERT(FALSE);
+    }
+}
+
+/****************************************************************************************************
+                                Helper Function Implementation
+****************************************************************************************************/
+
+static void mco_gpio_pin_init(rcc_mco_sel_e mco_select)
+{
+    gpio_handle mco_gpio_pin;
+    mco_gpio_pin.gpio_conf.mode            = GPIO_MODE_ALT_FN;
+    mco_gpio_pin.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
+    mco_gpio_pin.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
+    mco_gpio_pin.gpio_conf.alt_fn_no       = GPIO_ALT_FN_0;
+
+    mco_gpio_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
+    mco_gpio_pin.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
+
+    switch (mco_select) {
+    case RCC_MCO1_SEL:
+        // MCO1 - PA8
+        mco_gpio_pin.p_gpiox          = GPIOA;
+        mco_gpio_pin.gpio_conf.pin_no = PIN_NO_8;
+        break;
+    case RCC_MCO2_SEL:
+        // MCO2 - PC9
+        mco_gpio_pin.p_gpiox          = GPIOC;
+        mco_gpio_pin.gpio_conf.pin_no = PIN_NO_9;
+        break;
+    default: ASSERT(FALSE);
+    }
+    gpio_init(&mco_gpio_pin);
 }
