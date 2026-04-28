@@ -27,11 +27,7 @@ typedef enum {
     I2C_REPEATED_START_ENABLE,
 } i2c_repeated_start_e;
 
-typedef enum {
-    I2C_MODE_SLAVE,
-    I2C_MODE_MASTER,
-} i2c_mode_e;
-
+// Write = 0, read = 1
 typedef enum {
     I2C_READ_WRITE_BIT = (1 << 0),
 } i2c_read_write_bit_e;
@@ -43,7 +39,10 @@ typedef enum {
 
 typedef enum {
     I2C_STATUS_READY = 0, // Default
-    I2C_STATUS_RUNNING,
+    I2C_STATUS_MASTER_TX,
+    I2C_STATUS_MASTER_RX,
+    I2C_STATUS_SLAVE_TX,
+    I2C_STATUS_SLAVE_RX,
 } i2c_status_e;
 
 // TRISE
@@ -243,7 +242,6 @@ typedef struct {
     uint8_t target_addr;
     __vo i2c_status_e status;
     i2c_repeated_start_e repeated_start;
-    i2c_mode_e mode;
 } i2c_it_data;
 
 typedef struct {

@@ -145,7 +145,7 @@ void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t
     clear_start_flag(p_i2cx);
 
     // Wait for address to be sent
-    send_address(p_i2cx, target_addr, I2C_WRITE_SEL);
+    send_address(p_i2cx, target_addr, I2C_STATUS_MASTER_TX);
     while (!(p_i2cx->SR1 & I2C_SR1_ADDR));
     clear_address_flag(p_i2cx);
 
@@ -159,7 +159,7 @@ void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t
             while (!(p_i2cx->SR1 & I2C_SR1_TxE));
             while (!(p_i2cx->SR1 & I2C_SR1_BTF));
             if (repeated_start == I2C_REPEATED_START_DISABLE) {
-                p_i2cx->CR1 |= I2C_CR1_STOP;
+                generate_stop_condition(p_i2cx);
             }
         }
     }
@@ -192,7 +192,7 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t 
     while (!(p_i2cx->SR1 & I2C_SR1_SB));
     clear_start_flag(p_i2cx);
 
-    send_address(p_i2cx, target_addr, I2C_READ_SEL);
+    send_address(p_i2cx, target_addr, I2C_STATUS_MASTER_RX);
     while (!(p_i2cx->SR1 & I2C_SR1_ADDR));
 
     if (length == 1) {
@@ -210,7 +210,7 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t 
         p_data++;
 
         if ((i == 1) && (repeated_start == I2C_REPEATED_START_DISABLE)) {
-            p_i2cx->CR1 |= I2C_CR1_STOP;
+            generate_stop_condition(p_i2cx);
         }
     }
 }
@@ -428,6 +428,10 @@ static inline void generate_start_condition(i2c_reg_def *p_i2cx)
     p_i2cx->CR1 |= I2C_CR1_START;
 }
 
+static inline void generate_stop_condition(i2c_reg_def *p_i2cx)
+{
+    p_i2cx->CR1 |= I2C_CR1_STOP;
+}
 static inline void clear_start_flag(i2c_reg_def *p_i2cx)
 {
     uint32_t __vo dummy_read;
@@ -435,13 +439,16 @@ static inline void clear_start_flag(i2c_reg_def *p_i2cx)
     UNUSED(dummy_read);
 }
 
-static inline void send_address(i2c_reg_def *p_i2cx, uint8_t target_addr, i2c_read_write_sel_e read_write_sel)
+static inline void send_address(i2c_reg_def *p_i2cx, uint8_t target_addr, i2c_status_e i2c_status)
 {
     // Clears SB and writes address
-    switch (read_write_sel) {
-    case I2C_READ_SEL:  p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT); break;
-    case I2C_WRITE_SEL: p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT); break;
-    default:            ASSERT(FALSE);
+    switch (i2c_status) {
+    case I2C_STATUS_MASTER_TX:
+    case I2C_STATUS_SLAVE_TX:  p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT); break;
+    case I2C_STATUS_MASTER_RX:
+    case I2C_STATUS_SLAVE_RX:  p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT); break;
+
+    default:                   ASSERT(FALSE);
     }
 }
 
