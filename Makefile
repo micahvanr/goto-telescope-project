@@ -47,7 +47,8 @@ MANUAL_TEST_FILES = gpio_test \
 					misc_test \
 
 
-COMMON_FILES = assert_handler
+COMMON_FILES = assert_handler \
+			   printf
 
 #APP_FILES = 
 
@@ -103,6 +104,10 @@ $(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 $(OBJ_DIR)%.o: $(COMMON_DIR)%.c 
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $^
+
+$(OBJ_DIR)%.o: $(PRINTF_DIR)%.c 
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $^
 

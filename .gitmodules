@@ -4,3 +4,6 @@
 [submodule "tools/fff"]
 	path = tools/fff
 	url = https://github.com/meekrosoft/fff.git
+[submodule "external/printf"]
+	path = external/printf
+	url = https://github.com/eyalroz/printf

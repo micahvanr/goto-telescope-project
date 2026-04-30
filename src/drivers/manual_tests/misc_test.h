@@ -2,6 +2,7 @@
 #define MISC_TEST_H
 
 #include "../rcc.h"
+#include "../../common/printf.h"
 #include "test_types.h"
 
 void misc_tests(test_type_e test);

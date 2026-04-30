@@ -21,6 +21,7 @@ typedef enum {
     // Misc tests options
     MISC_TEST_ASSERT,
     MISC_TEST_GET_CLOCK,
+    MISC_TEST_PRINTF,
 } test_type_e;
 
 #endif

@@ -45,7 +45,7 @@ static void usart2_init(void)
 {
     g_usart_test.p_usartx                     = USART2;
     g_usart_test.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
-    g_usart_test.usart_conf.baudrate          = USART_BAUDRATE_57600;
+    g_usart_test.usart_conf.baudrate          = USART_BAUDRATE_115200;
     g_usart_test.usart_conf.parity_control    = USART_PARITY_CONTROL_DISABLE;
     g_usart_test.usart_conf.parity_select     = USART_PARITY_SEL_EVEN;
     g_usart_test.usart_conf.stop_bits         = USART_STOP_BITS_1;

@@ -85,7 +85,6 @@ void usart_init(usart_handle *const p_usart_handle)
     // Set baudrate
     set_baudrate(p_usart_handle->p_usartx, p_usart_handle->usart_conf.oversampling_mode,
                  p_usart_handle->usart_conf.baudrate);
-
 }
 
 // Check each setting of the handle and ensure it is one of the available enum values
@@ -257,7 +256,7 @@ void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t c
 
     // Configure transfer settings
     p_usart_handle->usart_it_data.txrx_length = length;
-    p_usart_handle->usart_it_data.txrx_buffer   = p_data;
+    p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_TX;
 
     // Enable interrupts in cpu
@@ -296,7 +295,7 @@ void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t co
 
     // Configure read settings
     p_usart_handle->usart_it_data.txrx_length = length;
-    p_usart_handle->usart_it_data.txrx_buffer   = p_data;
+    p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_RX;
 
     // Enable interrupts in cpu
@@ -374,6 +373,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             recieve_data(p_usart_handle);
         }
         if (p_usart_handle->usart_it_data.txrx_length == 0) {
+            // TODO: Clean code up. Move to separate functions
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_RXNEIE;
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_PCE;
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
@@ -403,6 +403,29 @@ void usart_it_handler(usart_handle *const p_usart_handle)
     }
 }
 
+
+/***************************************************************************
+Function: usart_transmit_single_byte
+Overview: Writes 1 byte of data into the given usart peripheral
+Parameters:
+    p_usartx: USART register peripheral to be written to
+        USARTx (1, 2, 3, 6) or
+        UARTx (4, 5)
+    data: Byte of data to be sent
+Return: 
+    None
+Note: 
+    Used for printf implementation
+***************************************************************************/
+void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const data)
+{
+    ASSERT(verify_usart_initialized(p_usartx));
+    p_usartx->CR1 |= USART_CR1_TE;
+
+    while (!(p_usartx->SR & USART_SR_TXE));
+    p_usartx->DR = data;
+
+}
 /****************************************************************************************************
                                 Helper Function Implementation
 ****************************************************************************************************/
