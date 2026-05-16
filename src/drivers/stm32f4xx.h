@@ -80,6 +80,7 @@ typedef enum {
     LOW  = 0
 } pin_logic_level_e;
 
+// TODO: Change from enum to using stdbool.h instead
 typedef enum {
     FALSE = 0,
     TRUE  = 1
@@ -195,5 +196,6 @@ void irq_config(irq_number_e irq_num, togglable_e toggle);
 void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 
 #include "../common/assert_handler.h"
+#include "../common/printf.h"
 
 #endif

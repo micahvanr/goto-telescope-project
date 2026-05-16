@@ -22,7 +22,7 @@ int main(void)
     printf_init();
 
     // Change this variable to run the correct test
-    test_type_e test = MISC_TEST_PRINTF;
+    test_type_e test = I2C_TEST_SLAVE_RECEIVE_IT;
     switch (test) {
 
     // GPIO tests
@@ -40,8 +40,11 @@ int main(void)
     case I2C_TEST_MASTER_RECEIVE:
     case I2C_TEST_SLAVE_TRANSMIT:
     case I2C_TEST_SLAVE_RECEIVE:
-    case I2C_TEST_WRITE_IT:
-    case I2C_TEST_READ_IT:         i2c_tests(test); break;
+    case I2C_TEST_MASTER_TRANSMIT_IT:
+    case I2C_TEST_MASTER_RECEIVE_IT:
+    case I2C_TEST_SLAVE_TRANSMIT_IT:
+    case I2C_TEST_SLAVE_RECEIVE_IT:   i2c_tests(test); break;
+
     // Misc tests
     case MISC_TEST_ASSERT:
     case MISC_TEST_GET_CLOCK:

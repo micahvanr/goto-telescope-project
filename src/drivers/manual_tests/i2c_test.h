@@ -3,6 +3,7 @@
 
 #include "../i2c.h"
 #include "test_types.h"
+#include "../../common/printf.h"
 
 typedef enum {
     COMMAND_LEN  = 0x51,
