@@ -711,5 +711,5 @@ static void master_addr(i2c_handle *p_i2c_handle)
 }
 static void slave_addr(i2c_handle *p_i2c_handle)
 {
-
+    UNUSED(p_i2c_handle);
 }
