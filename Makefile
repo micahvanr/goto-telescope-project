@@ -71,7 +71,7 @@ LINKER = $(SRC_DIR)/stm32_ls.ld
 
 
 # CPPCheck Suppressions
-SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction #--suppress=unusedStructMember
+SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --inline-suppr#--suppress=unusedStructMember 
 
 # General Flags
 MACH = cortex-m4
@@ -137,8 +137,10 @@ flash:
 			-f board/stm32f4discovery.cfg \
 			-c "program build/bin/main.elf"
 
+# Trying out using compile commands file
 cppcheck:
-	@$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
+	@$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
+	# @$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
 	$(FORMAT) -i $(ALL_FILES)
