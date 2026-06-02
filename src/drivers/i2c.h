@@ -23,6 +23,12 @@ typedef enum {
 } i2c_init_port_num_e;
 
 typedef enum {
+    I2C1_STATUS_NUM = 0,
+    I2C2_STATUS_NUM = 1,
+    I2C3_STATUS_NUM = 2,
+} i2c_status_port_num_e;
+
+typedef enum {
     I2C_REPEATED_START_DISABLE,
     I2C_REPEATED_START_ENABLE,
 } i2c_repeated_start_e;
@@ -38,7 +44,8 @@ typedef enum {
 } i2c_read_write_sel_e;
 
 typedef enum {
-    I2C_STATUS_READY = 0, // Default
+    I2C_STATUS_READY   = 0, // Default
+    I2C_STATUS_RUNNING = 1, // Only to be used in setting/getting of global status variable
     I2C_STATUS_MASTER_TX,
     I2C_STATUS_MASTER_RX,
     I2C_STATUS_SLAVE_TX,
@@ -146,7 +153,7 @@ typedef enum {
     I2C_SR1_RxNE     = (1 << I2C_SR1_RxNE_POS),
     I2C_SR1_BERR     = (1 << I2C_SR1_BERR_POS),
     I2C_SR1_ARLO     = (1 << I2C_SR1_ARLO_POS),
-    I2C_SR1_AF       = (1 << I2C_SR1_AF_POS),	
+    I2C_SR1_AF       = (1 << I2C_SR1_AF_POS),
     I2C_SR1_OVR      = (1 << I2C_SR1_OVR_POS),
     I2C_SR1_PECERR   = (1 << I2C_SR1_PECERR_POS),
     I2C_SR1_TIMEOUT  = (1 << I2C_SR1_TIMEOUT_POS),
@@ -247,7 +254,7 @@ typedef struct {
 typedef struct {
     i2c_reg_def *p_i2cx;
     i2c_config i2c_conf;
-	i2c_it_data i2c_it_data;
+    i2c_it_data i2c_it_data;
 } i2c_handle;
 
 /****************************************************************************************************
@@ -276,15 +283,12 @@ void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t leng
 
 // Write/read interrupt
 void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
-                         i2c_repeated_start_e repeated_start);
+                            i2c_repeated_start_e repeated_start);
 void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
-                        i2c_repeated_start_e repeated_start);
+                           i2c_repeated_start_e repeated_start);
 
-void i2c_slave_transmit_it(i2c_handle *p_i2c_handle, uint8_t const *p_data, uint32_t length);
+void i2c_slave_transmit_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length);
 void i2c_slave_receive_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length);
-
-// void i2c_transmit_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t const length);
-// void i2c_receive_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t const length);
 
 // Interrupt handling
 void i2c_it_config(i2c_reg_def const *const p_i2cx, togglable_e toggle);

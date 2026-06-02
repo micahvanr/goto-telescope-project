@@ -19,15 +19,15 @@ void i2c_tests(test_type_e test)
     i2c1_gpio_init();
     i2c1_init();
     switch (test) {
-    case I2C_TEST_MASTER_TRANSMIT: i2c1_master_transmit(); break;
-    case I2C_TEST_MASTER_RECEIVE:  i2c1_master_receive(); break;
-    case I2C_TEST_SLAVE_TRANSMIT:  i2c1_slave_transmit(); break;
-    case I2C_TEST_SLAVE_RECEIVE:   i2c1_slave_receive(); break;
+    case I2C_TEST_MASTER_TRANSMIT:    i2c1_master_transmit(); break;
+    case I2C_TEST_MASTER_RECEIVE:     i2c1_master_receive(); break;
+    case I2C_TEST_SLAVE_TRANSMIT:     i2c1_slave_transmit(); break;
+    case I2C_TEST_SLAVE_RECEIVE:      i2c1_slave_receive(); break;
     case I2C_TEST_MASTER_TRANSMIT_IT: i2c1_master_transmit_it(); break;
-    case I2C_TEST_MASTER_RECEIVE_IT: i2c1_master_receive_it(); break;
-    case I2C_TEST_SLAVE_TRANSMIT_IT: i2c1_slave_transmit_it(); break;
-    case I2C_TEST_SLAVE_RECEIVE_IT: i2c1_slave_receive_it(); break;  
-    default:                       ASSERT(FALSE);
+    case I2C_TEST_MASTER_RECEIVE_IT:  i2c1_master_receive_it(); break;
+    case I2C_TEST_SLAVE_TRANSMIT_IT:  i2c1_slave_transmit_it(); break;
+    case I2C_TEST_SLAVE_RECEIVE_IT:   i2c1_slave_receive_it(); break;
+    default:                          ASSERT(FALSE);
     }
 
     UNUSED(test);
@@ -116,22 +116,37 @@ static void i2c1_slave_receive(void)
 }
 static void i2c1_master_transmit_it(void)
 {
-    // TODO: Test with/without static prefix
-    // uint8_t data          = 0x33;
     static uint8_t string_test[] = "Testing string";
 
     while (1) {
         printf_("Testing printf from i2c");
-        i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, string_test, sizeof(string_test) - 1, I2C_REPEATED_START_ENABLE);
+        i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, string_test, sizeof(string_test) - 1,
+                               I2C_REPEATED_START_ENABLE);
         for (uint32_t i = 0; i < 50000; i++);
-        i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, string_test, sizeof(string_test) - 1, I2C_REPEATED_START_DISABLE);
+        i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, string_test, sizeof(string_test) - 1,
+                               I2C_REPEATED_START_DISABLE);
     }
-
 }
 static void i2c1_slave_transmit_it(void)
 {
+    uint8_t command_read;
+    static uint8_t string_test[] = "Testing string";
+    uint8_t length_of_data       = sizeof(string_test) - 1;
+    while (1) {
+        i2c_slave_receive(g_i2c_handle.p_i2cx, &command_read, 1);
 
+        switch ((i2c_test_enums)command_read) {
+        case (COMMAND_LEN):
+            i2c_slave_transmit_it(&g_i2c_handle, &length_of_data, 1);
+            break;
+        case (COMMAND_READ):
+            i2c_slave_transmit_it(&g_i2c_handle, string_test, length_of_data);
+            break;
+        default:;
+        }
+    }
 }
+
 static void i2c1_master_receive_it(void)
 {
     static uint8_t command;
@@ -151,7 +166,6 @@ static void i2c1_master_receive_it(void)
 }
 static void i2c1_slave_receive_it(void)
 {
-
 }
 void I2C1_EV_IRQHandler()
 {

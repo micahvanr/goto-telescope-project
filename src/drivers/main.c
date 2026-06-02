@@ -14,15 +14,25 @@
 #include "manual_tests/i2c_test.h"
 // clang-format on
 #include "../common/printf.h"
+#include "stm32f4xx.h"
+
+
+// TODO: Improve test functions: 
+// USART & I2C
+// Put Arduino code in git repo. Arduino files should test 1-3 functions but should be organized logically.
+// Ex. I2C slave transmit with/without interrupts should have their own Arduino file.
+
 
 int main(void)
 {
 
-    // Uses USART1 and PA9
+    // Uses USART2 and PA2 - change inside printf_macros.c
     printf_init();
+    // Uses PA3
+    test_pin_init();
 
     // Change this variable to run the correct test
-    test_type_e test = I2C_TEST_SLAVE_RECEIVE_IT;
+    test_type_e test =  I2C_TEST_SLAVE_TRANSMIT;
     switch (test) {
 
     // GPIO tests
@@ -50,4 +60,6 @@ int main(void)
     case MISC_TEST_GET_CLOCK:
     case MISC_TEST_PRINTF:            misc_tests(test); break;
     }
+
+    ASSERT(FALSE);
 }
