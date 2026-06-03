@@ -3,7 +3,6 @@
 // ANY CHANGES WITH BE MARKED WITH "NOTE:"
 
 // NOTE:
-#include "../drivers/printf_macros.h"
 #include "../drivers/usart.h"
 
 static void printf_gpio_init();
@@ -51,7 +50,7 @@ static void printf_gpio_init();
  * printf_config.h header file
  */
 #if PRINTF_INCLUDE_CONFIG_H
-#include "printf_config.h"
+#include "printf_config.h" 
 #endif
 
 // NOTE: Changed directory slightly and changed from <> to ""
@@ -276,6 +275,8 @@ typedef unsigned int printf_size_t;
 #if (PRINTF_SUPPORT_DECIMAL_SPECIFIERS || PRINTF_SUPPORT_EXPONENTIAL_SPECIFIERS)
 #include <float.h>
 #if FLT_RADIX != 2
+// NOTE: Added cppcheck suppression
+// cppcheck-suppress preprocessorErrorDirective
 #error "Non-binary-radix floating-point types are unsupported."
 #endif /* PRINTF_SUPPORT_DECIMAL_SPECIFIERS || PRINTF_SUPPORT_EXPONENTIAL_SPECIFIERS */
 
@@ -1028,7 +1029,7 @@ static void print_exponential_number(output_gadget_t *output, floating_point_t n
 
     /* Determine the decimal exponent */
     if (abs_number == (floating_point_t)0.0) {
-        /* TODO: This is a special-case for 0.0 (and -0.0); but proper handling is required for denormals more generally. */
+        /* TODO This is a special-case for 0.0 (and -0.0); but proper handling is required for denormals more generally. */
         floored_exp10 = 0; /* ... and no need to set a normalization factor or check the powers table */
     } else {
         floating_point_t exp10 = log10_of_positive(abs_number);
@@ -1115,7 +1116,7 @@ static void print_exponential_number(output_gadget_t *output, floating_point_t n
             }
             /* ... and it should already be the case that decimal_part_components.fractional == 0 */
         }
-        /* TODO: What about rollover strictly within the fractional part? */
+        /* TODO What about rollover strictly within the fractional part? */
     }
 
     /*

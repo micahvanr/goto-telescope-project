@@ -14,6 +14,7 @@
 #include "manual_tests/i2c_test.h"
 // clang-format on
 #include "../common/printf.h"
+#include "../common/debug_pin.h"
 #include "stm32f4xx.h"
 
 
@@ -29,7 +30,7 @@ int main(void)
     // Uses USART2 and PA2 - change inside printf_macros.c
     printf_init();
     // Uses PA3
-    test_pin_init();
+    debug_pin_init();
 
     // Change this variable to run the correct test
     test_type_e test =  I2C_TEST_SLAVE_TRANSMIT;

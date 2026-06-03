@@ -2,7 +2,14 @@
 // NOTE: COPIED FROM PRINTF IN EXTERNAL DIR
 // ANY CHANGES WITH BE MARKED WITH "NOTE:"
 
-void printf_init();
+// NOTE: Function prototypes
+void printf_init(void);
+void toggle_debug_pin(void);
+
+#define PRINTF_USART USART2
+#define PRINTF_USART_TX_PORT GPIOA
+#define PRINTF_USART_TX_PIN PIN_NO_2
+
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
  *             2021-2024, Haifa, Palestine/Israel

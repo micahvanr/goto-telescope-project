@@ -51,7 +51,8 @@ MANUAL_TEST_FILES = gpio_test \
 
 
 COMMON_FILES = assert_handler \
-			   printf
+				printf \
+				debug_pin
 
 #APP_FILES = 
 
