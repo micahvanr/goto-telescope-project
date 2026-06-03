@@ -23,16 +23,19 @@
 // Put Arduino code in git repo. Arduino files should test 1-3 functions but should be organized logically.
 // Ex. I2C slave transmit with/without interrupts should have their own Arduino file.
 
+// TODO: Move arduino test code into test/ directory.
+// Rename and move unit test into subdirectory of test called utest
+// Rename manual tests in driver code to driver_mtest
 
 int main(void)
 {
 
-    // Uses USART2 and PA2 - change inside printf_macros.c
+    // Uses USART2 and PA2 - change inside printf.h
     printf_init();
     // Uses PA3
     debug_pin_init();
 
-    // Change this variable to run the correct test
+    // NOTE: Change this variable to run the correct test
     test_type_e test =  I2C_TEST_SLAVE_TRANSMIT;
     switch (test) {
 
@@ -46,6 +49,7 @@ int main(void)
     case USART_TEST_READ:
     case USART_TEST_WRITE_IT:
     case USART_TEST_READ_IT:          usart_tests(test); break;
+
     // I2C tests
     case I2C_TEST_MASTER_TRANSMIT:
     case I2C_TEST_MASTER_RECEIVE:

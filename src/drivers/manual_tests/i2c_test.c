@@ -1,4 +1,5 @@
 #include "i2c_test.h"
+#include "../i2c.h"
 
 static void i2c1_gpio_init(void);
 static void i2c1_init(void);

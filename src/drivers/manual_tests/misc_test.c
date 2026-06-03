@@ -1,4 +1,5 @@
 #include "misc_test.h"
+#include "../rcc.c"
 
 static void test_assert(void);
 static void test_get_clock(void);

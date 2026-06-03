@@ -1,7 +1,6 @@
 #ifndef I2C_TEST_H
 #define I2C_TEST_H
 
-#include "../i2c.h"
 #include "test_types.h"
 #include "../../common/printf.h"
 

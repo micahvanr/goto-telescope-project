@@ -1,4 +1,5 @@
 #include "gpio_test.h"
+#include "../gpio.h"
 
 static void test_gpio_blink_led(void);
 static void test_gpio_read_write(void);
