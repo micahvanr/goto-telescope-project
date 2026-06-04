@@ -12,7 +12,7 @@ static void usart_init_asserts(usart_handle const *const p_usart_handle);
 
 // General helper functions
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
-static inline bool_e verify_usart_initialized(usart_reg_def const *const p_usartx);
+static inline bool verify_usart_initialized(usart_reg_def const *const p_usartx);
 static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);
 
 static void transfer_data(usart_handle *p_usart_handle);
@@ -93,75 +93,75 @@ void usart_init(usart_handle *const p_usart_handle)
 // Check each setting of the handle and ensure it is one of the available enum values
 static void usart_init_asserts(usart_handle const *const p_usart_handle)
 {
-    uint8_t found_setting = FALSE;
+    uint8_t found_setting = false;
 
     // Peripheral check
-    found_setting = (p_usart_handle->p_usartx == USART1) ? TRUE
-                  : (p_usart_handle->p_usartx == USART2) ? TRUE
-                  : (p_usart_handle->p_usartx == USART3) ? TRUE
-                  : (p_usart_handle->p_usartx == UART4)  ? TRUE
-                  : (p_usart_handle->p_usartx == UART5)  ? TRUE
-                  : (p_usart_handle->p_usartx == USART6) ? TRUE
-                                                         : FALSE;
+    found_setting = (p_usart_handle->p_usartx == USART1) ? true
+                  : (p_usart_handle->p_usartx == USART2) ? true
+                  : (p_usart_handle->p_usartx == USART3) ? true
+                  : (p_usart_handle->p_usartx == UART4)  ? true
+                  : (p_usart_handle->p_usartx == UART5)  ? true
+                  : (p_usart_handle->p_usartx == USART6) ? true
+                                                         : false;
     ASSERT(found_setting);
 
     // Baudrate check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.baudrate) {
-    case USART_BAUDRATE_1200:   found_setting = TRUE; break;
-    case USART_BAUDRATE_2400:   found_setting = TRUE; break;
-    case USART_BAUDRATE_9600:   found_setting = TRUE; break;
-    case USART_BAUDRATE_19200:  found_setting = TRUE; break;
-    case USART_BAUDRATE_38400:  found_setting = TRUE; break;
-    case USART_BAUDRATE_57600:  found_setting = TRUE; break;
-    case USART_BAUDRATE_115200: found_setting = TRUE; break;
-    case USART_BAUDRATE_230400: found_setting = TRUE; break;
-    case USART_BAUDRATE_460800: found_setting = TRUE; break;
-    case USART_BAUDRATE_921600: found_setting = TRUE; break;
-    case USART_BAUDRATE_2MB:    found_setting = TRUE; break;
-    case USART_BAUDRATE_3MB:    found_setting = TRUE; break;
+    case USART_BAUDRATE_1200:   found_setting = true; break;
+    case USART_BAUDRATE_2400:   found_setting = true; break;
+    case USART_BAUDRATE_9600:   found_setting = true; break;
+    case USART_BAUDRATE_19200:  found_setting = true; break;
+    case USART_BAUDRATE_38400:  found_setting = true; break;
+    case USART_BAUDRATE_57600:  found_setting = true; break;
+    case USART_BAUDRATE_115200: found_setting = true; break;
+    case USART_BAUDRATE_230400: found_setting = true; break;
+    case USART_BAUDRATE_460800: found_setting = true; break;
+    case USART_BAUDRATE_921600: found_setting = true; break;
+    case USART_BAUDRATE_2MB:    found_setting = true; break;
+    case USART_BAUDRATE_3MB:    found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Oversampling check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.oversampling_mode) {
-    case USART_OVERSAMPLING_16: found_setting = TRUE; break;
-    case USART_OVERSAMPLING_8:  found_setting = TRUE; break;
+    case USART_OVERSAMPLING_16: found_setting = true; break;
+    case USART_OVERSAMPLING_8:  found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Parity control check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.parity_control) {
-    case USART_PARITY_CONTROL_DISABLE: found_setting = TRUE; break;
-    case USART_PARITY_CONTROL_ENABLE:  found_setting = TRUE; break;
+    case USART_PARITY_CONTROL_DISABLE: found_setting = true; break;
+    case USART_PARITY_CONTROL_ENABLE:  found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Parity selection check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.parity_select) {
-    case USART_PARITY_SEL_EVEN: found_setting = TRUE; break;
-    case USART_PARITY_SEL_ODD:  found_setting = TRUE; break;
+    case USART_PARITY_SEL_EVEN: found_setting = true; break;
+    case USART_PARITY_SEL_ODD:  found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Stop bit check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.stop_bits) {
-    case USART_STOP_BITS_1:   found_setting = TRUE; break;
-    case USART_STOP_BITS_0_5: found_setting = TRUE; break;
-    case USART_STOP_BITS_2:   found_setting = TRUE; break;
-    case USART_STOP_BITS_1_5: found_setting = TRUE; break;
+    case USART_STOP_BITS_1:   found_setting = true; break;
+    case USART_STOP_BITS_0_5: found_setting = true; break;
+    case USART_STOP_BITS_2:   found_setting = true; break;
+    case USART_STOP_BITS_1_5: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Word length check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_usart_handle->usart_conf.word_length) {
-    case USART_WORD_LENGTH_8_DATA_BITS: found_setting = TRUE; break;
-    case USART_WORD_LENGTH_9_DATA_BITS: found_setting = TRUE; break;
+    case USART_WORD_LENGTH_8_DATA_BITS: found_setting = true; break;
+    case USART_WORD_LENGTH_9_DATA_BITS: found_setting = true; break;
     }
     ASSERT(found_setting);
 }
@@ -366,7 +366,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
     case USART_MODE_RX:
         if ((status_reg & USART_SR_PE) || (status_reg & USART_SR_FE) || (status_reg & USART_SR_NF)
             || (status_reg & USART_SR_ORE)) {
-            ASSERT(FALSE);
+            ASSERT(false);
         }
         // if (p_usart_handle->txrx_length == 1) {
 
@@ -402,10 +402,9 @@ void usart_it_handler(usart_handle *const p_usart_handle)
         }
 
         break;
-    default: ASSERT(FALSE);
+    default: ASSERT(false);
     }
 }
-
 
 /***************************************************************************
 Function: usart_transmit_single_byte
@@ -487,12 +486,12 @@ static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *
     return 0;
 }
 
-static inline bool_e verify_usart_initialized(usart_reg_def const *const p_usartx)
+static inline bool verify_usart_initialized(usart_reg_def const *const p_usartx)
 {
     if (g_usart_port_init & (1 << map_usart_ports_to_num(p_usartx))) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 

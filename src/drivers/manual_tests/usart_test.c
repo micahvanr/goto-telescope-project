@@ -22,7 +22,7 @@ void usart_tests(test_type_e test)
     case USART_TEST_READ:     test_usart_receive(); break;
     case USART_TEST_WRITE_IT: test_usart_transmit_it(); break;
     case USART_TEST_READ_IT:  test_usart_receive_it(); break;
-    default:                  ASSERT(FALSE);
+    default:                  ASSERT(false);
     }
 
     while (1);

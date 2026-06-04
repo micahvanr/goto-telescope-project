@@ -31,7 +31,7 @@ void i2c_tests(test_type_e test)
     case I2C_TEST_MASTER_RECEIVE_IT:  i2c1_master_receive_it(); break;
     case I2C_TEST_SLAVE_TRANSMIT_IT:  i2c1_slave_transmit_it(); break;
     case I2C_TEST_SLAVE_RECEIVE_IT:   i2c1_slave_receive_it(); break;
-    default:                          ASSERT(FALSE);
+    default:                          ASSERT(false);
     }
 
     UNUSED(test);
@@ -91,7 +91,7 @@ static void i2c1_slave_transmit(void)
         switch ((i2c_test_enums)command_read) {
         case (COMMAND_LEN):  i2c_slave_transmit(I2C1, &length_of_data, 1); break;
         case (COMMAND_READ): i2c_slave_transmit(I2C1, string_test, length_of_data); break;
-        default:             ASSERT(FALSE);
+        default:             ASSERT(false);
         }
     }
 }
@@ -108,7 +108,7 @@ static void i2c1_master_receive(void)
         i2c_master_transmit(I2C1, TARGET_ADDR, &command, 1, I2C_REPEATED_START_DISABLE);
         i2c_master_receive(I2C1, TARGET_ADDR, &len_of_data, 1, I2C_REPEATED_START_DISABLE);
         if (len_of_data > 50) {
-            ASSERT(FALSE);
+            ASSERT(false);
         }
         command = COMMAND_READ;
         i2c_master_transmit(I2C1, TARGET_ADDR, &command, 1, I2C_REPEATED_START_DISABLE);
@@ -157,7 +157,7 @@ static void i2c1_master_receive_it(void)
         i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, &command, 1, I2C_REPEATED_START_DISABLE);
         i2c_master_receive_it(&g_i2c_handle, TARGET_ADDR, &len_of_data, 1, I2C_REPEATED_START_DISABLE);
         if (len_of_data > 50) {
-            ASSERT(FALSE);
+            ASSERT(false);
         }
         command = COMMAND_READ;
         i2c_master_transmit_it(&g_i2c_handle, TARGET_ADDR, &command, 1, I2C_REPEATED_START_DISABLE);
@@ -174,5 +174,5 @@ void I2C1_EV_IRQHandler()
 
 void I2C1_ER_IRQHandler()
 {
-    ASSERT(FALSE);
+    ASSERT(false);
 }

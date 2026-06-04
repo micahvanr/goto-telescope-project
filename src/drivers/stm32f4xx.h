@@ -81,12 +81,6 @@ typedef enum {
     LOW  = 0
 } pin_logic_level_e;
 
-// TODO: Change from enum to using stdbool.h instead
-typedef enum {
-    FALSE = 0,
-    TRUE  = 1
-} bool_e;
-
 typedef enum {
     ENABLE  = 1,
     DISABLE = 0,

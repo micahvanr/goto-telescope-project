@@ -13,7 +13,7 @@
 static inline void verify_i2c_init_asserts(i2c_handle const *const p_i2c_handle);
 
 static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const p_i2cx);
-static inline bool_e verify_i2c_initialized(i2c_reg_def const *p_i2cx);
+static inline bool verify_i2c_initialized(i2c_reg_def const *p_i2cx);
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle);
 
 static inline void i2c_clock_enable(i2c_reg_def const *const p_i2cx);
@@ -87,38 +87,38 @@ void i2c_init(i2c_handle *const p_i2c_handle)
 
 static inline void verify_i2c_init_asserts(i2c_handle const *const p_i2c_handle)
 {
-    uint8_t found_setting = FALSE;
+    uint8_t found_setting = false;
 
     // Peripheral check
-    found_setting = (p_i2c_handle->p_i2cx == I2C1) ? TRUE
-                  : (p_i2c_handle->p_i2cx == I2C2) ? TRUE
-                  : (p_i2c_handle->p_i2cx == I2C3) ? TRUE
-                                                   : FALSE;
+    found_setting = (p_i2c_handle->p_i2cx == I2C1) ? true
+                  : (p_i2c_handle->p_i2cx == I2C2) ? true
+                  : (p_i2c_handle->p_i2cx == I2C3) ? true
+                                                   : false;
     ASSERT(found_setting);
 
     // Fast mode duty cycle check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_i2c_handle->i2c_conf.fm_duty_cycle) {
-    case I2C_FM_DUTY_2:    found_setting = TRUE; break;
-    case I2C_FM_DUTY_16_9: found_setting = TRUE; break;
+    case I2C_FM_DUTY_2:    found_setting = true; break;
+    case I2C_FM_DUTY_16_9: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Speed mode check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_i2c_handle->i2c_conf.speed_mode) {
-    case I2C_SPEED_MODE_STANDARD: found_setting = TRUE; break;
-    case I2C_SPEED_MODE_FAST:     found_setting = TRUE; break;
+    case I2C_SPEED_MODE_STANDARD: found_setting = true; break;
+    case I2C_SPEED_MODE_FAST:     found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Clock frequency check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_i2c_handle->i2c_conf.clock_freq_hz) {
-    case I2C_CLK_FREQ_100KHZ: found_setting = TRUE; break;
-    case I2C_CLK_FREQ_200KHZ: found_setting = TRUE; break;
-    case I2C_CLK_FREQ_300KHZ: found_setting = TRUE; break;
-    case I2C_CLK_FREQ_400KHZ: found_setting = TRUE; break;
+    case I2C_CLK_FREQ_100KHZ: found_setting = true; break;
+    case I2C_CLK_FREQ_200KHZ: found_setting = true; break;
+    case I2C_CLK_FREQ_300KHZ: found_setting = true; break;
+    case I2C_CLK_FREQ_400KHZ: found_setting = true; break;
     }
     ASSERT(found_setting);
 }
@@ -504,7 +504,7 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
             }
             break;
 
-        default: ASSERT(FALSE); break;
+        default: ASSERT(false); break;
         }
         break;
 
@@ -541,12 +541,12 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
                 close_com(p_i2c_handle);
             }
             break;
-        default: ASSERT(FALSE); break;
+        default: ASSERT(false); break;
         }
 
         break;
 
-    default: ASSERT(FALSE); break;
+    default: ASSERT(false); break;
     }
     UNUSED(dummy_read);
 }
@@ -569,12 +569,12 @@ static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const 
     return 0;
 }
 
-static inline bool_e verify_i2c_initialized(i2c_reg_def const *p_i2cx)
+static inline bool verify_i2c_initialized(i2c_reg_def const *p_i2cx)
 {
     if (g_i2c_port_init & (1 << map_i2c_ports_to_num(p_i2cx))) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
@@ -592,7 +592,7 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
     case I2C_SPEED_MODE_STANDARD:
         // Peripheral clock speed must be at leats 2Mhz in standard mode
         if (peripheral_clock_khz < 2000) {
-            ASSERT(FALSE);
+            ASSERT(false);
         }
 
         // Set CCR
@@ -605,7 +605,7 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
     case I2C_SPEED_MODE_FAST:
         // Peripheral clock speed must be at leats 4Mhz in fast mode
         if (peripheral_clock_khz < 4000) {
-            ASSERT(FALSE);
+            ASSERT(false);
         }
 
         // Set duty cycle
@@ -651,7 +651,7 @@ static inline void send_address(i2c_reg_def *p_i2cx, uint8_t target_addr, i2c_st
     case I2C_STATUS_MASTER_RX:
     case I2C_STATUS_SLAVE_RX:  p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT); break;
 
-    default:                   ASSERT(FALSE);
+    default:                   ASSERT(false);
     }
 }
 

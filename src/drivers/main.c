@@ -66,5 +66,5 @@ int main(void)
     case MISC_TEST_PRINTF:            misc_tests(test); break;
     }
 
-    ASSERT(FALSE);
+    ASSERT(false);
 }

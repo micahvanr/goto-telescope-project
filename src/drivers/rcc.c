@@ -47,7 +47,7 @@ uint32_t rcc_get_pll_freq_hz(void)
     switch (pll_src) {
     case CLOCK_SRC_HSI: pll_input_clk_freq = HSI_CLOCK_FREQ; break;
     case CLOCK_SRC_HSE: pll_input_clk_freq = HSE_CLOCK_FREQ; break;
-    default:            ASSERT(FALSE); break;
+    default:            ASSERT(false); break;
     }
 
     // Calculations of PLL output frequency
@@ -77,7 +77,7 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
     case CLOCK_SRC_HSI: return HSI_CLOCK_FREQ;
     case CLOCK_SRC_HSE: return HSE_CLOCK_FREQ;
     case CLOCK_SRC_PLL: return rcc_get_pll_freq_hz();
-    default:            ASSERT(FALSE); return 0;
+    default:            ASSERT(false); return 0;
     }
 }
 
@@ -139,7 +139,7 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
         apb2_clock     = ahb_clock / apb2_prescaler;
         return apb2_clock;
 
-    default: ASSERT(FALSE); return 0;
+    default: ASSERT(false); return 0;
     }
 }
 
@@ -172,7 +172,7 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
         }
         mco_gpio_pin_init(RCC_MCO2_SEL);
         break;
-    default: ASSERT(FALSE);
+    default: ASSERT(false);
     }
 }
 
@@ -202,7 +202,7 @@ static void mco_gpio_pin_init(rcc_mco_sel_e mco_select)
         mco_gpio_pin.p_gpiox          = GPIOC;
         mco_gpio_pin.gpio_conf.pin_no = PIN_NO_9;
         break;
-    default: ASSERT(FALSE);
+    default: ASSERT(false);
     }
     gpio_init(&mco_gpio_pin);
 }
