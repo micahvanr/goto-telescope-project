@@ -24,7 +24,7 @@ OBJDUMP = arm-none-eabi-objdump
 RM = rm
 CPPCHECK = cppcheck
 FORMAT = clang-format-23
-COMP_COM_GEN = compiledb # compile_commands.json file generator
+COMP_COM_GEN = bear # compile_commands.json file generator
 
 # Files
 TARGET = $(BIN_DIR)/main
@@ -148,7 +148,7 @@ format:
 
 # Used to generate compile commands for clang LSP and potential other tools
 cc_gen: 
-	$(COMP_COM_GEN) make	
+	$(COMP_COM_GEN) -- make	
 
 # Unity testing commands
 test:
