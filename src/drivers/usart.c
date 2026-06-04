@@ -17,6 +17,8 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
 
 static void transfer_data(usart_handle *p_usart_handle);
 static void recieve_data(usart_handle *const p_usart_handle);
+static inline void enable_interrupts(usart_reg_def *const p_usartx);
+static inline void disable_interrupts(usart_reg_def *const p_usartx);
 
 static inline void usart_clock_enable(usart_reg_def const *const p_usartx);
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx);
@@ -250,7 +252,6 @@ Note:
 ***************************************************************************/
 void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
 {
-    uint32_t temp_reg;
     ASSERT(verify_usart_initialized(p_usart_handle->p_usartx));
 
     // Wait until usart is available (blocking)
@@ -262,16 +263,7 @@ void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t c
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_TX;
 
-    // Enable interrupts in cpu
-    usart_it_config(p_usart_handle->p_usartx, ENABLE);
-
-    // Enable interrupts and error interrupts
-    temp_reg = 0;
-    temp_reg |= USART_CR1_UE;
-    temp_reg |= USART_CR1_TXEIE;
-    temp_reg |= USART_CR1_TCIE;
-    temp_reg |= USART_CR1_PEIE;
-    p_usart_handle->p_usartx->CR1 |= temp_reg;
+    enable_interrupts(p_usart_handle->p_usartx);
 }
 
 /***************************************************************************
@@ -289,7 +281,6 @@ Note:
 ***************************************************************************/
 void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
 {
-    uint32_t temp_reg;
     ASSERT(verify_usart_initialized(p_usart_handle->p_usartx));
 
     // Wait until usart is available (blocking)
@@ -301,18 +292,10 @@ void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t co
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_RX;
 
-    // Enable interrupts in cpu
-    usart_it_config(p_usart_handle->p_usartx, ENABLE);
-
-    // Enable interrupts and error interrupts
-    temp_reg = 0;
-    temp_reg |= USART_CR1_UE;
-    temp_reg |= USART_CR1_RXNEIE;
     if (p_usart_handle->usart_conf.parity_control == USART_PARITY_CONTROL_ENABLE) {
-        temp_reg |= USART_CR1_PCE;
+        p_usart_handle->p_usartx->CR1 |= USART_CR1_PCE;
     }
-
-    p_usart_handle->p_usartx->CR1 |= temp_reg;
+    enable_interrupts(p_usart_handle->p_usartx);
 }
 
 /***************************************************************************
@@ -368,18 +351,11 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             || (status_reg & USART_SR_ORE)) {
             ASSERT(false);
         }
-        // if (p_usart_handle->txrx_length == 1) {
-
-        // }
         if (status_reg & USART_SR_RXNE) {
-            // Recieve data
             recieve_data(p_usart_handle);
         }
         if (p_usart_handle->usart_it_data.txrx_length == 0) {
-            // TODO: Clean code up. Move to separate functions
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_RXNEIE;
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_PCE;
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
+            disable_interrupts(p_usart_handle->p_usartx);
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
         }
         break;
@@ -388,9 +364,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
     case USART_MODE_TX:
         //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty
         if (p_usart_handle->usart_it_data.txrx_length == 1) {
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_TXEIE;
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_TCIE;
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_PEIE;
+            disable_interrupts(p_usart_handle->p_usartx);
         }
         if (status_reg & USART_SR_TXE) {
             transfer_data(p_usart_handle);
@@ -435,16 +409,16 @@ static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1ENR |= (p_usartx == USART2) ? (1 << RCC_APB1ENR_USART2_POS)
-                      : (p_usartx == USART3) ? (1 << RCC_APB1ENR_USART3_POS)
-                      : (p_usartx == UART4)  ? (1 << RCC_APB1ENR_UART4_POS)
-                      : (p_usartx == UART5)  ? (1 << RCC_APB1ENR_UART5_POS)
+        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
+                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3
+                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
+                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
                                              : 0;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2ENR |= (p_usartx == USART1) ? (1 << RCC_APB2ENR_USART1_POS)
-                      : (p_usartx == USART6) ? (1 << RCC_APB2ENR_USART6_POS)
+        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
+                      : (p_usartx == USART6) ? RCC_APB2ENR_USART6
                                              : 0;
     }
 }
@@ -452,16 +426,16 @@ static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1RSTR |= (p_usartx == USART2) ? (1 << RCC_APB1ENR_USART2_POS)
-                       : (p_usartx == USART3) ? (1 << RCC_APB1ENR_USART3_POS)
-                       : (p_usartx == UART4)  ? (1 << RCC_APB1ENR_UART4_POS)
-                       : (p_usartx == UART5)  ? (1 << RCC_APB1ENR_UART5_POS)
+        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
+                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3
+                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
+                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
                                               : 0;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? (1 << RCC_APB2ENR_USART1_POS)
-                       : (p_usartx == USART6) ? (1 << RCC_APB2ENR_USART6_POS)
+        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
+                       : (p_usartx == USART6) ? RCC_APB2ENR_USART6
                                               : 0;
     }
 }
@@ -546,20 +520,32 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
 
 static void transfer_data(usart_handle *p_usart_handle)
 {
-    // Send data
     p_usart_handle->p_usartx->DR = (uint32_t)*p_usart_handle->usart_it_data.txrx_buffer;
-    // Reduce length
     p_usart_handle->usart_it_data.txrx_length--;
-    // Increment buffer
     p_usart_handle->usart_it_data.txrx_buffer++;
 }
 
 static void recieve_data(usart_handle *p_usart_handle)
 {
-    // Receive data
     *p_usart_handle->usart_it_data.txrx_buffer = p_usart_handle->p_usartx->DR;
-    // Reduce length
     p_usart_handle->usart_it_data.txrx_length--;
-    // Increment buffer
     p_usart_handle->usart_it_data.txrx_buffer++;
+}
+
+static inline void enable_interrupts(usart_reg_def *const p_usartx)
+{
+    usart_it_config(p_usartx, ENABLE);
+    uint32_t temp_reg = 0;
+    temp_reg |= USART_CR1_UE;
+    temp_reg |= USART_CR1_TXEIE;
+    temp_reg |= USART_CR1_TCIE;
+    temp_reg |= USART_CR1_PEIE;
+    p_usartx->CR1 |= temp_reg;
+}
+
+static inline void disable_interrupts(usart_reg_def *const p_usartx)
+{
+    p_usartx->CR1 &= ~USART_CR1_RXNEIE;
+    p_usartx->CR1 &= ~USART_CR1_PCE;
+    p_usartx->CR1 &= ~USART_CR1_UE;
 }
