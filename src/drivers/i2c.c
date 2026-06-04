@@ -1,4 +1,5 @@
 #include "i2c.h"
+#include "assert_handler.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 

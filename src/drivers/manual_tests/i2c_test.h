@@ -1,8 +1,8 @@
 #ifndef I2C_TEST_H
 #define I2C_TEST_H
 
+#include "printf.h"
 #include "test_types.h"
-#include "../../common/printf.h"
 
 typedef enum {
     COMMAND_LEN  = 0x51,

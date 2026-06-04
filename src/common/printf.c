@@ -3,7 +3,8 @@
 // ANY CHANGES WITH BE MARKED WITH "NOTE:"
 
 // NOTE:
-#include "../drivers/usart.h"
+#include "gpio.h"
+#include "usart.h"
 
 static void printf_gpio_init();
 /**

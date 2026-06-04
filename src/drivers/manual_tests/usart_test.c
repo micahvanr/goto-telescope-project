@@ -1,5 +1,7 @@
 #include "usart_test.h"
-#include "../usart.h"
+#include "assert_handler.h"
+#include "gpio.h"
+#include "usart.h"
 
 static void usart_gpio_init(void);
 static void usart2_init(void);

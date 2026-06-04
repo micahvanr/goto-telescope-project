@@ -7,18 +7,18 @@
 
 // clang-format off
 // Test functions
-#include "manual_tests/test_types.h"
-#include "manual_tests/gpio_test.h"
-#include "manual_tests/usart_test.h"
-#include "manual_tests/misc_test.h"
-#include "manual_tests/i2c_test.h"
+#include "test_types.h"
+#include "gpio_test.h"
+#include "usart_test.h"
+#include "misc_test.h"
+#include "i2c_test.h"
 // clang-format on
-#include "../common/printf.h"
-#include "../common/debug_pin.h"
+#include "assert_handler.h"
+#include "debug_pin.h"
+#include "printf.h"
 #include "stm32f4xx.h"
 
-
-// TODO: Improve test functions: 
+// TODO: Improve test functions:
 // USART & I2C
 // Put Arduino code in git repo. Arduino files should test 1-3 functions but should be organized logically.
 // Ex. I2C slave transmit with/without interrupts should have their own Arduino file.
@@ -36,7 +36,7 @@ int main(void)
     debug_pin_init();
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test =  I2C_TEST_SLAVE_TRANSMIT;
+    test_type_e test = I2C_TEST_SLAVE_TRANSMIT;
     switch (test) {
 
     // GPIO tests

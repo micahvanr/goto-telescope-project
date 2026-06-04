@@ -1,5 +1,6 @@
 #include "misc_test.h"
-#include "../rcc.c"
+#include "assert_handler.h"
+#include "rcc.h"
 
 static void test_assert(void);
 static void test_get_clock(void);

@@ -18,6 +18,8 @@ SRC_DIR = ./src
 TEST_DIR = test
 MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
 
+INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_TEST_DIR)
+
 # Toolchain
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
@@ -80,7 +82,7 @@ WFLAGS = -Wall -Wextra -Werror -Wshadow
 SPECS = --specs=nosys.specs --specs=nano.specs
 
 # Compiler and Linker Flags
-CFLAGS = -mcpu=$(MACH) $(WFLAGS) -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g
+CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g
 LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) 
 LDFLAGSPLUS = $(LDFLAGS) -Wl,-Map=$(TARGET).map
 

@@ -4,11 +4,10 @@
 
 // NOTE: Function prototypes
 void printf_init(void);
-void toggle_debug_pin(void);
 
-#define PRINTF_USART USART2
+#define PRINTF_USART         USART2
 #define PRINTF_USART_TX_PORT GPIOA
-#define PRINTF_USART_TX_PIN PIN_NO_2
+#define PRINTF_USART_TX_PIN  PIN_NO_2
 
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
@@ -56,27 +55,26 @@ void toggle_debug_pin(void);
 #endif
 
 #ifdef __cplusplus
-# include <cstdarg>
-# include <cstddef>
+#include <cstdarg>
+#include <cstddef>
 extern "C" {
 #else
-# include <stdarg.h>
-# include <stddef.h>
+#include <stdarg.h>
+#include <stddef.h>
 #endif
 
 #ifdef __GNUC__
-# if ((__GNUC__ == 4 && __GNUC_MINOR__>= 4) || __GNUC__ > 4)
-#  define ATTR_PRINTF(one_based_format_index, first_arg) \
-__attribute__((format(gnu_printf, (one_based_format_index), (first_arg))))
-# else
-# define ATTR_PRINTF(one_based_format_index, first_arg) \
-__attribute__((format(printf, (one_based_format_index), (first_arg))))
-# endif
-# define ATTR_VPRINTF(one_based_format_index) \
-ATTR_PRINTF((one_based_format_index), 0)
+#if ((__GNUC__ == 4 && __GNUC_MINOR__ >= 4) || __GNUC__ > 4)
+#define ATTR_PRINTF(one_based_format_index, first_arg)                         \
+    __attribute__((format(gnu_printf, (one_based_format_index), (first_arg))))
 #else
-# define ATTR_PRINTF(one_based_format_index, first_arg)
-# define ATTR_VPRINTF(one_based_format_index)
+#define ATTR_PRINTF(one_based_format_index, first_arg)                     \
+    __attribute__((format(printf, (one_based_format_index), (first_arg))))
+#endif
+#define ATTR_VPRINTF(one_based_format_index) ATTR_PRINTF((one_based_format_index), 0)
+#else
+#define ATTR_PRINTF(one_based_format_index, first_arg)
+#define ATTR_VPRINTF(one_based_format_index)
 #endif
 
 #ifndef PRINTF_ALIAS_STANDARD_FUNCTION_NAMES_SOFT
@@ -88,12 +86,12 @@ ATTR_PRINTF((one_based_format_index), 0)
 #endif
 
 #if PRINTF_ALIAS_STANDARD_FUNCTION_NAMES_HARD
-# define printf_    printf
-# define sprintf_   sprintf
-# define vsprintf_  vsprintf
-# define snprintf_  snprintf
-# define vsnprintf_ vsnprintf
-# define vprintf_   vprintf
+#define printf_    printf
+#define sprintf_   sprintf
+#define vsprintf_  vsprintf
+#define snprintf_  snprintf
+#define vsnprintf_ vsnprintf
+#define vprintf_   vprintf
 #endif
 
 /*
@@ -131,7 +129,6 @@ ATTR_PRINTF((one_based_format_index), 0)
 PRINTF_VISIBILITY
 void putchar_(char c);
 
-
 /**
  * An implementation of the C standard's printf/vprintf
  *
@@ -149,11 +146,10 @@ void putchar_(char c);
  */
 /* @{ */
 PRINTF_VISIBILITY
-int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
+int printf_(const char *format, ...) ATTR_PRINTF(1, 2);
 PRINTF_VISIBILITY
-int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
+int vprintf_(const char *format, va_list arg) ATTR_VPRINTF(1);
 /* @} */
-
 
 /**
  * An implementation of the C standard's sprintf/vsprintf
@@ -173,11 +169,10 @@ int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
  */
 /* @{ */
 PRINTF_VISIBILITY
-int  sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
+int sprintf_(char *s, const char *format, ...) ATTR_PRINTF(2, 3);
 PRINTF_VISIBILITY
-int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
+int vsprintf_(char *s, const char *format, va_list arg) ATTR_VPRINTF(2);
 /* @} */
-
 
 /**
  * An implementation of the C standard's snprintf/vsnprintf
@@ -201,9 +196,9 @@ int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
  */
 /* @{ */
 PRINTF_VISIBILITY
-int  snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
+int snprintf_(char *s, size_t count, const char *format, ...) ATTR_PRINTF(3, 4);
 PRINTF_VISIBILITY
-int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
+int vsnprintf_(char *s, size_t count, const char *format, va_list arg) ATTR_VPRINTF(3);
 /* @} */
 
 /**
@@ -225,30 +220,30 @@ int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRI
  *
  */
 PRINTF_VISIBILITY
-int fctprintf(void (*out)(char c, void* extra_arg), void* extra_arg, const char* format, ...) ATTR_PRINTF(3, 4);
+int fctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char *format, ...) ATTR_PRINTF(3, 4);
 PRINTF_VISIBILITY
-int vfctprintf(void (*out)(char c, void* extra_arg), void* extra_arg, const char* format, va_list arg) ATTR_VPRINTF(3);
+int vfctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char *format, va_list arg) ATTR_VPRINTF(3);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
 #if PRINTF_ALIAS_STANDARD_FUNCTION_NAMES_HARD
-# undef printf_
-# undef sprintf_
-# undef vsprintf_
-# undef snprintf_
-# undef vsnprintf_
-# undef vprintf_
+#undef printf_
+#undef sprintf_
+#undef vsprintf_
+#undef snprintf_
+#undef vsnprintf_
+#undef vprintf_
 #else
 #if PRINTF_ALIAS_STANDARD_FUNCTION_NAMES_SOFT
-# define printf     printf_
-# define sprintf    sprintf_
-# define vsprintf   vsprintf_
-# define snprintf   snprintf_
-# define vsnprintf  vsnprintf_
-# define vprintf    vprintf_
+#define printf    printf_
+#define sprintf   sprintf_
+#define vsprintf  vsprintf_
+#define snprintf  snprintf_
+#define vsnprintf vsnprintf_
+#define vprintf   vprintf_
 #endif
 #endif
 
-#endif  /* PRINTF_H_ */
+#endif /* PRINTF_H_ */

@@ -218,7 +218,7 @@ typedef struct {
 typedef struct {
     usart_reg_def *p_usartx;
     usart_config usart_conf;
-	usart_it_data usart_it_data;
+    usart_it_data usart_it_data;
 } usart_handle;
 
 /****************************************************************************************************

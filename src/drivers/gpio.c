@@ -1,4 +1,6 @@
 #include "gpio.h"
+#include "assert_handler.h"
+#include "rcc.h"
 
 /*****************************************************************
                         Helper Function Prototypes

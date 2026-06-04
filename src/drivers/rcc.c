@@ -1,6 +1,6 @@
 #include "rcc.h"
+#include "assert_handler.h"
 #include "gpio.h"
-#include "stm32f4xx.h"
 #include <stdint.h>
 
 /*****************************************************************

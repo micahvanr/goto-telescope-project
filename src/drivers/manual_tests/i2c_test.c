@@ -1,5 +1,8 @@
 #include "i2c_test.h"
-#include "../i2c.h"
+#include "assert_handler.h"
+#include "gpio.h"
+#include "i2c.h"
+#include "rcc.h"
 
 static void i2c1_gpio_init(void);
 static void i2c1_init(void);
@@ -137,13 +140,9 @@ static void i2c1_slave_transmit_it(void)
         i2c_slave_receive(g_i2c_handle.p_i2cx, &command_read, 1);
 
         switch ((i2c_test_enums)command_read) {
-        case (COMMAND_LEN):
-            i2c_slave_transmit_it(&g_i2c_handle, &length_of_data, 1);
-            break;
-        case (COMMAND_READ):
-            i2c_slave_transmit_it(&g_i2c_handle, string_test, length_of_data);
-            break;
-        default:;
+        case (COMMAND_LEN):  i2c_slave_transmit_it(&g_i2c_handle, &length_of_data, 1); break;
+        case (COMMAND_READ): i2c_slave_transmit_it(&g_i2c_handle, string_test, length_of_data); break;
+        default:             ;
         }
     }
 }

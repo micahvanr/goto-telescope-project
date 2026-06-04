@@ -1,6 +1,7 @@
 #ifndef STM32F4XX_H
 #define STM32F4XX_H
 
+#include "common.h"
 #include <stdint.h>
 
 // TODO: Think about changing comment sections with macros
@@ -150,12 +151,6 @@ typedef enum {
     LED_BLUE_PORT   = 3u,
 } hardware_port_assignment_e;
 
-// Macros
-
-#define UNUSED(x) (void)(x)
-
-#define __vo volatile
-
 /****************************************************************************************************
                                         Register Structure Definitions
 ****************************************************************************************************/
@@ -194,8 +189,5 @@ typedef __vo struct {
 
 void irq_config(irq_number_e irq_num, togglable_e toggle);
 void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
-
-#include "../common/assert_handler.h"
-#include "../common/printf.h"
 
 #endif

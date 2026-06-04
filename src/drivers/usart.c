@@ -1,4 +1,7 @@
 #include "usart.h"
+#include "assert_handler.h"
+#include "common.h"
+#include "rcc.h"
 
 /*****************************************************************
                         Helper Function Prototypes
@@ -424,7 +427,6 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
 
     while (!(p_usartx->SR & USART_SR_TXE));
     p_usartx->DR = data;
-
 }
 /****************************************************************************************************
                                 Helper Function Implementation
