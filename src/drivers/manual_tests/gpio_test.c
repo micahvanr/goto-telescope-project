@@ -1,4 +1,6 @@
 #include "gpio_test.h"
+#include "assert_handler.h"
+#include "gpio.h"
 
 static void test_gpio_blink_led(void);
 static void test_gpio_read_write(void);
@@ -10,7 +12,7 @@ void gpio_tests(test_type_e test)
     case GPIO_TEST_BLINK_LED:  test_gpio_blink_led(); break;
     case GPIO_TEST_READ_WRITE: test_gpio_read_write(); break;
     case GPIO_TEST_IT:         test_gpio_it(); break;
-    default:                   ASSERT(FALSE);
+    default:                   ASSERT(false);
     }
 
     while (1);
@@ -26,7 +28,7 @@ static void test_gpio_blink_led(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
 
@@ -48,7 +50,7 @@ static void test_gpio_read_write(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
@@ -82,7 +84,7 @@ static void test_gpio_it(void)
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
-    gpio_test.gpio_conf.pullup_pulldown = GPIO_NO_PUPD;
+    gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
     gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);

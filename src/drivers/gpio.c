@@ -1,4 +1,6 @@
 #include "gpio.h"
+#include "assert_handler.h"
+#include "rcc.h"
 
 /*****************************************************************
                         Helper Function Prototypes
@@ -10,7 +12,7 @@ static void gpio_init_asserts(gpio_handle const *const p_gpio_handle);
 // General helper functions
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
-static inline bool_e verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no);
+static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no);
 
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
@@ -43,7 +45,6 @@ Note:
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
     pin_number_e pin_no = p_gpio_handle->gpio_conf.pin_no;
-    
 
     // Ensure handle structure values are valid
     gpio_init_asserts(p_gpio_handle);
@@ -70,7 +71,7 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
         uint8_t afr_reg;
         afr_reg = pin_no / 8;
-        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * pin_no));
+        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
     }
 
     // Set interrupt mode
@@ -230,107 +231,107 @@ void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no)
 
 static void gpio_init_asserts(gpio_handle const *const p_gpio_handle)
 {
-    uint8_t found_setting = FALSE;
+    uint8_t found_setting = false;
 
     // Peripheral check
-    found_setting = (p_gpio_handle->p_gpiox == GPIOA) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOB) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOC) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOD) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOE) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOF) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOG) ? TRUE
-                  : (p_gpio_handle->p_gpiox == GPIOH) ? TRUE
-                                                      : FALSE;
+    found_setting = (p_gpio_handle->p_gpiox == GPIOA) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOB) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOC) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOD) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOE) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOF) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOG) ? true
+                  : (p_gpio_handle->p_gpiox == GPIOH) ? true
+                                                      : false;
 
     // Alternate function check
     switch (p_gpio_handle->gpio_conf.alt_fn_no) {
-    case GPIO_ALT_FN_0:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_1:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_2:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_3:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_4:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_5:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_6:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_7:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_8:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_9:  found_setting = TRUE; break;
-    case GPIO_ALT_FN_10: found_setting = TRUE; break;
-    case GPIO_ALT_FN_11: found_setting = TRUE; break;
-    case GPIO_ALT_FN_12: found_setting = TRUE; break;
-    case GPIO_ALT_FN_13: found_setting = TRUE; break;
-    case GPIO_ALT_FN_14: found_setting = TRUE; break;
-    case GPIO_ALT_FN_15: found_setting = TRUE; break;
-    case GPIO_ALT_FN_NA: found_setting = TRUE; break;
+    case GPIO_ALT_FN_0:  found_setting = true; break;
+    case GPIO_ALT_FN_1:  found_setting = true; break;
+    case GPIO_ALT_FN_2:  found_setting = true; break;
+    case GPIO_ALT_FN_3:  found_setting = true; break;
+    case GPIO_ALT_FN_4:  found_setting = true; break;
+    case GPIO_ALT_FN_5:  found_setting = true; break;
+    case GPIO_ALT_FN_6:  found_setting = true; break;
+    case GPIO_ALT_FN_7:  found_setting = true; break;
+    case GPIO_ALT_FN_8:  found_setting = true; break;
+    case GPIO_ALT_FN_9:  found_setting = true; break;
+    case GPIO_ALT_FN_10: found_setting = true; break;
+    case GPIO_ALT_FN_11: found_setting = true; break;
+    case GPIO_ALT_FN_12: found_setting = true; break;
+    case GPIO_ALT_FN_13: found_setting = true; break;
+    case GPIO_ALT_FN_14: found_setting = true; break;
+    case GPIO_ALT_FN_15: found_setting = true; break;
+    case GPIO_ALT_FN_NA: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Interrupt trigger check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.it_trigger) {
-    case GPIO_IT_NA:  found_setting = TRUE; break;
-    case GPIO_IT_RT:  found_setting = TRUE; break;
-    case GPIO_IT_FT:  found_setting = TRUE; break;
-    case GPIO_IT_RFT: found_setting = TRUE; break;
+    case GPIO_IT_NA:  found_setting = true; break;
+    case GPIO_IT_RT:  found_setting = true; break;
+    case GPIO_IT_FT:  found_setting = true; break;
+    case GPIO_IT_RFT: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Mode check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.mode) {
-    case GPIO_MODE_INPUT:  found_setting = TRUE; break;
-    case GPIO_MODE_OUTPUT: found_setting = TRUE; break;
-    case GPIO_MODE_ALT_FN: found_setting = TRUE; break;
-    case GPIO_MODE_ANALOG: found_setting = TRUE; break;
+    case GPIO_MODE_INPUT:  found_setting = true; break;
+    case GPIO_MODE_OUTPUT: found_setting = true; break;
+    case GPIO_MODE_ALT_FN: found_setting = true; break;
+    case GPIO_MODE_ANALOG: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Output speed check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.output_speed) {
-    case GPIO_OSPEED_LOW:       found_setting = TRUE; break;
-    case GPIO_OSPEED_MEDIUM:    found_setting = TRUE; break;
-    case GPIO_OSPEED_FAST:      found_setting = TRUE; break;
-    case GPIO_OSPEED_VERY_FAST: found_setting = TRUE; break;
+    case GPIO_OSPEED_LOW:       found_setting = true; break;
+    case GPIO_OSPEED_MEDIUM:    found_setting = true; break;
+    case GPIO_OSPEED_FAST:      found_setting = true; break;
+    case GPIO_OSPEED_VERY_FAST: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Output type check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.output_type) {
-    case GPIO_OPTYPE_PUSH_PULL:  found_setting = TRUE; break;
-    case GPIO_OPTYPE_OPEN_DRAIN: found_setting = TRUE; break;
+    case GPIO_OPTYPE_PUSH_PULL:  found_setting = true; break;
+    case GPIO_OPTYPE_OPEN_DRAIN: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Pin number check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.pin_no) {
-    case PIN_NO_0:  found_setting = TRUE; break;
-    case PIN_NO_1:  found_setting = TRUE; break;
-    case PIN_NO_2:  found_setting = TRUE; break;
-    case PIN_NO_3:  found_setting = TRUE; break;
-    case PIN_NO_4:  found_setting = TRUE; break;
-    case PIN_NO_5:  found_setting = TRUE; break;
-    case PIN_NO_6:  found_setting = TRUE; break;
-    case PIN_NO_7:  found_setting = TRUE; break;
-    case PIN_NO_8:  found_setting = TRUE; break;
-    case PIN_NO_9:  found_setting = TRUE; break;
-    case PIN_NO_10: found_setting = TRUE; break;
-    case PIN_NO_11: found_setting = TRUE; break;
-    case PIN_NO_12: found_setting = TRUE; break;
-    case PIN_NO_13: found_setting = TRUE; break;
-    case PIN_NO_14: found_setting = TRUE; break;
-    case PIN_NO_15: found_setting = TRUE; break;
+    case PIN_NO_0:  found_setting = true; break;
+    case PIN_NO_1:  found_setting = true; break;
+    case PIN_NO_2:  found_setting = true; break;
+    case PIN_NO_3:  found_setting = true; break;
+    case PIN_NO_4:  found_setting = true; break;
+    case PIN_NO_5:  found_setting = true; break;
+    case PIN_NO_6:  found_setting = true; break;
+    case PIN_NO_7:  found_setting = true; break;
+    case PIN_NO_8:  found_setting = true; break;
+    case PIN_NO_9:  found_setting = true; break;
+    case PIN_NO_10: found_setting = true; break;
+    case PIN_NO_11: found_setting = true; break;
+    case PIN_NO_12: found_setting = true; break;
+    case PIN_NO_13: found_setting = true; break;
+    case PIN_NO_14: found_setting = true; break;
+    case PIN_NO_15: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     // Pullup/pulldown type check
-    found_setting = FALSE;
+    found_setting = false;
     switch (p_gpio_handle->gpio_conf.pullup_pulldown) {
-    case GPIO_NO_PUPD:   found_setting = TRUE; break;
-    case GPIO_PULL_UP:   found_setting = TRUE; break;
-    case GPIO_PULL_DOWN: found_setting = TRUE; break;
+    case GPIO_PUPD_NO:   found_setting = true; break;
+    case GPIO_PULL_UP:   found_setting = true; break;
+    case GPIO_PULL_DOWN: found_setting = true; break;
     }
     ASSERT(found_setting);
 }
@@ -362,14 +363,14 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
                                                                             : 0;
 }
 
-static inline bool_e verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no)
+static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_number_e pin_no)
 {
     // Get port initialization pins from list
     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpio)];
     // Mask the port to get the bit for the pin number
     uint8_t pin_initialized = ((port_init & (1 << pin_no)) >> pin_no);
 
-    return ((pin_initialized == GPIO_INITIALIZED) ? TRUE : FALSE);
+    return ((pin_initialized == GPIO_INITIALIZED) ? true : false);
 }
 
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox)

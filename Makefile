@@ -18,36 +18,49 @@ SRC_DIR = ./src
 TEST_DIR = test
 MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
 
+INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_TEST_DIR)
+
 # Toolchain
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
 RM = rm
 CPPCHECK = cppcheck
-FORMAT = clang-format
+FORMAT = clang-format-23
+COMP_COM_GEN = bear # compile_commands.json file generator
 
 # Files
 TARGET = $(BIN_DIR)/main
 
+ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
+
 ## .c/.h will be added to each one when compiled and linked
-DRIVER_FILES =	stm32f4xx \
-				main \
+SRC_FILES = stm32_startup \
+			syscalls
+
+DRIVER_FILES =	main \
+				stm32f4xx \
+				rcc \
 				gpio \
 				usart \
-				rcc
+				i2c
+				
 
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \
+					i2c_test \
 					misc_test \
 
 
-COMMON_FILES = assert_handler
+COMMON_FILES = assert_handler \
+				printf \
+				debug_pin
 
 #APP_FILES = 
 
 #BSP_FILES = 
 
-SOURCE_FILES = $(DRIVER_FILES) $(COMMON_FILES) $(MANUAL_TEST_FILES) #$(APP_FILES) $(BSP_FILES)
+SOURCE_FILES = $(DRIVER_FILES) $(COMMON_FILES) $(MANUAL_TEST_FILES) $(SRC_FILES)#$(APP_FILES) $(BSP_FILES)
 
 STARTUP = $(SRC_DIR)/stm32_startup.c
 
@@ -61,7 +74,7 @@ LINKER = $(SRC_DIR)/stm32_ls.ld
 
 
 # CPPCheck Suppressions
-SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction #--suppress=unusedStructMember
+SUPPRESSIONS = 	--suppress=missingIncludeSystem --suppress=unusedFunction --inline-suppr#--suppress=unusedStructMember 
 
 # General Flags
 MACH = cortex-m4
@@ -69,14 +82,14 @@ WFLAGS = -Wall -Wextra -Werror -Wshadow
 SPECS = --specs=nosys.specs --specs=nano.specs
 
 # Compiler and Linker Flags
-CFLAGS = -mcpu=$(MACH) $(WFLAGS) -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g
+CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g
 LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) 
 LDFLAGSPLUS = $(LDFLAGS) -Wl,-Map=$(TARGET).map
 
 
 # Build
 ## Linking
-$(TARGET).elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o#$(TEST_OBJ)
+$(TARGET).elf: $(OBJECTS)#$(TEST_OBJ)
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^ 
 
@@ -85,8 +98,7 @@ $(TARGET)_plus.elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGSPLUS) -o $@ $^ 	
 	
-## Compiling
-$(OBJ_DIR)/stm32_startup.o: $(STARTUP)
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 $(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
@@ -100,6 +112,10 @@ $(OBJ_DIR)%.o: $(COMMON_DIR)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $^
 
+$(OBJ_DIR)%.o: $(PRINTF_DIR)%.c 
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $^
+
 # Debug
 asm:
 	@mkdir -p $(dir $(ASM_DIR))
@@ -107,7 +123,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake test test_clean
+.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen
 
 all: $(TARGET).elf
 
@@ -118,16 +134,24 @@ clean:
 	-$(RM) -r $(TARGET).elf
 
 remake: clean all
-	
-flash:
-	openocd -f board/stm32f4discovery.cfg \
-	-c "init"
 
+flash:
+	openocd -f interface/stlink.cfg \
+			-f board/stm32f4discovery.cfg \
+			-c "program build/bin/main.elf"
+
+# Trying out using compile commands file
+# TODO: Change to compile commands -> change docker container to use bear to get compile commands
 cppcheck:
-	@$(CPPCHECK) $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c --enable=all $(SUPPRESSIONS) 
+	# @$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
+	@$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
-	$(FORMAT) -i $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
+	$(FORMAT) -i $(ALL_FILES)
+
+# Used to generate compile commands for clang LSP and potential other tools
+cc_gen: 
+	$(COMP_COM_GEN) -- make	
 
 # Unity testing commands
 test:

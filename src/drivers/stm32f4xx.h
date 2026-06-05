@@ -1,9 +1,10 @@
 #ifndef STM32F4XX_H
 #define STM32F4XX_H
 
+#include "common.h"
 #include <stdint.h>
 
-// TODO: Think about changing comment sections
+// TODO: Think about changing comment sections with macros
 //====================================================================//
 //  Address Definitions
 //====================================================================//
@@ -81,11 +82,6 @@ typedef enum {
 } pin_logic_level_e;
 
 typedef enum {
-    FALSE = 0,
-    TRUE  = 1
-} bool_e;
-
-typedef enum {
     ENABLE  = 1,
     DISABLE = 0,
 } togglable_e;
@@ -98,6 +94,10 @@ typedef enum {
     EXTI3_IRQ_NO_9      = 9,
     EXTI4_IRQ_NO_10     = 10,
     EXTI9_5_IRQ_NO_23   = 23,
+    I2C1_EV_IRQ_NO_31   = 31,
+    I2C1_ER_IRQ_NO_32   = 32,
+    I2C2_EV_IRQ_NO_33   = 33,
+    I2C2_ER_IRQ_NO_34   = 34,
     USART1_IRQ_NO_37    = 37,
     USART2_IRQ_NO_38    = 38,
     USART3_IRQ_NO_39    = 39,
@@ -105,6 +105,8 @@ typedef enum {
     UART4_IRQ_NO_52     = 52,
     UART5_IRQ_NO_53     = 53,
     USART6_IRQ_NO_71    = 71,
+    I2C3_EV_IRQ_NO_72   = 72,
+    I2C3_ER_IRQ_NO_73   = 73,
 } irq_number_e;
 
 // Lower number means higher priority
@@ -142,12 +144,6 @@ typedef enum {
     LED_RED_PORT    = 3u,
     LED_BLUE_PORT   = 3u,
 } hardware_port_assignment_e;
-
-// Macros
-
-#define UNUSED(x) (void)(x)
-
-#define __vo volatile
 
 /****************************************************************************************************
                                         Register Structure Definitions
@@ -187,7 +183,5 @@ typedef __vo struct {
 
 void irq_config(irq_number_e irq_num, togglable_e toggle);
 void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
-
-#include "../common/assert_handler.h"
 
 #endif

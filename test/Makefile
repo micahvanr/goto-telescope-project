@@ -47,6 +47,7 @@ FAIL = `grep -s FAIL $(PATHR)/*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)/*.txt`
 
 test: $(BUILD_PATHS) $(RESULTS)	
+	@echo ""
 	@echo "-----------------------PASSED:-----------------------"
 	@echo "$(PASSED)"
 	@echo "-----------------------FAILURES:-----------------------"

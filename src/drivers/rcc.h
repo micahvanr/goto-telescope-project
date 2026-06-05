@@ -1,8 +1,7 @@
 #ifndef RCC_H
 #define RCC_H
 
-#include "stm32f4xx.h"
-
+#include "common.h"
 /****************************************************************************************************
                                         Address Definitions
 ****************************************************************************************************/
@@ -34,6 +33,30 @@ typedef enum {
     APB1_BUS = 3,
     APB2_BUS = 4,
 } bus_types;
+
+typedef enum {
+    RCC_MCO1_SEL,
+    RCC_MCO2_SEL,
+} rcc_mco_sel_e;
+
+typedef enum {
+    RCC_MCO_PRE_1 = 1,
+    RCC_MCO_PRE_2 = 2,
+    RCC_MCO_PRE_3 = 3,
+    RCC_MCO_PRE_4 = 4,
+    RCC_MCO_PRE_5 = 5,
+} rcc_mco_prescaler_e;
+
+typedef enum {
+    RCC_MCO1_HSI_SRC    = 0,
+    RCC_MCO1_LSE_SRC    = 1,
+    RCC_MCO1_HSE_SRC    = 2,
+    RCC_MCO1_PLL_SRC    = 3,
+    RCC_MCO2_SYSCLK_SRC = 4,
+    RCC_MCO2_PLLI2S_SRC = 5,
+    RCC_MCO2_HSE_SRC    = 6,
+    RCC_MCO2_PLL_SRC    = 7,
+} rcc_mco_clock_src_e;
 
 // Register enums
 
@@ -224,8 +247,9 @@ typedef __vo struct {
                                     Peripheral Function APIs
 ****************************************************************************************************/
 
-uint32_t rcc_get_pll_freq(void);
-uint32_t rcc_get_sys_clock_freq(void);
-uint32_t rcc_get_bus_clock_freq(bus_types bus);
+uint32_t rcc_get_pll_freq_hz(void);
+uint32_t rcc_get_sys_clock_freq_hz(void);
+uint32_t rcc_get_bus_clock_freq_hz(bus_types bus);
+void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
 
 #endif
