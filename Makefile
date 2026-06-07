@@ -141,10 +141,9 @@ flash:
 			-c "program build/bin/main.elf"
 
 # Trying out using compile commands file
-# TODO: Change to compile commands -> change docker container to use bear to get compile commands
 cppcheck:
-	# @$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
-	@$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
+	@$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
+	# @$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
 	$(FORMAT) -i $(ALL_FILES)
