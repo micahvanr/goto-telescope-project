@@ -19,29 +19,25 @@ endif
 .PHONY: check_errors
 .PHONY: test_ci
 
-ROOT_DIR = ../..
-
-PATHU = $(ROOT_DIR)/tools/unity/src
-#PATH_APP = $(ROOT_DIR)/src/app
-#PATH_BSP = $(ROOT_DIR)/src/bsp
-#PATH_COMMON = $(ROOT_DIR)/src/common
-#PATH_DRIVERS = $(ROOT_DIR)/src/drivers
-PATHS = $(ROOT_DIR)/src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
+PATHU = ../tools/unity/src
+#PATH_APP = ../src/app
+#PATH_BSP = ../src/bsp
+#PATH_COMMON = ../src/common
+#PATH_DRIVERS = ../src/drivers
+PATHS = ../src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
 PATHT = .
-PATHB = $(ROOT_DIR)/build/bin
+PATHB = ../build/bin
 #PATHD = ../build/depends
-PATHO = $(ROOT_DIR)/build/obj_test
-PATHR = $(ROOT_DIR)/build/results
+PATHO = ../build/obj_test
+PATHR = ../build/results
 
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
 SRCT = $(wildcard $(PATHT)/*.c)
 
-CC = gcc
-
-COMPILE= $(CC) -c
-LINK= $(CC)
-DEPEND= $(CC) -MM -MG -MF
+COMPILE= gcc -c
+LINK= gcc
+DEPEND= gcc -MM -MG -MF
 CFLAGS= -I. -I $(PATHU) -I $(PATHS) -DTEST
 
 RESULTS = $(patsubst $(PATHT)/test_%.c,$(PATHR)/test_%.txt,$(SRCT) )

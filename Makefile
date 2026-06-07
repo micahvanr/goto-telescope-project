@@ -15,10 +15,10 @@ COMMON_DIR = ./src/common
 SRC_DIR = ./src
 
 ## Test dir
-UNIT_TEST_DIR = ./test/unit_test
-MANUAL_DRIVER_TEST_DIR = ./test/manual_test/drivers
+TEST_DIR = test
+MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
 
-INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_DRIVER_TEST_DIR)
+INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_TEST_DIR)
 
 # Toolchain
 CC = arm-none-eabi-gcc
@@ -101,7 +101,7 @@ $(TARGET)_plus.elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
-$(OBJ_DIR)%.o: $(MANUAL_DRIVER_TEST_DIR)%.c
+$(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 $(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
@@ -155,7 +155,7 @@ cc_gen:
 
 # Unity testing commands
 test:
-	make -C $(UNIT_TEST_DIR) 
+	make -C $(TEST_DIR) 
 
 test_clean:
-	make -C $(UNIT_TEST_DIR) clean
+	make -C $(TEST_DIR) clean

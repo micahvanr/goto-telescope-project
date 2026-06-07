@@ -41,8 +41,7 @@ Based on the pitchfork layout
 | src/bsp/| Source files for other modules and chips (board support package layer)|
 | src/drivers/| Source files for drivers layer|
 | src/common/| Source files for code that drivers and app use|
-| test/manual_test| Manual tests for source code (C code for target and Arduino to test target against)|
-| test/unit_test| Unit tests using Unity and FFF|
+| test/| Makefile with test source files |
 | tools/| Any tools used such as dockerfile and unit testing frameworks|
 
 ## Build

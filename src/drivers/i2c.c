@@ -763,6 +763,8 @@ static void master_sb(i2c_handle *p_i2c_handle)
 
 static void master_addr(i2c_handle *p_i2c_handle)
 {
+    // TODO: Add 2-byte reception with POS and ACK
+
     // Disable ack before clearing address flag in 1 byte reception
     if ((p_i2c_handle->i2c_it_data.status == I2C_STATUS_MASTER_RX) && (p_i2c_handle->i2c_it_data.txrx_length == 1)) {
         disable_ack(p_i2c_handle->p_i2cx);
