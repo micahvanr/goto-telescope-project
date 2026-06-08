@@ -51,7 +51,7 @@ static void printf_gpio_init();
  * printf_config.h header file
  */
 #if PRINTF_INCLUDE_CONFIG_H
-#include "printf_config.h" 
+#include "printf_config.h"
 #endif
 
 // NOTE: Changed directory slightly and changed from <> to ""

@@ -19,17 +19,18 @@ endif
 .PHONY: check_errors
 .PHONY: test_ci
 
+PATH_ROOT = ../..
 PATHU = ../tools/unity/src
 #PATH_APP = ../src/app
 #PATH_BSP = ../src/bsp
 #PATH_COMMON = ../src/common
 #PATH_DRIVERS = ../src/drivers
-PATHS = ../src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
+PATHS = $(PATH_ROOT)/src/common#$(PATH_COMMON) #$(PATH_APP) $(PATH_BSP) $(PATH_DRIVERS)
 PATHT = .
-PATHB = ../build/bin
+PATHB = $(PATH_ROOT)/build/bin
 #PATHD = ../build/depends
-PATHO = ../build/obj_test
-PATHR = ../build/results
+PATHO = $(PATH_ROOT)/build/obj_test
+PATHR = $(PATH_ROOT)/build/results
 
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 

@@ -417,9 +417,7 @@ static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
-                      : (p_usartx == USART6) ? RCC_APB2ENR_USART6
-                                             : 0;
+        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
     }
 }
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
@@ -434,9 +432,7 @@ static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
-                       : (p_usartx == USART6) ? RCC_APB2ENR_USART6
-                                              : 0;
+        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
     }
 }
 

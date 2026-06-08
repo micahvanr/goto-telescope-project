@@ -2,35 +2,34 @@
 #include "assert_handler.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "rcc.h"
 
 static void i2c1_gpio_init(void);
 static void i2c1_init(void);
-static void i2c1_master_transmit(void);
-static void i2c1_slave_transmit(void);
-static void i2c1_master_receive(void);
-static void i2c1_slave_receive(void);
-static void i2c1_master_transmit_it(void);
-static void i2c1_slave_transmit_it(void);
-static void i2c1_master_receive_it(void);
-static void i2c1_slave_receive_it(void);
+static void test_i2c_master_transmit(void);
+static void test_i2c_slave_transmit(void);
+static void test_i2c_master_receive(void);
+static void test_i2c_slave_receive(void);
+static void test_i2c_master_transmit_it(void);
+static void test_i2c_slave_transmit_it(void);
+static void test_i2c_master_receive_it(void);
+static void test_i2c_slave_receive_it(void);
 
 i2c_handle g_i2c_handle = {0};
 
 void i2c_tests(test_type_e test)
 {
-    rcc_mco_config(RCC_MCO1_HSI_SRC, RCC_MCO_PRE_4);
     i2c1_gpio_init();
     i2c1_init();
+
     switch (test) {
-    case I2C_TEST_MASTER_TRANSMIT:    i2c1_master_transmit(); break;
-    case I2C_TEST_MASTER_RECEIVE:     i2c1_master_receive(); break;
-    case I2C_TEST_SLAVE_TRANSMIT:     i2c1_slave_transmit(); break;
-    case I2C_TEST_SLAVE_RECEIVE:      i2c1_slave_receive(); break;
-    case I2C_TEST_MASTER_TRANSMIT_IT: i2c1_master_transmit_it(); break;
-    case I2C_TEST_MASTER_RECEIVE_IT:  i2c1_master_receive_it(); break;
-    case I2C_TEST_SLAVE_TRANSMIT_IT:  i2c1_slave_transmit_it(); break;
-    case I2C_TEST_SLAVE_RECEIVE_IT:   i2c1_slave_receive_it(); break;
+    case I2C_TEST_MASTER_TRANSMIT:    test_i2c_master_transmit(); break;
+    case I2C_TEST_MASTER_RECEIVE:     test_i2c_master_receive(); break;
+    case I2C_TEST_SLAVE_TRANSMIT:     test_i2c_slave_transmit(); break;
+    case I2C_TEST_SLAVE_RECEIVE:      test_i2c_slave_receive(); break;
+    case I2C_TEST_MASTER_TRANSMIT_IT: test_i2c_master_transmit_it(); break;
+    case I2C_TEST_MASTER_RECEIVE_IT:  test_i2c_master_receive_it(); break;
+    case I2C_TEST_SLAVE_TRANSMIT_IT:  test_i2c_slave_transmit_it(); break;
+    case I2C_TEST_SLAVE_RECEIVE_IT:   test_i2c_slave_receive_it(); break;
     default:                          ASSERT(false);
     }
 
@@ -39,24 +38,24 @@ void i2c_tests(test_type_e test)
 
 static void i2c1_gpio_init(void)
 {
-    gpio_handle i2c3_pins            = {0};
-    i2c3_pins.gpio_conf.it_trigger   = GPIO_IT_NA;
-    i2c3_pins.gpio_conf.mode         = GPIO_MODE_ALT_FN;
-    i2c3_pins.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
+    gpio_handle i2c1_pins            = {0};
+    i2c1_pins.gpio_conf.it_trigger   = GPIO_IT_NA;
+    i2c1_pins.gpio_conf.mode         = GPIO_MODE_ALT_FN;
+    i2c1_pins.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
 
-    i2c3_pins.gpio_conf.alt_fn_no       = GPIO_ALT_FN_4;
-    i2c3_pins.gpio_conf.output_type     = GPIO_OPTYPE_OPEN_DRAIN;
-    i2c3_pins.gpio_conf.pullup_pulldown = GPIO_PULL_UP;
+    i2c1_pins.gpio_conf.alt_fn_no       = GPIO_ALT_FN_4;
+    i2c1_pins.gpio_conf.output_type     = GPIO_OPTYPE_OPEN_DRAIN;
+    i2c1_pins.gpio_conf.pullup_pulldown = GPIO_PULL_UP;
 
     // PB6 - SCL
-    i2c3_pins.p_gpiox          = GPIOB;
-    i2c3_pins.gpio_conf.pin_no = PIN_NO_6;
-    gpio_init(&i2c3_pins);
+    i2c1_pins.p_gpiox          = GPIOB;
+    i2c1_pins.gpio_conf.pin_no = PIN_NO_6;
+    gpio_init(&i2c1_pins);
 
     // PB7 - SDA
-    i2c3_pins.p_gpiox          = GPIOB;
-    i2c3_pins.gpio_conf.pin_no = PIN_NO_7;
-    gpio_init(&i2c3_pins);
+    i2c1_pins.p_gpiox          = GPIOB;
+    i2c1_pins.gpio_conf.pin_no = PIN_NO_7;
+    gpio_init(&i2c1_pins);
 }
 
 static void i2c1_init(void)
@@ -69,7 +68,7 @@ static void i2c1_init(void)
     i2c_init(&g_i2c_handle);
 }
 
-static void i2c1_master_transmit(void)
+static void test_i2c_master_transmit(void)
 {
     // uint8_t data          = 0x33;
     uint8_t string_test[] = "Testing string";
@@ -80,7 +79,7 @@ static void i2c1_master_transmit(void)
     }
 }
 
-static void i2c1_slave_transmit(void)
+static void test_i2c_slave_transmit(void)
 {
     uint8_t command_read;
     uint8_t string_test[]  = "Testing string";
@@ -95,7 +94,7 @@ static void i2c1_slave_transmit(void)
         }
     }
 }
-static void i2c1_master_receive(void)
+static void test_i2c_master_receive(void)
 {
     // Get single byte
     // Get multiple bytes
@@ -115,10 +114,10 @@ static void i2c1_master_receive(void)
         i2c_master_receive(I2C1, TARGET_ADDR, multi_byte, len_of_data, I2C_REPEATED_START_DISABLE);
     }
 }
-static void i2c1_slave_receive(void)
+static void test_i2c_slave_receive(void)
 {
 }
-static void i2c1_master_transmit_it(void)
+static void test_i2c_master_transmit_it(void)
 {
     static uint8_t string_test[] = "Testing string";
 
@@ -131,7 +130,7 @@ static void i2c1_master_transmit_it(void)
                                I2C_REPEATED_START_DISABLE);
     }
 }
-static void i2c1_slave_transmit_it(void)
+static void test_i2c_slave_transmit_it(void)
 {
     uint8_t command_read;
     static uint8_t string_test[] = "Testing string";
@@ -147,7 +146,7 @@ static void i2c1_slave_transmit_it(void)
     }
 }
 
-static void i2c1_master_receive_it(void)
+static void test_i2c_master_receive_it(void)
 {
     static uint8_t command;
     static uint8_t len_of_data    = 0;
@@ -164,7 +163,7 @@ static void i2c1_master_receive_it(void)
         i2c_master_receive_it(&g_i2c_handle, TARGET_ADDR, multi_byte, len_of_data, I2C_REPEATED_START_DISABLE);
     }
 }
-static void i2c1_slave_receive_it(void)
+static void test_i2c_slave_receive_it(void)
 {
 }
 void I2C1_EV_IRQHandler()

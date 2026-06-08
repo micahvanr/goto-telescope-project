@@ -16,7 +16,8 @@ SRC_DIR = ./src
 
 ## Test dir
 TEST_DIR = test
-MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
+MANUAL_TEST_DIR = $(TEST_DIR)/manual_test
+UNIT_TEST_DIR = $(TEST_DIR)/unit_test
 
 INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_TEST_DIR)
 
@@ -31,7 +32,8 @@ COMP_COM_GEN = bear # compile_commands.json file generator
 # Files
 TARGET = $(BIN_DIR)/main
 
-ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
+# TODO: Change all files to include manual test
+ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(MANUAL_TEST_DIR)/*.c $(MANUAL_TEST_DIR)/*.h
 
 ## .c/.h will be added to each one when compiled and linked
 SRC_FILES = stm32_startup \
@@ -154,7 +156,7 @@ cc_gen:
 
 # Unity testing commands
 test:
-	make -C $(TEST_DIR) 
+	make -C $(UNIT_TEST_DIR) 
 
 test_clean:
-	make -C $(TEST_DIR) clean
+	make -C $(UNIT_TEST_DIR) clean

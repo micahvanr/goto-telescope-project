@@ -1,7 +1,7 @@
 #include "assert_handler.h"
 #include "gpio.h"
-#include "rcc.h"
 #include "printf.h"
+#include "rcc.h"
 
 static void blink_led(void);
 
