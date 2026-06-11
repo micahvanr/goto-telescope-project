@@ -32,7 +32,6 @@ COMP_COM_GEN = bear # compile_commands.json file generator
 # Files
 TARGET = $(BIN_DIR)/main
 
-# TODO: Change all files to include manual test
 ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(MANUAL_TEST_DIR)/*.c $(MANUAL_TEST_DIR)/*.h
 
 ## .c/.h will be added to each one when compiled and linked
@@ -156,7 +155,7 @@ cc_gen:
 
 # Unity testing commands
 test:
-	make -C $(UNIT_TEST_DIR) 
+	make -C $(UNIT_TEST_DIR) -s
 
 test_clean:
 	make -C $(UNIT_TEST_DIR) clean
