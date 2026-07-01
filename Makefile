@@ -124,7 +124,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen
+.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen arduino
 
 all: $(TARGET).elf
 
@@ -159,3 +159,6 @@ test:
 
 test_clean:
 	make -C $(UNIT_TEST_DIR) clean
+
+arduino:
+	make -C $(MANUAL_TEST_DIR) -s

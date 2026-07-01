@@ -7,10 +7,8 @@ typedef enum {
     GPIO_TEST_READ_WRITE,
     GPIO_TEST_IT,
     // USART tests options
-    USART_TEST_WRITE,
-    USART_TEST_READ,
-    USART_TEST_WRITE_IT,
-    USART_TEST_READ_IT,
+    USART_TEST_RXTX,
+    USART_TEST_RXTX_IT,
     // I2C test options
     I2C_TEST_MASTER_TRANSMIT,
     I2C_TEST_MASTER_RECEIVE,

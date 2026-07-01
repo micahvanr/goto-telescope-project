@@ -1,14 +1,15 @@
 #include "usart_test.h"
 #include "assert_handler.h"
 #include "gpio.h"
+#include "printf.h"
 #include "usart.h"
+#include "usart_test_arduino/usart_com_config.h"
+#include <string.h>
 
 static void usart_gpio_init(void);
 static void usart2_init(void);
-static void test_usart_transmit(void);
-static void test_usart_receive(void);
-static void test_usart_transmit_it(void);
-static void test_usart_receive_it(void);
+static void test_usart_txrx(void);
+static void test_usart_txrx_it(void);
 
 usart_handle g_usart_test_handle = {0};
 
@@ -18,29 +19,29 @@ void usart_tests(test_type_e test)
     usart2_init();
 
     switch (test) {
-    case USART_TEST_WRITE:    test_usart_transmit(); break;
-    case USART_TEST_READ:     test_usart_receive(); break;
-    case USART_TEST_WRITE_IT: test_usart_transmit_it(); break;
-    case USART_TEST_READ_IT:  test_usart_receive_it(); break;
-    default:                  ASSERT(false);
+    case USART_TEST_RXTX:    test_usart_txrx(); break;
+    case USART_TEST_RXTX_IT: test_usart_txrx_it(); break;
+    default:                 ASSERT(false);
     }
-
-    while (1);
+    ASSERT(false);
 }
 
 static void usart_gpio_init(void)
 {
-    // PA2 - TX
-    // PA3 - RX
     gpio_handle gpio_usart           = {0};
-    gpio_usart.p_gpiox               = GPIOA;
     gpio_usart.gpio_conf.alt_fn_no   = GPIO_ALT_FN_7;
     gpio_usart.gpio_conf.mode        = GPIO_MODE_ALT_FN;
     gpio_usart.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     gpio_usart.gpio_conf.it_trigger  = GPIO_IT_NA;
-    gpio_usart.gpio_conf.pin_no      = PIN_NO_2;
+
+    // PD6 - RX
+    gpio_usart.p_gpiox          = GPIOD;
+    gpio_usart.gpio_conf.pin_no = PIN_NO_6;
     gpio_init(&gpio_usart);
-    gpio_usart.gpio_conf.pin_no = PIN_NO_3;
+
+    // PD5 - TX
+    gpio_usart.p_gpiox          = GPIOD;
+    gpio_usart.gpio_conf.pin_no = PIN_NO_5;
     gpio_init(&gpio_usart);
 }
 
@@ -48,7 +49,7 @@ static void usart2_init(void)
 {
     g_usart_test_handle.p_usartx                     = USART2;
     g_usart_test_handle.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
-    g_usart_test_handle.usart_conf.baudrate          = USART_BAUDRATE_115200;
+    g_usart_test_handle.usart_conf.baudrate          = (usart_baudrate_e)USART_COM_SPEED;
     g_usart_test_handle.usart_conf.parity_control    = USART_PARITY_CONTROL_DISABLE;
     g_usart_test_handle.usart_conf.parity_select     = USART_PARITY_SEL_EVEN;
     g_usart_test_handle.usart_conf.stop_bits         = USART_STOP_BITS_1;
@@ -56,56 +57,57 @@ static void usart2_init(void)
     usart_init(&g_usart_test_handle);
 }
 
-static void test_usart_transmit(void)
+// TEST: USART txrx it
+static void test_usart_txrx(void)
 {
-    uint8_t write_data[]  = "testing\r\n";
-    uint32_t size_of_data = 0;
-    size_of_data          = sizeof(write_data) - 1;
-    while (1) {
-        usart_transmit(g_usart_test_handle.p_usartx, write_data, sizeof(write_data));
-        for (uint32_t i = 0; i < 500000; i++); // Delay
-    }
-    UNUSED(size_of_data);
-}
+    uint8_t tx_data[] = "STM->Arduino";
+    uint8_t tx_length = sizeof(tx_data) - 1;
 
-static void test_usart_receive(void)
-{
-    uint8_t size_of_data;
-    uint8_t data[50];
+    uint8_t expected_rx[20] = "Arduino->STM";
+    uint8_t rx_length;
+    uint8_t rx_data[20] = {0};
 
     while (1) {
-        // Get length
-        usart_receive(g_usart_test_handle.p_usartx, &size_of_data, 1);
-        usart_receive(g_usart_test_handle.p_usartx, data, size_of_data);
-        for (uint32_t i = 0; i < 500000; i++); // Delay
-    }
-}
+        // Send string
+        usart_transmit(g_usart_test_handle.p_usartx, &tx_length, 1);
+        usart_transmit(g_usart_test_handle.p_usartx, tx_data, tx_length);
 
-static void test_usart_transmit_it(void)
-{
-    static uint8_t write_data[] = "testing\r\n"; // Make static otherwise the data will get corrupted
-    uint32_t size_of_data       = 0;
-    size_of_data                = (sizeof(write_data) - 1);
-    while (1) {
-        usart_transmit_it(&g_usart_test_handle, write_data, size_of_data);
-        write_data[0] = 'b';
-        // for (uint32_t i = 0; i < 500000; i++); // Delay
-        usart_transmit_it(&g_usart_test_handle, write_data, size_of_data);
-        write_data[0] = 't';
+        // Receive string back
+        usart_receive(g_usart_test_handle.p_usartx, &rx_length, 1);
+        usart_receive(g_usart_test_handle.p_usartx, (uint8_t *)rx_data, rx_length);
 
-        for (uint32_t i = 0; i < 500000; i++); // Delay
+        // Ensure string returns expected value
+        if (strcmp((char *)expected_rx, (char *)rx_data) != 0) {
+            ASSERT(false);
+        }
+        for (uint32_t i = 0; i < 10000; i++);
     }
 }
-static void test_usart_receive_it(void)
+
+// TEST: USART txrx it
+static void test_usart_txrx_it(void)
 {
-    static uint8_t read_data[3]; // Make static otherwise the data will get corrupted
-    uint32_t size_of_data = 0;
-    size_of_data          = sizeof(read_data);
+    static uint8_t tx_data[] = "STM->Arduino";
+    static uint8_t tx_length = sizeof(tx_data) - 1;
+
+    static uint8_t expected_rx[20] = "Arduino->STM";
+    static uint8_t rx_length       = 0;
+    static uint8_t rx_data[20]     = {0};
+
     while (1) {
-        usart_receive_it(&g_usart_test_handle, read_data, size_of_data);
-        for (uint32_t i = 0; i < 5000000; i++); // Delay
-        usart_transmit_it(&g_usart_test_handle, read_data, size_of_data);
-        for (uint32_t i = 0; i < 1000000; i++); // Delay
+        // Send string
+        usart_transmit_it(&g_usart_test_handle, &tx_length, 1);
+        usart_transmit_it(&g_usart_test_handle, tx_data, tx_length);
+
+        // Receive string back
+        usart_receive_it(&g_usart_test_handle, &rx_length, 1);
+        usart_receive_it(&g_usart_test_handle, (uint8_t *)rx_data, rx_length);
+
+        // Ensure string returns expected value
+        if (strcmp((char *)expected_rx, (char *)rx_data) != 0) {
+            ASSERT(false);
+        }
+        for (uint32_t i = 0; i < 10000; i++);
     }
 }
 

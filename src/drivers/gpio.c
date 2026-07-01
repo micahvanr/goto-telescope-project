@@ -55,6 +55,14 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     // Enable RCC clock for peripheral port
     gpio_clock_enable(p_gpio_handle->p_gpiox);
 
+    // Set alternate function mode
+    // NOTE: Done before rest of config otherwise it may trigger undesired pin bouncing
+    if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
+        uint8_t afr_reg;
+        afr_reg = pin_no / 8;
+        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
+    }
+
     // Set gpio mode
     p_gpio_handle->p_gpiox->MODER |= (p_gpio_handle->gpio_conf.mode << (2 * pin_no));
 
@@ -67,12 +75,6 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     // Set pull up or pull down resistors
     p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_no));
 
-    // Set alternate function mode
-    if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
-        uint8_t afr_reg;
-        afr_reg = pin_no / 8;
-        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
-    }
 
     // Set interrupt mode
     if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA) {
