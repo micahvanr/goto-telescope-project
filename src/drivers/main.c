@@ -13,13 +13,9 @@
 #include "i2c_test.h"
 // clang-format on
 #include "assert_handler.h"
-#include "debug_pin.h"
+#include "debug_tools.h"
 #include "printf.h"
 
-// TODO: Improve test functions:
-// USART & I2C
-// Put Arduino code in git repo. Arduino files should test 1-3 functions but should be organized logically.
-// Ex. I2C slave transmit with/without interrupts should have their own Arduino file.
 
 int main(void)
 {
@@ -27,6 +23,10 @@ int main(void)
     printf_init();
     // Uses PA3
     debug_pin_init();
+    debug_button_init();
+
+    // NOTE: Uncomment line below if you want to run the program after button press
+    // while(!read_debug_button());
 
     // NOTE: Change this variable to run the correct test
     test_type_e test = I2C_TEST_IT;

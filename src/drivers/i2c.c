@@ -134,7 +134,7 @@ void i2c_reset(i2c_reg_def const *const p_i2cx)
     i2c_clock_disable(p_i2cx);
 }
 
-// TODO: Might need to return success/fail incase the device never receives and ack
+// NOTE: Might need to return success/fail incase the device never receives and ack
 
 /***************************************************************************
 Function: i2c_master_transmit

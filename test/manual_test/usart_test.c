@@ -57,13 +57,12 @@ static void usart2_init(void)
     usart_init(&g_usart_test_handle);
 }
 
-// TEST: USART txrx it
 static void test_usart_txrx(void)
 {
     uint8_t tx_data[] = "STM->Arduino";
     uint8_t tx_length = sizeof(tx_data) - 1;
 
-    uint8_t expected_rx[20] = "Arduino->STM";
+    uint8_t const expected_rx[20] = "Arduino->STM";
     uint8_t rx_length;
     uint8_t rx_data[20] = {0};
 
@@ -84,13 +83,12 @@ static void test_usart_txrx(void)
     }
 }
 
-// TEST: USART txrx it
 static void test_usart_txrx_it(void)
 {
     static uint8_t tx_data[] = "STM->Arduino";
     static uint8_t tx_length = sizeof(tx_data) - 1;
 
-    static uint8_t expected_rx[20] = "Arduino->STM";
+    static uint8_t const expected_rx[20] = "Arduino->STM";
     static uint8_t rx_length       = 0;
     static uint8_t rx_data[20]     = {0};
 
