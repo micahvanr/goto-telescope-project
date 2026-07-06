@@ -1,69 +1,115 @@
-// Wire Master Transmitter and Receiver 
-//Uno, Ethernet A4 (SDA), A5 (SCL)
+// Uno R3: A4 (SDA), A5 (SCL)
+// Wire Master Transmitter and Receiver
 #include <Wire.h>
+#include "i2c_com_config.h"
 
-// Include the required Wire library for I2C<br>#include <Wire.h>
-int LED = 13;
+static void receive_event(int chr);
+static void request_event(void);
 
-uint8_t rcv_buf[32];
-
-int data_len=0;
-#define SLAVE_ADDR 0x42
+uint8_t rx_data[32];
+uint8_t rx_len = 0;
 
 void setup() {
-    Serial.begin(9600);
-    
-  // Define the LED pin as Output
-  pinMode (LED, OUTPUT);
-  
-  // join i2c bus (address optional for master)
-  Wire.begin(); 
+  uint8_t mode = I2C_TEST_MODE;
+  uint8_t in_read;
+
+  Serial.begin(115200);
+
+  switch (mode) {
+    // NOTE: Arduino acts as slave - address necessary
+    case I2C_TEST_STM_MASTER_TX:
+    case I2C_TEST_STM_MASTER_RX:
+      {
+        // Start I2C
+        Wire.begin(I2C_ARDUINO_ADDR);
+
+        Wire.onReceive(receive_event);
+        Wire.onRequest(request_event);
+
+        Serial.println("-----------------------------");
+        Serial.println("Arduino Slave ready. Address: 0x68");
+        Serial.println("-----------------------------");
+        Serial.println();
+
+        if (mode == I2C_TEST_STM_MASTER_TX) {
+          Serial.println("Waiting for data from master...");
+        } else if (mode == I2C_TEST_STM_MASTER_RX) {
+          Serial.println("Ready to send data...");
+        }
+        break;
+      }
+
+    case I2C_TEST_STM_SLAVE_TX:
+    case I2C_TEST_STM_SLAVE_RX:
+      {
+        break;
+      }
+  }
 }
 
 void loop() {
+  uint8_t mode = I2C_TEST_MODE;
+  uint8_t in_read;
 
-  Serial.println("Arduino Master");
-  Serial.println("Send character \"s\" to begin");
-  Serial.println("-----------------------------");
+  if ((mode == I2C_TEST_STM_SLAVE_RX) || (mode == I2C_TEST_STM_SLAVE_TX)) {
 
-   while(!Serial.available());
-  char in_read=Serial.read();
+    // NOTE: Arduino acts as master - address unnecessary
+    Wire.begin();
 
-  while(in_read != 's');
+    Serial.println("-----------------------------");
+    Serial.println("Arduino Master");
+    Serial.println("Send character \"s\" to begin");
+    Serial.println("-----------------------------");
 
-  Serial.println("Starting..");
+    do {
+      while (!Serial.available());
+      in_read = Serial.read();
+    } while (in_read != 's');
 
-  Wire.beginTransmission(SLAVE_ADDR);
-  
-  Wire.write(0X51); //Send this command to read the length
-  Wire.endTransmission();
+    Serial.println("Sending data...");
 
+    if (mode == I2C_TEST_STM_SLAVE_TX) {
+      Wire.requestFrom(I2C_STM_ADDR, 18);
 
-  Wire.requestFrom(SLAVE_ADDR,1); // Request the transmitted two bytes from the two registers
+      uint8_t i = 0;
 
-  if(Wire.available()) {  // 
-    data_len = Wire.read(); // Reads the data 
-  }
-  Serial.print("Data Length:");
-  Serial.println(String(data_len,DEC));
+      while (Wire.available()) {
+        rx_data[i++] = Wire.read();
+      }
 
-  Wire.beginTransmission(SLAVE_ADDR);
-  
-  Wire.write(0X52); //Send this command to ask data
-  Wire.endTransmission();
+      rx_data[i] = '\0';
+      Serial.print("Received:");
+      Serial.println((char *)rx_data);
 
-  Wire.requestFrom(SLAVE_ADDR,data_len);
+    } else if (mode == I2C_TEST_STM_SLAVE_RX) {
 
-  uint32_t i=0;
-  for( i =0; i <= data_len ; i++)
-  {
-    if(Wire.available()) {  // 
-      rcv_buf[i] = Wire.read(); // Reads the data 
+      Wire.beginTransmission(I2C_STM_ADDR);
+      Wire.write("Arduino->STM");
+      Wire.endTransmission();
     }
   }
-  rcv_buf[i] = '\0';
+}
 
-  Serial.print("Data:");
-  Serial.println((char*)rcv_buf);
-  Serial.println("*********************END*********************");
+
+// I2C slave rx
+static void receive_event(int chr) {
+
+  uint8_t i = 0;
+  while (Wire.available()) {
+    rx_data[i++] = Wire.read();
+  }
+  rx_data[i] = '\0';
+  Serial.print("Received:");
+  Serial.println((char *)rx_data);
+}
+
+// I2C slave tx
+static void request_event(void) {
+
+  uint8_t tx_buffer[] = "Arduino->STM";
+  uint8_t tx_size = sizeof(tx_buffer) - 1;
+  static uint8_t cnt = 0;
+
+  Wire.write(tx_buffer, tx_size);
+
 }

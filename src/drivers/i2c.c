@@ -213,7 +213,11 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t 
     // Ensure peripheral is not busy
     while (p_i2cx->SR2 & I2C_SR2_BUSY);
 
-    enable_ack(p_i2cx);
+    if (length != 1) {
+        enable_ack(p_i2cx);
+    } else {
+        disable_ack(p_i2cx);
+    }
 
     generate_start_condition(p_i2cx);
 
@@ -223,9 +227,9 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t 
     send_address(p_i2cx, target_addr, I2C_STATUS_MASTER_RX);
     while (!(p_i2cx->SR1 & I2C_SR1_ADDR));
 
-    if (length == 1) {
-        disable_ack(p_i2cx);
-    }
+    // if (length == 1) {
+    //     disable_ack(p_i2cx);
+    // }
 
     clear_address_flag(p_i2cx);
 
@@ -518,8 +522,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
         switch (p_i2c_handle->i2c_it_data.status) {
 
         case I2C_STATUS_SLAVE_TX:
-            // if (p_i2c_handle->i2c_it_data.txrx_length == 0) {
-            // }
 
             if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
                 send_byte(p_i2c_handle);
@@ -763,8 +765,6 @@ static void master_sb(i2c_handle *p_i2c_handle)
 
 static void master_addr(i2c_handle *p_i2c_handle)
 {
-    // TODO: Add 2-byte reception with POS and ACK
-
     // Disable ack before clearing address flag in 1 byte reception
     if ((p_i2c_handle->i2c_it_data.status == I2C_STATUS_MASTER_RX) && (p_i2c_handle->i2c_it_data.txrx_length == 1)) {
         disable_ack(p_i2c_handle->p_i2cx);

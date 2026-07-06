@@ -16,7 +16,7 @@ PORT = $(firstword $(PORT_LINE))
 # Commands
 ARDUINO_CLI = arduino-cli
 
-.PHONY: compile monitor i2c_upload usart_upload
+.PHONY: compile monitor upload_i2c upload_usart
 .PHONY: $(ARDUINO_FILES) $(UPLOAD_FILE)
 
 compile: $(ARDUINO_FILES)
@@ -24,10 +24,10 @@ compile: $(ARDUINO_FILES)
 $(ARDUINO_FILES): 
 	@$(ARDUINO_CLI) compile --fqbn $(UNO_INFO) $@
 
-usart_upload: usart_test_arduino
+upload_usart: usart_test_arduino
 	@$(ARDUINO_CLI) upload -p $(PORT) --fqbn $(UNO_INFO) $^
 
-i2c_upload: i2c_test_arduino
+upload_i2c: i2c_test_arduino
 	@$(ARDUINO_CLI) upload -p $(PORT) --fqbn $(UNO_INFO) $^
 
 monitor: 
