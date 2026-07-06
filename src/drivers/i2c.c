@@ -3,9 +3,6 @@
 #include "rcc.h"
 #include "stm32f4xx.h"
 
-// TODO: Implement function callbacks
-// TODO: Create comment macros for nvim
-
 /*****************************************************************
                         Helper Function Prototypes
 *****************************************************************/
@@ -487,6 +484,7 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
             if ((p_i2c_handle->i2c_it_data.txrx_length == 0) && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_BTF)
                 && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE)) {
                 close_com(p_i2c_handle);
+                i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
             }
 
             else if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
@@ -504,6 +502,7 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
                 if (p_i2c_handle->i2c_it_data.txrx_length == 0) {
                     close_com(p_i2c_handle);
+                    i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
                 }
             }
             break;

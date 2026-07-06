@@ -349,6 +349,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
     case USART_MODE_RX:
         if ((status_reg & USART_SR_PE) || (status_reg & USART_SR_FE) || (status_reg & USART_SR_NF)
             || (status_reg & USART_SR_ORE)) {
+            usart_callback(p_usart_handle, USART_EVENT_ERROR);
             ASSERT(false);
         }
         if (p_usart_handle->p_usartx->SR & USART_SR_RXNE) {
@@ -357,6 +358,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
         if (p_usart_handle->usart_it_data.txrx_length == 0) {
             disable_interrupts(p_usart_handle->p_usartx);
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
         }
         break;
 
@@ -370,6 +372,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             disable_interrupts(p_usart_handle->p_usartx);
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
         }
 
         break;

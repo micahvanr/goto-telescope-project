@@ -15,6 +15,13 @@ typedef enum {
 /****************************************************************************************************
                                     Macros and Other Enums
 ****************************************************************************************************/
+
+// Used for callbacks
+typedef enum {
+    I2C_EVENT_CMPLT,
+    I2C_EVENT_ERROR,
+} i2c_event_e;
+
 // Init check enum
 typedef enum {
     I2C1_INIT_NUM = 0,
@@ -293,5 +300,8 @@ void i2c_slave_receive_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t le
 // Interrupt handling
 void i2c_it_config(i2c_reg_def const *const p_i2cx, togglable_e toggle);
 void i2c_it_handler(i2c_handle *const p_i2c_handle);
+
+// User implement callback function to handle
+void __weak i2c_callback(i2c_handle *p_i2c_handle, i2c_event_e event);
 
 #endif

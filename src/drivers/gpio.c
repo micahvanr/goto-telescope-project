@@ -75,7 +75,6 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     // Set pull up or pull down resistors
     p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_no));
 
-
     // Set interrupt mode
     if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA) {
         gpio_it_config(p_gpio_handle, ENABLE);
