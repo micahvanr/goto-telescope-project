@@ -1,14 +1,15 @@
 #include "assert_handler.h"
 #include "gpio.h"
+#include "printf.h"
 #include "rcc.h"
 
 static void blink_led(void);
 
 void assert_handler(void)
 {
-    // TODO: Assert - Turn off telescope motors
-    // TODO: Assert - Log to console
-    // TODO: Assert - Change to hardfault
+    // TODO: Turn off telescope motors
+    // TODO: Change to hardfault?
+    printf_("ASSERT TRIGGERED");
     // Breakpoint
     __asm volatile("BKPT");
 

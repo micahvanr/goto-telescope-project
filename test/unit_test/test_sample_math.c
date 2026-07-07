@@ -1,6 +1,6 @@
-#include "../tools/unity/src/unity.h"
-#include "../tools/fff/fff.h"
-#include "../src/common/sample_math.h"
+#include "../../tools/unity/src/unity.h"
+#include "../../tools/fff/fff.h"
+#include "../../src/common/sample_math.h"
 
 DEFINE_FFF_GLOBALS;
 

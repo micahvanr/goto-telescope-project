@@ -2,7 +2,6 @@
 #define STM32F4XX_H
 
 #include "common.h"
-#include <stdint.h>
 
 // TODO: Think about changing comment sections with macros
 //====================================================================//

@@ -16,7 +16,8 @@ SRC_DIR = ./src
 
 ## Test dir
 TEST_DIR = test
-MANUAL_TEST_DIR = $(DRIVER_DIR)/manual_tests
+MANUAL_TEST_DIR = $(TEST_DIR)/manual_test
+UNIT_TEST_DIR = $(TEST_DIR)/unit_test
 
 INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MANUAL_TEST_DIR)
 
@@ -31,7 +32,7 @@ COMP_COM_GEN = bear # compile_commands.json file generator
 # Files
 TARGET = $(BIN_DIR)/main
 
-ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(SRC_DIR)/*/*/*.h $(SRC_DIR)/*/*/*.c
+ALL_FILES = $(SRC_DIR)/*/*.h $(SRC_DIR)/*/*.c $(MANUAL_TEST_DIR)/*.c $(MANUAL_TEST_DIR)/*.h
 
 ## .c/.h will be added to each one when compiled and linked
 SRC_FILES = stm32_startup \
@@ -54,7 +55,7 @@ MANUAL_TEST_FILES = gpio_test \
 
 COMMON_FILES = assert_handler \
 				printf \
-				debug_pin
+				debug_tools
 
 #APP_FILES = 
 
@@ -123,7 +124,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen
+.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen arduino
 
 all: $(TARGET).elf
 
@@ -141,10 +142,9 @@ flash:
 			-c "program build/bin/main.elf"
 
 # Trying out using compile commands file
-# TODO: Change to compile commands -> change docker container to use bear to get compile commands
 cppcheck:
-	# @$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
-	@$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
+	@$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
+	# @$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
 	$(FORMAT) -i $(ALL_FILES)
@@ -155,7 +155,10 @@ cc_gen:
 
 # Unity testing commands
 test:
-	make -C $(TEST_DIR) 
+	make -C $(UNIT_TEST_DIR) -s
 
 test_clean:
-	make -C $(TEST_DIR) clean
+	make -C $(UNIT_TEST_DIR) clean
+
+arduino:
+	make -C $(MANUAL_TEST_DIR) -s

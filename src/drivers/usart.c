@@ -230,7 +230,7 @@ void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t leng
     p_usartx->CR1 |= USART_CR1_RE;
 
     for (uint32_t i = 0; i < length; i++) {
-        while (!((p_usartx->SR & USART_SR_RXNE)));
+        while (!(p_usartx->SR & USART_SR_RXNE));
         *p_data = p_usartx->DR;
         p_data++;
     }
@@ -349,30 +349,30 @@ void usart_it_handler(usart_handle *const p_usart_handle)
     case USART_MODE_RX:
         if ((status_reg & USART_SR_PE) || (status_reg & USART_SR_FE) || (status_reg & USART_SR_NF)
             || (status_reg & USART_SR_ORE)) {
+            usart_callback(p_usart_handle, USART_EVENT_ERROR);
             ASSERT(false);
         }
-        if (status_reg & USART_SR_RXNE) {
+        if (p_usart_handle->p_usartx->SR & USART_SR_RXNE) {
             recieve_data(p_usart_handle);
         }
         if (p_usart_handle->usart_it_data.txrx_length == 0) {
             disable_interrupts(p_usart_handle->p_usartx);
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
         }
         break;
 
     // Tranfer data
     case USART_MODE_TX:
         //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty
-        if (p_usart_handle->usart_it_data.txrx_length == 1) {
-            disable_interrupts(p_usart_handle->p_usartx);
-        }
-        if (status_reg & USART_SR_TXE) {
+        if ((p_usart_handle->p_usartx->SR & USART_SR_TXE) && (p_usart_handle->usart_it_data.txrx_length != 0)) {
             transfer_data(p_usart_handle);
         }
-        if (p_usart_handle->usart_it_data.txrx_length == 0) {
-            while (!(p_usart_handle->p_usartx->SR & USART_SR_TC));
+        if ((p_usart_handle->usart_it_data.txrx_length == 0) && (status_reg & USART_SR_TC)) {
+            disable_interrupts(p_usart_handle->p_usartx);
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
         }
 
         break;
@@ -417,9 +417,7 @@ static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
-                      : (p_usartx == USART6) ? RCC_APB2ENR_USART6
-                                             : 0;
+        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
     }
 }
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
@@ -434,9 +432,7 @@ static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1
-                       : (p_usartx == USART6) ? RCC_APB2ENR_USART6
-                                              : 0;
+        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
     }
 }
 
@@ -546,6 +542,9 @@ static inline void enable_interrupts(usart_reg_def *const p_usartx)
 static inline void disable_interrupts(usart_reg_def *const p_usartx)
 {
     p_usartx->CR1 &= ~USART_CR1_RXNEIE;
+    p_usartx->CR1 &= ~USART_CR1_TCIE;
+    p_usartx->CR1 &= ~USART_CR1_TXEIE;
+    p_usartx->CR1 &= ~USART_CR1_PEIE;
     p_usartx->CR1 &= ~USART_CR1_PCE;
     p_usartx->CR1 &= ~USART_CR1_UE;
 }

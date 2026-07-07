@@ -28,6 +28,13 @@ typedef enum {
 /****************************************************************************************************
                                     Macros and Other Enums
 ****************************************************************************************************/
+
+// Used for callbacks
+typedef enum {
+    USART_EVENT_CMPLT,
+    USART_EVENT_ERROR,
+} usart_event_e;
+
 // Init check enum
 typedef enum {
     USART1_INIT_NUM = 0,
@@ -252,5 +259,8 @@ void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t co
 // Interrupt handling
 void usart_it_config(usart_reg_def const *const p_usartx, togglable_e toggle);
 void usart_it_handler(usart_handle *const p_usart_handle);
+
+// User implement callback function to handle
+void __weak usart_callback(usart_handle *p_usart_handle, usart_event_e event);
 
 #endif
