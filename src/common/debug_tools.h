@@ -1,5 +1,5 @@
-#ifndef DEBUG_PIN_H
-#define DEBUG_PIN_H
+#ifndef DEBUG_TOOLS_H
+#define DEBUG_TOOLS_H
 
 #include "stm32f4xx.h"
 
