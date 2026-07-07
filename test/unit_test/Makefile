@@ -20,7 +20,7 @@ endif
 .PHONY: test_ci
 
 PATH_ROOT = ../..
-PATHU = ../tools/unity/src
+PATHU = $(PATH_ROOT)/tools/unity/src
 #PATH_APP = ../src/app
 #PATH_BSP = ../src/bsp
 #PATH_COMMON = ../src/common
@@ -61,7 +61,7 @@ test: $(BUILD_PATHS) $(RESULTS)
 $(PATHR)/%.txt: $(PATHB)/%.$(TARGET_EXTENSION)
 	-./$< > $@ 2>&1
 
-$(PATHB)/test_%.$(TARGET_EXTENSION): $(PATHO)/test_%.o $(PATHO)/%.o $(PATHO)/unity.o #$(PATHD)/test_%.d
+$(PATHB)/test_%.$(TARGET_EXTENSION): $(PATHO)/test_%.o $(PATHO)/%.o $(PATHO)/unity.o#$(PATHD)/test_%.d
 	$(LINK) -o $@ $^
 
 $(PATHO)/%.o:: $(PATHT)/%.c
