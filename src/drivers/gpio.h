@@ -3,9 +3,9 @@
 
 #include "stm32f4xx.h"
 
-/****************************************************************************************************
-                                    Address Definitions
-****************************************************************************************************/
+//======================================================================================//
+//                  Address Definitions
+//======================================================================================//
 
 typedef enum {
     GPIOA_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x0000u)),
@@ -28,11 +28,13 @@ typedef enum {
 #define GPIOG_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1800u))
 #define GPIOH_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1C00u))
 #endif
-/****************************************************************************************************
-                                    Macros and Other Enums
-****************************************************************************************************/
 
-/*****                   GPIO Handle Structure Possible Values                    *****/
+//======================================================================================//
+//                  Macros and Other Enums
+//======================================================================================//
+
+//  GPIO Handle Structure Possible Values
+//=========================================//
 
 typedef enum {
     GPIO_MODE_INPUT  = 0, // Default
@@ -117,9 +119,9 @@ typedef enum {
     EXTI_LINE_NO_22 = 22,
 } exti_lines_e;
 
-/****************************************************************************************************
-                                    Structure Definitions
-****************************************************************************************************/
+//======================================================================================//
+//                  Structure Definitions
+//======================================================================================//
 
 // Register definition
 typedef __vo struct {
@@ -151,10 +153,11 @@ typedef struct {
     gpio_config gpio_conf;
 } gpio_handle;
 
-/*
-Initialization structure. Each bit represents a pin and when it is zero it means the pin has not been initialized.
-Otherwise a one means it has been initialized. This is used to ensure initialization of a pin before using it.
-*/
+// Initialization structure. Each bit represents a pin and 
+// When it is zero it means the pin has not been initialized.
+// Otherwise a one means it has been initialized. 
+// This is used to ensure initialization of a pin before using it.
+
 typedef struct {
     uint16_t gpio_a_pin_init;
     uint16_t gpio_b_pin_init;
@@ -166,9 +169,9 @@ typedef struct {
     uint16_t gpio_h_pin_init;
 } gpio_pin_init;
 
-/****************************************************************************************************
-                                    Peripheral Structure Definitions
-****************************************************************************************************/
+//======================================================================================//
+//                  Peripheral Structure Definitions
+//======================================================================================//
 
 #define GPIOA ((gpio_reg_def *)GPIOA_BASE_ADDR)
 #define GPIOB ((gpio_reg_def *)GPIOB_BASE_ADDR)
@@ -179,9 +182,9 @@ typedef struct {
 #define GPIOG ((gpio_reg_def *)GPIOG_BASE_ADDR)
 #define GPIOH ((gpio_reg_def *)GPIOH_BASE_ADDR)
 
-/****************************************************************************************************
-                                    Peripheral Function APIs
-****************************************************************************************************/
+//======================================================================================//
+//                  Peripheral Function APIs
+//======================================================================================//
 
 void gpio_init(gpio_handle *const p_gpio_handle);
 void gpio_reset(gpio_reg_def const *const p_gpiox);

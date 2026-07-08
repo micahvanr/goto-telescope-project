@@ -3,14 +3,9 @@
 
 #include "common.h"
 
-// TODO: Think about changing comment sections with macros
-//====================================================================//
-//  Address Definitions
-//====================================================================//
-
-/****************************************************************************************************
-                                        Address Definitions
-****************************************************************************************************/
+//============================================================//
+//          Address Definitions
+//============================================================//
 
 typedef enum {
     EXTI_BASE_ADDR   = (0x40013C00ul),
@@ -33,26 +28,9 @@ typedef enum {
     AHB2_BASE_ADDR = (0x50000000ul),
 } bus_base_addr_e;
 
-#ifdef MACRO
-#define EXTI_BASE_ADDR   (0x40013C00ul)
-#define SYSCFG_BASE_ADDR (0x40013800ul)
-
-#define NVIC_ISER_BASE_ADDR (0xE000E100ul)
-#define NVIC_ICER_BASE_ADDR (0xE000E180ul)
-#define NVIC_ISPR_BASE_ADDR (0xE000E200ul)
-#define NVIC_ICPR_BASE_ADDR (0xE000E280ul)
-#define NVIC_IABR_BASE_ADDR (0xE000E300ul)
-#define NVIC_IPR_BASE_ADDR  (0xE000E400ul)
-
-#define APB1_BASE_ADDR (0x40000000ul)
-#define APB2_BASE_ADDR (0x40010000ul)
-#define AHB1_BASE_ADDR (0x40020000ul)
-#define AHB2_BASE_ADDR (0x50000000ul)
-#endif
-
-/****************************************************************************************************
-                                                Macros and Other Enums
-****************************************************************************************************/
+//======================================================================================//
+//                  Macros and Other Enums
+//======================================================================================//
 
 // Enums
 // General
@@ -144,9 +122,9 @@ typedef enum {
     LED_BLUE_PORT   = 3u,
 } hardware_port_assignment_e;
 
-/****************************************************************************************************
-                                        Register Structure Definitions
-****************************************************************************************************/
+//======================================================================================//
+//                  Register Structure Definitions
+//======================================================================================//
 
 // clang-format off
 typedef __vo struct {
@@ -166,19 +144,18 @@ typedef __vo struct {
 	uint32_t RESERVED1;			// Reserved 0x1C
 	uint32_t CMPCR;				// Compensation cell control register								Offset: 0x20
 } syscfg_reg_def;
-
 // clang-format on
 
-/****************************************************************************************************
-                                    Peripheral Structure Definitions
-****************************************************************************************************/
+//======================================================================================//
+//                  Peripheral Structure Definitions
+//======================================================================================//
 
 #define EXTI   ((exti_reg_def *)EXTI_BASE_ADDR)
 #define SYSCFG ((syscfg_reg_def *)SYSCFG_BASE_ADDR)
 
-/****************************************************************************************************
-                                    General MCU API Function Prototypes
-****************************************************************************************************/
+//======================================================================================//
+//                  General MCU API Function Prototypes
+//======================================================================================//
 
 void irq_config(irq_number_e irq_num, togglable_e toggle);
 void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);

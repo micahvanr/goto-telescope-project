@@ -45,10 +45,18 @@ Based on the pitchfork layout
 | tools/| Any tools used such as dockerfile and unit testing frameworks|
 
 ## Build
-The way I will be building the project is through a Makefile. I will be debugging the code through vscode with the cortex-debug extension. This will allow me to use vscode with most if not all the debugging tools as a standard IDE would. In addition, I will then still be able to use make to build my project the way I want to.
+The way I will be building the project is through a Makefile and by using a compile commands generator (Bear in this case).
+The Makefile will compile the code and run the unit tests. Bear will be used to generate a compile commands file 
+for cppcheck to use to get project information from.
+
+## IDE/Editor
+I use Neovim as my editor along with Tmux in order to run commands and debug my application. This makes it to where just about everything can be run
+from the command line whether it be debugging to just flashing the code to the board.
  
 ## Tests
-I will be performing unit testing using the Unity framework with the Fake Function Framework (FFF) to create mocks. The Unity is an all C testing framework made for the embedded field. FFF similiar in that it is a simple C header implementation. I will not be performing unit tests on driver layer code. Instead I will be relying on integration and system tests to ensure the drivers work properly. 
+I will be performing unit testing using the Unity framework with the Fake Function Framework (FFF) to create mocks. 
+The Unity is an all C testing framework made for the embedded field. FFF similiar in that it is a simple C header implementation. 
+I will not be performing unit tests on driver layer code. Instead I will be relying on integration and system tests to ensure the drivers work properly. 
 
 ## Pushing a new change or addition
 1. Create a local branch
@@ -63,29 +71,12 @@ I will be performing unit testing using the Unity framework with the Fake Functi
 10. Open pull-request
 11. Merge pull-request
 
-## Commit message
+## Commit Structure:
+Commit structure will follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and use the additional types they list.
 * One change per commit:
     * Each commit should make one change or addition in order for them to be organized well and the commits will be clear.
 * Commits should build (if applicable):
-
-### Commit Structure:
-Subject Line - 		{\<type>:\<scope>:\<description>}	(Describe solution not problem)  <br>	
-Blank Line - 		{\n}  <br>
-Body - 		   		{Explain what and why}  <br>
-Blank Line - 		{\n}  <br>
-Optional Footer - 	{Any additional comments or what it connects to} 
-
-### Ex commit:  
-git -commit -m "feat(UART): Add UART drivers  <br>
- <br>
-UART drivers are required for GPS locator"
 	
-### List of types - \<type>  
-* add
-* fix
-* modify
-* del
-
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
 
