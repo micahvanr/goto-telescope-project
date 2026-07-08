@@ -5,10 +5,10 @@
 
 static void blink_led(void);
 
+// Function used by ASSERT() macro
 void assert_handler(void)
 {
     // TODO: Turn off telescope motors
-    // TODO: Change to hardfault?
     printf_("ASSERT TRIGGERED");
     // Breakpoint
     __asm volatile("BKPT");

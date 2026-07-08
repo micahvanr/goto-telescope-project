@@ -3,9 +3,9 @@
 #include "common.h"
 #include "rcc.h"
 
-/*****************************************************************
-                        Helper Function Prototypes
-*****************************************************************/
+//========================================================//
+//          Helper Function Prototypes
+//========================================================//
 
 // Assert helper functions
 static void usart_init_asserts(usart_handle const *const p_usart_handle);
@@ -23,16 +23,16 @@ static inline void disable_interrupts(usart_reg_def *const p_usartx);
 static inline void usart_clock_enable(usart_reg_def const *const p_usartx);
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx);
 
-/*****************************************************************
-                        Global variables
-*****************************************************************/
+//========================================================//
+//          Global Variables
+//========================================================//
 
 // Same concept with GPIO init variable but with USART ports instead.
 uint8_t g_usart_port_init = 0;
 
-/****************************************************************************************************
-                                    Peripheral Function API Implementation
-****************************************************************************************************/
+//======================================================================================//
+//                  Peripheral Function API Implementation
+//======================================================================================//
 
 /***************************************************************************
 Function: usart_init
@@ -401,9 +401,10 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
     while (!(p_usartx->SR & USART_SR_TXE));
     p_usartx->DR = data;
 }
-/****************************************************************************************************
-                                Helper Function Implementation
-****************************************************************************************************/
+
+//======================================================================================//
+//                  Helper Function Implementation
+//======================================================================================//
 
 static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
 {

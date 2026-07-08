@@ -39,11 +39,13 @@ void this_is_a_function(void)
 ``` C
 // This is a comment
 
-/* 
-This is a multi-line 
-comment
-*/
+// This 
+// is 
+// a 
+// multi-line 
+// comment
 ```
+
 ## Source file comments
 * Before each function there should be a short function block. It should contain a brief overview, what parameters it has, the values those parameters can be, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
@@ -108,6 +110,7 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 * Always keep #include guards (in caps) in every header file to avoid duplicated and recursive includsions.
 ``` C
 #ifndef UART_H
+#define UART_H
     // Defines and all code goes in here
 #endif
 ```
@@ -124,7 +127,6 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 * Switches are convenient with enums as the compiler will warn when there are enum values that haven't been used in the switch statement
 
 # if/else statements
-
 * Always use brackets, even for single line statements
 * Ternary if statements are okay but should not be overused
 
