@@ -18,17 +18,6 @@ typedef enum {
     GPIOH_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x1C00u)),
 } gpio_base_addr_e;
 
-#ifdef MACRO
-#define GPIOA_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0000u))
-#define GPIOB_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0400u))
-#define GPIOC_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0800u))
-#define GPIOD_BASE_ADDR ((AHB1_BASE_ADDR) + (0x0C00u))
-#define GPIOE_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1000u))
-#define GPIOF_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1400u))
-#define GPIOG_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1800u))
-#define GPIOH_BASE_ADDR ((AHB1_BASE_ADDR) + (0x1C00u))
-#endif
-
 //======================================================================================//
 //                  Macros and Other Enums
 //======================================================================================//
@@ -120,7 +109,7 @@ typedef enum {
 } exti_lines_e;
 
 //======================================================================================//
-//                  Structure Definitions
+//                  Register Structure Definitions
 //======================================================================================//
 
 // Register definition
@@ -183,7 +172,7 @@ typedef struct {
 #define GPIOH ((gpio_reg_def *)GPIOH_BASE_ADDR)
 
 //======================================================================================//
-//                  Peripheral Function APIs
+//                  Function API prototypes
 //======================================================================================//
 
 void gpio_init(gpio_handle *const p_gpio_handle);

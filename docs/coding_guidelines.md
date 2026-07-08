@@ -69,19 +69,28 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 }
 ```
 ## Header file comments
-* Each section of the header file should have headings that title each section
+
+### Header Organization
+* Address definitions
+* Macros and Other Enums
+* Register structure definitions
+* Peripheral structure definitions
+* Function API prototypes
+
+### Section Format
 ``` C
-/****************************************************************************************************
-                                        Heading 1
-****************************************************************************************************/
+//======================================================================================//
+//                  Header 1
+//======================================================================================//
 
-/*****************************************************************
-                            Heading 2
-*****************************************************************/
+//========================================================//
+//          Header 2
+//========================================================//
 
-/*****                      Heading 3                       *****/
+//  Header 3
+//=========================================//
 
-// Header 4 & basic comment
+// Basic comment
 ```
 ## Other comments
 * Apart from the comments defined above I will add other comments here and there if something requires more explaination
