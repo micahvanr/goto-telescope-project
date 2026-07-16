@@ -36,12 +36,13 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     // Get register values
     rcc_pllcfgr_reg = RCC->PLLCFGR;
-    pllm            = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLM_POS) & RCC_PLL_CFGR_PLLM_MASK);
-    plln            = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLN_POS) & RCC_PLL_CFGR_PLLN_MASK);
-    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLP_POS) & RCC_PLL_CFGR_PLLP_MASK);
+    // TODO: Fix mask
+    pllm            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLM0_POS) & RCC_PLLCFGR_PLLM_MASK);
+    plln            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLN0_POS) & RCC_PLLCFGR_PLLN_MASK);
+    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLP0_POS) & RCC_PLLCFGR_PLLP_MASK);
     pllp            = pllp_values[pllp_reg];
 
-    pll_src = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLSRC_POS) & RCC_PLL_CFGR_PLLSRC_MASK);
+    pll_src = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLSRC_POS) & RCC_PLLCFGR_PLLSRC_MASK);
 
     // Select PLL clock source frequency
     switch (pll_src) {
@@ -69,7 +70,8 @@ Note: None
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL)
-    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS_POS) & RCC_CFGR_SWS_MASK);
+    // // TODO: Fix mask
+    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS_MASK);
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
     // Return clock depending on what the source is
@@ -154,9 +156,9 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
     case RCC_MCO1_PLL_SRC:
         RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
-            RCC->CFGR &= ~(RCC_CFGR_MCO1_PRE_MASK << RCC_CFGR_MCO1_PRE_POS);
+            RCC->CFGR &= ~(RCC_CFGR_MCO1PRE_MASK << RCC_CFGR_MCO1PRE_POS);
         } else {
-            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1_PRE_POS;
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1PRE_POS;
         }
         mco_gpio_pin_init(RCC_MCO1_SEL);
         break;
@@ -166,9 +168,9 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
     case RCC_MCO2_PLL_SRC:
         RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
-            RCC->CFGR &= ~(RCC_CFGR_MCO2_PRE_MASK << RCC_CFGR_MCO2_PRE_POS);
+            RCC->CFGR &= ~(RCC_CFGR_MCO2PRE_MASK << RCC_CFGR_MCO2PRE_POS);
         } else {
-            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2_PRE_POS;
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2PRE_POS;
         }
         mco_gpio_pin_init(RCC_MCO2_SEL);
         break;

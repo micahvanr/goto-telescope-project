@@ -117,7 +117,7 @@ void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e toggle)
     switch (toggle) {
     case ENABLE:
         // Enable the SYSCFG clock in RCC
-        RCC->APB2ENR |= RCC_APB2ENR_SYSCFG;
+        RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
         // Enable the corresponding EXTI line in the EXTI control register of SYSCFG
         SYSCFG->EXTICR[exti_cr_reg_num] |= (map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));

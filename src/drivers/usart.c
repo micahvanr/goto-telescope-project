@@ -410,30 +410,30 @@ static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
-                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3
-                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
-                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
+        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
+                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
+                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
+                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                              : 0;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
+        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
     }
 }
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
-                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3
-                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
-                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
+        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
+                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
+                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
+                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                               : 0;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
+        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
     }
 }
 
@@ -504,8 +504,8 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
 
     // Set up variable to write into register
     temp_reg = 0;
-    temp_reg |= (div_fraction << USART_BRR_FRACTION_POS);
-    temp_reg |= (div_mantissa << USART_BRR_MANTISSA_POS);
+    temp_reg |= (div_fraction << USART_BRR_DIV_FRACTION_POS);
+    temp_reg |= (div_mantissa << USART_BRR_DIV_MANTISSA_POS);
 
     // 3rd bit must be kept clear if over8 is used
     if (oversampling_mode == USART_OVERSAMPLING_8) {

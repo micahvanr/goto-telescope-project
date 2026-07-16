@@ -73,7 +73,7 @@ void i2c_init(i2c_handle *const p_i2c_handle)
     p_i2c_handle->p_i2cx->CR2 |= (rcc_get_bus_clock_freq_hz(APB1_BUS) / 1000000);
 
     // Set own address
-    p_i2c_handle->p_i2cx->OAR1 |= (p_i2c_handle->i2c_conf.own_address << I2C_OAR1_ADD1_POS);
+    p_i2c_handle->p_i2cx->OAR1 |= (p_i2c_handle->i2c_conf.own_address << I2C_OAR1_ADD7_POS);
 
     // Configure CCR
     set_ccr_and_trise(p_i2c_handle);
@@ -173,12 +173,12 @@ void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t
 
     // Send data
     for (uint32_t i = length; i > 0; i--) {
-        while (!(p_i2cx->SR1 & I2C_SR1_TxE));
+        while (!(p_i2cx->SR1 & I2C_SR1_TXE));
         p_i2cx->DR = *p_data;
         p_data++;
         // If last byte send stop
         if (i == 1) {
-            while (!(p_i2cx->SR1 & I2C_SR1_TxE));
+            while (!(p_i2cx->SR1 & I2C_SR1_TXE));
             while (!(p_i2cx->SR1 & I2C_SR1_BTF));
             if (repeated_start == I2C_REPEATED_START_DISABLE) {
                 generate_stop_condition(p_i2cx);
@@ -234,7 +234,7 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t 
         if (i == 1) {
             disable_ack(p_i2cx);
         }
-        while (!(p_i2cx->SR1 & I2C_SR1_RxNE));
+        while (!(p_i2cx->SR1 & I2C_SR1_RXNE));
         *p_data = p_i2cx->DR;
         p_data++;
 
@@ -271,7 +271,7 @@ void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32
 
     // Send data
     for (uint32_t i = length; i > 0; i--) {
-        while (!(p_i2cx->SR1 & I2C_SR1_TxE));
+        while (!(p_i2cx->SR1 & I2C_SR1_TXE));
         p_i2cx->DR = *p_data;
         p_data++;
     }
@@ -309,7 +309,7 @@ void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t leng
 
     // Receive data
     for (uint32_t i = length; i > 0; i--) {
-        while (!(p_i2cx->SR1 & I2C_SR1_RxNE));
+        while (!(p_i2cx->SR1 & I2C_SR1_RXNE));
         *p_data = p_i2cx->DR;
         p_data++;
     }
@@ -482,18 +482,18 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
         switch (p_i2c_handle->i2c_it_data.status) {
         case I2C_STATUS_MASTER_TX:
             if ((p_i2c_handle->i2c_it_data.txrx_length == 0) && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_BTF)
-                && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE)) {
+                && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE)) {
                 close_com(p_i2c_handle);
                 i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
             }
 
-            else if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
+            else if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
                 send_byte(p_i2c_handle);
             }
             break;
 
         case I2C_STATUS_MASTER_RX:
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RxNE) {
+            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
                 if (p_i2c_handle->i2c_it_data.txrx_length == 2) {
                     disable_ack(p_i2c_handle->p_i2cx);
                 }
@@ -522,7 +522,7 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
         case I2C_STATUS_SLAVE_TX:
 
-            if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TxE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
+            if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
                 send_byte(p_i2c_handle);
             }
 
@@ -533,7 +533,7 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
             break;
         case I2C_STATUS_SLAVE_RX:
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RxNE) {
+            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
                 receive_byte(p_i2c_handle);
             }
 
@@ -586,7 +586,7 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
     uint32_t peripheral_clock_khz = (rcc_get_bus_clock_freq_hz(APB1_BUS) / 1000);
 
     // Speed configuration
-    p_i2c_handle->p_i2cx->CCR |= (p_i2c_handle->i2c_conf.speed_mode << I2C_CCR_FS_POS);
+    p_i2c_handle->p_i2cx->CCR |= (p_i2c_handle->i2c_conf.speed_mode << I2C_CCR_F_S_POS);
 
     switch (p_i2c_handle->i2c_conf.speed_mode) {
     case I2C_SPEED_MODE_STANDARD:
@@ -621,7 +621,7 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
         // Set TRISE
         trise_value |= ((I2C_MAX_RISE_FM_300_NS / (1000000 / (peripheral_clock_khz))) + 1);
     }
-    p_i2c_handle->p_i2cx->TRISE = (trise_value & I2C_TRISE_MASK);
+    p_i2c_handle->p_i2cx->TRISE = (trise_value & I2C_TRISE_TRISE_MASK);
     p_i2c_handle->p_i2cx->CCR |= ccr_value;
 }
 
@@ -742,16 +742,16 @@ static inline void clear_af(i2c_reg_def *p_i2cx)
 }
 static inline void i2c_clock_enable(i2c_reg_def const *const p_i2cx)
 {
-    RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1
-                  : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2
-                  : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3
+    RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
+                  : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
+                  : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
                                      : 0;
 }
 static inline void i2c_clock_disable(i2c_reg_def const *const p_i2cx)
 {
-    RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1
-                   : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2
-                   : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3
+    RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
+                   : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
+                   : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
                                       : 0;
 }
 

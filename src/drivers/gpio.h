@@ -19,7 +19,7 @@ typedef enum {
 } gpio_base_addr_e;
 
 //======================================================================================//
-//                  Macros and Other Enums
+//                  Peripheral Constants
 //======================================================================================//
 
 //  GPIO Handle Structure Possible Values
@@ -109,20 +109,20 @@ typedef enum {
 } exti_lines_e;
 
 //======================================================================================//
-//                  Register Structure Definitions
+//                  Structure Definitions
 //======================================================================================//
 
 // Register definition
 typedef __vo struct {
-    uint32_t MODER;   // GPIO port mode register                  Offset: 0x00
-    uint32_t OTYPER;  // GPIO port output type register           Offset: 0x04
-    uint32_t OSPEEDR; // GPIO port output speed register          Offset: 0x08
-    uint32_t PUPDR;   // GPIO port pull-up/pull-down register     Offset: 0x0C
-    uint32_t IDR;     // GPIO port input data register            Offset: 0x10
-    uint32_t ODR;     // GPIO port output data register           Offset: 0x14
-    uint32_t BSRR;    // GPIO port bit set/reset register         Offset: 0x18
-    uint32_t LCKR;    // GPIO port configuration lock register    Offset: 0x1C
-    uint32_t AFR[2];  // GPIO alternate function register         Offset: 0x20
+    uint32_t MODER;   // GPIO port mode register                    Offset: 0x0
+    uint32_t OTYPER;  // GPIO port output type register             Offset: 0x4
+    uint32_t OSPEEDR; // GPIO port output speed register            Offset: 0x8
+    uint32_t PUPDR;   // GPIO port pull-up/pull-down register       Offset: 0xC
+    uint32_t IDR;     // GPIO port input data register              Offset: 0x10
+    uint32_t ODR;     // GPIO port output data register             Offset: 0x14
+    uint32_t BSRR;    // GPIO port bit set/reset register           Offset: 0x18
+    uint32_t LCKR;    // GPIO port configuration lock register      Offset: 0x1C
+    uint32_t AFR[2];  // GPIO alternate function register           Offset: 0x20
 } gpio_reg_def;
 
 // Configuration definition (used to initialize and configure gpio port settings)
@@ -142,9 +142,9 @@ typedef struct {
     gpio_config gpio_conf;
 } gpio_handle;
 
-// Initialization structure. Each bit represents a pin and 
+// Initialization structure. Each bit represents a pin and
 // When it is zero it means the pin has not been initialized.
-// Otherwise a one means it has been initialized. 
+// Otherwise a one means it has been initialized.
 // This is used to ensure initialization of a pin before using it.
 
 typedef struct {
@@ -159,7 +159,7 @@ typedef struct {
 } gpio_pin_init;
 
 //======================================================================================//
-//                  Peripheral Structure Definitions
+//                  Peripheral Structure Macros
 //======================================================================================//
 
 #define GPIOA ((gpio_reg_def *)GPIOA_BASE_ADDR)
