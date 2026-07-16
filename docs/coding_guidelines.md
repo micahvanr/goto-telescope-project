@@ -1,8 +1,9 @@
 # Intro
-This document contains the coding guidelines I will follow in order to keep the project consistent and readable. Some guidelines are my personal preferance while others are best practices. In addition, I will be using clang to enforce some formatting. 
+This document contains the coding guidelines I will follow in order to keep the project consistent and readable. 
+Some guidelines are my personal preferance while others are best practices.  
 
 # Naming
-* I will be using snake case in all cases except macros and enum values. Macros and enum values will be in all caps.
+* I will be using snake case in all cases except constant values. Constants will be in all caps.
 ``` C
 #define THIS_IS_A_MACRO (50)
 void this_is_a_function(void) 
@@ -12,16 +13,17 @@ void this_is_a_function(void)
 ```
 ### When naming try to follow these rules
 * Avoid single letter variables
-* Avoid abbreviations (except stated below)
+* Avoid abbreviations (unless very obvious)
 * Prefix pointers and global scope variables (e.g. p_gpioa or g_task_num)
 * Enums should be typedefined and suffixed with _e (e.g. gpio_mode_values_e)
 * Include units in the name if applicable (e.g. delay_seconds)
-* Prefix module names their corresponding module (e.g. gpio_init) except for helper functions 
+* Prefix module function names their corresponding module (e.g. gpio_init) except for helper functions 
 
-### Register structures:
+### Driver register structures:
 * Each register structure definition will be in the format of the register it corresponds to. 
 * Most will be in all caps and abbreviated to some degree. 
 * This is to signify you are modifying a register and for consistency between the register and the referance manual
+* Should be generated with reg_constant_gen.py
 
 ### Other naming conventions:
 * One code module per header and source file
@@ -68,16 +70,7 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
     // ... 
 }
 ```
-## Header file comments
-
-### Header Organization
-* Address definitions
-* Macros and Other Enums
-* Register structure definitions
-* Peripheral structure definitions
-* Function API prototypes
-
-### Section Format
+## Header file section comments
 ``` C
 //======================================================================================//
 //                  Header 1
@@ -92,12 +85,12 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 
 // Basic comment
 ```
-## Other comments
+### Other comments
 * Apart from the comments defined above I will add other comments here and there if something requires more explaination
 
-# Defines/macros
+# Constants
 * Define constant variables and use comments if it is unclear where it comes from
-* Prefer to use enums where possible
+* Prefer to use enums where possible but macros are fine
 * Use static inline functions instead of macro functions as they are less error prone and easier to read.
 * Always use paranthesis (even for single numbers) to avoid unexpected macro expansion 
 ``` C
@@ -115,6 +108,16 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
         } while(0)                  
 ```
 
+### Driver register constants
+Register constants should be created using the reg_constant_gen Python script. This keeps constants consistent
+and easy to create. If additional register related constants are needed name them as following
+and place them at the top of the register constants section
+``` C
+typedef enum {
+    // *Special constant here*
+} *peripheral*_reg_misc_e;
+```
+
 # Header files
 * Always keep #include guards (in caps) in every header file to avoid duplicated and recursive includsions.
 ``` C
@@ -130,6 +133,14 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 #include "drivers/uart.h"
 #include "stm32f407xx.h"
 ```
+### Driver header Organization
+Driver header files should be organized in the following way:
+* Address Definitions
+* Peripheral Constants
+* Register Constants
+* Structure Definitions
+* Peripheral Structure Macros
+* Function API Prototypes
 
 # Switch statements
 * Use switch statements to avoid if else-if chain which can become unreadable
