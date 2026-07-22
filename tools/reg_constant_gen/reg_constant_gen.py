@@ -153,10 +153,13 @@ def reg_struct_out(peri, generic_peri_name):
         previous_offset = 0
         reserved_num = 0
         reserved_str = "reserved_"
+        found_offset_list = []
+
         max_name_width = max(len(str(reg.find('name').text)) for reg in peri.iter('register'))
         max_name_width = max(max_name_width, len("reserved_xx"))
         max_desc_width = max(len(re.sub(" +", " ",str(reg.find('description').text))) for reg in peri.iter('register'))
         max_desc_width = max(max_desc_width, len("Reserved section #"))
+
         for reg in peri.iter('register'):
             name = reg.find('name').text
             offset = reg.find('addressOffset').text
@@ -164,13 +167,41 @@ def reg_struct_out(peri, generic_peri_name):
             desc = str(desc).replace("\n", "")
             desc = re.sub(" +", " ", desc)
 
+            # Get rid of appended _x and (x) as these are generally used to specify
+            # Alternate versions of a register
+            name = str(name).split("_")[0]
+            desc = str(desc).split("(")[0]
+
+            # Break if negative, happens when wrapping around registers
+            if ((int(offset, base=16) - previous_offset) < 0):
+                break
+
+            # Don't print repeated offsets
+            if (int(offset, base=16) == previous_offset and int(offset, base=16) != 0):
+                continue
+
+            # Check for any offset gaps
             while (int(offset, base=16) - previous_offset) > 4 and offset != 0:
                 previous_offset += 4
                 reserved_num += 1
+                list_size = len(found_offset_list)
 
-                print(f"    uint32_t {reserved_str + str(reserved_num) + ";":{max_name_width + 4}} // Reserved 0x{(str(hex(previous_offset)).upper()).split("X")[1]}", file=f)
-                # print(f"    uint32_t {reserved_str + str(reserved_num):{max_name_width + 4}} // {"Reserved section #"+ str(reserved_num):{max_desc_width + 3}}  Offset: {hex(previous_offset).upper()}", file=f)
-            print(f"    uint32_t {name + ";":{max_name_width + 4}} // {desc:{max_desc_width + 4}} Offset: {offset}", file=f)
+                # Print any out of order registers
+                for reg_find in peri.iter('register'):
+                    desc_find = reg_find.find('description').text
+                    if reg_find.find('addressOffset').text == str(hex(previous_offset)):
+                        print(f"    uint32_t {reg_find.find('name').text + ";":{max_name_width + 4}} // {desc_find:{max_desc_width + 4}} Offset: 0x{(str(hex(previous_offset)).upper()).split("X")[1]}", file=f)
+                        found_offset_list.append(reg_find.find('addressOffset').text)
+                        break
+
+                # Print reserved address block
+                if len(found_offset_list) == list_size:
+                    print(f"    uint32_t {reserved_str + str(reserved_num) + ";":{max_name_width + 4}} // Reserved 0x{(str(hex(previous_offset)).upper()).split("X")[1]}", file=f)
+
+            # Print normally (not already repeated)
+            if not (offset in found_offset_list):
+                print(f"    uint32_t {name + ";":{max_name_width + 4}} // {desc:{max_desc_width + 4}} Offset: {offset}", file=f)
+
             previous_offset = int(offset, base=16)
 
         print("}", generic_peri_name.lower() + "_reg_def" + ";", file=f)
