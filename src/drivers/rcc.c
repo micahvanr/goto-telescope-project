@@ -36,7 +36,6 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     // Get register values
     rcc_pllcfgr_reg = RCC->PLLCFGR;
-    // TODO: Fix mask
     pllm            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLM0_POS) & RCC_PLLCFGR_PLLM_MASK);
     plln            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLN0_POS) & RCC_PLLCFGR_PLLN_MASK);
     pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLP0_POS) & RCC_PLLCFGR_PLLP_MASK);
@@ -143,6 +142,26 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
 
     default: ASSERT(false); return 0;
     }
+}
+
+uint32_t rcc_get_timer_clock_freq_hz(bus_types bus)
+{
+    uint32_t bus_clock = rcc_get_bus_clock_freq_hz(bus);
+    uint8_t bus_prescaler = 0;
+    uint8_t const APB_PRESCALER = 1 << 2;
+
+    switch (bus) {
+    case APB1_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK ; break;
+    case APB2_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK ; break;
+    default:       ASSERT(false);
+    }
+
+    BREAKPOINT();
+    if (bus_prescaler & APB_PRESCALER) {
+        return 2 * bus_clock;
+    }
+
+    return bus_clock;
 }
 
 void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler)

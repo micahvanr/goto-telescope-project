@@ -43,7 +43,8 @@ DRIVER_FILES =	main \
 				rcc \
 				gpio \
 				usart \
-				i2c
+				i2c \
+				timer \
 				
 
 
@@ -51,6 +52,7 @@ MANUAL_TEST_FILES = gpio_test \
 					usart_test \
 					i2c_test \
 					misc_test \
+					timer_test \
 
 
 COMMON_FILES = assert_handler \

@@ -8,6 +8,7 @@
 // Test functions
 #include "test_types.h"
 #include "gpio_test.h"
+#include "timer_test.h"
 #include "usart_test.h"
 #include "misc_test.h"
 #include "i2c_test.h"
@@ -29,7 +30,7 @@ int main(void)
     // while(!read_debug_button());
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test = I2C_TEST_REG;
+    test_type_e test = TIMER_TEST;
     switch (test) {
 
     // GPIO tests
@@ -45,6 +46,9 @@ int main(void)
     // (tested with Arduino)
     case I2C_TEST_REG:
     case I2C_TEST_IT:          i2c_tests(test); break;
+
+    // Timer tests
+    case TIMER_TEST:           timer_tests(test); break;
 
     // Misc tests
     case MISC_TEST_ASSERT:

@@ -89,8 +89,8 @@ static void test_usart_txrx_it(void)
     static uint8_t tx_length = sizeof(tx_data) - 1;
 
     static uint8_t const expected_rx[20] = "Arduino->STM";
-    static uint8_t rx_length       = 0;
-    static uint8_t rx_data[20]     = {0};
+    static uint8_t rx_length             = 0;
+    static uint8_t rx_data[20]           = {0};
 
     while (1) {
         // Send string

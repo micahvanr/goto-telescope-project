@@ -2,9 +2,9 @@
 #include "assert_handler.h"
 #include "rcc.h"
 
-//========================================================//
+//========================================================//}
 //          Helper Function Prototypes
-//========================================================//
+//========================================================//{
 
 // Assert helper functions
 static void gpio_init_asserts(gpio_handle const *const p_gpio_handle);
@@ -17,9 +17,9 @@ static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpio, pin_
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
 
-//========================================================//
+//========================================================//}
 //          Global Variables
-//========================================================//
+//========================================================//{
 
 // This variable is used to check/set a pins initialzation status.
 // It is an array with a length of 8 and each element is 16 bits wide.
@@ -27,10 +27,9 @@ static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
 // If a bit in a specific element is 0, that means it has not been initialized. If it is a 1, it has been.
 uint16_t g_gpio_pin_init[8] = {0};
 
-
-//======================================================================================//
+//======================================================================================//}
 //                  Peripheral Function API Implementation
-//======================================================================================//
+//======================================================================================//{
 
 /***************************************************************************
 Function: gpio_init
