@@ -10,8 +10,9 @@ void assert_handler(void)
 {
     // TODO: Turn off telescope motors
     printf_("ASSERT TRIGGERED");
+
     // Breakpoint
-    __asm volatile("BKPT");
+    BREAKPOINT();
 
     blink_led();
 }
