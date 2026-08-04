@@ -17,6 +17,8 @@
 #include "debug_tools.h"
 #include "printf.h"
 
+// TODO: Change all drivers field register contants to use bits format (0bx)
+
 int main(void)
 {
     // Uses USART2 and PA2 - change inside printf.h

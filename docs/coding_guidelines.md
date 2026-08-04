@@ -108,14 +108,28 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
         } while(0)                  
 ```
 
-### Driver register constants
-Register constants should be created using the reg_constant_gen Python script. This keeps constants consistent
+## Driver register constants
+### Miscellaneous constants
+Register field constants should be created using the reg_constant_gen Python script. This keeps constants consistent
 and easy to create. If additional register related constants are needed name them as following
-and place them at the top of the register constants section
+and place them at the top of the register constants section.
+``` C
+// Example using USART. The position of the field was not generated cleanly.
+typedef enum {
+    USART_BRR_OVER8EN_CLEAR_POS = 3,
+} usart_reg_misc_e;
+``` 
+
+### Field constants
+If the constant is used to set the value of a field in a register use the bit format (0bx) to show the 
+configuration of the bits. This makes comparing the values to the referance manual easier and 
+it makes it easier to know what bits are being manipulated. The width of the bits should match the 
+width of the field in the register.
 ``` C
 typedef enum {
-    // *Special constant here*
-} *peripheral*_reg_misc_e;
+    // Example 
+    PERI_REG_NAME = 0b001,
+} peri_reg_misc_e;
 ```
 
 # Header files
