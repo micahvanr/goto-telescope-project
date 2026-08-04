@@ -800,7 +800,7 @@ void tim_delay(uint32_t time, tim_unit_of_time_e unit);
 // TODO: Add interrupt versions
 void tim_set_manual(tim_handler *p_tim_handler, uint16_t auto_reload, uint16_t prescaler);
 void tim_set_auto(tim_handler *p_tim_handler, uint32_t time, tim_unit_of_time_e unit);
-tim_status_e tim_read_status(tim_reg_def *const p_timx);
+tim_status_e tim_read_status(tim_reg_def const *const p_timx);
 void tim_reset_status(tim_reg_def *const p_timx);
 
 //} Other Configuration

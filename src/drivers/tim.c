@@ -162,7 +162,7 @@ Return:
     TIM_UPDATE_FOUND (1)
 Note: None
 ***************************************************************************/
-tim_status_e tim_read_status(tim_reg_def *const p_timx)
+tim_status_e tim_read_status(tim_reg_def const *const p_timx)
 {
     return (tim_status_e)(p_timx->SR & TIM_SR_UIF);
 }

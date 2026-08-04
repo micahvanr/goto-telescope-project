@@ -146,7 +146,6 @@ typedef struct {
 // When it is zero it means the pin has not been initialized.
 // Otherwise a one means it has been initialized.
 // This is used to ensure initialization of a pin before using it.
-
 typedef struct {
     uint16_t gpio_a_pin_init;
     uint16_t gpio_b_pin_init;

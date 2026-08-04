@@ -1013,6 +1013,7 @@ typedef enum {
 } rcc_csr_pos_e;
 
 typedef enum {
+    // cppcheck-suppress shiftTooManyBitsSigned
     RCC_CSR_LPWRRSTF = (1 << RCC_CSR_LPWRRSTF_POS),   // Low-power reset flag
     RCC_CSR_WWDGRSTF = (1 << RCC_CSR_WWDGRSTF_POS),   // Window watchdog reset flag
     RCC_CSR_WDGRSTF  = (1 << RCC_CSR_WDGRSTF_POS),    // Independent watchdog reset flag
@@ -1046,6 +1047,7 @@ typedef enum {
 } rcc_sscgr_pos_e;
 
 typedef enum {
+    // cppcheck-suppress shiftTooManyBitsSigned
     RCC_SSCGR_SSCGEN    = (1 << RCC_SSCGR_SSCGEN_POS),      // Spread spectrum modulation enable
     RCC_SSCGR_SPREADSEL = (1 << RCC_SSCGR_SPREADSEL_POS),   // Spread Select
     RCC_SSCGR_INCSTEP   = (1 << RCC_SSCGR_INCSTEP_POS),     // Incrementation step

@@ -44,7 +44,7 @@ DRIVER_FILES =	main \
 				gpio \
 				usart \
 				i2c \
-				timer \
+				tim \
 				
 
 
