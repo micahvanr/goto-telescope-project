@@ -1,5 +1,5 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef TIM_H
+#define TIM_H
 
 #include "stm32f4xx.h"
 
@@ -29,32 +29,95 @@ typedef enum {
     TIM9_BASE_ADDR  = ((APB2_BASE_ADDR) + (0x4000u)),
     TIM10_BASE_ADDR = ((APB2_BASE_ADDR) + (0x4400u)),
     TIM11_BASE_ADDR = ((APB2_BASE_ADDR) + (0x4800u)),
-} timer_base_addr_e;
+} tim_base_addr_e;
 
 //======================================================================================//}
 //                  Peripheral Constants
 //======================================================================================//{
 
 typedef enum {
-    TIMER_COUNTER_EN,
-    TIMER_COUNTER_DI,
-} timer_counter_toggle_e;
+    TIM_COUNTER_EN,
+    TIM_COUNTER_DI,
+} tim_counter_toggle_e;
 
 typedef enum {
-    TIMER_UPDATE_NA    = 0,
-    TIMER_UPDATE_FOUND = 1,
-} timer_status_e;
+    TIM_UPDATE_NA    = 0b0,
+    TIM_UPDATE_FOUND = 0b1,
+} tim_status_e;
 
 typedef enum {
-    TIMER_UNIT_S,  // Seconds
-    TIMER_UNIT_MS, // Miliseconds
-    TIMER_UNIT_US, // Microseconds
-} timer_unit_of_time_e;
+    TIM_UNIT_S,  // Seconds
+    TIM_UNIT_MS, // Miliseconds
+    TIM_UNIT_US, // Microseconds
+} tim_unit_of_time_e;
+
+typedef enum {
+    TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately
+    TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now
+} tim_arr_preload_e;
+
+typedef enum {
+    TIM_AUTO_ARR_COUNT_DI = 0b0,
+    TIM_AUTO_ARR_COUNT_EN = 0b1,
+} tim_auto_arr_count_e;
+
+typedef enum {
+    TIM_ONE_PULSE_MODE_DI = 0b0,
+    TIM_ONE_PULSE_MODE_EN = 0b1,
+} tim_one_pulse_mode_e;
+
+typedef enum {
+    TIM_CLK_SEL_INTERNAL         = 0b000,
+    TIM_CLK_SEL_INTERNAL_TRIGGER = 0b110,
+    TIM_CLK_SEL_EXTERNAL         = 0b111,
+} tim_clock_sel_e;
+
+typedef enum {
+    TIM_IC_EDGE_DETECTION_RISING  = 0b0,
+    TIM_IC_EDGE_DETECTION_FALLING = 0b1,
+} tim_ic_edge_detection_e;
+
+// DTS = dead-time and sampling clock (derived from CR1->CKD)
+typedef enum {
+    TIM_IC_FILTER_NA            = 0b0000,
+    TIM_IC_FILTER_FCLKINT_N2    = 0b0001,
+    TIM_IC_FILTER_FCLKINT_N4    = 0b0010,
+    TIM_IC_FILTER_FCLKINT_N8    = 0b0011,
+    TIM_IC_FILTER_FDTS_DIV2_N6  = 0b0100,
+    TIM_IC_FILTER_FDTS_DIV2_N8  = 0b0101,
+    TIM_IC_FILTER_FDTS_DIV4_N6  = 0b0110,
+    TIM_IC_FILTER_FDTS_DIV4_N8  = 0b0111,
+    TIM_IC_FILTER_FDTS_DIV8_N6  = 0b1000,
+    TIM_IC_FILTER_FDTS_DIV8_N8  = 0b1001,
+    TIM_IC_FILTER_FDTS_DIV16_N5 = 0b1010,
+    TIM_IC_FILTER_FDTS_DIV16_N6 = 0b1011,
+    TIM_IC_FILTER_FDTS_DIV16_N8 = 0b1100,
+    TIM_IC_FILTER_FDTS_DIV32_N5 = 0b1101,
+    TIM_IC_FILTER_FDTS_DIV32_N6 = 0b1110,
+    TIM_IC_FILTER_FDTS_DIV32_N8 = 0b1111,
+} tim_ic_filter_e;
+
+// clang-format off
+typedef enum {
+    TIM_OC_OPM_FROZEN         = 0b000, // Comparison between output compare register and counter has no effect on OCxREF
+    TIM_OC_OPM_EQ_ACTIVE      = 0b001, // Sets OCxREF active level on match
+    TIM_OC_OPM_EQ_INACTIVE    = 0b010, // Sets OCxREF inactive level on match
+    TIM_OC_OPM_TOGGLE         = 0b011, // Toggles OCxREF when there is a match
+    TIM_OC_OPM_FORCE_INACTIVE = 0b100, // Forces OCxREF low
+    TIM_OC_OPM_FORCE_ACTIVE   = 0b101, // Forces OCxREF high
+    TIM_OC_OPM_PWM_1          = 0b110, // Upcounting: OCxREF is active when count < CCR, else it is inactive. Downcounting: Vice versa
+    TIM_OC_OPM_PWM_2          = 0b110, // Upcounting: OCxREF is inactive when count < CCR, else it is active. Downcounting: Vice versa
+} tim_oc_output_mode_e;
+// clang-format on
+
+typedef enum {
+    TIM_OC_POL_ACTIVE_LOW  = 0,
+    TIM_OC_POL_ACTIVE_HIGH = 1,
+} tim_oc_polarity_e;
 
 //======================================================================================//}
 //                  Register Constants
 //======================================================================================//{
-// Included in timer_reg_constants.h
 
 typedef enum {
     TIM_CR1_CKD_POS  = 8, // Clock division
@@ -685,21 +748,26 @@ typedef __vo struct {
 } tim_reg_def;
 
 typedef struct {
-    uint32_t prescaler;
-
-} timer_config;
-
-typedef struct {
-    tim_reg_def *p_timx;
-    uint32_t time_left;
-    // TODO: Change to enum
-    uint8_t complete;
-} basic_timer;
+    tim_arr_preload_e preload;
+    tim_one_pulse_mode_e one_pulse_mode;
+    tim_clock_sel_e clock_sel;
+} tim_config;
 
 typedef struct {
     tim_reg_def *p_timx;
-    timer_config tim_config;
-} timer_handler;
+    tim_config tim_conf;
+} tim_handler;
+
+typedef struct {
+    tim_ic_filter_e filter;
+    tim_ic_edge_detection_e edge_detection;
+} tim_ic_config;
+
+typedef struct {
+    tim_oc_output_mode_e output_mode;
+    tim_oc_polarity_e polarity;
+    tim_arr_preload_e arr_preload;
+} tim_oc_config;
 
 //======================================================================================//}
 //                  Peripheral Structure Macros
@@ -724,20 +792,16 @@ typedef struct {
 //                  Function API Prototypes
 //======================================================================================//{
 
-void timer_init(void);
+void tim_reset(tim_reg_def const *const p_timx);
 
 // Delay functions
-void timer_delay_sec(uint32_t seconds);
-void timer_delay_ms(uint32_t ms);
-void timer_delay_us(uint32_t us);
+void tim_delay(uint32_t time, tim_unit_of_time_e unit);
 
-// Basic timer
-void timer_set_sec(tim_reg_def *const p_timx, uint32_t const seconds);
-void timer_set_ms(tim_reg_def *const p_timx, uint32_t const ms);
-void timer_set_us(tim_reg_def *const p_timx, uint32_t us);
-void set_timer_sec_it(uint32_t seconds, tim_reg_def *const p_timx);
-timer_status_e timer_read_status(tim_reg_def *const p_timx);
-void timer_reset_status(tim_reg_def *const p_timx);
+// TODO: Add interrupt versions
+void tim_set_manual(tim_handler *p_tim_handler, uint16_t auto_reload, uint16_t prescaler);
+void tim_set_auto(tim_handler *p_tim_handler, uint32_t time, tim_unit_of_time_e unit);
+tim_status_e tim_read_status(tim_reg_def *const p_timx);
+void tim_reset_status(tim_reg_def *const p_timx);
 
 //} Other Configuration
 //=========================================//{

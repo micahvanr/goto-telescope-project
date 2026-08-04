@@ -17,7 +17,6 @@
 #include "debug_tools.h"
 #include "printf.h"
 
-// TEST: TEST ALL FUNCTIONS AFTER HEADER CHANGES
 int main(void)
 {
     // Uses USART2 and PA2 - change inside printf.h

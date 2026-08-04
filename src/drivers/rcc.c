@@ -69,7 +69,6 @@ Note: None
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL)
-    // // TODO: Fix mask
     clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS_MASK);
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
@@ -146,13 +145,13 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
 
 uint32_t rcc_get_timer_clock_freq_hz(bus_types bus)
 {
-    uint32_t bus_clock = rcc_get_bus_clock_freq_hz(bus);
-    uint8_t bus_prescaler = 0;
+    uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
+    uint8_t bus_prescaler       = 0;
     uint8_t const APB_PRESCALER = 1 << 2;
 
     switch (bus) {
-    case APB1_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK ; break;
-    case APB2_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK ; break;
+    case APB1_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK; break;
+    case APB2_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK; break;
     default:       ASSERT(false);
     }
 
