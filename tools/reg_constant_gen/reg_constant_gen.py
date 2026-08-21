@@ -37,6 +37,7 @@ def find_peri():
 
     print("What peripheral would you like")
     user_peri = input()
+    user_peri = user_peri.upper()
 
     for peri_element in root.iter('peripheral'):
         peri_name = peri_element.find('name').text
@@ -66,7 +67,7 @@ def bit_pos_out(reg, generic_peri_name):
         if output_format == "enum":
             print("typedef enum {", file=f)
 
-        reg_name = reg.find('name').text
+        reg_name = str(reg.find('name').text).upper()
         max_offset_str_width = max(len(str(field.find('bitOffset').text)) for field in reg.iter('field'))
         max_field_width = max(len(field.find('name').text) for field in reg.iter('field'))
         max_field_width += len(generic_peri_name) + len(reg_name) + 2 + len("_POS")
@@ -98,7 +99,7 @@ def bit_mask_out(reg, generic_peri_name):
         if output_format == "enum":
             print("typedef enum {", file=f)
 
-        reg_name = reg.find('name').text
+        reg_name = str(reg.find('name').text).upper()
         max_bitwidth_width = max(len(str(convert_width_to_string(field.find('bitWidth').text))) for field in reg.iter('field'))
         max_field_width = max(len(field.find('name').text) for field in reg.iter('field'))
         max_field_width += len(generic_peri_name) + len(reg_name) + 2 + len("_MASK")
@@ -123,7 +124,7 @@ def bit_out(reg, generic_peri_name):
         if output_format == "enum":
             print("typedef enum {", file=f)
 
-        reg_name = reg.find('name').text
+        reg_name = str(reg.find('name').text).upper()
         max_pos_str_width = max(len(field.find('name').text) for field in reg.iter('field'))
         max_pos_str_width += len(generic_peri_name) + len(reg_name) + 2 + len("_POS")
         max_field_width = max(len(field.find('name').text) for field in reg.iter('field'))
