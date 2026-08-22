@@ -37,7 +37,7 @@ typedef enum {
 } i2c_status_port_num_e;
 
 typedef enum {
-    I2C_REPEATED_START_DISABLE,
+    I2C_REPEATED_START_DISABLE = 0,
     I2C_REPEATED_START_ENABLE,
 } i2c_repeated_start_e;
 
@@ -312,17 +312,17 @@ typedef enum {
 
 // Configuration settings
 typedef enum {
-    I2C_SPEED_MODE_STANDARD = 0, // Default
+    I2C_SPEED_MODE_STANDARD = 0, 
     I2C_SPEED_MODE_FAST     = 1,
 } i2c_speed_mode_e;
 
 typedef enum {
-    I2C_FM_DUTY_2    = 0, // Default
+    I2C_FM_DUTY_2    = 0, 
     I2C_FM_DUTY_16_9 = 1,
 } i2c_fm_duty_cycle;
 
 typedef enum {
-    I2C_CLK_FREQ_100KHZ = 100000, // Default
+    I2C_CLK_FREQ_100KHZ = 100000, 
     I2C_CLK_FREQ_200KHZ = 200000,
     I2C_CLK_FREQ_300KHZ = 300000,
     I2C_CLK_FREQ_400KHZ = 400000,
@@ -348,9 +348,9 @@ typedef __vo struct {
 // Configuration definition (used to initialize and configure I2C port settings)
 typedef struct {
     uint8_t own_address;
-    i2c_speed_mode_e speed_mode;
-    i2c_fm_duty_cycle fm_duty_cycle;
-    i2c_clk_freq_hz_e clock_freq_hz;
+    i2c_speed_mode_e speed_mode;     // Default: I2C_SPEED_MODE_STANDARD
+    i2c_fm_duty_cycle fm_duty_cycle; // Default: I2C_FM_DUTY_2
+    i2c_clk_freq_hz_e clock_freq_hz; // Default: I2C_CLK_FREQ_100KHZ
 } i2c_config;
 
 // Interrupt handle definition (used to handle the I2C interrupts)
@@ -359,7 +359,7 @@ typedef struct {
     uint32_t txrx_length;
     uint8_t target_addr;
     __vo i2c_status_e status;
-    i2c_repeated_start_e repeated_start;
+    i2c_repeated_start_e repeated_start; // Default: I2C_REPEATED_START_DISABLE
 } i2c_it_data;
 
 // Handle definition (used to configure and handle the I2C features)

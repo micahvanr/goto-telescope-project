@@ -26,21 +26,21 @@ typedef enum {
 //=========================================//
 
 typedef enum {
-    GPIO_MODE_INPUT  = 0b00, // Default
+    GPIO_MODE_INPUT  = 0b00,
     GPIO_MODE_OUTPUT = 0b10,
     GPIO_MODE_ALT_FN = 0b01,
     GPIO_MODE_ANALOG = 0b11,
 } gpio_modes_e;
 
 typedef enum {
-    GPIO_IT_NA  = 0, // Default
+    GPIO_IT_NA  = 0, 
     GPIO_IT_RT  = 1,
     GPIO_IT_FT  = 2,
     GPIO_IT_RFT = 3,
 } gpio_it_trigger_e;
 
 typedef enum {
-    GPIO_ALT_FN_0  = 0b0000, // Default
+    GPIO_ALT_FN_0  = 0b0000, 
     GPIO_ALT_FN_1  = 0b0001,
     GPIO_ALT_FN_2  = 0b0010,
     GPIO_ALT_FN_3  = 0b0011,
@@ -56,23 +56,23 @@ typedef enum {
     GPIO_ALT_FN_13 = 0b1101,
     GPIO_ALT_FN_14 = 0b1110,
     GPIO_ALT_FN_15 = 0b1111,
-    GPIO_ALT_FN_NA,  
+    GPIO_ALT_FN_NA,
 } gpio_alt_fn_e;
 
 typedef enum {
-    GPIO_OPTYPE_PUSH_PULL  = 0b0, // Default
+    GPIO_OPTYPE_PUSH_PULL  = 0b0, 
     GPIO_OPTYPE_OPEN_DRAIN = 0b1,
 } gpio_output_type_e;
 
 typedef enum {
-    GPIO_OSPEED_LOW       = 0b00, // Default
+    GPIO_OSPEED_LOW       = 0b00, 
     GPIO_OSPEED_MEDIUM    = 0b01,
     GPIO_OSPEED_FAST      = 0b10,
     GPIO_OSPEED_VERY_FAST = 0b11,
 } gpio_output_speed_e;
 
 typedef enum {
-    GPIO_PUPD_NO   = 0b00, // Default
+    GPIO_PUPD_NO   = 0b00, 
     GPIO_PULL_UP   = 0b01,
     GPIO_PULL_DOWN = 0b10,
 } gpio_pullup_pulldown_e;
@@ -127,13 +127,13 @@ typedef __vo struct {
 
 // Configuration definition (used to initialize and configure gpio port settings)
 typedef struct {
-    pin_number_e pin_no;
-    gpio_modes_e mode;
-    gpio_output_type_e output_type;
-    gpio_output_speed_e output_speed;
-    gpio_pullup_pulldown_e pullup_pulldown;
-    gpio_alt_fn_e alt_fn_no;
-    gpio_it_trigger_e it_trigger;
+    pin_number_e pin_no;                    // Default: PIN_NO_0
+    gpio_modes_e mode;                      // Default: GPIO_MODE_INPUT
+    gpio_output_type_e output_type;         // Default: GPIO_OPTYPE_PUSH_PULL
+    gpio_output_speed_e output_speed;       // Default: GPIO_OSPEED_LOW
+    gpio_pullup_pulldown_e pullup_pulldown; // Default: GPIO_PUPD_NO
+    gpio_alt_fn_e alt_fn_no;                // Default: GPIO_ALT_FN_0
+    gpio_it_trigger_e it_trigger;           // Default: GPIO_IT_NA
 } gpio_config;
 
 // Handle definition (used to configure and handle the gpio features)
@@ -141,21 +141,6 @@ typedef struct {
     gpio_reg_def *p_gpiox;
     gpio_config gpio_conf;
 } gpio_handle;
-
-// Initialization structure. Each bit represents a pin and
-// When it is zero it means the pin has not been initialized.
-// Otherwise a one means it has been initialized.
-// This is used to ensure initialization of a pin before using it.
-typedef struct {
-    uint16_t gpio_a_pin_init;
-    uint16_t gpio_b_pin_init;
-    uint16_t gpio_c_pin_init;
-    uint16_t gpio_d_pin_init;
-    uint16_t gpio_e_pin_init;
-    uint16_t gpio_f_pin_init;
-    uint16_t gpio_g_pin_init;
-    uint16_t gpio_h_pin_init;
-} gpio_pin_init;
 
 //======================================================================================//
 //                  Peripheral Structure Macros

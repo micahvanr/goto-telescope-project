@@ -262,27 +262,27 @@ typedef enum {
 
 // Configuration settings
 typedef enum {
-    USART_OVERSAMPLING_16 = 0, // Default
+    USART_OVERSAMPLING_16 = 0, 
     USART_OVERSAMPLING_8  = 1,
 } usart_oversampling_e;
 
 typedef enum {
-    USART_WORD_LENGTH_8_DATA_BITS = 0, // Default
+    USART_WORD_LENGTH_8_DATA_BITS = 0, 
     USART_WORD_LENGTH_9_DATA_BITS = 1,
 } usart_word_length_e;
 
 typedef enum {
-    USART_PARITY_CONTROL_DISABLE = 0, // Default
+    USART_PARITY_CONTROL_DISABLE = 0, 
     USART_PARITY_CONTROL_ENABLE  = 1,
 } usart_parity_control_e;
 
 typedef enum {
-    USART_PARITY_SEL_EVEN = 0, // Default
+    USART_PARITY_SEL_EVEN = 0, 
     USART_PARITY_SEL_ODD  = 1,
 } usart_parity_select_e;
 
 typedef enum {
-    USART_STOP_BITS_1   = 0, // Default
+    USART_STOP_BITS_1   = 0, 
     USART_STOP_BITS_0_5 = 1,
     USART_STOP_BITS_2   = 2,
     USART_STOP_BITS_1_5 = 3,
@@ -310,7 +310,7 @@ typedef enum {
 } usart_mode_e;
 
 typedef enum {
-    USART_STATUS_READY = 0, // Default
+    USART_STATUS_READY = 0,
     USART_STATUS_RUNNING,
 } usart_status_e;
 
@@ -330,12 +330,12 @@ typedef __vo struct {
 
 // Configuration definition (used to initialize and configure USART port settings)
 typedef struct {
-    usart_oversampling_e oversampling_mode;
-    usart_word_length_e word_length;
-    usart_parity_control_e parity_control;
-    usart_parity_select_e parity_select;
-    usart_stop_bits_e stop_bits;
-    usart_baudrate_e baudrate;
+    usart_oversampling_e oversampling_mode; // Default: USART_OVERSAMPLING_16
+    usart_word_length_e word_length;        // Default: USART_WORD_LENGTH_8_DATA_BITS
+    usart_parity_control_e parity_control;  // Default: USART_PARITY_CONTROL_DISABLE
+    usart_parity_select_e parity_select;    // Default: USART_PARITY_SEL_EVEN
+    usart_stop_bits_e stop_bits;            // Default: USART_STOP_BITS_1
+    usart_baudrate_e baudrate;              // Default: NA
 } usart_config;
 
 // Interrupt handle definition (used to handle the USART interrupts)
@@ -343,7 +343,7 @@ typedef struct {
     uint8_t *txrx_buffer;
     uint32_t txrx_length;
     usart_mode_e mode;
-    __vo usart_status_e status;
+    __vo usart_status_e status; // Default: USART_STATUS_READY
 } usart_it_data;
 
 // Handle definition (used to configure and handle the USART features)

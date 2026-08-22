@@ -18,7 +18,6 @@
 #include "printf.h"
 
 // TODO: Change all drivers to clear bitfields before setting them
-// TODO: Add default comments to other drivers handle structures
 // TODO: Add more const qualifiers where it makes sense
 
 int main(void)
