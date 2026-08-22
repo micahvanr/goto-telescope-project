@@ -108,6 +108,18 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
         } while(0)                  
 ```
 
+## Other General Rules
+* Explicitly state what the enum/macro value should be if the constant needs to be a specific value
+otherwise leaving blank is fine. Do not rely on compiler setting enum values to necessary values.
+``` C
+typedef enum {
+    CONSTANT_VALUE_IMPORTANT = 0,
+    CONSTANT_VALUE_NOT_IMPORTANT,
+} example_e;
+
+```
+    
+
 ## Driver register constants
 ### Miscellaneous constants
 Register field constants should be created using the reg_constant_gen Python script. This keeps constants consistent

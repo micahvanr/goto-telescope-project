@@ -26,10 +26,10 @@ typedef enum {
 //=========================================//
 
 typedef enum {
-    GPIO_MODE_INPUT  = 0, // Default
-    GPIO_MODE_OUTPUT = 1,
-    GPIO_MODE_ALT_FN = 2,
-    GPIO_MODE_ANALOG = 3,
+    GPIO_MODE_INPUT  = 0b00, // Default
+    GPIO_MODE_OUTPUT = 0b10,
+    GPIO_MODE_ALT_FN = 0b01,
+    GPIO_MODE_ANALOG = 0b11,
 } gpio_modes_e;
 
 typedef enum {
@@ -40,41 +40,41 @@ typedef enum {
 } gpio_it_trigger_e;
 
 typedef enum {
-    GPIO_ALT_FN_0  = 0, // Default
-    GPIO_ALT_FN_1  = 1,
-    GPIO_ALT_FN_2  = 2,
-    GPIO_ALT_FN_3  = 3,
-    GPIO_ALT_FN_4  = 4,
-    GPIO_ALT_FN_5  = 5,
-    GPIO_ALT_FN_6  = 6,
-    GPIO_ALT_FN_7  = 7,
-    GPIO_ALT_FN_8  = 8,
-    GPIO_ALT_FN_9  = 9,
-    GPIO_ALT_FN_10 = 10,
-    GPIO_ALT_FN_11 = 11,
-    GPIO_ALT_FN_12 = 12,
-    GPIO_ALT_FN_13 = 13,
-    GPIO_ALT_FN_14 = 14,
-    GPIO_ALT_FN_15 = 15,
-    GPIO_ALT_FN_NA,
+    GPIO_ALT_FN_0  = 0b0000, // Default
+    GPIO_ALT_FN_1  = 0b0001,
+    GPIO_ALT_FN_2  = 0b0010,
+    GPIO_ALT_FN_3  = 0b0011,
+    GPIO_ALT_FN_4  = 0b0100,
+    GPIO_ALT_FN_5  = 0b0101,
+    GPIO_ALT_FN_6  = 0b0110,
+    GPIO_ALT_FN_7  = 0b0111,
+    GPIO_ALT_FN_8  = 0b1000,
+    GPIO_ALT_FN_9  = 0b1001,
+    GPIO_ALT_FN_10 = 0b1010,
+    GPIO_ALT_FN_11 = 0b1011,
+    GPIO_ALT_FN_12 = 0b1100,
+    GPIO_ALT_FN_13 = 0b1101,
+    GPIO_ALT_FN_14 = 0b1110,
+    GPIO_ALT_FN_15 = 0b1111,
+    GPIO_ALT_FN_NA,  
 } gpio_alt_fn_e;
 
 typedef enum {
-    GPIO_OPTYPE_PUSH_PULL  = 0, // Default
-    GPIO_OPTYPE_OPEN_DRAIN = 1,
+    GPIO_OPTYPE_PUSH_PULL  = 0b0, // Default
+    GPIO_OPTYPE_OPEN_DRAIN = 0b1,
 } gpio_output_type_e;
 
 typedef enum {
-    GPIO_OSPEED_LOW       = 0, // Default
-    GPIO_OSPEED_MEDIUM    = 1,
-    GPIO_OSPEED_FAST      = 2,
-    GPIO_OSPEED_VERY_FAST = 3,
+    GPIO_OSPEED_LOW       = 0b00, // Default
+    GPIO_OSPEED_MEDIUM    = 0b01,
+    GPIO_OSPEED_FAST      = 0b10,
+    GPIO_OSPEED_VERY_FAST = 0b11,
 } gpio_output_speed_e;
 
 typedef enum {
-    GPIO_PUPD_NO   = 0, // Default
-    GPIO_PULL_UP   = 1,
-    GPIO_PULL_DOWN = 2,
+    GPIO_PUPD_NO   = 0b00, // Default
+    GPIO_PULL_UP   = 0b01,
+    GPIO_PULL_DOWN = 0b10,
 } gpio_pullup_pulldown_e;
 
 typedef enum {
