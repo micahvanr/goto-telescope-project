@@ -2,7 +2,8 @@
 
 # Files
 ARDUINO_FILES = usart_test_arduino \
-				i2c_test_arduino
+				i2c_test_arduino \
+				timer_test_arduino
 # Leave empty if not uploading
 UPLOAD_FILE = 
 
@@ -16,7 +17,7 @@ PORT = $(firstword $(PORT_LINE))
 # Commands
 ARDUINO_CLI = arduino-cli
 
-.PHONY: compile monitor upload_i2c upload_usart
+.PHONY: compile monitor upload_i2c upload_usart timer_test_arduino
 .PHONY: $(ARDUINO_FILES) $(UPLOAD_FILE)
 
 compile: $(ARDUINO_FILES)
@@ -28,6 +29,9 @@ upload_usart: usart_test_arduino
 	@$(ARDUINO_CLI) upload -p $(PORT) --fqbn $(UNO_INFO) $^
 
 upload_i2c: i2c_test_arduino
+	@$(ARDUINO_CLI) upload -p $(PORT) --fqbn $(UNO_INFO) $^
+
+upload_timer: timer_test_arduino
 	@$(ARDUINO_CLI) upload -p $(PORT) --fqbn $(UNO_INFO) $^
 
 monitor: 

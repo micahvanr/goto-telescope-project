@@ -4,3 +4,4 @@ bin
 kiCAD
 compile_commands.json
 tools/reg_constant_gen/out
+.clangd
