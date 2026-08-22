@@ -155,7 +155,6 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types bus)
     default:       ASSERT(false);
     }
 
-    BREAKPOINT();
     if (bus_prescaler & APB_PRESCALER) {
         return 2 * bus_clock;
     }

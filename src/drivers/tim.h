@@ -1,6 +1,7 @@
 #ifndef TIM_H
 #define TIM_H
 
+#include "rcc.h"
 #include "stm32f4xx.h"
 
 // Basic Timers: TIM6 & TIM7
@@ -36,6 +37,40 @@ typedef enum {
 //======================================================================================//{
 
 typedef enum {
+    TIM_MAX_NUM_TIMERS = 14,
+} tim_num_of_timers_e;
+
+// Init check enum
+typedef enum {
+    TIM1_INIT_NUM  = 0,
+    TIM2_INIT_NUM  = 1,
+    TIM3_INIT_NUM  = 2,
+    TIM4_INIT_NUM  = 3,
+    TIM5_INIT_NUM  = 4,
+    TIM6_INIT_NUM  = 5,
+    TIM7_INIT_NUM  = 6,
+    TIM8_INIT_NUM  = 7,
+    TIM9_INIT_NUM  = 8,
+    TIM10_INIT_NUM = 9,
+    TIM11_INIT_NUM = 10,
+    TIM12_INIT_NUM = 11,
+    TIM13_INIT_NUM = 12,
+    TIM14_INIT_NUM = 13,
+} tim_init_peri_num_e;
+
+typedef enum {
+    TIM_NOT_INITIALIZED = 0,
+    TIM_INITIALIZED     = 1,
+} tim_init_check_e;
+
+typedef enum {
+    TIM_TYPE_BASIC,
+    TIM_TYPE_GENERAL_2_5,
+    TIM_TYPE_GENERAL_9_14,
+    TIM_TYPE_ADVANCED,
+} tim_type_e;
+
+typedef enum {
     TIM_COUNTER_EN,
     TIM_COUNTER_DI,
 } tim_counter_toggle_e;
@@ -66,6 +101,15 @@ typedef enum {
     TIM_ONE_PULSE_MODE_EN = 0b1,
 } tim_one_pulse_mode_e;
 
+// Numbers used to select register
+typedef enum {
+    TIM_CHANNEL_SEL_1 = 0,
+    TIM_CHANNEL_SEL_2 = 1,
+    TIM_CHANNEL_SEL_3 = 2,
+    TIM_CHANNEL_SEL_4 = 3,
+    TIM_CHANNEL_NA,
+} tim_channel_sel_e;
+
 typedef enum {
     TIM_CLK_SEL_INTERNAL         = 0b000,
     TIM_CLK_SEL_INTERNAL_TRIGGER = 0b110,
@@ -73,11 +117,48 @@ typedef enum {
 } tim_clock_sel_e;
 
 typedef enum {
-    TIM_IC_EDGE_DETECTION_RISING  = 0b0,
-    TIM_IC_EDGE_DETECTION_FALLING = 0b1,
-} tim_ic_edge_detection_e;
+    TIM_TRIGGER_SEL_ITR0    = 0b000,
+    TIM_TRIGGER_SEL_ITR1    = 0b001,
+    TIM_TRIGGER_SEL_ITR2    = 0b010,
+    TIM_TRIGGER_SEL_ITR3    = 0b011,
+    TIM_TRIGGER_SEL_TI1F_ED = 0b100,
+    TIM_TRIGGER_SEL_TI1FP1  = 0b101,
+    TIM_TRIGGER_SEL_TI1FP2  = 0b110,
+    TIM_TRIGGER_SEL_ETRF    = 0b111,
+} tim_trigger_sel_e;
+
+typedef enum {
+    TIM_CNT_DIR_UP   = 0b0,
+    TIM_CNT_DIR_DOWN = 0b1,
+} tim_cnt_dir_e;
+
+typedef enum {
+    TIM_ALIGN_EDGE              = 0b00,
+    TIM_ALIGN_CENTER_IT_DOWN    = 0b01,
+    TIM_ALIGN_CENTER_IT_UP      = 0b10,
+    TIM_ALIGN_CENTER_IT_DOWN_UP = 0b11,
+} tim_align_mode_e;
 
 // DTS = dead-time and sampling clock (derived from CR1->CKD)
+typedef enum {
+    TIM_DTS_FREQ_CLK_INT        = 0b00,
+    TIM_DTS_FREQ_CLK_INT_MULT_2 = 0b01,
+    TIM_DTS_FREQ_CLK_INT_MULT_4 = 0b10,
+} tim_dts_mult_e;
+
+typedef enum {
+    TIM_INPUT_MAP_MAIN         = 0b01, // Input will match the channel number
+    TIM_INPUT_MAP_TI_ALTERNATE = 0b10, // Input will be the alternate channel number (either +- 1)
+    TIM_INPUT_MAP_TRC          = 0b11,
+} tim_input_map_type_e;
+
+typedef enum {
+    TIM_IC_PRESCALER_NA   = 0b00,
+    TIM_IC_PRESCALER_2_EV = 0b01,
+    TIM_IC_PRESCALER_4_EV = 0b10,
+    TIM_IC_PRESCALER_8_EV = 0b11,
+} tim_ic_prescaler_e;
+
 typedef enum {
     TIM_IC_FILTER_NA            = 0b0000,
     TIM_IC_FILTER_FCLKINT_N2    = 0b0001,
@@ -97,6 +178,12 @@ typedef enum {
     TIM_IC_FILTER_FDTS_DIV32_N8 = 0b1111,
 } tim_ic_filter_e;
 
+typedef enum {
+    TIM_IC_EDGE_DETECTION_RISING         = 0b00,
+    TIM_IC_EDGE_DETECTION_FALLING        = 0b01,
+    TIM_IC_EDGE_DETECTION_RISING_FALLING = 0b101, // Special case where the bits are not adjacent to eachother
+} tim_ic_edge_detection_e;
+
 // clang-format off
 typedef enum {
     TIM_OC_OPM_FROZEN         = 0b000, // Comparison between output compare register and counter has no effect on OCxREF
@@ -106,13 +193,13 @@ typedef enum {
     TIM_OC_OPM_FORCE_INACTIVE = 0b100, // Forces OCxREF low
     TIM_OC_OPM_FORCE_ACTIVE   = 0b101, // Forces OCxREF high
     TIM_OC_OPM_PWM_1          = 0b110, // Upcounting: OCxREF is active when count < CCR, else it is inactive. Downcounting: Vice versa
-    TIM_OC_OPM_PWM_2          = 0b110, // Upcounting: OCxREF is inactive when count < CCR, else it is active. Downcounting: Vice versa
+    TIM_OC_OPM_PWM_2          = 0b111, // Upcounting: OCxREF is inactive when count < CCR, else it is active. Downcounting: Vice versa
 } tim_oc_output_mode_e;
 // clang-format on
 
 typedef enum {
-    TIM_OC_POL_ACTIVE_LOW  = 0,
-    TIM_OC_POL_ACTIVE_HIGH = 1,
+    TIM_OC_POL_ACTIVE_HIGH = 0,
+    TIM_OC_POL_ACTIVE_LOW  = 1,
 } tim_oc_polarity_e;
 
 //======================================================================================//}
@@ -360,135 +447,135 @@ typedef enum {
 } tim_egr_mask_e;
 
 typedef enum {
-    TIM_CCMR1_Output_OC2CE_POS = 15, // Output Compare 2 clear enable
-    TIM_CCMR1_Output_OC2M_POS  = 12, // Output Compare 2 mode
-    TIM_CCMR1_Output_OC2PE_POS = 11, // Output Compare 2 preload enable
-    TIM_CCMR1_Output_OC2FE_POS = 10, // Output Compare 2 fast enable
-    TIM_CCMR1_Output_CC2S_POS  = 8,  // Capture/Compare 2 selection
-    TIM_CCMR1_Output_OC1CE_POS = 7,  // Output Compare 1 clear enable
-    TIM_CCMR1_Output_OC1M_POS  = 4,  // Output Compare 1 mode
-    TIM_CCMR1_Output_OC1PE_POS = 3,  // Output Compare 1 preload enable
-    TIM_CCMR1_Output_OC1FE_POS = 2,  // Output Compare 1 fast enable
-    TIM_CCMR1_Output_CC1S_POS  = 0,  // Capture/Compare 1 selection
+    TIM_CCMR1_OUTPUT_OC2CE_POS = 15, // Output Compare 2 clear enable
+    TIM_CCMR1_OUTPUT_OC2M_POS  = 12, // Output Compare 2 mode
+    TIM_CCMR1_OUTPUT_OC2PE_POS = 11, // Output Compare 2 preload enable
+    TIM_CCMR1_OUTPUT_OC2FE_POS = 10, // Output Compare 2 fast enable
+    TIM_CCMR1_OUTPUT_CC2S_POS  = 8,  // Capture/Compare 2 selection
+    TIM_CCMR1_OUTPUT_OC1CE_POS = 7,  // Output Compare 1 clear enable
+    TIM_CCMR1_OUTPUT_OC1M_POS  = 4,  // Output Compare 1 mode
+    TIM_CCMR1_OUTPUT_OC1PE_POS = 3,  // Output Compare 1 preload enable
+    TIM_CCMR1_OUTPUT_OC1FE_POS = 2,  // Output Compare 1 fast enable
+    TIM_CCMR1_OUTPUT_CC1S_POS  = 0,  // Capture/Compare 1 selection
 } tim_ccmr1_output_pos_e;
 
 typedef enum {
-    TIM_CCMR1_Output_OC2CE = (1 << TIM_CCMR1_Output_OC2CE_POS), // Output Compare 2 clear enable
-    TIM_CCMR1_Output_OC2M  = (1 << TIM_CCMR1_Output_OC2M_POS),  // Output Compare 2 mode
-    TIM_CCMR1_Output_OC2PE = (1 << TIM_CCMR1_Output_OC2PE_POS), // Output Compare 2 preload enable
-    TIM_CCMR1_Output_OC2FE = (1 << TIM_CCMR1_Output_OC2FE_POS), // Output Compare 2 fast enable
-    TIM_CCMR1_Output_CC2S  = (1 << TIM_CCMR1_Output_CC2S_POS),  // Capture/Compare 2 selection
-    TIM_CCMR1_Output_OC1CE = (1 << TIM_CCMR1_Output_OC1CE_POS), // Output Compare 1 clear enable
-    TIM_CCMR1_Output_OC1M  = (1 << TIM_CCMR1_Output_OC1M_POS),  // Output Compare 1 mode
-    TIM_CCMR1_Output_OC1PE = (1 << TIM_CCMR1_Output_OC1PE_POS), // Output Compare 1 preload enable
-    TIM_CCMR1_Output_OC1FE = (1 << TIM_CCMR1_Output_OC1FE_POS), // Output Compare 1 fast enable
-    TIM_CCMR1_Output_CC1S  = (1 << TIM_CCMR1_Output_CC1S_POS),  // Capture/Compare 1 selection
+    TIM_CCMR1_OUTPUT_OC2CE = (1 << TIM_CCMR1_OUTPUT_OC2CE_POS), // Output Compare 2 clear enable
+    TIM_CCMR1_OUTPUT_OC2M  = (1 << TIM_CCMR1_OUTPUT_OC2M_POS),  // Output Compare 2 mode
+    TIM_CCMR1_OUTPUT_OC2PE = (1 << TIM_CCMR1_OUTPUT_OC2PE_POS), // Output Compare 2 preload enable
+    TIM_CCMR1_OUTPUT_OC2FE = (1 << TIM_CCMR1_OUTPUT_OC2FE_POS), // Output Compare 2 fast enable
+    TIM_CCMR1_OUTPUT_CC2S  = (1 << TIM_CCMR1_OUTPUT_CC2S_POS),  // Capture/Compare 2 selection
+    TIM_CCMR1_OUTPUT_OC1CE = (1 << TIM_CCMR1_OUTPUT_OC1CE_POS), // Output Compare 1 clear enable
+    TIM_CCMR1_OUTPUT_OC1M  = (1 << TIM_CCMR1_OUTPUT_OC1M_POS),  // Output Compare 1 mode
+    TIM_CCMR1_OUTPUT_OC1PE = (1 << TIM_CCMR1_OUTPUT_OC1PE_POS), // Output Compare 1 preload enable
+    TIM_CCMR1_OUTPUT_OC1FE = (1 << TIM_CCMR1_OUTPUT_OC1FE_POS), // Output Compare 1 fast enable
+    TIM_CCMR1_OUTPUT_CC1S  = (1 << TIM_CCMR1_OUTPUT_CC1S_POS),  // Capture/Compare 1 selection
 } tim_ccmr1_output_e;
 
 typedef enum {
-    TIM_CCMR1_Output_OC2CE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_OC2M_MASK  = 0b111, // 3 bit(s)
-    TIM_CCMR1_Output_OC2PE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_OC2FE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_CC2S_MASK  = 0b11,  // 2 bit(s)
-    TIM_CCMR1_Output_OC1CE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_OC1M_MASK  = 0b111, // 3 bit(s)
-    TIM_CCMR1_Output_OC1PE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_OC1FE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR1_Output_CC1S_MASK  = 0b11,  // 2 bit(s)
+    TIM_CCMR1_OUTPUT_OC2CE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_OC2M_MASK  = 0b111, // 3 bit(s)
+    TIM_CCMR1_OUTPUT_OC2PE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_OC2FE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_CC2S_MASK  = 0b11,  // 2 bit(s)
+    TIM_CCMR1_OUTPUT_OC1CE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_OC1M_MASK  = 0b111, // 3 bit(s)
+    TIM_CCMR1_OUTPUT_OC1PE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_OC1FE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR1_OUTPUT_CC1S_MASK  = 0b11,  // 2 bit(s)
 } tim_ccmr1_output_mask_e;
 
 typedef enum {
-    TIM_CCMR1_Input_IC2F_POS   = 12, // Input capture 2 filter
-    TIM_CCMR1_Input_IC2PCS_POS = 10, // Input capture 2 prescaler
-    TIM_CCMR1_Input_CC2S_POS   = 8,  // Capture/Compare 2 selection
-    TIM_CCMR1_Input_IC1F_POS   = 4,  // Input capture 1 filter
-    TIM_CCMR1_Input_ICPCS_POS  = 2,  // Input capture 1 prescaler
-    TIM_CCMR1_Input_CC1S_POS   = 0,  // Capture/Compare 1 selection
+    TIM_CCMR1_INPUT_IC2F_POS   = 12, // Input capture 2 filter
+    TIM_CCMR1_INPUT_IC2PCS_POS = 10, // Input capture 2 prescaler
+    TIM_CCMR1_INPUT_CC2S_POS   = 8,  // Capture/Compare 2 selection
+    TIM_CCMR1_INPUT_IC1F_POS   = 4,  // Input capture 1 filter
+    TIM_CCMR1_INPUT_ICPCS_POS  = 2,  // Input capture 1 prescaler
+    TIM_CCMR1_INPUT_CC1S_POS   = 0,  // Capture/Compare 1 selection
 } tim_ccmr1_input_pos_e;
 
 typedef enum {
-    TIM_CCMR1_Input_IC2F   = (1 << TIM_CCMR1_Input_IC2F_POS),   // Input capture 2 filter
-    TIM_CCMR1_Input_IC2PCS = (1 << TIM_CCMR1_Input_IC2PCS_POS), // Input capture 2 prescaler
-    TIM_CCMR1_Input_CC2S   = (1 << TIM_CCMR1_Input_CC2S_POS),   // Capture/Compare 2 selection
-    TIM_CCMR1_Input_IC1F   = (1 << TIM_CCMR1_Input_IC1F_POS),   // Input capture 1 filter
-    TIM_CCMR1_Input_ICPCS  = (1 << TIM_CCMR1_Input_ICPCS_POS),  // Input capture 1 prescaler
-    TIM_CCMR1_Input_CC1S   = (1 << TIM_CCMR1_Input_CC1S_POS),   // Capture/Compare 1 selection
+    TIM_CCMR1_INPUT_IC2F   = (1 << TIM_CCMR1_INPUT_IC2F_POS),   // Input capture 2 filter
+    TIM_CCMR1_INPUT_IC2PCS = (1 << TIM_CCMR1_INPUT_IC2PCS_POS), // Input capture 2 prescaler
+    TIM_CCMR1_INPUT_CC2S   = (1 << TIM_CCMR1_INPUT_CC2S_POS),   // Capture/Compare 2 selection
+    TIM_CCMR1_INPUT_IC1F   = (1 << TIM_CCMR1_INPUT_IC1F_POS),   // Input capture 1 filter
+    TIM_CCMR1_INPUT_ICPCS  = (1 << TIM_CCMR1_INPUT_ICPCS_POS),  // Input capture 1 prescaler
+    TIM_CCMR1_INPUT_CC1S   = (1 << TIM_CCMR1_INPUT_CC1S_POS),   // Capture/Compare 1 selection
 } tim_ccmr1_input_e;
 
 typedef enum {
-    TIM_CCMR1_Input_IC2F_MASK   = 0b1111, // 4 bit(s)
-    TIM_CCMR1_Input_IC2PCS_MASK = 0b11,   // 2 bit(s)
-    TIM_CCMR1_Input_CC2S_MASK   = 0b11,   // 2 bit(s)
-    TIM_CCMR1_Input_IC1F_MASK   = 0b1111, // 4 bit(s)
-    TIM_CCMR1_Input_ICPCS_MASK  = 0b11,   // 2 bit(s)
-    TIM_CCMR1_Input_CC1S_MASK   = 0b11,   // 2 bit(s)
+    TIM_CCMR1_INPUT_IC2F_MASK   = 0b1111, // 4 bit(s)
+    TIM_CCMR1_INPUT_IC2PCS_MASK = 0b11,   // 2 bit(s)
+    TIM_CCMR1_INPUT_CC2S_MASK   = 0b11,   // 2 bit(s)
+    TIM_CCMR1_INPUT_IC1F_MASK   = 0b1111, // 4 bit(s)
+    TIM_CCMR1_INPUT_ICPCS_MASK  = 0b11,   // 2 bit(s)
+    TIM_CCMR1_INPUT_CC1S_MASK   = 0b11,   // 2 bit(s)
 } tim_ccmr1_input_mask_e;
 
 typedef enum {
-    TIM_CCMR2_Output_OC4CE_POS = 15, // Output compare 4 clear enable
-    TIM_CCMR2_Output_OC4M_POS  = 12, // Output compare 4 mode
-    TIM_CCMR2_Output_OC4PE_POS = 11, // Output compare 4 preload enable
-    TIM_CCMR2_Output_OC4FE_POS = 10, // Output compare 4 fast enable
-    TIM_CCMR2_Output_CC4S_POS  = 8,  // Capture/Compare 4 selection
-    TIM_CCMR2_Output_OC3CE_POS = 7,  // Output compare 3 clear enable
-    TIM_CCMR2_Output_OC3M_POS  = 4,  // Output compare 3 mode
-    TIM_CCMR2_Output_OC3PE_POS = 3,  // Output compare 3 preload enable
-    TIM_CCMR2_Output_OC3FE_POS = 2,  // Output compare 3 fast enable
-    TIM_CCMR2_Output_CC3S_POS  = 0,  // Capture/Compare 3 selection
+    TIM_CCMR2_OUTPUT_OC4CE_POS = 15, // Output compare 4 clear enable
+    TIM_CCMR2_OUTPUT_OC4M_POS  = 12, // Output compare 4 mode
+    TIM_CCMR2_OUTPUT_OC4PE_POS = 11, // Output compare 4 preload enable
+    TIM_CCMR2_OUTPUT_OC4FE_POS = 10, // Output compare 4 fast enable
+    TIM_CCMR2_OUTPUT_CC4S_POS  = 8,  // Capture/Compare 4 selection
+    TIM_CCMR2_OUTPUT_OC3CE_POS = 7,  // Output compare 3 clear enable
+    TIM_CCMR2_OUTPUT_OC3M_POS  = 4,  // Output compare 3 mode
+    TIM_CCMR2_OUTPUT_OC3PE_POS = 3,  // Output compare 3 preload enable
+    TIM_CCMR2_OUTPUT_OC3FE_POS = 2,  // Output compare 3 fast enable
+    TIM_CCMR2_OUTPUT_CC3S_POS  = 0,  // Capture/Compare 3 selection
 } tim_ccmr2_output_pos_e;
 
 typedef enum {
-    TIM_CCMR2_Output_OC4CE = (1 << TIM_CCMR2_Output_OC4CE_POS), // Output compare 4 clear enable
-    TIM_CCMR2_Output_OC4M  = (1 << TIM_CCMR2_Output_OC4M_POS),  // Output compare 4 mode
-    TIM_CCMR2_Output_OC4PE = (1 << TIM_CCMR2_Output_OC4PE_POS), // Output compare 4 preload enable
-    TIM_CCMR2_Output_OC4FE = (1 << TIM_CCMR2_Output_OC4FE_POS), // Output compare 4 fast enable
-    TIM_CCMR2_Output_CC4S  = (1 << TIM_CCMR2_Output_CC4S_POS),  // Capture/Compare 4 selection
-    TIM_CCMR2_Output_OC3CE = (1 << TIM_CCMR2_Output_OC3CE_POS), // Output compare 3 clear enable
-    TIM_CCMR2_Output_OC3M  = (1 << TIM_CCMR2_Output_OC3M_POS),  // Output compare 3 mode
-    TIM_CCMR2_Output_OC3PE = (1 << TIM_CCMR2_Output_OC3PE_POS), // Output compare 3 preload enable
-    TIM_CCMR2_Output_OC3FE = (1 << TIM_CCMR2_Output_OC3FE_POS), // Output compare 3 fast enable
-    TIM_CCMR2_Output_CC3S  = (1 << TIM_CCMR2_Output_CC3S_POS),  // Capture/Compare 3 selection
+    TIM_CCMR2_OUTPUT_OC4CE = (1 << TIM_CCMR2_OUTPUT_OC4CE_POS), // Output compare 4 clear enable
+    TIM_CCMR2_OUTPUT_OC4M  = (1 << TIM_CCMR2_OUTPUT_OC4M_POS),  // Output compare 4 mode
+    TIM_CCMR2_OUTPUT_OC4PE = (1 << TIM_CCMR2_OUTPUT_OC4PE_POS), // Output compare 4 preload enable
+    TIM_CCMR2_OUTPUT_OC4FE = (1 << TIM_CCMR2_OUTPUT_OC4FE_POS), // Output compare 4 fast enable
+    TIM_CCMR2_OUTPUT_CC4S  = (1 << TIM_CCMR2_OUTPUT_CC4S_POS),  // Capture/Compare 4 selection
+    TIM_CCMR2_OUTPUT_OC3CE = (1 << TIM_CCMR2_OUTPUT_OC3CE_POS), // Output compare 3 clear enable
+    TIM_CCMR2_OUTPUT_OC3M  = (1 << TIM_CCMR2_OUTPUT_OC3M_POS),  // Output compare 3 mode
+    TIM_CCMR2_OUTPUT_OC3PE = (1 << TIM_CCMR2_OUTPUT_OC3PE_POS), // Output compare 3 preload enable
+    TIM_CCMR2_OUTPUT_OC3FE = (1 << TIM_CCMR2_OUTPUT_OC3FE_POS), // Output compare 3 fast enable
+    TIM_CCMR2_OUTPUT_CC3S  = (1 << TIM_CCMR2_OUTPUT_CC3S_POS),  // Capture/Compare 3 selection
 } tim_ccmr2_output_e;
 
 typedef enum {
-    TIM_CCMR2_Output_OC4CE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_OC4M_MASK  = 0b111, // 3 bit(s)
-    TIM_CCMR2_Output_OC4PE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_OC4FE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_CC4S_MASK  = 0b11,  // 2 bit(s)
-    TIM_CCMR2_Output_OC3CE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_OC3M_MASK  = 0b111, // 3 bit(s)
-    TIM_CCMR2_Output_OC3PE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_OC3FE_MASK = 0b1,   // 1 bit(s)
-    TIM_CCMR2_Output_CC3S_MASK  = 0b11,  // 2 bit(s)
+    TIM_CCMR2_OUTPUT_OC4CE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_OC4M_MASK  = 0b111, // 3 bit(s)
+    TIM_CCMR2_OUTPUT_OC4PE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_OC4FE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_CC4S_MASK  = 0b11,  // 2 bit(s)
+    TIM_CCMR2_OUTPUT_OC3CE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_OC3M_MASK  = 0b111, // 3 bit(s)
+    TIM_CCMR2_OUTPUT_OC3PE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_OC3FE_MASK = 0b1,   // 1 bit(s)
+    TIM_CCMR2_OUTPUT_CC3S_MASK  = 0b11,  // 2 bit(s)
 } tim_ccmr2_output_mask_e;
 
 typedef enum {
-    TIM_CCMR2_Input_IC4F_POS   = 12, // Input capture 4 filter
-    TIM_CCMR2_Input_IC4PSC_POS = 10, // Input capture 4 prescaler
-    TIM_CCMR2_Input_CC4S_POS   = 8,  // Capture/Compare 4 selection
-    TIM_CCMR2_Input_IC3F_POS   = 4,  // Input capture 3 filter
-    TIM_CCMR2_Input_IC3PSC_POS = 2,  // Input capture 3 prescaler
-    TIM_CCMR2_Input_CC3S_POS   = 0,  // Capture/compare 3 selection
+    TIM_CCMR2_INPUT_IC4F_POS   = 12, // Input capture 4 filter
+    TIM_CCMR2_INPUT_IC4PSC_POS = 10, // Input capture 4 prescaler
+    TIM_CCMR2_INPUT_CC4S_POS   = 8,  // Capture/Compare 4 selection
+    TIM_CCMR2_INPUT_IC3F_POS   = 4,  // Input capture 3 filter
+    TIM_CCMR2_INPUT_IC3PSC_POS = 2,  // Input capture 3 prescaler
+    TIM_CCMR2_INPUT_CC3S_POS   = 0,  // Capture/compare 3 selection
 } tim_ccmr2_input_pos_e;
 
 typedef enum {
-    TIM_CCMR2_Input_IC4F   = (1 << TIM_CCMR2_Input_IC4F_POS),   // Input capture 4 filter
-    TIM_CCMR2_Input_IC4PSC = (1 << TIM_CCMR2_Input_IC4PSC_POS), // Input capture 4 prescaler
-    TIM_CCMR2_Input_CC4S   = (1 << TIM_CCMR2_Input_CC4S_POS),   // Capture/Compare 4 selection
-    TIM_CCMR2_Input_IC3F   = (1 << TIM_CCMR2_Input_IC3F_POS),   // Input capture 3 filter
-    TIM_CCMR2_Input_IC3PSC = (1 << TIM_CCMR2_Input_IC3PSC_POS), // Input capture 3 prescaler
-    TIM_CCMR2_Input_CC3S   = (1 << TIM_CCMR2_Input_CC3S_POS),   // Capture/compare 3 selection
+    TIM_CCMR2_INPUT_IC4F   = (1 << TIM_CCMR2_INPUT_IC4F_POS),   // Input capture 4 filter
+    TIM_CCMR2_INPUT_IC4PSC = (1 << TIM_CCMR2_INPUT_IC4PSC_POS), // Input capture 4 prescaler
+    TIM_CCMR2_INPUT_CC4S   = (1 << TIM_CCMR2_INPUT_CC4S_POS),   // Capture/Compare 4 selection
+    TIM_CCMR2_INPUT_IC3F   = (1 << TIM_CCMR2_INPUT_IC3F_POS),   // Input capture 3 filter
+    TIM_CCMR2_INPUT_IC3PSC = (1 << TIM_CCMR2_INPUT_IC3PSC_POS), // Input capture 3 prescaler
+    TIM_CCMR2_INPUT_CC3S   = (1 << TIM_CCMR2_INPUT_CC3S_POS),   // Capture/compare 3 selection
 } tim_ccmr2_input_e;
 
 typedef enum {
-    TIM_CCMR2_Input_IC4F_MASK   = 0b1111, // 4 bit(s)
-    TIM_CCMR2_Input_IC4PSC_MASK = 0b11,   // 2 bit(s)
-    TIM_CCMR2_Input_CC4S_MASK   = 0b11,   // 2 bit(s)
-    TIM_CCMR2_Input_IC3F_MASK   = 0b1111, // 4 bit(s)
-    TIM_CCMR2_Input_IC3PSC_MASK = 0b11,   // 2 bit(s)
-    TIM_CCMR2_Input_CC3S_MASK   = 0b11,   // 2 bit(s)
+    TIM_CCMR2_INPUT_IC4F_MASK   = 0b1111, // 4 bit(s)
+    TIM_CCMR2_INPUT_IC4PSC_MASK = 0b11,   // 2 bit(s)
+    TIM_CCMR2_INPUT_CC4S_MASK   = 0b11,   // 2 bit(s)
+    TIM_CCMR2_INPUT_IC3F_MASK   = 0b1111, // 4 bit(s)
+    TIM_CCMR2_INPUT_IC3PSC_MASK = 0b11,   // 2 bit(s)
+    TIM_CCMR2_INPUT_CC3S_MASK   = 0b11,   // 2 bit(s)
 } tim_ccmr2_input_mask_e;
 
 typedef enum {
@@ -724,49 +811,69 @@ typedef enum {
 //======================================================================================//{
 
 typedef __vo struct {
-    uint32_t CR1;   // control register 1                                 Offset: 0x0
-    uint32_t CR2;   // control register 2                                 Offset: 0x4
-    uint32_t SMCR;  // slave mode control register                        Offset: 0x8
-    uint32_t DIER;  // DMA/Interrupt enable register                      Offset: 0xC
-    uint32_t SR;    // status register                                    Offset: 0x10
-    uint32_t EGR;   // event generation register                          Offset: 0x14
-    uint32_t CCMR1; // capture/compare mode register 1                    Offset: 0x18
-    uint32_t CCMR2; // capture/compare mode register 2                    Offset: 0x1C
-    uint32_t CCER;  // capture/compare enable register                    Offset: 0x20
-    uint32_t CNT;   // counter                                            Offset: 0x24
-    uint32_t PSC;   // prescaler                                          Offset: 0x28
-    uint32_t ARR;   // auto-reload register                               Offset: 0x2C
-    uint32_t RCR;   // repetition counter register                        Offset: 0x30
-    uint32_t CCR1;  // capture/compare register 1                         Offset: 0x34
-    uint32_t CCR2;  // capture/compare register 2                         Offset: 0x38
-    uint32_t CCR3;  // capture/compare register 3                         Offset: 0x3C
-    uint32_t CCR4;  // capture/compare register 4                         Offset: 0x40
-    uint32_t BDTR;  // break and dead-time register                       Offset: 0x44
-    uint32_t DCR;   // DMA control register                               Offset: 0x48
-    uint32_t DMAR;  // DMA address for full transfer                      Offset: 0x4C
-    uint32_t OR;    // TIM5 option register                               Offset: 0x50
+    uint32_t CR1;     // control register 1                                 Offset: 0x0
+    uint32_t CR2;     // control register 2                                 Offset: 0x4
+    uint32_t SMCR;    // slave mode control register                        Offset: 0x8
+    uint32_t DIER;    // DMA/Interrupt enable register                      Offset: 0xC
+    uint32_t SR;      // status register                                    Offset: 0x10
+    uint32_t EGR;     // event generation register                          Offset: 0x14
+    uint32_t CCMR[2]; // capture/compare mode register 1 & 2                Offset: 0x18
+    uint32_t CCER;    // capture/compare enable register                    Offset: 0x20
+    uint32_t CNT;     // counter                                            Offset: 0x24
+    uint32_t PSC;     // prescaler                                          Offset: 0x28
+    uint32_t ARR;     // auto-reload register                               Offset: 0x2C
+    uint32_t RCR;     // repetition counter register                        Offset: 0x30
+    uint32_t CCR[4];  // capture/compare register 1-4                       Offset: 0x34
+    uint32_t BDTR;    // break and dead-time register                       Offset: 0x44
+    uint32_t DCR;     // DMA control register                               Offset: 0x48
+    uint32_t DMAR;    // DMA address for full transfer                      Offset: 0x4C
+    uint32_t OR;      // TIM5 option register                               Offset: 0x50
 } tim_reg_def;
 
+// Base config settings
 typedef struct {
-    tim_arr_preload_e preload;
-    tim_one_pulse_mode_e one_pulse_mode;
-    tim_clock_sel_e clock_sel;
+    tim_arr_preload_e preload;           // Default: TIM_ARR_PRELOAD_DI
+    tim_one_pulse_mode_e one_pulse_mode; // Default: TIM_ONE_PULSE_MODE_DI
+    tim_clock_sel_e clock_sel;           // Default: TIM_CLK_SEL_INTERNAL
+    tim_trigger_sel_e trigger_sel;       // Default: TIM_TRIGGER_SEL_ITR0
+    tim_cnt_dir_e direction;             // Default: TIM_CNT_DIR_UP
+    tim_align_mode_e align_mode;         // Default: TIM_ALIGN_EDGE
 } tim_config;
 
+// Base timer timing settings
+typedef struct {
+    uint32_t auto_reload;    // Default: 0
+    uint32_t prescaler;      // Default: 0
+    uint32_t period;           // Default: 0
+    uint32_t frequency_hz;    // Default: 0
+    tim_unit_of_time_e unit; // Default: TIM_UNIT_S
+} tim_timing_config;
+
+// Base timer handler
 typedef struct {
     tim_reg_def *p_timx;
     tim_config tim_conf;
+    tim_timing_config timing_conf;
 } tim_handler;
 
+// Timer input capture channel settings
 typedef struct {
-    tim_ic_filter_e filter;
-    tim_ic_edge_detection_e edge_detection;
+    tim_channel_sel_e channel_num;          // Default: TIM_CHANNEL_SEL_1
+    tim_dts_mult_e dts_mult;                // Default: TIM_DTS_FREQ_CLK_INT
+    tim_input_map_type_e input_map;         // Default: TIM_INPUT_MAP_MAIN
+    tim_ic_prescaler_e prescaler;           // Default: TIM_IC_PRESCALER_NA
+    tim_ic_filter_e filter;                 // Default: TIM_IC_FILTER_NA
+    tim_ic_edge_detection_e edge_detection; // Default: TIM_IC_EDGE_DETECTION_RISING
 } tim_ic_config;
 
+// Timer output compare channel settings
 typedef struct {
-    tim_oc_output_mode_e output_mode;
-    tim_oc_polarity_e polarity;
-    tim_arr_preload_e arr_preload;
+    tim_channel_sel_e channel_num;    // Default: TIM_CHANNEL_SEL_1
+    tim_oc_output_mode_e output_mode; // Default: TIM_OC_OPM_FROZEN
+    tim_oc_polarity_e polarity;       // Default: TIM_OC_POL_ACTIVE_HIGH
+    tim_arr_preload_e arr_preload;    // Default: TIM_ARR_PRELOAD_DI
+    uint32_t duty_cycle;              // Default: 0
+    uint32_t ccr_value;               // Default: 0
 } tim_oc_config;
 
 //======================================================================================//}
@@ -792,16 +899,29 @@ typedef struct {
 //                  Function API Prototypes
 //======================================================================================//{
 
-void tim_reset(tim_reg_def const *const p_timx);
-
 // Delay functions
 void tim_delay(uint32_t time, tim_unit_of_time_e unit);
 
-// TODO: Add interrupt versions
-void tim_set_manual(tim_handler *p_tim_handler, uint16_t auto_reload, uint16_t prescaler);
-void tim_set_auto(tim_handler *p_tim_handler, uint32_t time, tim_unit_of_time_e unit);
-tim_status_e tim_read_status(tim_reg_def const *const p_timx);
-void tim_reset_status(tim_reg_def *const p_timx);
+void tim_init(tim_handler *p_tim_handler);
+void tim_reset(tim_reg_def const *const p_timx);
+
+void tim_ic_init(tim_reg_def *p_timx, tim_ic_config ic_config);
+void tim_oc_init(tim_reg_def *p_timx, tim_oc_config oc_config);
+
+void tim_start(tim_reg_def *p_timx);
+void tim_start_it(tim_reg_def *p_timx);
+void tim_channel_start(tim_reg_def *p_timx, tim_channel_sel_e channel);
+void tim_channel_start_it(tim_reg_def *p_timx, tim_channel_sel_e channel);
+
+void tim_it_config(tim_reg_def const *p_timx, tim_channel_sel_e channel, togglable_e toggle);
+
+tim_status_e tim_read_base_status(tim_reg_def const *const p_timx);
+void tim_reset_base_status(tim_reg_def *const p_timx);
+tim_status_e tim_read_channel_status(tim_reg_def const *p_timx, tim_channel_sel_e channel);
+void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e channel);
+
+uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channel);
+bus_types get_tim_bus(tim_reg_def const *const p_timx);
 
 //} Other Configuration
 //=========================================//{

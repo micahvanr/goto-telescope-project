@@ -18,11 +18,15 @@
 #include "printf.h"
 
 // TODO: Change all drivers field register contants to use bits format (0bx)
+// TODO: Change all drivers to clear bitfields before setting them
+// TODO: Add default comments to other drivers handle structures
+// TODO: Add more const qualifiers where it makes sense
 
 int main(void)
 {
     // Uses USART2 and PA2 - change inside printf.h
     printf_init();
+
     // Uses PA3
     debug_pin_init();
     debug_button_init();
@@ -30,8 +34,12 @@ int main(void)
     // NOTE: Uncomment line below if you want to run the program after button press
     // while(!read_debug_button());
 
+    printf_(" ");
+    toggle_debug_pin();
+    toggle_debug_pin();
+
     // NOTE: Change this variable to run the correct test
-    test_type_e test = TIMER_TEST;
+    test_type_e test = TIMER_TEST_FREQ;
     switch (test) {
 
     // GPIO tests
@@ -49,7 +57,13 @@ int main(void)
     case I2C_TEST_IT:          i2c_tests(test); break;
 
     // Timer tests
-    case TIMER_TEST:           timer_tests(test); break;
+    case TIMER_TEST_AUTO:
+    case TIMER_TEST_MANUAL:
+    case TIMER_TEST_FREQ:
+    case TIMER_TEST_DELAY:
+    case TIMER_TEST_OC_PWM:
+    case TIMER_TEST_BASIC_IT:
+    case TIMER_TEST_IC_IT:     timer_tests(test); break;
 
     // Misc tests
     case MISC_TEST_ASSERT:
