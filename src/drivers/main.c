@@ -19,6 +19,7 @@
 
 // TODO: Change all drivers to clear bitfields before setting them
 // TODO: Add more const qualifiers where it makes sense
+// TEST: All drivers to ensure all work after all changes
 
 int main(void)
 {

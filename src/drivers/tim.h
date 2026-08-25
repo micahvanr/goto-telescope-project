@@ -84,6 +84,9 @@ typedef enum {
     TIM_UNIT_S,  // Seconds
     TIM_UNIT_MS, // Miliseconds
     TIM_UNIT_US, // Microseconds
+    TIM_UNIT_HZ,
+    TIM_UNIT_KHZ,
+    TIM_UNIT_MHZ,
 } tim_unit_of_time_e;
 
 typedef enum {
@@ -844,8 +847,7 @@ typedef struct {
 typedef struct {
     uint32_t auto_reload;    // Default: 0
     uint32_t prescaler;      // Default: 0
-    uint32_t period;           // Default: 0
-    uint32_t frequency_hz;    // Default: 0
+    uint32_t time;           // Default: 0
     tim_unit_of_time_e unit; // Default: TIM_UNIT_S
 } tim_timing_config;
 

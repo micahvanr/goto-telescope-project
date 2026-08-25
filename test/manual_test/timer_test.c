@@ -31,6 +31,10 @@ void timer_tests(test_type_e test)
 {
     timer1_init();
     timer8_init();
+    // while(1) {
+    //     toggle_debug_pin();
+    //     for (uint32_t i = 0; i < 5000; i++);
+    // }
 
     switch (test) {
     case TIMER_TEST_AUTO:     test_timer_auto(); break;
@@ -94,8 +98,8 @@ static void timer_ic_gpio_pin_init(void)
 
 static void test_timer_auto(void)
 {
-    g_tim1_handle.timing_conf.period = 100;
-    g_tim1_handle.timing_conf.unit   = TIM_UNIT_MS;
+    g_tim1_handle.timing_conf.time = 100;
+    g_tim1_handle.timing_conf.unit = TIM_UNIT_MS;
 
     tim_init(&g_tim1_handle);
     printf_("First count: %lu", g_tim1_handle.p_timx->CNT);
@@ -125,7 +129,8 @@ static void test_timer_manual(void)
 
 static void test_timer_freq(void)
 {
-    g_tim1_handle.timing_conf.frequency_hz = 100;
+    g_tim1_handle.timing_conf.time = 1;
+    g_tim1_handle.timing_conf.unit = TIM_UNIT_KHZ;
 
     tim_init(&g_tim1_handle);
     tim_start(g_tim1_handle.p_timx);
@@ -196,8 +201,8 @@ static void test_ic_it(void)
 
 static void test_it(void)
 {
-    g_tim1_handle.timing_conf.period = 100;
-    g_tim1_handle.timing_conf.unit   = TIM_UNIT_MS;
+    g_tim1_handle.timing_conf.time = 100;
+    g_tim1_handle.timing_conf.unit = TIM_UNIT_MS;
     tim_init(&g_tim1_handle);
 
     tim_start_it(g_tim1_handle.p_timx);

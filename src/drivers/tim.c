@@ -13,7 +13,7 @@
 
 static inline void tim_clock_enable(tim_reg_def const *const p_timx);
 static inline void tim_clock_disable(tim_reg_def const *const p_timx);
-static void set_prescaler_count(tim_reg_def *p_timx, uint32_t period, tim_unit_of_time_e unit);
+static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_time_e unit);
 static inline bool overflow_check(tim_reg_def const *p_timx, uint32_t check_num, uint32_t factor);
 static inline uint32_t get_ccr_pwm(tim_reg_def const *p_timx, uint32_t duty_cycle);
 static tim_type_e get_tim_type(tim_reg_def *p_timx);
@@ -63,8 +63,8 @@ void tim_delay(uint32_t period, tim_unit_of_time_e unit)
         delay_handler.tim_conf.one_pulse_mode = TIM_ONE_PULSE_MODE_DI;
         delay_handler.tim_conf.clock_sel      = TIM_CLK_SEL_INTERNAL;
 
-        delay_handler.timing_conf.period = period;
-        delay_handler.timing_conf.unit   = unit;
+        delay_handler.timing_conf.time = period;
+        delay_handler.timing_conf.unit = unit;
     }
 
     tim_init(&delay_handler);
@@ -118,18 +118,10 @@ void tim_init(tim_handler *p_tim_handler)
     if ((p_tim_handler->timing_conf.auto_reload != 0) && (p_tim_handler->timing_conf.prescaler != 0)) {
         p_tim_handler->p_timx->PSC = p_tim_handler->timing_conf.prescaler - 1;
         p_tim_handler->p_timx->ARR = p_tim_handler->timing_conf.auto_reload - 1;
-    // Calculate ARR and PSC from given period and unit
-    } else if ((p_tim_handler->timing_conf.period != 0) && (p_tim_handler->timing_conf.unit != 0)) {
-        set_prescaler_count(p_tim_handler->p_timx, p_tim_handler->timing_conf.period, p_tim_handler->timing_conf.unit);
-    // Calculate ARR and PSC from given period and unit but convert from frequency first
-    } else if (p_tim_handler->timing_conf.frequency_hz != 0) {
-        uint32_t period;
-        tim_unit_of_time_e unit;
-        period = 1000000 / p_tim_handler->timing_conf.frequency_hz;
-        unit = TIM_UNIT_US;
-        set_prescaler_count(p_tim_handler->p_timx, period, unit);
+        // Calculate ARR and PSC from given time and unit
+    } else if ((p_tim_handler->timing_conf.time != 0) && (p_tim_handler->timing_conf.unit != 0)) {
+        set_prescaler_count(p_tim_handler->p_timx, p_tim_handler->timing_conf.time, p_tim_handler->timing_conf.unit);
     }
-
     // Set ARR preload
     // (if preload is off, the count value will count to this new value immediately)
     // (if preload is on, the count value will count to the new value after finishing what its counting to now)
@@ -200,9 +192,12 @@ static void tim_base_init_asserts(tim_handler const *p_tim_handler)
 
     found_setting = false;
     switch (p_tim_handler->timing_conf.unit) {
-    case TIM_UNIT_S:  found_setting = true; break;
-    case TIM_UNIT_MS: found_setting = true; break;
-    case TIM_UNIT_US: found_setting = true; break;
+    case TIM_UNIT_S:   found_setting = true; break;
+    case TIM_UNIT_MS:  found_setting = true; break;
+    case TIM_UNIT_US:  found_setting = true; break;
+    case TIM_UNIT_HZ:  found_setting = true; break;
+    case TIM_UNIT_KHZ: found_setting = true; break;
+    case TIM_UNIT_MHZ: found_setting = true; break;
     }
     ASSERT(found_setting);
 }
@@ -718,21 +713,40 @@ static inline void tim_clock_disable(tim_reg_def const *const p_timx)
     }
 }
 
-static void set_prescaler_count(tim_reg_def *p_timx, uint32_t period, tim_unit_of_time_e unit)
+static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_time_e unit)
 {
+
+    // uint32_t period;
+    // tim_unit_of_time_e unit;
+    // period = 1000000 / p_tim_handler->timing_conf.frequency_hz;
+    // unit = TIM_UNIT_US;
+    // set_prescaler_count(p_tim_handler->p_timx, period, unit);
+
     uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
     uint32_t prescaler = 1;
     uint32_t count     = 1;
     uint32_t unit_in_seconds;
+    uint32_t period;
 
     uint8_t const FACTOR_5 = 5;
     uint8_t const FACTOR_3 = 3;
     uint8_t const FACTOR_2 = 2;
 
     switch (unit) {
+    case TIM_UNIT_MHZ: time *= 1000; [[fallthrough]];
+    case TIM_UNIT_KHZ: time *= 1000; [[fallthrough]];
+    case TIM_UNIT_HZ:
+        period = 1000000 / time;
+        unit   = TIM_UNIT_US;
+        break;
+    default: period = time; break;
+    }
+
+    switch (unit) {
     case TIM_UNIT_S:  unit_in_seconds = 1; break;
     case TIM_UNIT_MS: unit_in_seconds = 1000; break;
     case TIM_UNIT_US: unit_in_seconds = 1000000; break;
+    default:          ASSERT(false); break;
     }
 
     clk_freq = rcc_get_timer_clock_freq_hz(get_tim_bus(p_timx));
