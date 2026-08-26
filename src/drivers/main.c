@@ -17,9 +17,7 @@
 #include "debug_tools.h"
 #include "printf.h"
 
-// TODO: Change all drivers to clear bitfields before setting them
 // TODO: Add more const qualifiers where it makes sense
-// TEST: All drivers to ensure all work after all changes
 
 int main(void)
 {
@@ -38,7 +36,7 @@ int main(void)
     toggle_debug_pin();
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test = TIMER_TEST_FREQ;
+    test_type_e test = I2C_TEST_IT;
     switch (test) {
 
     // GPIO tests

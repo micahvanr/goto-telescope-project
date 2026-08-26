@@ -86,6 +86,8 @@ Note: Check handler's substructures for default values
 void tim_init(tim_handler *p_tim_handler)
 {
     tim_type_e timer_type;
+    uint32_t temp_cr1 = p_tim_handler->p_timx->CR1;
+    uint32_t temp_smcr = p_tim_handler->p_timx->SMCR;
 
     tim_base_init_asserts(p_tim_handler);
 
@@ -96,20 +98,25 @@ void tim_init(tim_handler *p_tim_handler)
     tim_clock_enable(p_tim_handler->p_timx);
 
     // One pulse mode
-    p_tim_handler->p_timx->CR1 |= p_tim_handler->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
+    temp_cr1 &= ~(TIM_CR1_OPM);
+    temp_cr1 |= p_tim_handler->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
 
     if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)) {
         // Set direction
-        p_tim_handler->p_timx->CR1 |= p_tim_handler->tim_conf.direction << TIM_CR1_DIR_POS;
+        temp_cr1 &= ~(TIM_CR1_DIR);
+        temp_cr1 |= p_tim_handler->tim_conf.direction << TIM_CR1_DIR_POS;
         // Set align mode
-        p_tim_handler->p_timx->CR1 |= p_tim_handler->tim_conf.align_mode << TIM_CR1_CMS_POS;
+        temp_cr1 &= ~(TIM_CR1_CMS_MASK << TIM_CR1_DIR_POS);
+        temp_cr1 |= p_tim_handler->tim_conf.align_mode << TIM_CR1_CMS_POS;
     }
 
     if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)
         || (timer_type == TIM_TYPE_GENERAL_9_14)) {
-        p_tim_handler->p_timx->SMCR |= p_tim_handler->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
+        temp_smcr &= ~(TIM_SMCR_SMS_MASK << TIM_SMCR_SMS_POS);
+        temp_smcr |= p_tim_handler->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
         if (p_tim_handler->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL) {
-            p_tim_handler->p_timx->SMCR |= p_tim_handler->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
+            temp_smcr &= ~(TIM_SMCR_TS_MASK << TIM_SMCR_TS_POS);
+            temp_smcr |= p_tim_handler->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
         }
     }
 
@@ -128,8 +135,12 @@ void tim_init(tim_handler *p_tim_handler)
     // This value is set after the prescaler and counter are set and only if a value has been set
     // otherwise a garbage value will be set in the PSC register
     if ((p_tim_handler->p_timx->PSC != 0) && (p_tim_handler->p_timx->ARR != 0)) {
-        p_tim_handler->p_timx->CR1 |= p_tim_handler->tim_conf.preload << TIM_CR1_ARPE_POS;
+        temp_cr1 &= ~(TIM_CR1_ARPE);
+        temp_cr1 |= p_tim_handler->tim_conf.preload << TIM_CR1_ARPE_POS;
     }
+
+    p_tim_handler->p_timx->CR1 = temp_cr1;
+    p_tim_handler->p_timx->SMCR = temp_smcr;
 }
 
 // Check each setting of the handle and ensure it is one of the available enum values

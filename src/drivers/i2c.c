@@ -71,9 +71,11 @@ void i2c_init(i2c_handle *const p_i2c_handle)
     i2c_clock_enable(p_i2c_handle->p_i2cx);
 
     // Set peripheral clock frequency
+    p_i2c_handle->p_i2cx->CR2 &= ~(I2C_CR2_FREQ_MASK << I2C_CR2_FREQ_POS);
     p_i2c_handle->p_i2cx->CR2 |= (rcc_get_bus_clock_freq_hz(APB1_BUS) / 1000000);
 
     // Set own address
+    p_i2c_handle->p_i2cx->OAR1 &= ~(I2C_OAR1_ADD7_MASK << I2C_OAR1_ADD7_POS);
     p_i2c_handle->p_i2cx->OAR1 |= (p_i2c_handle->i2c_conf.own_address << I2C_OAR1_ADD7_POS);
 
     // Configure CCR
@@ -622,7 +624,10 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
         // Set TRISE
         trise_value |= ((I2C_MAX_RISE_FM_300_NS / (1000000 / (peripheral_clock_khz))) + 1);
     }
+    p_i2c_handle->p_i2cx->TRISE &= ~(I2C_TRISE_TRISE_MASK << I2C_TRISE_TRISE_POS);
     p_i2c_handle->p_i2cx->TRISE = (trise_value & I2C_TRISE_TRISE_MASK);
+
+    p_i2c_handle->p_i2cx->CCR &= ~(I2C_CCR_CCR_MASK << I2C_CCR_CCR_POS);
     p_i2c_handle->p_i2cx->CCR |= ccr_value;
 }
 

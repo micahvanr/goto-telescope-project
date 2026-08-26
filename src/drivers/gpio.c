@@ -60,19 +60,24 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
         uint8_t afr_reg;
         afr_reg = pin_no / 8;
+        p_gpio_handle->p_gpiox->AFR[afr_reg] &= ~(GPIO_AFRL_AFRL0_MASK << (4 * (pin_no % 8)));
         p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
     }
 
     // Set gpio mode
+    p_gpio_handle->p_gpiox->MODER &= ~(GPIO_MODER_MODER0_MASK << (2 * pin_no));
     p_gpio_handle->p_gpiox->MODER |= (p_gpio_handle->gpio_conf.mode << (2 * pin_no));
 
     // Set output type
+    p_gpio_handle->p_gpiox->OTYPER &= ~(GPIO_OTYPER_OT0_MASK << pin_no);
     p_gpio_handle->p_gpiox->OTYPER |= (p_gpio_handle->gpio_conf.output_type << pin_no);
 
     // Set output speed
+    p_gpio_handle->p_gpiox->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR0_MASK << (2 * pin_no));
     p_gpio_handle->p_gpiox->OSPEEDR |= (p_gpio_handle->gpio_conf.output_speed << (2 * pin_no));
 
     // Set pull up or pull down resistors
+    p_gpio_handle->p_gpiox->PUPDR &= ~(GPIO_PUPDR_PUPDR0_MASK << (2 * pin_no));
     p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_no));
 
     // Set interrupt mode

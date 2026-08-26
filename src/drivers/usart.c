@@ -45,7 +45,7 @@ Note: None
 ***************************************************************************/
 void usart_init(usart_handle *const p_usart_handle)
 {
-    uint32_t temp_reg;
+    uint32_t temp_cr1 = p_usart_handle->p_usartx->CR1;
 
     // Ensure handle structure values are valid
     usart_init_asserts(p_usart_handle);
@@ -57,35 +57,33 @@ void usart_init(usart_handle *const p_usart_handle)
     usart_clock_enable(p_usart_handle->p_usartx);
 
     // Enable USART peripheral
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_UE;
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_TE;
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_RE;
+    temp_cr1 |= USART_CR1_UE;
+    temp_cr1 |= USART_CR1_TE;
+    temp_cr1 |= USART_CR1_RE;
 
-    // Set CR1 - Reset value: 0x0000 0000
-    temp_reg = 0;
     // Set oversampling mode
-    temp_reg |= (p_usart_handle->usart_conf.oversampling_mode << USART_CR1_OVER8_POS);
+    temp_cr1 &= ~(USART_CR1_OVER8_MASK << USART_CR1_OVER8_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.oversampling_mode << USART_CR1_OVER8_POS);
 
     // Set word length
-    temp_reg |= (p_usart_handle->usart_conf.word_length << USART_CR1_M_POS);
+    temp_cr1 &= ~(USART_CR1_M_MASK << USART_CR1_M_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.word_length << USART_CR1_M_POS);
 
     // Set parity control
-    temp_reg |= (p_usart_handle->usart_conf.parity_control << USART_CR1_PCE_POS);
+    temp_cr1 &= ~(USART_CR1_PCE_MASK << USART_CR1_PCE_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.parity_control << USART_CR1_PCE_POS);
 
     // Set parity selection (even/odd)
     if (p_usart_handle->usart_conf.parity_control == USART_PARITY_CONTROL_ENABLE) {
-        temp_reg |= (p_usart_handle->usart_conf.parity_select << USART_CR1_PS_POS);
+        temp_cr1 &= ~(USART_CR1_PS_MASK << USART_CR1_PS_POS);
+        temp_cr1 |= (p_usart_handle->usart_conf.parity_select << USART_CR1_PS_POS);
     }
 
-    p_usart_handle->p_usartx->CR1 |= temp_reg;
-
-    // Set CR2 - Reset value: 0x0000 0000
-    temp_reg = 0;
+    p_usart_handle->p_usartx->CR1 = temp_cr1;
 
     // Set stop bits
-    temp_reg |= (p_usart_handle->usart_conf.stop_bits << USART_CR2_STOP_POS);
-
-    p_usart_handle->p_usartx->CR2 |= temp_reg;
+    p_usart_handle->p_usartx->CR2 &= ~(USART_CR2_STOP_MASK << USART_CR2_STOP_POS);
+    p_usart_handle->p_usartx->CR2 |= (p_usart_handle->usart_conf.stop_bits << USART_CR2_STOP_POS);
 
     // Set baudrate
     set_baudrate(p_usart_handle->p_usartx, p_usart_handle->usart_conf.oversampling_mode,
@@ -469,7 +467,7 @@ static inline bool verify_usart_initialized(usart_reg_def const *const p_usartx)
 // Sets the baudrate for the given USART peripheral
 static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate)
 {
-    uint32_t temp_reg;
+    uint32_t temp_brr;
     uint32_t clock_freq;
     bus_types usart_bus;
 
@@ -503,16 +501,16 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
     }
 
     // Set up variable to write into register
-    temp_reg = 0;
-    temp_reg |= (div_fraction << USART_BRR_DIV_FRACTION_POS);
-    temp_reg |= (div_mantissa << USART_BRR_DIV_MANTISSA_POS);
+    temp_brr = 0;
+    temp_brr |= (div_fraction << USART_BRR_DIV_FRACTION_POS);
+    temp_brr |= (div_mantissa << USART_BRR_DIV_MANTISSA_POS);
 
     // 3rd bit must be kept clear if over8 is used
     if (oversampling_mode == USART_OVERSAMPLING_8) {
-        temp_reg &= ~(1 << USART_BRR_OVER8EN_CLEAR_POS);
+        temp_brr &= ~(1 << USART_BRR_OVER8EN_CLEAR_POS);
     }
 
-    p_usartx->BRR = temp_reg;
+    p_usartx->BRR = temp_brr;
 }
 
 static void transfer_data(usart_handle *p_usart_handle)
@@ -532,20 +530,14 @@ static void recieve_data(usart_handle *p_usart_handle)
 static inline void enable_interrupts(usart_reg_def *const p_usartx)
 {
     usart_it_config(p_usartx, ENABLE);
-    uint32_t temp_reg = 0;
-    temp_reg |= USART_CR1_UE;
-    temp_reg |= USART_CR1_TXEIE;
-    temp_reg |= USART_CR1_TCIE;
-    temp_reg |= USART_CR1_PEIE;
-    p_usartx->CR1 |= temp_reg;
+    uint32_t temp_cr1 = p_usartx->CR1;
+    temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
+    p_usartx->CR1 = temp_cr1;
 }
 
 static inline void disable_interrupts(usart_reg_def *const p_usartx)
 {
-    p_usartx->CR1 &= ~USART_CR1_RXNEIE;
-    p_usartx->CR1 &= ~USART_CR1_TCIE;
-    p_usartx->CR1 &= ~USART_CR1_TXEIE;
-    p_usartx->CR1 &= ~USART_CR1_PEIE;
-    p_usartx->CR1 &= ~USART_CR1_PCE;
-    p_usartx->CR1 &= ~USART_CR1_UE;
+    uint32_t temp_cr1 = p_usartx->CR1;
+    temp_cr1 &= ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
+    p_usartx->CR1 = temp_cr1;
 }

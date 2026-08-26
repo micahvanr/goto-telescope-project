@@ -217,3 +217,33 @@ typedef struct {
 * Const causes the compiler to output an error programmer if tries to modify the variable.
 * Volatile tells the compiler to not perform optimization on the variables. This is useful when variables will change by external means, such as an external device.
 * They can be used in combination to create more complex variables.
+
+# Driver Implementation 
+## Initialization
+Driver initialization for each register should follow the procedure below:
+If setting multiple fields:
+If setting one field follow steps 2 & 3:
+Repeat for each register
+1. Read current register value to temp variable named temp_x (reg name). In temp variable:
+2. Clear register field to be set
+3. Set register field
+4. Repeat 2 & 3 for each field to be set in the register
+5. After all fields set, set register with temp variable
+This keeps consistency between each driver. In addition, it keeps configuration of other parts of the register intact
+and ensures each field is cleared before being set.
+``` C
+void example_init(handler example_handler) {
+    // Multiple field change
+    uint32_t temp_cr1 = example_handler->CR1;
+
+    // If field is single bits wide
+    temp_cr1 &= ~EX_CR1_FIELD_1;
+    // If field is multi bits wide
+    temp_cr1 &= ~(EX_CR1_FIELD_2_MASK << EX_CR1_FIELD_2_POS)
+    example_handler->CR1 = temp_cr1;
+
+    // Single field change
+    example_handler->CR2 &= ~(EX_CR2_FIELD)
+    example_handler->CR2 = example_handler.cr2_field;
+}
+```
