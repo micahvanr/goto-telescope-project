@@ -36,6 +36,11 @@ typedef enum {
     USART6_INIT_NUM = 5,
 } usart_init_port_num_e;
 
+typedef enum {
+    USART_NOT_INITIALIZED = 0,
+    USART_INITIALIZED     = 0,
+} usart_init_check_e;
+
 //======================================================================================//
 //                  Register Constants
 //======================================================================================//
@@ -262,27 +267,27 @@ typedef enum {
 
 // Configuration settings
 typedef enum {
-    USART_OVERSAMPLING_16 = 0, 
+    USART_OVERSAMPLING_16 = 0,
     USART_OVERSAMPLING_8  = 1,
 } usart_oversampling_e;
 
 typedef enum {
-    USART_WORD_LENGTH_8_DATA_BITS = 0, 
+    USART_WORD_LENGTH_8_DATA_BITS = 0,
     USART_WORD_LENGTH_9_DATA_BITS = 1,
 } usart_word_length_e;
 
 typedef enum {
-    USART_PARITY_CONTROL_DISABLE = 0, 
+    USART_PARITY_CONTROL_DISABLE = 0,
     USART_PARITY_CONTROL_ENABLE  = 1,
 } usart_parity_control_e;
 
 typedef enum {
-    USART_PARITY_SEL_EVEN = 0, 
+    USART_PARITY_SEL_EVEN = 0,
     USART_PARITY_SEL_ODD  = 1,
 } usart_parity_select_e;
 
 typedef enum {
-    USART_STOP_BITS_1   = 0, 
+    USART_STOP_BITS_1   = 0,
     USART_STOP_BITS_0_5 = 1,
     USART_STOP_BITS_2   = 2,
     USART_STOP_BITS_1_5 = 3,

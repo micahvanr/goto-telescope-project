@@ -7,10 +7,13 @@
 //          Helper Function Prototypes
 //========================================================//
 
+// Assert helper functions
 static inline void verify_i2c_init_asserts(i2c_handle const *const p_i2c_handle);
+static inline void set_i2c_init_status(i2c_reg_def const *const p_i2cx);
+static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2cx);
 
+// General helper functions
 static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const p_i2cx);
-static inline bool verify_i2c_initialized(i2c_reg_def const *p_i2cx);
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle);
 
 static inline void i2c_clock_enable(i2c_reg_def const *const p_i2cx);
@@ -65,8 +68,7 @@ void i2c_init(i2c_handle *const p_i2c_handle)
     verify_i2c_init_asserts(p_i2c_handle);
 
     // Initialize the port in the init variable
-    g_i2c_port_init |= (1 << (map_i2c_ports_to_num(p_i2c_handle->p_i2cx)));
-
+    set_i2c_init_status(p_i2c_handle->p_i2cx);
     // Enable clock
     i2c_clock_enable(p_i2c_handle->p_i2cx);
 
@@ -157,7 +159,7 @@ Note: None
 void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t const *p_data, uint32_t length,
                          i2c_repeated_start_e repeated_start)
 {
-    ASSERT(verify_i2c_initialized(p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
     // Ensure peripheral is not busy
     while (p_i2cx->SR2 & I2C_SR2_BUSY);
@@ -208,7 +210,7 @@ Note: None
 void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t target_addr, uint8_t *p_data, uint32_t length,
                         i2c_repeated_start_e repeated_start)
 {
-    ASSERT(verify_i2c_initialized(p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
     // Ensure peripheral is not busy
     while (p_i2cx->SR2 & I2C_SR2_BUSY);
@@ -261,7 +263,7 @@ Note: None
 ***************************************************************************/
 void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32_t length)
 {
-    ASSERT(verify_i2c_initialized(p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
     // Ensure peripheral is not busy
     while (p_i2cx->SR2 & I2C_SR2_BUSY);
@@ -299,7 +301,7 @@ Note: None
 ***************************************************************************/
 void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t length)
 {
-    ASSERT(verify_i2c_initialized(p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
     // Ensure peripheral is not busy
     while (p_i2cx->SR2 & I2C_SR2_BUSY);
@@ -343,9 +345,9 @@ Note: None
 void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
                             i2c_repeated_start_e repeated_start)
 {
-    ASSERT(verify_i2c_initialized(p_i2c_handle->p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until i2c is available (blocking)
     while (!(p_i2c_handle->i2c_it_data.status == I2C_STATUS_READY));
     p_i2c_handle->i2c_it_data.status = I2C_STATUS_MASTER_TX;
 
@@ -378,9 +380,9 @@ Note: None
 void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
                            i2c_repeated_start_e repeated_start)
 {
-    ASSERT(verify_i2c_initialized(p_i2c_handle->p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until i2c is available (blocking)
     while (!(p_i2c_handle->i2c_it_data.status == I2C_STATUS_READY));
     p_i2c_handle->i2c_it_data.status = I2C_STATUS_MASTER_RX;
 
@@ -399,9 +401,9 @@ void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_
 
 void i2c_slave_transmit_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length)
 {
-    ASSERT(verify_i2c_initialized(p_i2c_handle->p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until i2c is available (blocking)
     while (!(p_i2c_handle->i2c_it_data.status == I2C_STATUS_READY));
     p_i2c_handle->i2c_it_data.status = I2C_STATUS_SLAVE_TX;
 
@@ -416,9 +418,9 @@ void i2c_slave_transmit_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t l
 
 void i2c_slave_receive_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length)
 {
-    ASSERT(verify_i2c_initialized(p_i2c_handle->p_i2cx));
+    ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until i2c is available (blocking)
     while (!(p_i2c_handle->i2c_it_data.status == I2C_STATUS_READY));
     p_i2c_handle->i2c_it_data.status = I2C_STATUS_SLAVE_RX;
 
@@ -572,13 +574,14 @@ static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const 
     return 0;
 }
 
-static inline bool verify_i2c_initialized(i2c_reg_def const *p_i2cx)
+static inline void set_i2c_init_status(i2c_reg_def const *const p_i2cx)
 {
-    if (g_i2c_port_init & (1 << map_i2c_ports_to_num(p_i2cx))) {
-        return true;
-    } else {
-        return false;
-    }
+
+    g_i2c_port_init |= (1 << (map_i2c_ports_to_num(p_i2cx)));
+}
+static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2cx)
+{
+    return g_i2c_port_init & (1 << (map_i2c_ports_to_num(p_i2cx)));
 }
 
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)

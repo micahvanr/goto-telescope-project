@@ -31,6 +31,11 @@ typedef enum {
 } i2c_init_port_num_e;
 
 typedef enum {
+    I2C_NOT_INITIALIZED = 0,
+    I2C_INITIALIZED     = 1,
+} i2c_init_check_e;
+
+typedef enum {
     I2C1_STATUS_NUM = 0,
     I2C2_STATUS_NUM = 1,
     I2C3_STATUS_NUM = 2,
@@ -312,17 +317,17 @@ typedef enum {
 
 // Configuration settings
 typedef enum {
-    I2C_SPEED_MODE_STANDARD = 0, 
+    I2C_SPEED_MODE_STANDARD = 0,
     I2C_SPEED_MODE_FAST     = 1,
 } i2c_speed_mode_e;
 
 typedef enum {
-    I2C_FM_DUTY_2    = 0, 
+    I2C_FM_DUTY_2    = 0,
     I2C_FM_DUTY_16_9 = 1,
 } i2c_fm_duty_cycle;
 
 typedef enum {
-    I2C_CLK_FREQ_100KHZ = 100000, 
+    I2C_CLK_FREQ_100KHZ = 100000,
     I2C_CLK_FREQ_200KHZ = 200000,
     I2C_CLK_FREQ_300KHZ = 300000,
     I2C_CLK_FREQ_400KHZ = 400000,

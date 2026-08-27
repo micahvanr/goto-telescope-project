@@ -11,6 +11,13 @@
 //          Helper Function Prototypes
 //========================================================//
 
+// Assert helper functions
+static void tim_base_init_asserts(tim_handler const *p_tim_handler);
+static void tim_ic_init_asserts(tim_reg_def const *p_timx, tim_ic_config ic_config);
+static void tim_oc_init_asserts(tim_reg_def const *p_timx, tim_oc_config oc_config);
+static void tim_peri_assert(tim_reg_def const *p_timx);
+
+// General helper functions
 static inline void tim_clock_enable(tim_reg_def const *const p_timx);
 static inline void tim_clock_disable(tim_reg_def const *const p_timx);
 static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_time_e unit);
@@ -18,10 +25,6 @@ static inline bool overflow_check(tim_reg_def const *p_timx, uint32_t check_num,
 static inline uint32_t get_ccr_pwm(tim_reg_def const *p_timx, uint32_t duty_cycle);
 static tim_type_e get_tim_type(tim_reg_def *p_timx);
 
-static void tim_base_init_asserts(tim_handler const *p_tim_handler);
-static void tim_ic_init_asserts(tim_reg_def const *p_timx, tim_ic_config ic_config);
-static void tim_oc_init_asserts(tim_reg_def const *p_timx, tim_oc_config oc_config);
-static void tim_peri_assert(tim_reg_def const *p_timx);
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *p_timx);
 static inline void set_tim_base_init_status(tim_reg_def const *p_timx);
 static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *p_timx);
@@ -86,7 +89,7 @@ Note: Check handler's substructures for default values
 void tim_init(tim_handler *p_tim_handler)
 {
     tim_type_e timer_type;
-    uint32_t temp_cr1 = p_tim_handler->p_timx->CR1;
+    uint32_t temp_cr1  = p_tim_handler->p_timx->CR1;
     uint32_t temp_smcr = p_tim_handler->p_timx->SMCR;
 
     tim_base_init_asserts(p_tim_handler);
@@ -139,7 +142,7 @@ void tim_init(tim_handler *p_tim_handler)
         temp_cr1 |= p_tim_handler->tim_conf.preload << TIM_CR1_ARPE_POS;
     }
 
-    p_tim_handler->p_timx->CR1 = temp_cr1;
+    p_tim_handler->p_timx->CR1  = temp_cr1;
     p_tim_handler->p_timx->SMCR = temp_smcr;
 }
 
@@ -650,7 +653,6 @@ uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channe
 //                  Helper Function Implementation
 //======================================================================================//
 
-// TODO: Implement similar function in other peripherals?
 bus_types get_tim_bus(tim_reg_def const *const p_timx)
 {
     // If TIMER peripheral on APB2
@@ -907,7 +909,6 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *p_timx)
     return 0;
 }
 
-// TODO: Change other drivers to follow this practice
 static inline void set_tim_base_init_status(tim_reg_def const *p_timx)
 {
     g_tim_peri_init |= (1 << map_tim_peri_to_num(p_timx));
