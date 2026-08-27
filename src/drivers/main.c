@@ -17,8 +17,6 @@
 #include "debug_tools.h"
 #include "printf.h"
 
-// TODO: Add more const qualifiers where it makes sense
-
 int main(void)
 {
     // Uses USART2 and PA2 - change inside printf.h

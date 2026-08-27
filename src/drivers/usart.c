@@ -23,7 +23,7 @@ static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx);
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
 static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);
 
-static void transfer_data(usart_handle *p_usart_handle);
+static void transfer_data(usart_handle *const p_usart_handle);
 static void recieve_data(usart_handle *const p_usart_handle);
 
 //========================================================//
@@ -198,7 +198,7 @@ Note:
     9 Bit write with no parity not implemented.
     If sending string, ensure the size does not include the '\0' character. 
 ***************************************************************************/
-void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length)
+void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t const length)
 {
     ASSERT(get_usart_init_status(p_usartx) == USART_INITIALIZED);
     p_usartx->CR1 |= USART_CR1_TE;
@@ -225,7 +225,7 @@ Return:
     None
 Note: 9 Bit write with no parity not implemented
 ***************************************************************************/
-void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length)
+void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t const length)
 {
     ASSERT(get_usart_init_status(p_usartx) == USART_INITIALIZED);
     p_usartx->CR1 |= USART_CR1_RE;
@@ -251,7 +251,7 @@ Note:
     If sending string, ensure the size does not include the '\0' character. 
     If the USART peripheral is busy transmitting/receiving, it will poll until it is available.
 ***************************************************************************/
-void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
+void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
     ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
@@ -280,7 +280,7 @@ Note:
     9 Bit write with no parity not implemented
     If the USART peripheral is busy transmitting/receiving, it will poll until it is available.
 ***************************************************************************/
-void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
+void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
     ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
@@ -313,7 +313,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void usart_it_config(usart_reg_def const *const p_usartx, togglable_e toggle)
+void usart_it_config(usart_reg_def const *const p_usartx, togglable_e const toggle)
 {
     if (p_usartx == USART1) {
         irq_config(USART1_IRQ_NO_37, toggle);
@@ -481,7 +481,7 @@ static inline usart_init_check_e get_usart_init_status(usart_reg_def const *cons
 }
 
 // Sets the baudrate for the given USART peripheral
-static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate)
+static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode, usart_baudrate_e const baudrate)
 {
     uint32_t temp_brr;
     uint32_t clock_freq;
@@ -529,14 +529,14 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
     p_usartx->BRR = temp_brr;
 }
 
-static void transfer_data(usart_handle *p_usart_handle)
+static void transfer_data(usart_handle *const p_usart_handle)
 {
     p_usart_handle->p_usartx->DR = (uint32_t)*p_usart_handle->usart_it_data.txrx_buffer;
     p_usart_handle->usart_it_data.txrx_length--;
     p_usart_handle->usart_it_data.txrx_buffer++;
 }
 
-static void recieve_data(usart_handle *p_usart_handle)
+static void recieve_data(usart_handle *const p_usart_handle)
 {
     *p_usart_handle->usart_it_data.txrx_buffer = p_usart_handle->p_usartx->DR;
     p_usart_handle->usart_it_data.txrx_length--;

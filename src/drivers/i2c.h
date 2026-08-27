@@ -400,13 +400,13 @@ void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32
 void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t length);
 
 // Write/read interrupt
-void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
+void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *const p_data, uint32_t length,
                             i2c_repeated_start_e repeated_start);
-void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *p_data, uint32_t length,
+void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t target_addr, uint8_t *const p_data, uint32_t length,
                            i2c_repeated_start_e repeated_start);
 
-void i2c_slave_transmit_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length);
-void i2c_slave_receive_it(i2c_handle *p_i2c_handle, uint8_t *p_data, uint32_t length);
+void i2c_slave_transmit_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data, uint32_t length);
+void i2c_slave_receive_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data, uint32_t length);
 
 // Interrupt handling
 void i2c_it_config(i2c_reg_def const *const p_i2cx, togglable_e toggle);

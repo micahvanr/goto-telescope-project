@@ -94,7 +94,7 @@ Return:
     Clock frequency (hz) for the given bus
 Note: None
 ***************************************************************************/
-uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
+uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 {
     uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
     uint16_t const apb_clock_prescaler[] = {2, 4, 8, 16};
@@ -143,7 +143,7 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
     }
 }
 
-uint32_t rcc_get_timer_clock_freq_hz(bus_types bus)
+uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
     uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
     uint8_t bus_prescaler       = 0;
@@ -162,7 +162,7 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types bus)
     return bus_clock;
 }
 
-void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler)
+void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 
     switch (mco_clk_src) {
@@ -198,7 +198,7 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
 //======================================================================================//
 //                  Helper Function Implementation
 //======================================================================================//
-static void mco_gpio_pin_init(rcc_mco_sel_e mco_select)
+static void mco_gpio_pin_init(rcc_mco_sel_e const mco_select)
 {
     gpio_handle mco_gpio_pin;
     mco_gpio_pin.gpio_conf.mode            = GPIO_MODE_ALT_FN;

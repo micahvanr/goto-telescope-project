@@ -381,11 +381,11 @@ void usart_reset(usart_reg_def const *const p_usartx);
 void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length);
 void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length);
 // Used for printf
-void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const p_data);
+void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t p_data);
 
 // Write/read interrupt
-void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
-void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length);
+void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t length);
+void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t length);
 
 // Interrupt handling
 void usart_it_config(usart_reg_def const *const p_usartx, togglable_e toggle);

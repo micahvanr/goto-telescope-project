@@ -904,22 +904,22 @@ typedef struct {
 // Delay functions
 void tim_delay(uint32_t time, tim_unit_of_time_e unit);
 
-void tim_init(tim_handler *p_tim_handler);
+void tim_init(tim_handler *const p_tim_handler);
 void tim_reset(tim_reg_def const *const p_timx);
 
-void tim_ic_init(tim_reg_def *p_timx, tim_ic_config ic_config);
-void tim_oc_init(tim_reg_def *p_timx, tim_oc_config oc_config);
+void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config ic_config);
+void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config oc_config);
 
-void tim_start(tim_reg_def *p_timx);
-void tim_start_it(tim_reg_def *p_timx);
-void tim_channel_start(tim_reg_def *p_timx, tim_channel_sel_e channel);
-void tim_channel_start_it(tim_reg_def *p_timx, tim_channel_sel_e channel);
+void tim_start(tim_reg_def *const p_timx);
+void tim_start_it(tim_reg_def *const p_timx);
+void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e channel);
+void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 
-void tim_it_config(tim_reg_def const *p_timx, tim_channel_sel_e channel, togglable_e toggle);
+void tim_it_config(tim_reg_def const *const p_timx, tim_channel_sel_e channel, togglable_e toggle);
 
 tim_status_e tim_read_base_status(tim_reg_def const *const p_timx);
 void tim_reset_base_status(tim_reg_def *const p_timx);
-tim_status_e tim_read_channel_status(tim_reg_def const *p_timx, tim_channel_sel_e channel);
+tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 
 uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channel);

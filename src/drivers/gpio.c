@@ -114,7 +114,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e toggle)
+void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
     uint8_t pin_no             = p_gpio_handle->gpio_conf.pin_no;
     uint8_t exti_cr_reg_num    = pin_no / 4;
@@ -166,7 +166,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void gpio_it_handler(exti_lines_e exti_line)
+void gpio_it_handler(exti_lines_e const exti_line)
 {
     // Clears the pending bit for the EXTI line in the EXTI register
     EXTI->PR |= (1 << exti_line);
@@ -186,7 +186,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
+void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_no, pin_logic_level_e const pin_level)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
     switch (pin_level) {
@@ -209,7 +209,7 @@ Return:
         LOW (0)
 Note: None
 ***************************************************************************/
-pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no)
+pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
     return (pin_logic_level_e)(p_gpiox->IDR & (1 << pin_no));
@@ -227,7 +227,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no)
+void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_no)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
     p_gpiox->ODR ^= (1 << pin_no);
@@ -359,7 +359,7 @@ static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 }
 
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
-static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
+static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
 {
     return (line_num == EXTI_LINE_NO_0)                                     ? EXTI0_IRQ_NO_6
          : (line_num == EXTI_LINE_NO_1)                                     ? EXTI1_IRQ_NO_7
@@ -371,12 +371,12 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num)
                                                                             : 0;
 }
 
-static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
+static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
 {
     g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)] |= (1 << pin_no);
 }
 
-static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
+static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
 {
     // Get port initialization pins from list
     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)];
@@ -385,16 +385,6 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 
     return pin_initialized;
 }
-
-// static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpiox, pin_number_e pin_no)
-// {
-//     // Get port initialization pins from list
-//     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)];
-//     // Mask the port to get the bit for the pin number
-//     uint8_t pin_initialized = ((port_init & (1 << pin_no)) >> pin_no);
-//
-//     return ((pin_initialized == GPIO_INITIALIZED) ? true : false);
-// }
 
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox)
 {

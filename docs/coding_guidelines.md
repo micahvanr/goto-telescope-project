@@ -214,9 +214,28 @@ typedef struct {
 
 ## Const and volatile
 * All variables and pointers should be defined as const and/or volatile when applicable.
-* Const causes the compiler to output an error programmer if tries to modify the variable.
+* They can be used in combination to create more complex but useful variables.
+### Const
+Const causes the compiler to output an error programmer if tries to modify the variable.
+* Add const to parameters that are passed by reference. It can be added if the data pointed to should not change or if the pointer itself should not change
+* Always use const for constants that might be defined as an enum or macro otherwise. 
+* Never use const to parameters that are passed by value in a function prototype as it doesn't do anything. Instead, add to function implemention.
+* Can also be used when a variable is set once by doing a calculation or from a returned value from a function. 
+``` C
+// Parameter passed by value not const but reference
+void ex_function(uint32_t *const p_value, uint32_t value);        
+
+// Parameter passed by value and reference both const
+void ex_function(uint32_t *const p_value, uint32_t const value) {  
+    // Could be defined as enum or macro
+    float const PI = 3.14;
+    // Calculated/returned from function
+    uint32_t const LEN = sizeof(value)
+}
+``` 
+### Volatile
 * Volatile tells the compiler to not perform optimization on the variables. This is useful when variables will change by external means, such as an external device.
-* They can be used in combination to create more complex variables.
+
 
 # Driver Implementation 
 ## Initialization

@@ -490,6 +490,7 @@ typedef enum {
 } gpio_bsrr_pos_e;
 
 typedef enum {
+    // cppcheck-suppress shiftTooManyBitsSigned
     GPIO_BSRR_BR15 = (1 << GPIO_BSRR_BR15_POS), // Port x reset bit y (y = 0..15)
     GPIO_BSRR_BR14 = (1 << GPIO_BSRR_BR14_POS), // Port x reset bit y (y = 0..15)
     GPIO_BSRR_BR13 = (1 << GPIO_BSRR_BR13_POS), // Port x reset bit y (y = 0..15)

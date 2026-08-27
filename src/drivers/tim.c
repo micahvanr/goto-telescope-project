@@ -12,24 +12,24 @@
 //========================================================//
 
 // Assert helper functions
-static void tim_base_init_asserts(tim_handler const *p_tim_handler);
-static void tim_ic_init_asserts(tim_reg_def const *p_timx, tim_ic_config ic_config);
-static void tim_oc_init_asserts(tim_reg_def const *p_timx, tim_oc_config oc_config);
-static void tim_peri_assert(tim_reg_def const *p_timx);
+static void tim_base_init_asserts(tim_handler const *const p_tim_handler);
+static void tim_ic_init_asserts(tim_reg_def const *const p_timx, tim_ic_config const ic_config);
+static void tim_oc_init_asserts(tim_reg_def const *const p_timx, tim_oc_config const oc_config);
+static void tim_peri_assert(tim_reg_def const *const p_timx);
 
 // General helper functions
 static inline void tim_clock_enable(tim_reg_def const *const p_timx);
 static inline void tim_clock_disable(tim_reg_def const *const p_timx);
-static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_time_e unit);
-static inline bool overflow_check(tim_reg_def const *p_timx, uint32_t check_num, uint32_t factor);
-static inline uint32_t get_ccr_pwm(tim_reg_def const *p_timx, uint32_t duty_cycle);
-static tim_type_e get_tim_type(tim_reg_def *p_timx);
+static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit);
+static inline bool overflow_check(tim_reg_def const *const p_timx, uint32_t check_num, uint32_t factor);
+static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t duty_cycle);
+static tim_type_e get_tim_type(tim_reg_def const *const p_timx);
 
-static inline uint8_t map_tim_peri_to_num(tim_reg_def const *p_timx);
-static inline void set_tim_base_init_status(tim_reg_def const *p_timx);
-static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *p_timx);
-static inline void set_tim_channel_init_status(tim_reg_def const *p_timx, tim_channel_sel_e channel);
-static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *p_timx, tim_channel_sel_e channel);
+static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx);
+static inline void set_tim_base_init_status(tim_reg_def const *const p_timx);
+static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx);
+static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
+static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 
 //========================================================//
 //          Global Variables
@@ -55,7 +55,7 @@ Return:
 Note: Care should be taken when using us unit as the delay can be too short and 
 the software may not be able to keep up
 ***************************************************************************/
-void tim_delay(uint32_t period, tim_unit_of_time_e unit)
+void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
     static uint8_t initialized = false;
     tim_handler delay_handler  = {0};
@@ -86,7 +86,7 @@ Return:
     None
 Note: Check handler's substructures for default values
 ***************************************************************************/
-void tim_init(tim_handler *p_tim_handler)
+void tim_init(tim_handler *const p_tim_handler)
 {
     tim_type_e timer_type;
     uint32_t temp_cr1  = p_tim_handler->p_timx->CR1;
@@ -147,7 +147,7 @@ void tim_init(tim_handler *p_tim_handler)
 }
 
 // Check each setting of the handle and ensure it is one of the available enum values
-static void tim_base_init_asserts(tim_handler const *p_tim_handler)
+static void tim_base_init_asserts(tim_handler const *const p_tim_handler)
 {
     uint8_t found_setting = false;
 
@@ -241,7 +241,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_start(tim_reg_def *p_timx)
+void tim_start(tim_reg_def *const p_timx)
 {
     if (get_tim_base_init_status(p_timx) == TIM_NOT_INITIALIZED) {
         ASSERT(false);
@@ -259,7 +259,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_start_it(tim_reg_def *p_timx)
+void tim_start_it(tim_reg_def *const p_timx)
 {
     if (get_tim_base_init_status(p_timx) == TIM_NOT_INITIALIZED) {
         ASSERT(false);
@@ -279,7 +279,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_channel_start(tim_reg_def *p_timx, tim_channel_sel_e channel)
+void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
@@ -300,7 +300,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_channel_start_it(tim_reg_def *p_timx, tim_channel_sel_e channel)
+void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
@@ -329,7 +329,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_it_config(tim_reg_def const *p_timx, tim_channel_sel_e channel, togglable_e toggle)
+void tim_it_config(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
         irq_config(TIM1_CC_IRQ_NO_27, toggle);
@@ -373,7 +373,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_ic_init(tim_reg_def *p_timx, tim_ic_config ic_config)
+void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 {
     // Either % the channel num and start from 1 or dont and start channel num from 0
     uint8_t const MODE_REG         = ic_config.channel_num / 2;
@@ -402,7 +402,7 @@ void tim_ic_init(tim_reg_def *p_timx, tim_ic_config ic_config)
 }
 
 // Check each setting of the config and ensure it is one of the available enum values
-static void tim_ic_init_asserts(tim_reg_def const *p_timx, tim_ic_config ic_config)
+static void tim_ic_init_asserts(tim_reg_def const *const p_timx, tim_ic_config const ic_config)
 {
     uint8_t found_setting;
 
@@ -484,7 +484,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_oc_init(tim_reg_def *p_timx, tim_oc_config oc_config)
+void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 {
     // Either % the channel num and start from 1 or dont and start channel num from 0
     uint8_t const MODE_REG         = oc_config.channel_num / 2;
@@ -521,7 +521,7 @@ void tim_oc_init(tim_reg_def *p_timx, tim_oc_config oc_config)
 }
 
 // Check each setting of the config and ensure it is one of the available enum values
-static void tim_oc_init_asserts(tim_reg_def const *p_timx, tim_oc_config oc_config)
+static void tim_oc_init_asserts(tim_reg_def const *const p_timx, tim_oc_config const oc_config)
 {
     uint8_t found_setting;
     tim_peri_assert(p_timx);
@@ -608,7 +608,7 @@ Return:
     TIM_UPDATE_FOUND [1]
 Note: None
 ***************************************************************************/
-tim_status_e tim_read_channel_status(tim_reg_def const *p_timx, tim_channel_sel_e channel)
+tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
     return (tim_status_e)((p_timx->SR & (TIM_SR_CC1IF << channel)) >> TIM_SR_CC1IF_POS);
 }
@@ -626,7 +626,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e channel)
+void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     p_timx->SR &= ~(TIM_SR_CC1IF << channel);
 }
@@ -644,7 +644,7 @@ Return:
     uint32_t: CCR value of channel
 Note: None
 ***************************************************************************/
-uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channel)
+uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     return p_timx->CCR[channel];
 }
@@ -726,15 +726,8 @@ static inline void tim_clock_disable(tim_reg_def const *const p_timx)
     }
 }
 
-static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_time_e unit)
+static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit)
 {
-
-    // uint32_t period;
-    // tim_unit_of_time_e unit;
-    // period = 1000000 / p_tim_handler->timing_conf.frequency_hz;
-    // unit = TIM_UNIT_US;
-    // set_prescaler_count(p_tim_handler->p_timx, period, unit);
-
     uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
     uint32_t prescaler = 1;
     uint32_t count     = 1;
@@ -808,7 +801,7 @@ static void set_prescaler_count(tim_reg_def *p_timx, uint32_t time, tim_unit_of_
 
 // Checks multiplication against an unsigned 16 bit variable
 // Returns true if there is an overflow
-static inline bool overflow_check(tim_reg_def const *p_timx, uint32_t check_num, uint32_t factor)
+static inline bool overflow_check(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
 {
     uint32_t max;
     if ((p_timx == TIM2) || (p_timx == TIM5)) {
@@ -823,7 +816,7 @@ static inline bool overflow_check(tim_reg_def const *p_timx, uint32_t check_num,
     }
 }
 
-static inline uint32_t get_ccr_pwm(tim_reg_def const *p_timx, uint32_t duty_cycle)
+static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t const duty_cycle)
 {
     uint32_t arr_value = p_timx->ARR;
     uint32_t ccr;
@@ -834,7 +827,7 @@ static inline uint32_t get_ccr_pwm(tim_reg_def const *p_timx, uint32_t duty_cycl
     return ccr;
 }
 
-static tim_type_e get_tim_type(tim_reg_def *p_timx)
+static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 {
     if ((p_timx == TIM6) || (p_timx == TIM7)) {
         return TIM_TYPE_BASIC;
@@ -846,11 +839,10 @@ static tim_type_e get_tim_type(tim_reg_def *p_timx)
     } else if ((p_timx == TIM1) || (p_timx == TIM8)) {
         return TIM_TYPE_ADVANCED;
     }
-    UNUSED(p_timx);
     return 0;
 }
 
-static void tim_peri_assert(tim_reg_def const *p_timx)
+static void tim_peri_assert(tim_reg_def const *const p_timx)
 {
     uint8_t found_setting = false;
 
@@ -873,7 +865,7 @@ static void tim_peri_assert(tim_reg_def const *p_timx)
     ASSERT(found_setting);
 }
 
-static inline uint8_t map_tim_peri_to_num(tim_reg_def const *p_timx)
+static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 {
     if (p_timx == TIM1) {
         return TIM1_INIT_NUM;
@@ -909,22 +901,22 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *p_timx)
     return 0;
 }
 
-static inline void set_tim_base_init_status(tim_reg_def const *p_timx)
+static inline void set_tim_base_init_status(tim_reg_def const *const p_timx)
 {
     g_tim_peri_init |= (1 << map_tim_peri_to_num(p_timx));
 }
 
-static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *p_timx)
+static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx)
 {
     return g_tim_peri_init & (1 << map_tim_peri_to_num(p_timx));
 }
 
-static inline void set_tim_channel_init_status(tim_reg_def const *p_timx, tim_channel_sel_e channel)
+static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
     g_tim_channel_init[map_tim_peri_to_num(p_timx)] |= (1 << channel);
 }
 
-static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *p_timx, tim_channel_sel_e channel)
+static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
     return g_tim_channel_init[map_tim_peri_to_num(p_timx)] & (1 << channel);
 }
