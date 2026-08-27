@@ -8,6 +8,11 @@
         }                     \
     } while (0)
 
+#define BREAKPOINT(void)        \
+    do {                        \
+        __asm volatile("BKPT"); \
+    } while (0)
+
 void assert_handler(void);
 
 #endif

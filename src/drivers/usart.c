@@ -9,19 +9,22 @@
 
 // Assert helper functions
 static void usart_init_asserts(usart_handle const *const p_usart_handle);
+static inline void set_usart_init_status(usart_reg_def const *const p_usartx);
+static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx);
 
 // General helper functions
-static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
-static inline bool verify_usart_initialized(usart_reg_def const *const p_usartx);
-static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);
+static inline void usart_clock_enable(usart_reg_def const *const p_usartx);
+static inline void usart_clock_disable(usart_reg_def const *const p_usartx);
 
-static void transfer_data(usart_handle *p_usart_handle);
-static void recieve_data(usart_handle *const p_usart_handle);
 static inline void enable_interrupts(usart_reg_def *const p_usartx);
 static inline void disable_interrupts(usart_reg_def *const p_usartx);
 
-static inline void usart_clock_enable(usart_reg_def const *const p_usartx);
-static inline void usart_clock_disable(usart_reg_def const *const p_usartx);
+static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx);
+static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
+static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);
+
+static void transfer_data(usart_handle *const p_usart_handle);
+static void recieve_data(usart_handle *const p_usart_handle);
 
 //========================================================//
 //          Global Variables
@@ -45,47 +48,45 @@ Note: None
 ***************************************************************************/
 void usart_init(usart_handle *const p_usart_handle)
 {
-    uint32_t temp_reg;
+    uint32_t temp_cr1 = p_usart_handle->p_usartx->CR1;
 
     // Ensure handle structure values are valid
     usart_init_asserts(p_usart_handle);
 
     // Initialize the port in the init variable
-    g_usart_port_init |= (1 << map_usart_ports_to_num(p_usart_handle->p_usartx));
+    set_usart_init_status(p_usart_handle->p_usartx);
 
     // Enable clock of USART peripheral
     usart_clock_enable(p_usart_handle->p_usartx);
 
     // Enable USART peripheral
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_UE;
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_TE;
-    p_usart_handle->p_usartx->CR1 |= USART_CR1_RE;
+    temp_cr1 |= USART_CR1_UE;
+    temp_cr1 |= USART_CR1_TE;
+    temp_cr1 |= USART_CR1_RE;
 
-    // Set CR1 - Reset value: 0x0000 0000
-    temp_reg = 0;
     // Set oversampling mode
-    temp_reg |= (p_usart_handle->usart_conf.oversampling_mode << USART_CR1_OVER8_POS);
+    temp_cr1 &= ~(USART_CR1_OVER8_MASK << USART_CR1_OVER8_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.oversampling_mode << USART_CR1_OVER8_POS);
 
     // Set word length
-    temp_reg |= (p_usart_handle->usart_conf.word_length << USART_CR1_M_POS);
+    temp_cr1 &= ~(USART_CR1_M_MASK << USART_CR1_M_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.word_length << USART_CR1_M_POS);
 
     // Set parity control
-    temp_reg |= (p_usart_handle->usart_conf.parity_control << USART_CR1_PCE_POS);
+    temp_cr1 &= ~(USART_CR1_PCE_MASK << USART_CR1_PCE_POS);
+    temp_cr1 |= (p_usart_handle->usart_conf.parity_control << USART_CR1_PCE_POS);
 
     // Set parity selection (even/odd)
     if (p_usart_handle->usart_conf.parity_control == USART_PARITY_CONTROL_ENABLE) {
-        temp_reg |= (p_usart_handle->usart_conf.parity_select << USART_CR1_PS_POS);
+        temp_cr1 &= ~(USART_CR1_PS_MASK << USART_CR1_PS_POS);
+        temp_cr1 |= (p_usart_handle->usart_conf.parity_select << USART_CR1_PS_POS);
     }
 
-    p_usart_handle->p_usartx->CR1 |= temp_reg;
-
-    // Set CR2 - Reset value: 0x0000 0000
-    temp_reg = 0;
+    p_usart_handle->p_usartx->CR1 = temp_cr1;
 
     // Set stop bits
-    temp_reg |= (p_usart_handle->usart_conf.stop_bits << USART_CR2_STOP_POS);
-
-    p_usart_handle->p_usartx->CR2 |= temp_reg;
+    p_usart_handle->p_usartx->CR2 &= ~(USART_CR2_STOP_MASK << USART_CR2_STOP_POS);
+    p_usart_handle->p_usartx->CR2 |= (p_usart_handle->usart_conf.stop_bits << USART_CR2_STOP_POS);
 
     // Set baudrate
     set_baudrate(p_usart_handle->p_usartx, p_usart_handle->usart_conf.oversampling_mode,
@@ -197,9 +198,9 @@ Note:
     9 Bit write with no parity not implemented.
     If sending string, ensure the size does not include the '\0' character. 
 ***************************************************************************/
-void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t length)
+void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t const length)
 {
-    ASSERT(verify_usart_initialized(p_usartx));
+    ASSERT(get_usart_init_status(p_usartx) == USART_INITIALIZED);
     p_usartx->CR1 |= USART_CR1_TE;
 
     for (uint32_t i = 0; i < length; i++) {
@@ -224,9 +225,9 @@ Return:
     None
 Note: 9 Bit write with no parity not implemented
 ***************************************************************************/
-void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t length)
+void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t const length)
 {
-    ASSERT(verify_usart_initialized(p_usartx));
+    ASSERT(get_usart_init_status(p_usartx) == USART_INITIALIZED);
     p_usartx->CR1 |= USART_CR1_RE;
 
     for (uint32_t i = 0; i < length; i++) {
@@ -250,9 +251,9 @@ Note:
     If sending string, ensure the size does not include the '\0' character. 
     If the USART peripheral is busy transmitting/receiving, it will poll until it is available.
 ***************************************************************************/
-void usart_transmit_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
+void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
-    ASSERT(verify_usart_initialized(p_usart_handle->p_usartx));
+    ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
     // Wait until usart is available (blocking)
     while (p_usart_handle->usart_it_data.status == USART_STATUS_RUNNING);
@@ -279,9 +280,9 @@ Note:
     9 Bit write with no parity not implemented
     If the USART peripheral is busy transmitting/receiving, it will poll until it is available.
 ***************************************************************************/
-void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t const length)
+void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
-    ASSERT(verify_usart_initialized(p_usart_handle->p_usartx));
+    ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
     // Wait until usart is available (blocking)
     while (p_usart_handle->usart_it_data.status == USART_STATUS_RUNNING);
@@ -312,7 +313,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void usart_it_config(usart_reg_def const *const p_usartx, togglable_e toggle)
+void usart_it_config(usart_reg_def const *const p_usartx, togglable_e const toggle)
 {
     if (p_usartx == USART1) {
         irq_config(USART1_IRQ_NO_37, toggle);
@@ -395,7 +396,7 @@ Note:
 ***************************************************************************/
 void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const data)
 {
-    ASSERT(verify_usart_initialized(p_usartx));
+    ASSERT(get_usart_init_status(p_usartx) == USART_INITIALIZED);
     p_usartx->CR1 |= USART_CR1_TE;
 
     while (!(p_usartx->SR & USART_SR_TXE));
@@ -406,34 +407,46 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
 //                  Helper Function Implementation
 //======================================================================================//
 
-static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
+static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
-                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3
-                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
-                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
-                                             : 0;
+        return APB1_BUS;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
+        return APB2_BUS;
+    }
+}
+static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
+{
+    switch (get_usart_bus(p_usartx)) {
+    case APB1_BUS:
+        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
+                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
+                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
+                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
+                                             : 0;
+        break;
+    case APB2_BUS:
+        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
+        break;
+    default: ASSERT(false);
     }
 }
 static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
-        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2
-                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3
-                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4
-                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5
+        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
+                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
+                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
+                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                               : 0;
     }
     // If USART peripheral on APB2
     else {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1 : (p_usartx == USART6) ? RCC_APB2ENR_USART6 : 0;
+        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
     }
 }
 
@@ -457,19 +470,20 @@ static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *
     return 0;
 }
 
-static inline bool verify_usart_initialized(usart_reg_def const *const p_usartx)
+static inline void set_usart_init_status(usart_reg_def const *const p_usartx)
 {
-    if (g_usart_port_init & (1 << map_usart_ports_to_num(p_usartx))) {
-        return true;
-    } else {
-        return false;
-    }
+    g_usart_port_init |= (1 << map_usart_ports_to_num(p_usartx));
+}
+
+static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx)
+{
+    return g_usart_port_init & (1 << map_usart_ports_to_num(p_usartx));
 }
 
 // Sets the baudrate for the given USART peripheral
-static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate)
+static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode, usart_baudrate_e const baudrate)
 {
-    uint32_t temp_reg;
+    uint32_t temp_brr;
     uint32_t clock_freq;
     bus_types usart_bus;
 
@@ -503,26 +517,26 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
     }
 
     // Set up variable to write into register
-    temp_reg = 0;
-    temp_reg |= (div_fraction << USART_BRR_FRACTION_POS);
-    temp_reg |= (div_mantissa << USART_BRR_MANTISSA_POS);
+    temp_brr = 0;
+    temp_brr |= (div_fraction << USART_BRR_DIV_FRACTION_POS);
+    temp_brr |= (div_mantissa << USART_BRR_DIV_MANTISSA_POS);
 
     // 3rd bit must be kept clear if over8 is used
     if (oversampling_mode == USART_OVERSAMPLING_8) {
-        temp_reg &= ~(1 << USART_BRR_OVER8EN_CLEAR_POS);
+        temp_brr &= ~(1 << USART_BRR_OVER8EN_CLEAR_POS);
     }
 
-    p_usartx->BRR = temp_reg;
+    p_usartx->BRR = temp_brr;
 }
 
-static void transfer_data(usart_handle *p_usart_handle)
+static void transfer_data(usart_handle *const p_usart_handle)
 {
     p_usart_handle->p_usartx->DR = (uint32_t)*p_usart_handle->usart_it_data.txrx_buffer;
     p_usart_handle->usart_it_data.txrx_length--;
     p_usart_handle->usart_it_data.txrx_buffer++;
 }
 
-static void recieve_data(usart_handle *p_usart_handle)
+static void recieve_data(usart_handle *const p_usart_handle)
 {
     *p_usart_handle->usart_it_data.txrx_buffer = p_usart_handle->p_usartx->DR;
     p_usart_handle->usart_it_data.txrx_length--;
@@ -532,20 +546,14 @@ static void recieve_data(usart_handle *p_usart_handle)
 static inline void enable_interrupts(usart_reg_def *const p_usartx)
 {
     usart_it_config(p_usartx, ENABLE);
-    uint32_t temp_reg = 0;
-    temp_reg |= USART_CR1_UE;
-    temp_reg |= USART_CR1_TXEIE;
-    temp_reg |= USART_CR1_TCIE;
-    temp_reg |= USART_CR1_PEIE;
-    p_usartx->CR1 |= temp_reg;
+    uint32_t temp_cr1 = p_usartx->CR1;
+    temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
+    p_usartx->CR1 = temp_cr1;
 }
 
 static inline void disable_interrupts(usart_reg_def *const p_usartx)
 {
-    p_usartx->CR1 &= ~USART_CR1_RXNEIE;
-    p_usartx->CR1 &= ~USART_CR1_TCIE;
-    p_usartx->CR1 &= ~USART_CR1_TXEIE;
-    p_usartx->CR1 &= ~USART_CR1_PEIE;
-    p_usartx->CR1 &= ~USART_CR1_PCE;
-    p_usartx->CR1 &= ~USART_CR1_UE;
+    uint32_t temp_cr1 = p_usartx->CR1;
+    temp_cr1 &= ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
+    p_usartx->CR1 = temp_cr1;
 }

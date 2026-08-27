@@ -58,6 +58,13 @@ I will be performing unit testing using the Unity framework with the Fake Functi
 The Unity is an all C testing framework made for the embedded field. FFF similiar in that it is a simple C header implementation. 
 I will not be performing unit tests on driver layer code. Instead I will be relying on integration and system tests to ensure the drivers work properly. 
 
+## Tools
+In addition to the unit testing tools I have used. I have made my own Python script to help 
+generate constants for peripheral structure definitions and constant definitions. 
+This will speed up writing those structures and especially constants tremendously. 
+The script parses the STM32F407 SVD file which is in an XML format. It then processes the data,
+prompts the user, and outputs the constants as enumerations or defines
+
 ## Pushing a new change or addition
 1. Create a local branch
 2. Make code changes

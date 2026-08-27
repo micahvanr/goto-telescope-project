@@ -65,45 +65,56 @@ typedef enum {
 
 // Only adding IRQ numbers when they are needed
 typedef enum {
-    EXTI0_IRQ_NO_6      = 6,
-    EXTI1_IRQ_NO_7      = 7,
-    EXTI2_IRQ_NO_8      = 8,
-    EXTI3_IRQ_NO_9      = 9,
-    EXTI4_IRQ_NO_10     = 10,
-    EXTI9_5_IRQ_NO_23   = 23,
-    I2C1_EV_IRQ_NO_31   = 31,
-    I2C1_ER_IRQ_NO_32   = 32,
-    I2C2_EV_IRQ_NO_33   = 33,
-    I2C2_ER_IRQ_NO_34   = 34,
-    USART1_IRQ_NO_37    = 37,
-    USART2_IRQ_NO_38    = 38,
-    USART3_IRQ_NO_39    = 39,
-    EXTI15_10_IRQ_NO_40 = 40,
-    UART4_IRQ_NO_52     = 52,
-    UART5_IRQ_NO_53     = 53,
-    USART6_IRQ_NO_71    = 71,
-    I2C3_EV_IRQ_NO_72   = 72,
-    I2C3_ER_IRQ_NO_73   = 73,
+    EXTI0_IRQ_NO_6               = 6,
+    EXTI1_IRQ_NO_7               = 7,
+    EXTI2_IRQ_NO_8               = 8,
+    EXTI3_IRQ_NO_9               = 9,
+    EXTI4_IRQ_NO_10              = 10,
+    EXTI9_5_IRQ_NO_23            = 23,
+    TIM1_BRK_TIM9_IRQ_NO_24      = 24,
+    TIM1_UP_TIM10_IRQ_NO_25      = 25,
+    TIM1_TRG_COM_TIM11_IRQ_NO_26 = 26,
+    TIM1_CC_IRQ_NO_27            = 27,
+    TIM2_IRQ_NO_28               = 28,
+    TIM3_IRQ_NO_29               = 29,
+    TIM4_IRQ_NO_30               = 30,
+    I2C1_EV_IRQ_NO_31            = 31,
+    I2C1_ER_IRQ_NO_32            = 32,
+    I2C2_EV_IRQ_NO_33            = 33,
+    I2C2_ER_IRQ_NO_34            = 34,
+    USART1_IRQ_NO_37             = 37,
+    USART2_IRQ_NO_38             = 38,
+    USART3_IRQ_NO_39             = 39,
+    EXTI15_10_IRQ_NO_40          = 40,
+    TIM8_BRK_TIM12_IRQ_NO_43     = 43,
+    TIM8_UP_TIM13_IRQ_NO_44      = 44,
+    TIM8_TRG_COM_TIM14_IRQ_NO_45 = 45,
+    TIM8_CC_IRQ_NO_46            = 46,
+    UART4_IRQ_NO_52              = 52,
+    UART5_IRQ_NO_53              = 53,
+    TIM7_IRQ_NO_55               = 55,
+    USART6_IRQ_NO_71             = 71,
+    I2C3_EV_IRQ_NO_72            = 72,
 } irq_number_e;
 
 // Lower number means higher priority
 typedef enum {
-    IRQ_PRIORITY_0,
-    IRQ_PRIORITY_1,
-    IRQ_PRIORITY_2,
-    IRQ_PRIORITY_3,
-    IRQ_PRIORITY_4,
-    IRQ_PRIORITY_5,
-    IRQ_PRIORITY_6,
-    IRQ_PRIORITY_7,
-    IRQ_PRIORITY_8,
-    IRQ_PRIORITY_9,
-    IRQ_PRIORITY_10,
-    IRQ_PRIORITY_11,
-    IRQ_PRIORITY_12,
-    IRQ_PRIORITY_13,
-    IRQ_PRIORITY_14,
-    IRQ_PRIORITY_15,
+    IRQ_PRIORITY_0                   = 0,
+    IRQ_PRIORITY_1                   = 1,
+    IRQ_PRIORITY_2                   = 2,
+    IRQ_PRIORITY_3                   = 3,
+    IRQ_PRIORITY_4                   = 4,
+    IRQ_PRIORITY_5                   = 5,
+    IRQ_PRIORITY_6                   = 6,
+    IRQ_PRIORITY_7                   = 7,
+    IRQ_PRIORITY_8                   = 8,
+    IRQ_PRIORITY_9                   = 9,
+    IRQ_PRIORITY_10                  = 10,
+    IRQ_PRIORITY_11                  = 11,
+    IRQ_PRIORITY_12                  = 12,
+    IRQ_PRIORITY_13                  = 13,
+    IRQ_PRIORITY_14                  = 14,
+    IRQ_PRIORITY_15                  = 15,
     IRQ_NUM_PRIORITY_BITS_IMPLMENTED = 4,
 } irq_priority_e;
 
@@ -126,25 +137,23 @@ typedef enum {
 //                  Register Structure Definitions
 //======================================================================================//
 
-// clang-format off
 typedef __vo struct {
-	uint32_t IMR;				// Interrupt mask register											Offset: 0x00
-	uint32_t EMR;				// Event mask register												Offset: 0x04
-	uint32_t RTSR;				// Rising trigger selection register								Offset: 0x08
-	uint32_t FTSR;				// Falling trigger selection register								Offset: 0x0C
-	uint32_t SWIER;				// Software interrupt event register								Offset: 0x10
-	uint32_t PR;				// Pending register													Offset: 0x14
+    uint32_t IMR;   // Interrupt mask register                             Offset: 0x0
+    uint32_t EMR;   // Event mask register                                 Offset: 0x4
+    uint32_t RTSR;  // Rising Trigger selection register                   Offset: 0x8
+    uint32_t FTSR;  // Falling Trigger selection register                  Offset: 0xC
+    uint32_t SWIER; // Software interrupt event register                   Offset: 0x10
+    uint32_t PR;    // Pending register                                    Offset: 0x14
 } exti_reg_def;
 
 typedef __vo struct {
-	uint32_t MEMRMP;			// SYSCFG memory remap register										Offset: 0x00
-	uint32_t PMC;				// SYSCFG peripheral mode configuration register 					Offset: 0x04
-	uint32_t EXTICR[4];			// SYSCFG external interrupt configuration register 1-4				Offset: 0x08
-	uint32_t RESERVED0;			// Reserved 0x18
-	uint32_t RESERVED1;			// Reserved 0x1C
-	uint32_t CMPCR;				// Compensation cell control register								Offset: 0x20
+    uint32_t MEMRM;      // memory remap register                            Offset: 0x0
+    uint32_t PMC;        // peripheral mode configuration register           Offset: 0x4
+    uint32_t EXTICR[4];  // external interrupt configuration register 1-4    Offset: 0x8
+    uint32_t reserved_1; // Reserved 0x18
+    uint32_t reserved_2; // Reserved 0x1C
+    uint32_t CMPCR;      // Compensation cell control register               Offset: 0x20
 } syscfg_reg_def;
-// clang-format on
 
 //======================================================================================//
 //                  Peripheral Structure Definitions

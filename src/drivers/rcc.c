@@ -36,12 +36,12 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     // Get register values
     rcc_pllcfgr_reg = RCC->PLLCFGR;
-    pllm            = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLM_POS) & RCC_PLL_CFGR_PLLM_MASK);
-    plln            = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLN_POS) & RCC_PLL_CFGR_PLLN_MASK);
-    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLP_POS) & RCC_PLL_CFGR_PLLP_MASK);
+    pllm            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLM0_POS) & RCC_PLLCFGR_PLLM_MASK);
+    plln            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLN0_POS) & RCC_PLLCFGR_PLLN_MASK);
+    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLP0_POS) & RCC_PLLCFGR_PLLP_MASK);
     pllp            = pllp_values[pllp_reg];
 
-    pll_src = ((rcc_pllcfgr_reg >> RCC_PLL_CFGR_PLLSRC_POS) & RCC_PLL_CFGR_PLLSRC_MASK);
+    pll_src = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLSRC_POS) & RCC_PLLCFGR_PLLSRC_MASK);
 
     // Select PLL clock source frequency
     switch (pll_src) {
@@ -69,7 +69,7 @@ Note: None
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL)
-    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS_POS) & RCC_CFGR_SWS_MASK);
+    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS_MASK);
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
     // Return clock depending on what the source is
@@ -94,7 +94,7 @@ Return:
     Clock frequency (hz) for the given bus
 Note: None
 ***************************************************************************/
-uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
+uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 {
     uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
     uint16_t const apb_clock_prescaler[] = {2, 4, 8, 16};
@@ -143,7 +143,26 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types bus)
     }
 }
 
-void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler)
+uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
+{
+    uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
+    uint8_t bus_prescaler       = 0;
+    uint8_t const APB_PRESCALER = 1 << 2;
+
+    switch (bus) {
+    case APB1_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK; break;
+    case APB2_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK; break;
+    default:       ASSERT(false);
+    }
+
+    if (bus_prescaler & APB_PRESCALER) {
+        return 2 * bus_clock;
+    }
+
+    return bus_clock;
+}
+
+void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 
     switch (mco_clk_src) {
@@ -154,9 +173,9 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
     case RCC_MCO1_PLL_SRC:
         RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
-            RCC->CFGR &= ~(RCC_CFGR_MCO1_PRE_MASK << RCC_CFGR_MCO1_PRE_POS);
+            RCC->CFGR &= ~(RCC_CFGR_MCO1PRE_MASK << RCC_CFGR_MCO1PRE_POS);
         } else {
-            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1_PRE_POS;
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1PRE_POS;
         }
         mco_gpio_pin_init(RCC_MCO1_SEL);
         break;
@@ -166,9 +185,9 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
     case RCC_MCO2_PLL_SRC:
         RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
-            RCC->CFGR &= ~(RCC_CFGR_MCO2_PRE_MASK << RCC_CFGR_MCO2_PRE_POS);
+            RCC->CFGR &= ~(RCC_CFGR_MCO2PRE_MASK << RCC_CFGR_MCO2PRE_POS);
         } else {
-            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2_PRE_POS;
+            RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2PRE_POS;
         }
         mco_gpio_pin_init(RCC_MCO2_SEL);
         break;
@@ -179,7 +198,7 @@ void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
 //======================================================================================//
 //                  Helper Function Implementation
 //======================================================================================//
-static void mco_gpio_pin_init(rcc_mco_sel_e mco_select)
+static void mco_gpio_pin_init(rcc_mco_sel_e const mco_select)
 {
     gpio_handle mco_gpio_pin;
     mco_gpio_pin.gpio_conf.mode            = GPIO_MODE_ALT_FN;

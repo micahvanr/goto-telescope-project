@@ -24,6 +24,8 @@ void i2c_tests(test_type_e test)
     i2c1_gpio_init();
     i2c1_init();
 
+    // PB6 - SCL
+    // PB7 - SDA
     if (test == I2C_TEST_REG) {
         switch (test_mode) {
         case I2C_TEST_STM_MASTER_TX: test_i2c_master_transmit(); break;

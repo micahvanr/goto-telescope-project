@@ -13,7 +13,7 @@ Parameters:
 Return: None
 Note: None
 ***************************************************************************/
-void irq_config(irq_number_e irq_num, togglable_e toggle)
+void irq_config(irq_number_e const irq_num, togglable_e const toggle)
 {
     uint32_t volatile *p_nvic_iser = (uint32_t *)NVIC_ISER_BASE_ADDR;
     uint32_t volatile *p_nvic_icer = (uint32_t *)NVIC_ICER_BASE_ADDR;
@@ -42,7 +42,7 @@ Parameters:
 Return: None
 Note: Only 4 of the 8 bits are implemented in the stm32f4xx MCUs so 16 levels or priority
 ***************************************************************************/
-void irq_priority(irq_number_e irq_num, irq_priority_e irq_pri)
+void irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
 {
     uint32_t volatile *p_nvic_ipr = (uint32_t *)NVIC_IPR_BASE_ADDR;
 

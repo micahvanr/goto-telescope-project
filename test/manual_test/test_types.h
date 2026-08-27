@@ -12,6 +12,15 @@ typedef enum {
     // I2C test options
     I2C_TEST_REG,
     I2C_TEST_IT,
+    // Timer test options
+    TIMER_TEST_AUTO,
+    TIMER_TEST_MANUAL,
+    TIMER_TEST_FREQ,
+    TIMER_TEST_DELAY,
+    TIMER_TEST_OC_PWM,
+    TIMER_TEST_IC_IT,
+    TIMER_TEST_BASIC_IT,
+
     // Misc tests options
     MISC_TEST_ASSERT,
     MISC_TEST_GET_CLOCK,

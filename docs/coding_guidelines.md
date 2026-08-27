@@ -1,8 +1,9 @@
 # Intro
-This document contains the coding guidelines I will follow in order to keep the project consistent and readable. Some guidelines are my personal preferance while others are best practices. In addition, I will be using clang to enforce some formatting. 
+This document contains the coding guidelines I will follow in order to keep the project consistent and readable. 
+Some guidelines are my personal preferance while others are best practices.  
 
 # Naming
-* I will be using snake case in all cases except macros and enum values. Macros and enum values will be in all caps.
+* I will be using snake case in all cases except constant values. Constants will be in all caps.
 ``` C
 #define THIS_IS_A_MACRO (50)
 void this_is_a_function(void) 
@@ -12,16 +13,17 @@ void this_is_a_function(void)
 ```
 ### When naming try to follow these rules
 * Avoid single letter variables
-* Avoid abbreviations (except stated below)
+* Avoid abbreviations (unless very obvious)
 * Prefix pointers and global scope variables (e.g. p_gpioa or g_task_num)
 * Enums should be typedefined and suffixed with _e (e.g. gpio_mode_values_e)
 * Include units in the name if applicable (e.g. delay_seconds)
-* Prefix module names their corresponding module (e.g. gpio_init) except for helper functions 
+* Prefix module function names their corresponding module (e.g. gpio_init) except for helper functions 
 
-### Register structures:
+### Driver register structures:
 * Each register structure definition will be in the format of the register it corresponds to. 
 * Most will be in all caps and abbreviated to some degree. 
 * This is to signify you are modifying a register and for consistency between the register and the referance manual
+* Should be generated with reg_constant_gen.py
 
 ### Other naming conventions:
 * One code module per header and source file
@@ -68,27 +70,27 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
     // ... 
 }
 ```
-## Header file comments
-* Each section of the header file should have headings that title each section
+## Header file section comments
 ``` C
-/****************************************************************************************************
-                                        Heading 1
-****************************************************************************************************/
+//======================================================================================//
+//                  Header 1
+//======================================================================================//
 
-/*****************************************************************
-                            Heading 2
-*****************************************************************/
+//========================================================//
+//          Header 2
+//========================================================//
 
-/*****                      Heading 3                       *****/
+//  Header 3
+//=========================================//
 
-// Header 4 & basic comment
+// Basic comment
 ```
-## Other comments
+### Other comments
 * Apart from the comments defined above I will add other comments here and there if something requires more explaination
 
-# Defines/macros
+# Constants
 * Define constant variables and use comments if it is unclear where it comes from
-* Prefer to use enums where possible
+* Prefer to use enums where possible but macros are fine
 * Use static inline functions instead of macro functions as they are less error prone and easier to read.
 * Always use paranthesis (even for single numbers) to avoid unexpected macro expansion 
 ``` C
@@ -106,6 +108,42 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
         } while(0)                  
 ```
 
+## Other General Rules
+* Explicitly state what the enum/macro value should be if the constant needs to be a specific value
+otherwise leaving blank is fine. Do not rely on compiler setting enum values to necessary values.
+``` C
+typedef enum {
+    CONSTANT_VALUE_IMPORTANT = 0,
+    CONSTANT_VALUE_NOT_IMPORTANT,
+} example_e;
+
+```
+    
+
+## Driver register constants
+### Miscellaneous constants
+Register field constants should be created using the reg_constant_gen Python script. This keeps constants consistent
+and easy to create. If additional register related constants are needed name them as following
+and place them at the top of the register constants section.
+``` C
+// Example using USART. The position of the field was not generated cleanly.
+typedef enum {
+    USART_BRR_OVER8EN_CLEAR_POS = 3,
+} usart_reg_misc_e;
+``` 
+
+### Field constants
+If the constant is used to set the value of a field in a register use the bit format (0bx) to show the 
+configuration of the bits. This makes comparing the values to the referance manual easier and 
+it makes it easier to know what bits are being manipulated. The width of the bits should match the 
+width of the field in the register.
+``` C
+typedef enum {
+    // Example 
+    PERI_REG_NAME = 0b001,
+} peri_reg_misc_e;
+```
+
 # Header files
 * Always keep #include guards (in caps) in every header file to avoid duplicated and recursive includsions.
 ``` C
@@ -121,6 +159,14 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 #include "drivers/uart.h"
 #include "stm32f407xx.h"
 ```
+### Driver header Organization
+Driver header files should be organized in the following way:
+* Address Definitions
+* Peripheral Constants
+* Register Constants
+* Structure Definitions
+* Peripheral Structure Macros
+* Function API Prototypes
 
 # Switch statements
 * Use switch statements to avoid if else-if chain which can become unreadable
@@ -168,6 +214,55 @@ typedef struct {
 
 ## Const and volatile
 * All variables and pointers should be defined as const and/or volatile when applicable.
-* Const causes the compiler to output an error programmer if tries to modify the variable.
+* They can be used in combination to create more complex but useful variables.
+### Const
+Const causes the compiler to output an error programmer if tries to modify the variable.
+* Add const to parameters that are passed by reference. It can be added if the data pointed to should not change or if the pointer itself should not change
+* Always use const for constants that might be defined as an enum or macro otherwise. 
+* Never use const to parameters that are passed by value in a function prototype as it doesn't do anything. Instead, add to function implemention.
+* Can also be used when a variable is set once by doing a calculation or from a returned value from a function. 
+``` C
+// Parameter passed by value not const but reference
+void ex_function(uint32_t *const p_value, uint32_t value);        
+
+// Parameter passed by value and reference both const
+void ex_function(uint32_t *const p_value, uint32_t const value) {  
+    // Could be defined as enum or macro
+    float const PI = 3.14;
+    // Calculated/returned from function
+    uint32_t const LEN = sizeof(value)
+}
+``` 
+### Volatile
 * Volatile tells the compiler to not perform optimization on the variables. This is useful when variables will change by external means, such as an external device.
-* They can be used in combination to create more complex variables.
+
+
+# Driver Implementation 
+## Initialization
+Driver initialization for each register should follow the procedure below:
+If setting multiple fields:
+If setting one field follow steps 2 & 3:
+Repeat for each register
+1. Read current register value to temp variable named temp_x (reg name). In temp variable:
+2. Clear register field to be set
+3. Set register field
+4. Repeat 2 & 3 for each field to be set in the register
+5. After all fields set, set register with temp variable
+This keeps consistency between each driver. In addition, it keeps configuration of other parts of the register intact
+and ensures each field is cleared before being set.
+``` C
+void example_init(handler example_handler) {
+    // Multiple field change
+    uint32_t temp_cr1 = example_handler->CR1;
+
+    // If field is single bits wide
+    temp_cr1 &= ~EX_CR1_FIELD_1;
+    // If field is multi bits wide
+    temp_cr1 &= ~(EX_CR1_FIELD_2_MASK << EX_CR1_FIELD_2_POS)
+    example_handler->CR1 = temp_cr1;
+
+    // Single field change
+    example_handler->CR2 &= ~(EX_CR2_FIELD)
+    example_handler->CR2 = example_handler.cr2_field;
+}
+```

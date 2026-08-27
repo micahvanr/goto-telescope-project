@@ -6,6 +6,7 @@ BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
 ASM_DIR = $(BUILD_DIR)/asm
+DEPEND_DIR = $(BUILD_DIR)/dep
 
 ## Source dir
 DRIVER_DIR = ./src/drivers
@@ -43,7 +44,8 @@ DRIVER_FILES =	main \
 				rcc \
 				gpio \
 				usart \
-				i2c
+				i2c \
+				tim \
 				
 
 
@@ -51,6 +53,7 @@ MANUAL_TEST_FILES = gpio_test \
 					usart_test \
 					i2c_test \
 					misc_test \
+					timer_test \
 
 
 COMMON_FILES = assert_handler \
@@ -70,6 +73,7 @@ SOURCES = $(patsubst %, $(DRIVER_DIR)/%.c, $(SOURCE_FILES))
 ## Prefixes with object path and .o for corresponding files
 OBJECTS = $(patsubst %, $(OBJ_DIR)/%.o, $(SOURCE_FILES)) 
 
+DEPS = $(OBJECTS:%.o=%.d)
 
 LINKER = $(SRC_DIR)/stm32_ls.ld
 
@@ -83,16 +87,20 @@ WFLAGS = -Wall -Wextra -Werror -Wshadow
 SPECS = --specs=nosys.specs --specs=nano.specs
 
 # Compiler and Linker Flags
-CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g
+DEPENDFLAGS = -MMD -MP
+CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) \
+		 -mthumb -mfloat-abi=soft -std=gnu11 -O0 -g $(DEPENDFLAGS)
 LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) 
 LDFLAGSPLUS = $(LDFLAGS) -Wl,-Map=$(TARGET).map
 
 
 # Build
 ## Linking
-$(TARGET).elf: $(OBJECTS)#$(TEST_OBJ)
+$(TARGET).elf: $(OBJECTS)#$(DEPS)#$(TEST_OBJ)
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^ 
+
+-include $(DEPS)
 
 ## Linking Plus
 $(TARGET)_plus.elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
@@ -100,22 +108,22 @@ $(TARGET)_plus.elf: $(OBJECTS) $(OBJ_DIR)/stm32_startup.o
 	$(CC) $(LDFLAGSPLUS) -o $@ $^ 	
 	
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)%.o: $(COMMON_DIR)%.c 
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)%.o: $(PRINTF_DIR)%.c 
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Debug
 asm:
@@ -124,7 +132,7 @@ asm:
 
 
 # Phonies
-.PHONY: all clean plus cppcheck flash remake test test_clean cc_gen arduino
+.PHONY: all clean plus cppcheck flash re test test_clean cc_gen arduino
 
 all: $(TARGET).elf
 
@@ -134,7 +142,12 @@ clean:
 	-$(RM) -r $(OBJ_DIR)/*.o
 	-$(RM) -r $(TARGET).elf
 
-remake: clean all
+fclean:
+	-$(RM) -r $(OBJ_DIR)/*.o
+	-$(RM) -r $(OBJ_DIR)/*.d
+	-$(RM) -r $(TARGET).elf
+
+re: clean all
 
 flash:
 	openocd -f interface/stlink.cfg \
@@ -144,7 +157,6 @@ flash:
 # Trying out using compile commands file
 cppcheck:
 	@$(CPPCHECK) --project=compile_commands.json --enable=all $(SUPPRESSIONS)
-	# @$(CPPCHECK) $(ALL_FILES) --enable=all $(SUPPRESSIONS) 
 
 format:
 	$(FORMAT) -i $(ALL_FILES)
