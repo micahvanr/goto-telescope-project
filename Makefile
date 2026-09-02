@@ -35,9 +35,11 @@ INCLUDE_DIRS = $(DRIVER_DIR) $(APP_DIR) $(BSP_DIR) $(COMMON_DIR) $(SRC_DIR) $(MA
 #========================================================================================{
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
+SIZE = arm-none-eabi-size
 RM = rm
 CPPCHECK = cppcheck
 FORMAT = clang-format-23
+MAKE = make
 COMP_COM_GEN = bear # compile_commands.json file generator
 
 #========================================================================================}
@@ -101,73 +103,37 @@ MACH = cortex-m4
 WFLAGS = -Wall -Wextra -Werror -Wshadow
 SPECS = --specs=nosys.specs --specs=nano.specs
 DEPENDFLAGS = -MMD -MP
-OPTIMIZATION = -O0
+# Use -0g for release, -03/-0s for release
+debug: OPTIMIZATION = -Og
+release: OPTIMIZATION = -Os
 
 #}  Compiler and Linker Flags
 #============================================{
 CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) \
 		 -mthumb -mfloat-abi=soft -std=gnu11 $(OPTIMIZATION) -g $(DEPENDFLAGS)
-LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) 
-LDFLAGSMAP = $(LDFLAGS) -Wl,-Map=$(TARGET).map
-
-#========================================================================================}
-#                   Build
-#========================================================================================{
-
-#}  Linking
-#============================================{
-$(TARGET).elf: $(OBJECTS)
-	@mkdir -p $(dir $@)
-	$(CC) $(LDFLAGS) -o $@ $^ 
-
--include $(DEPS)
-
-$(TARGET)_map.elf: $(OBJECTS)
-	@mkdir -p $(dir $@)
-	$(CC) $(LDFLAGSMAP) -o $@ $^ 	
-	
-#}  Compiling
-#============================================{
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ_DIR)%.o: $(COMMON_DIR)%.c 
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ_DIR)%.o: $(PRINTF_DIR)%.c 
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
+LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) -Wl,-Map=$(TARGET).map $(OPTIMIZATION)
 
 #========================================================================================}
 #                   Commands
 #========================================================================================{
+
 # Phonies
 .PHONY: all clean map cppcheck flash re test test_clean cc_gen arduino 
 
-all: $(TARGET).elf
+all: debug
 
-map: $(TARGET)_map.elf
+debug: $(TARGET).elf asm_gen size
+
+release: $(TARGET).elf asm_gen size
 
 clean:
-	-$(RM) -r $(OBJ_DIR)/*.o
-	-$(RM) -r $(ASM_FILE).s
-	-$(RM) -r $(TARGET).elf
-	-$(RM) -r $(TARGET)_map.elf
+	-$(RM) -f -r $(OBJ_DIR)/*.o
+	-$(RM) -f -r $(ASM_FILE).s
+	-$(RM) -f -r $(TARGET).elf
+	-$(RM) -f -r $(TARGET)_map.elf
 
-fclean:
-	-$(RM) -r $(OBJ_DIR)/*.o
-	-$(RM) -r $(OBJ_DIR)/*.d
-	-$(RM) -r $(ASM_FILE).s
-	-$(RM) -r $(TARGET).elf
-	-$(RM) -r $(TARGET)_map.elf
+fclean: clean
+	-$(RM) -f -r $(OBJ_DIR)/*.d
 
 re: clean all
 
@@ -192,12 +158,48 @@ asm_gen:
 	@mkdir -p $(ASM_DIR)
 	$(OBJDUMP) -d $(TARGET).elf > $(ASM_FILE).s
 
+size: 
+	@$(SIZE) $(TARGET).elf
+
 # Unity testing commands
 test:
-	make -C $(UNIT_TEST_DIR) -s
+	$(MAKE) -C $(UNIT_TEST_DIR) -s
 
 test_clean:
-	make -C $(UNIT_TEST_DIR) clean
+	$(MAKE) -C $(UNIT_TEST_DIR) clean
 
 arduino:
-	make -C $(MANUAL_TEST_DIR) -s
+	$(MAKE) -C $(MANUAL_TEST_DIR) -s
+
+#========================================================================================}
+#                   Build
+#========================================================================================{
+
+#}  Linking
+#============================================{
+$(TARGET).elf: $(OBJECTS)
+	@mkdir -p $(dir $@)
+	$(CC) $(LDFLAGS) -o $@ $^ 
+
+-include $(DEPS)
+	
+#}  Compiling
+#============================================{
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)%.o: $(MANUAL_TEST_DIR)%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)%.o: $(DRIVER_DIR)%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)%.o: $(COMMON_DIR)%.c 
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)%.o: $(PRINTF_DIR)%.c 
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
