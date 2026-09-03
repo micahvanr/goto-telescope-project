@@ -3,9 +3,9 @@
 #include "rcc.h"
 #include "stm32f4xx.h"
 
-//========================================================//
-//          Helper Function Prototypes
-//========================================================//
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static inline void verify_i2c_init_asserts(i2c_handle const *const p_i2c_handle);
@@ -38,9 +38,9 @@ static void master_sb(i2c_handle *const p_i2c_handle);
 static void master_addr(i2c_handle *const p_i2c_handle);
 static void slave_addr(i2c_handle const *const p_i2c_handle);
 
-//========================================================//
-//          Global Variables
-//========================================================//
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 // I2C1 = bit pos 0
 // I2C2 = bit pos 1

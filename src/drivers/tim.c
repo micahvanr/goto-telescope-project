@@ -1,15 +1,14 @@
 #include "tim.h"
 #include "assert_handler.h"
-#include "common.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 #include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-//========================================================//
-//          Helper Function Prototypes
-//========================================================//
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static void tim_base_init_asserts(tim_handler const *const p_tim_handler);
@@ -31,9 +30,9 @@ static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 
-//========================================================//
-//          Global Variables
-//========================================================//
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 uint16_t g_tim_peri_init                       = 0;
 uint8_t g_tim_channel_init[TIM_MAX_NUM_TIMERS] = {0};
 
@@ -731,7 +730,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
     uint32_t prescaler = 1;
     uint32_t count     = 1;
-    uint32_t unit_in_seconds;
+    uint32_t unit_in_seconds = 0;
     uint32_t period;
 
     uint8_t const FACTOR_5 = 5;

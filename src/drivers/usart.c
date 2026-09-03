@@ -3,9 +3,9 @@
 #include "common.h"
 #include "rcc.h"
 
-//========================================================//
-//          Helper Function Prototypes
-//========================================================//
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static void usart_init_asserts(usart_handle const *const p_usart_handle);
@@ -26,9 +26,9 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
 static void transfer_data(usart_handle *const p_usart_handle);
 static void recieve_data(usart_handle *const p_usart_handle);
 
-//========================================================//
-//          Global Variables
-//========================================================//
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 // Same concept with GPIO init variable but with USART ports instead.
 uint8_t g_usart_port_init = 0;
@@ -477,7 +477,8 @@ static inline void set_usart_init_status(usart_reg_def const *const p_usartx)
 
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx)
 {
-    return g_usart_port_init & (1 << map_usart_ports_to_num(p_usartx));
+    // FIX: Fix the get init status function
+    return 0b1 & (g_usart_port_init >> map_usart_ports_to_num(p_usartx));
 }
 
 // Sets the baudrate for the given USART peripheral

@@ -6,6 +6,7 @@
 
 // clang-format off
 // Test functions
+#include "common.h"
 #include "test_types.h"
 #include "gpio_test.h"
 #include "timer_test.h"
@@ -16,9 +17,13 @@
 #include "assert_handler.h"
 #include "debug_tools.h"
 #include "printf.h"
+#include "gpio.h"
+
+// TODO: Change header file constant enums to be type uint32_t
 
 int main(void)
 {
+    gpio_reset(GPIOA);
     // Uses USART2 and PA2 - change inside printf.h
     printf_init();
 
@@ -34,7 +39,7 @@ int main(void)
     toggle_debug_pin();
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test = I2C_TEST_IT;
+    test_type_e test = GPIO_TEST_BLINK_LED;
     switch (test) {
 
     // GPIO tests
