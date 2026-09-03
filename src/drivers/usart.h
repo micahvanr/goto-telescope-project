@@ -8,12 +8,12 @@
 //======================================================================================//
 
 typedef enum {
-    USART1_BASE_ADDR = ((APB2_BASE_ADDR) + (0x1000u)),
-    USART6_BASE_ADDR = ((APB2_BASE_ADDR) + (0x1400u)),
-    USART2_BASE_ADDR = ((APB1_BASE_ADDR) + (0x4400u)),
-    USART3_BASE_ADDR = ((APB1_BASE_ADDR) + (0x4400u)),
-    UART4_BASE_ADDR  = ((APB1_BASE_ADDR) + (0x4400u)),
-    UART5_BASE_ADDR  = ((APB1_BASE_ADDR) + (0x4400u)),
+    USART1_BASE_ADDR = ((APB2_BASE_ADDR) + (0x1000U)),
+    USART6_BASE_ADDR = ((APB2_BASE_ADDR) + (0x1400U)),
+    USART2_BASE_ADDR = ((APB1_BASE_ADDR) + (0x4400U)),
+    USART3_BASE_ADDR = ((APB1_BASE_ADDR) + (0x4400U)),
+    UART4_BASE_ADDR  = ((APB1_BASE_ADDR) + (0x4400U)),
+    UART5_BASE_ADDR  = ((APB1_BASE_ADDR) + (0x4400U)),
 } usart_base_addr_e;
 
 //======================================================================================//
@@ -38,255 +38,34 @@ typedef enum {
 
 typedef enum {
     USART_NOT_INITIALIZED = 0,
-    USART_INITIALIZED     = 0,
+    USART_INITIALIZED     = 1,
 } usart_init_check_e;
 
-//======================================================================================//
-//                  Register Constants
-//======================================================================================//
+//} Configuration Settings
+//=========================================//{
 
-typedef enum {
-    USART_BRR_OVER8EN_CLEAR_POS = 3,
-} usart_reg_misc_e;
-
-typedef enum {
-    USART_SR_CTS_POS  = 9, // CTS flag
-    USART_SR_LBD_POS  = 8, // LIN break detection flag
-    USART_SR_TXE_POS  = 7, // Transmit data register empty
-    USART_SR_TC_POS   = 6, // Transmission complete
-    USART_SR_RXNE_POS = 5, // Read data register not empty
-    USART_SR_IDLE_POS = 4, // IDLE line detected
-    USART_SR_ORE_POS  = 3, // Overrun error
-    USART_SR_NF_POS   = 2, // Noise detected flag
-    USART_SR_FE_POS   = 1, // Framing error
-    USART_SR_PE_POS   = 0, // Parity error
-} usart_sr_pos_e;
-
-typedef enum {
-    USART_SR_CTS  = (1 << USART_SR_CTS_POS),  // CTS flag
-    USART_SR_LBD  = (1 << USART_SR_LBD_POS),  // LIN break detection flag
-    USART_SR_TXE  = (1 << USART_SR_TXE_POS),  // Transmit data register empty
-    USART_SR_TC   = (1 << USART_SR_TC_POS),   // Transmission complete
-    USART_SR_RXNE = (1 << USART_SR_RXNE_POS), // Read data register not empty
-    USART_SR_IDLE = (1 << USART_SR_IDLE_POS), // IDLE line detected
-    USART_SR_ORE  = (1 << USART_SR_ORE_POS),  // Overrun error
-    USART_SR_NF   = (1 << USART_SR_NF_POS),   // Noise detected flag
-    USART_SR_FE   = (1 << USART_SR_FE_POS),   // Framing error
-    USART_SR_PE   = (1 << USART_SR_PE_POS),   // Parity error
-} usart_sr_e;
-
-typedef enum {
-    USART_SR_CTS_MASK  = 0b1, // 1 bit(s)
-    USART_SR_LBD_MASK  = 0b1, // 1 bit(s)
-    USART_SR_TXE_MASK  = 0b1, // 1 bit(s)
-    USART_SR_TC_MASK   = 0b1, // 1 bit(s)
-    USART_SR_RXNE_MASK = 0b1, // 1 bit(s)
-    USART_SR_IDLE_MASK = 0b1, // 1 bit(s)
-    USART_SR_ORE_MASK  = 0b1, // 1 bit(s)
-    USART_SR_NF_MASK   = 0b1, // 1 bit(s)
-    USART_SR_FE_MASK   = 0b1, // 1 bit(s)
-    USART_SR_PE_MASK   = 0b1, // 1 bit(s)
-} usart_sr_mask_e;
-
-typedef enum {
-    USART_DR_DR_POS = 0, // Data value
-} usart_dr_pos_e;
-
-typedef enum {
-    USART_DR_DR = (1 << USART_DR_DR_POS), // Data value
-} usart_dr_e;
-
-typedef enum {
-    USART_DR_DR_MASK = 0b111111111, // 9 bit(s)
-} usart_dr_mask_e;
-
-typedef enum {
-    USART_BRR_DIV_MANTISSA_POS = 4, // mantissa of USARTDIV
-    USART_BRR_DIV_FRACTION_POS = 0, // fraction of USARTDIV
-} usart_brr_pos_e;
-
-typedef enum {
-    USART_BRR_DIV_MANTISSA = (1 << USART_BRR_DIV_MANTISSA_POS), // mantissa of USARTDIV
-    USART_BRR_DIV_FRACTION = (1 << USART_BRR_DIV_FRACTION_POS), // fraction of USARTDIV
-} usart_brr_e;
-
-typedef enum {
-    USART_BRR_DIV_MANTISSA_MASK = 0b111111111111, // 12 bit(s)
-    USART_BRR_DIV_FRACTION_MASK = 0b1111,         // 4 bit(s)
-} usart_brr_mask_e;
-
-typedef enum {
-    USART_CR1_OVER8_POS  = 15, // Oversampling mode
-    USART_CR1_UE_POS     = 13, // USART enable
-    USART_CR1_M_POS      = 12, // Word length
-    USART_CR1_WAKE_POS   = 11, // Wakeup method
-    USART_CR1_PCE_POS    = 10, // Parity control enable
-    USART_CR1_PS_POS     = 9,  // Parity selection
-    USART_CR1_PEIE_POS   = 8,  // PE interrupt enable
-    USART_CR1_TXEIE_POS  = 7,  // TXE interrupt enable
-    USART_CR1_TCIE_POS   = 6,  // Transmission complete interrupt enable
-    USART_CR1_RXNEIE_POS = 5,  // RXNE interrupt enable
-    USART_CR1_IDLEIE_POS = 4,  // IDLE interrupt enable
-    USART_CR1_TE_POS     = 3,  // Transmitter enable
-    USART_CR1_RE_POS     = 2,  // Receiver enable
-    USART_CR1_RWU_POS    = 1,  // Receiver wakeup
-    USART_CR1_SBK_POS    = 0,  // Send break
-} usart_cr1_pos_e;
-
-typedef enum {
-    USART_CR1_OVER8  = (1 << USART_CR1_OVER8_POS),  // Oversampling mode
-    USART_CR1_UE     = (1 << USART_CR1_UE_POS),     // USART enable
-    USART_CR1_M      = (1 << USART_CR1_M_POS),      // Word length
-    USART_CR1_WAKE   = (1 << USART_CR1_WAKE_POS),   // Wakeup method
-    USART_CR1_PCE    = (1 << USART_CR1_PCE_POS),    // Parity control enable
-    USART_CR1_PS     = (1 << USART_CR1_PS_POS),     // Parity selection
-    USART_CR1_PEIE   = (1 << USART_CR1_PEIE_POS),   // PE interrupt enable
-    USART_CR1_TXEIE  = (1 << USART_CR1_TXEIE_POS),  // TXE interrupt enable
-    USART_CR1_TCIE   = (1 << USART_CR1_TCIE_POS),   // Transmission complete interrupt enable
-    USART_CR1_RXNEIE = (1 << USART_CR1_RXNEIE_POS), // RXNE interrupt enable
-    USART_CR1_IDLEIE = (1 << USART_CR1_IDLEIE_POS), // IDLE interrupt enable
-    USART_CR1_TE     = (1 << USART_CR1_TE_POS),     // Transmitter enable
-    USART_CR1_RE     = (1 << USART_CR1_RE_POS),     // Receiver enable
-    USART_CR1_RWU    = (1 << USART_CR1_RWU_POS),    // Receiver wakeup
-    USART_CR1_SBK    = (1 << USART_CR1_SBK_POS),    // Send break
-} usart_cr1_e;
-
-typedef enum {
-    USART_CR1_OVER8_MASK  = 0b1, // 1 bit(s)
-    USART_CR1_UE_MASK     = 0b1, // 1 bit(s)
-    USART_CR1_M_MASK      = 0b1, // 1 bit(s)
-    USART_CR1_WAKE_MASK   = 0b1, // 1 bit(s)
-    USART_CR1_PCE_MASK    = 0b1, // 1 bit(s)
-    USART_CR1_PS_MASK     = 0b1, // 1 bit(s)
-    USART_CR1_PEIE_MASK   = 0b1, // 1 bit(s)
-    USART_CR1_TXEIE_MASK  = 0b1, // 1 bit(s)
-    USART_CR1_TCIE_MASK   = 0b1, // 1 bit(s)
-    USART_CR1_RXNEIE_MASK = 0b1, // 1 bit(s)
-    USART_CR1_IDLEIE_MASK = 0b1, // 1 bit(s)
-    USART_CR1_TE_MASK     = 0b1, // 1 bit(s)
-    USART_CR1_RE_MASK     = 0b1, // 1 bit(s)
-    USART_CR1_RWU_MASK    = 0b1, // 1 bit(s)
-    USART_CR1_SBK_MASK    = 0b1, // 1 bit(s)
-} usart_cr1_mask_e;
-
-typedef enum {
-    USART_CR2_LINEN_POS = 14, // LIN mode enable
-    USART_CR2_STOP_POS  = 12, // STOP bits
-    USART_CR2_CLKEN_POS = 11, // Clock enable
-    USART_CR2_CPOL_POS  = 10, // Clock polarity
-    USART_CR2_CPHA_POS  = 9,  // Clock phase
-    USART_CR2_LBCL_POS  = 8,  // Last bit clock pulse
-    USART_CR2_LBDIE_POS = 6,  // LIN break detection interrupt enable
-    USART_CR2_LBDL_POS  = 5,  // lin break detection length
-    USART_CR2_ADD_POS   = 0,  // Address of the USART node
-} usart_cr2_pos_e;
-
-typedef enum {
-    USART_CR2_LINEN = (1 << USART_CR2_LINEN_POS), // LIN mode enable
-    USART_CR2_STOP  = (1 << USART_CR2_STOP_POS),  // STOP bits
-    USART_CR2_CLKEN = (1 << USART_CR2_CLKEN_POS), // Clock enable
-    USART_CR2_CPOL  = (1 << USART_CR2_CPOL_POS),  // Clock polarity
-    USART_CR2_CPHA  = (1 << USART_CR2_CPHA_POS),  // Clock phase
-    USART_CR2_LBCL  = (1 << USART_CR2_LBCL_POS),  // Last bit clock pulse
-    USART_CR2_LBDIE = (1 << USART_CR2_LBDIE_POS), // LIN break detection interrupt enable
-    USART_CR2_LBDL  = (1 << USART_CR2_LBDL_POS),  // lin break detection length
-    USART_CR2_ADD   = (1 << USART_CR2_ADD_POS),   // Address of the USART node
-} usart_cr2_e;
-
-typedef enum {
-    USART_CR2_LINEN_MASK = 0b1,    // 1 bit(s)
-    USART_CR2_STOP_MASK  = 0b11,   // 2 bit(s)
-    USART_CR2_CLKEN_MASK = 0b1,    // 1 bit(s)
-    USART_CR2_CPOL_MASK  = 0b1,    // 1 bit(s)
-    USART_CR2_CPHA_MASK  = 0b1,    // 1 bit(s)
-    USART_CR2_LBCL_MASK  = 0b1,    // 1 bit(s)
-    USART_CR2_LBDIE_MASK = 0b1,    // 1 bit(s)
-    USART_CR2_LBDL_MASK  = 0b1,    // 1 bit(s)
-    USART_CR2_ADD_MASK   = 0b1111, // 4 bit(s)
-} usart_cr2_mask_e;
-
-typedef enum {
-    USART_CR3_ONEBIT_POS = 11, // One sample bit method enable
-    USART_CR3_CTSIE_POS  = 10, // CTS interrupt enable
-    USART_CR3_CTSE_POS   = 9,  // CTS enable
-    USART_CR3_RTSE_POS   = 8,  // RTS enable
-    USART_CR3_DMAT_POS   = 7,  // DMA enable transmitter
-    USART_CR3_DMAR_POS   = 6,  // DMA enable receiver
-    USART_CR3_SCEN_POS   = 5,  // Smartcard mode enable
-    USART_CR3_NACK_POS   = 4,  // Smartcard NACK enable
-    USART_CR3_HDSEL_POS  = 3,  // Half-duplex selection
-    USART_CR3_IRLP_POS   = 2,  // IrDA low-power
-    USART_CR3_IREN_POS   = 1,  // IrDA mode enable
-    USART_CR3_EIE_POS    = 0,  // Error interrupt enable
-} usart_cr3_pos_e;
-
-typedef enum {
-    USART_CR3_ONEBIT = (1 << USART_CR3_ONEBIT_POS), // One sample bit method enable
-    USART_CR3_CTSIE  = (1 << USART_CR3_CTSIE_POS),  // CTS interrupt enable
-    USART_CR3_CTSE   = (1 << USART_CR3_CTSE_POS),   // CTS enable
-    USART_CR3_RTSE   = (1 << USART_CR3_RTSE_POS),   // RTS enable
-    USART_CR3_DMAT   = (1 << USART_CR3_DMAT_POS),   // DMA enable transmitter
-    USART_CR3_DMAR   = (1 << USART_CR3_DMAR_POS),   // DMA enable receiver
-    USART_CR3_SCEN   = (1 << USART_CR3_SCEN_POS),   // Smartcard mode enable
-    USART_CR3_NACK   = (1 << USART_CR3_NACK_POS),   // Smartcard NACK enable
-    USART_CR3_HDSEL  = (1 << USART_CR3_HDSEL_POS),  // Half-duplex selection
-    USART_CR3_IRLP   = (1 << USART_CR3_IRLP_POS),   // IrDA low-power
-    USART_CR3_IREN   = (1 << USART_CR3_IREN_POS),   // IrDA mode enable
-    USART_CR3_EIE    = (1 << USART_CR3_EIE_POS),    // Error interrupt enable
-} usart_cr3_e;
-
-typedef enum {
-    USART_CR3_ONEBIT_MASK = 0b1, // 1 bit(s)
-    USART_CR3_CTSIE_MASK  = 0b1, // 1 bit(s)
-    USART_CR3_CTSE_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_RTSE_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_DMAT_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_DMAR_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_SCEN_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_NACK_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_HDSEL_MASK  = 0b1, // 1 bit(s)
-    USART_CR3_IRLP_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_IREN_MASK   = 0b1, // 1 bit(s)
-    USART_CR3_EIE_MASK    = 0b1, // 1 bit(s)
-} usart_cr3_mask_e;
-
-typedef enum {
-    USART_GTPR_GT_POS  = 8, // Guard time value
-    USART_GTPR_PSC_POS = 0, // Prescaler value
-} usart_gtpr_pos_e;
-
-typedef enum {
-    USART_GTPR_GT  = (1 << USART_GTPR_GT_POS),  // Guard time value
-    USART_GTPR_PSC = (1 << USART_GTPR_PSC_POS), // Prescaler value
-} usart_gtpr_e;
-
-typedef enum {
-    USART_GTPR_GT_MASK  = 0b11111111, // 8 bit(s)
-    USART_GTPR_PSC_MASK = 0b11111111, // 8 bit(s)
-} usart_gtpr_mask_e;
-
-// Configuration settings
+// TODO: Change to 0bx format
 typedef enum {
     USART_OVERSAMPLING_16 = 0,
     USART_OVERSAMPLING_8  = 1,
 } usart_oversampling_e;
 
-typedef enum {
+typedef enum : uint32_t {
     USART_WORD_LENGTH_8_DATA_BITS = 0,
     USART_WORD_LENGTH_9_DATA_BITS = 1,
 } usart_word_length_e;
 
-typedef enum {
+typedef enum : uint32_t {
     USART_PARITY_CONTROL_DISABLE = 0,
     USART_PARITY_CONTROL_ENABLE  = 1,
 } usart_parity_control_e;
 
-typedef enum {
+typedef enum : uint32_t {
     USART_PARITY_SEL_EVEN = 0,
     USART_PARITY_SEL_ODD  = 1,
 } usart_parity_select_e;
 
-typedef enum {
+typedef enum : uint32_t {
     USART_STOP_BITS_1   = 0,
     USART_STOP_BITS_0_5 = 1,
     USART_STOP_BITS_2   = 2,
@@ -318,6 +97,232 @@ typedef enum {
     USART_STATUS_READY = 0,
     USART_STATUS_RUNNING,
 } usart_status_e;
+//======================================================================================//
+//                  Register Constants
+//======================================================================================//
+
+typedef enum : uint32_t {
+    USART_BRR_OVER8EN_CLEAR_POS = 3U,
+} usart_reg_misc_e;
+
+// clang-format off
+typedef enum : uint32_t {
+    USART_SR_CTS_POS  = 9U,   // CTS flag
+    USART_SR_LBD_POS  = 8U,   // LIN break detection flag
+    USART_SR_TXE_POS  = 7U,   // Transmit data register empty
+    USART_SR_TC_POS   = 6U,   // Transmission complete
+    USART_SR_RXNE_POS = 5U,   // Read data register not empty
+    USART_SR_IDLE_POS = 4U,   // IDLE line detected
+    USART_SR_ORE_POS  = 3U,   // Overrun error
+    USART_SR_NF_POS   = 2U,   // Noise detected flag
+    USART_SR_FE_POS   = 1U,   // Framing error
+    USART_SR_PE_POS   = 0U,   // Parity error
+} usart_sr_pos_e;
+
+typedef enum : uint32_t {
+    USART_SR_CTS  = (1U << USART_SR_CTS_POS),    // CTS flag
+    USART_SR_LBD  = (1U << USART_SR_LBD_POS),    // LIN break detection flag
+    USART_SR_TXE  = (1U << USART_SR_TXE_POS),    // Transmit data register empty
+    USART_SR_TC   = (1U << USART_SR_TC_POS),     // Transmission complete
+    USART_SR_RXNE = (1U << USART_SR_RXNE_POS),   // Read data register not empty
+    USART_SR_IDLE = (1U << USART_SR_IDLE_POS),   // IDLE line detected
+    USART_SR_ORE  = (1U << USART_SR_ORE_POS),    // Overrun error
+    USART_SR_NF   = (1U << USART_SR_NF_POS),     // Noise detected flag
+    USART_SR_FE   = (1U << USART_SR_FE_POS),     // Framing error
+    USART_SR_PE   = (1U << USART_SR_PE_POS),     // Parity error
+} usart_sr_e;
+
+typedef enum : uint32_t {
+    USART_SR_CTS_MASK  = 0b1U,   // 1 bit(s)
+    USART_SR_LBD_MASK  = 0b1U,   // 1 bit(s)
+    USART_SR_TXE_MASK  = 0b1U,   // 1 bit(s)
+    USART_SR_TC_MASK   = 0b1U,   // 1 bit(s)
+    USART_SR_RXNE_MASK = 0b1U,   // 1 bit(s)
+    USART_SR_IDLE_MASK = 0b1U,   // 1 bit(s)
+    USART_SR_ORE_MASK  = 0b1U,   // 1 bit(s)
+    USART_SR_NF_MASK   = 0b1U,   // 1 bit(s)
+    USART_SR_FE_MASK   = 0b1U,   // 1 bit(s)
+    USART_SR_PE_MASK   = 0b1U,   // 1 bit(s)
+} usart_sr_mask_e;
+
+typedef enum : uint32_t {
+    USART_DR_DR_POS = 0U,   // Data value
+} usart_dr_pos_e;
+
+typedef enum : uint32_t {
+    USART_DR_DR = (1U << USART_DR_DR_POS),   // Data value
+} usart_dr_e;
+
+typedef enum : uint32_t {
+    USART_DR_DR_MASK = 0b111111111U,   // 9 bit(s)
+} usart_dr_mask_e;
+
+typedef enum : uint32_t {
+    USART_BRR_DIV_MANTISSA_POS = 4U,   // mantissa of USARTDIV
+    USART_BRR_DIV_FRACTION_POS = 0U,   // fraction of USARTDIV
+} usart_brr_pos_e;
+
+typedef enum : uint32_t {
+    USART_BRR_DIV_MANTISSA = (1U << USART_BRR_DIV_MANTISSA_POS),   // mantissa of USARTDIV
+    USART_BRR_DIV_FRACTION = (1U << USART_BRR_DIV_FRACTION_POS),   // fraction of USARTDIV
+} usart_brr_e;
+
+typedef enum : uint32_t {
+    USART_BRR_DIV_MANTISSA_MASK = 0b111111111111U,   // 12 bit(s)
+    USART_BRR_DIV_FRACTION_MASK = 0b1111U,           // 4 bit(s)
+} usart_brr_mask_e;
+
+typedef enum : uint32_t {
+    USART_CR1_OVER8_POS  = 15U,   // Oversampling mode
+    USART_CR1_UE_POS     = 13U,   // USART enable
+    USART_CR1_M_POS      = 12U,   // Word length
+    USART_CR1_WAKE_POS   = 11U,   // Wakeup method
+    USART_CR1_PCE_POS    = 10U,   // Parity control enable
+    USART_CR1_PS_POS     = 9U,    // Parity selection
+    USART_CR1_PEIE_POS   = 8U,    // PE interrupt enable
+    USART_CR1_TXEIE_POS  = 7U,    // TXE interrupt enable
+    USART_CR1_TCIE_POS   = 6U,    // Transmission complete interrupt enable
+    USART_CR1_RXNEIE_POS = 5U,    // RXNE interrupt enable
+    USART_CR1_IDLEIE_POS = 4U,    // IDLE interrupt enable
+    USART_CR1_TE_POS     = 3U,    // Transmitter enable
+    USART_CR1_RE_POS     = 2U,    // Receiver enable
+    USART_CR1_RWU_POS    = 1U,    // Receiver wakeup
+    USART_CR1_SBK_POS    = 0U,    // Send break
+} usart_cr1_pos_e;
+
+typedef enum : uint32_t {
+    USART_CR1_OVER8  = (1U << USART_CR1_OVER8_POS),    // Oversampling mode
+    USART_CR1_UE     = (1U << USART_CR1_UE_POS),       // USART enable
+    USART_CR1_M      = (1U << USART_CR1_M_POS),        // Word length
+    USART_CR1_WAKE   = (1U << USART_CR1_WAKE_POS),     // Wakeup method
+    USART_CR1_PCE    = (1U << USART_CR1_PCE_POS),      // Parity control enable
+    USART_CR1_PS     = (1U << USART_CR1_PS_POS),       // Parity selection
+    USART_CR1_PEIE   = (1U << USART_CR1_PEIE_POS),     // PE interrupt enable
+    USART_CR1_TXEIE  = (1U << USART_CR1_TXEIE_POS),    // TXE interrupt enable
+    USART_CR1_TCIE   = (1U << USART_CR1_TCIE_POS),     // Transmission complete interrupt enable
+    USART_CR1_RXNEIE = (1U << USART_CR1_RXNEIE_POS),   // RXNE interrupt enable
+    USART_CR1_IDLEIE = (1U << USART_CR1_IDLEIE_POS),   // IDLE interrupt enable
+    USART_CR1_TE     = (1U << USART_CR1_TE_POS),       // Transmitter enable
+    USART_CR1_RE     = (1U << USART_CR1_RE_POS),       // Receiver enable
+    USART_CR1_RWU    = (1U << USART_CR1_RWU_POS),      // Receiver wakeup
+    USART_CR1_SBK    = (1U << USART_CR1_SBK_POS),      // Send break
+} usart_cr1_e;
+
+typedef enum : uint32_t {
+    USART_CR1_OVER8_MASK  = 0b1U,   // 1 bit(s)
+    USART_CR1_UE_MASK     = 0b1U,   // 1 bit(s)
+    USART_CR1_M_MASK      = 0b1U,   // 1 bit(s)
+    USART_CR1_WAKE_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR1_PCE_MASK    = 0b1U,   // 1 bit(s)
+    USART_CR1_PS_MASK     = 0b1U,   // 1 bit(s)
+    USART_CR1_PEIE_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR1_TXEIE_MASK  = 0b1U,   // 1 bit(s)
+    USART_CR1_TCIE_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR1_RXNEIE_MASK = 0b1U,   // 1 bit(s)
+    USART_CR1_IDLEIE_MASK = 0b1U,   // 1 bit(s)
+    USART_CR1_TE_MASK     = 0b1U,   // 1 bit(s)
+    USART_CR1_RE_MASK     = 0b1U,   // 1 bit(s)
+    USART_CR1_RWU_MASK    = 0b1U,   // 1 bit(s)
+    USART_CR1_SBK_MASK    = 0b1U,   // 1 bit(s)
+} usart_cr1_mask_e;
+
+typedef enum : uint32_t {
+    USART_CR2_LINEN_POS = 14U,   // LIN mode enable
+    USART_CR2_STOP_POS  = 12U,   // STOP bits
+    USART_CR2_CLKEN_POS = 11U,   // Clock enable
+    USART_CR2_CPOL_POS  = 10U,   // Clock polarity
+    USART_CR2_CPHA_POS  = 9U,    // Clock phase
+    USART_CR2_LBCL_POS  = 8U,    // Last bit clock pulse
+    USART_CR2_LBDIE_POS = 6U,    // LIN break detection interrupt enable
+    USART_CR2_LBDL_POS  = 5U,    // lin break detection length
+    USART_CR2_ADD_POS   = 0U,    // Address of the USART node
+} usart_cr2_pos_e;
+
+typedef enum : uint32_t {
+    USART_CR2_LINEN = (1U << USART_CR2_LINEN_POS),   // LIN mode enable
+    USART_CR2_STOP  = (1U << USART_CR2_STOP_POS),    // STOP bits
+    USART_CR2_CLKEN = (1U << USART_CR2_CLKEN_POS),   // Clock enable
+    USART_CR2_CPOL  = (1U << USART_CR2_CPOL_POS),    // Clock polarity
+    USART_CR2_CPHA  = (1U << USART_CR2_CPHA_POS),    // Clock phase
+    USART_CR2_LBCL  = (1U << USART_CR2_LBCL_POS),    // Last bit clock pulse
+    USART_CR2_LBDIE = (1U << USART_CR2_LBDIE_POS),   // LIN break detection interrupt enable
+    USART_CR2_LBDL  = (1U << USART_CR2_LBDL_POS),    // lin break detection length
+    USART_CR2_ADD   = (1U << USART_CR2_ADD_POS),     // Address of the USART node
+} usart_cr2_e;
+
+typedef enum : uint32_t {
+    USART_CR2_LINEN_MASK = 0b1U,      // 1 bit(s)
+    USART_CR2_STOP_MASK  = 0b11U,     // 2 bit(s)
+    USART_CR2_CLKEN_MASK = 0b1U,      // 1 bit(s)
+    USART_CR2_CPOL_MASK  = 0b1U,      // 1 bit(s)
+    USART_CR2_CPHA_MASK  = 0b1U,      // 1 bit(s)
+    USART_CR2_LBCL_MASK  = 0b1U,      // 1 bit(s)
+    USART_CR2_LBDIE_MASK = 0b1U,      // 1 bit(s)
+    USART_CR2_LBDL_MASK  = 0b1U,      // 1 bit(s)
+    USART_CR2_ADD_MASK   = 0b1111U,   // 4 bit(s)
+} usart_cr2_mask_e;
+
+typedef enum : uint32_t {
+    USART_CR3_ONEBIT_POS = 11U,   // One sample bit method enable
+    USART_CR3_CTSIE_POS  = 10U,   // CTS interrupt enable
+    USART_CR3_CTSE_POS   = 9U,    // CTS enable
+    USART_CR3_RTSE_POS   = 8U,    // RTS enable
+    USART_CR3_DMAT_POS   = 7U,    // DMA enable transmitter
+    USART_CR3_DMAR_POS   = 6U,    // DMA enable receiver
+    USART_CR3_SCEN_POS   = 5U,    // Smartcard mode enable
+    USART_CR3_NACK_POS   = 4U,    // Smartcard NACK enable
+    USART_CR3_HDSEL_POS  = 3U,    // Half-duplex selection
+    USART_CR3_IRLP_POS   = 2U,    // IrDA low-power
+    USART_CR3_IREN_POS   = 1U,    // IrDA mode enable
+    USART_CR3_EIE_POS    = 0U,    // Error interrupt enable
+} usart_cr3_pos_e;
+
+typedef enum : uint32_t {
+    USART_CR3_ONEBIT = (1U << USART_CR3_ONEBIT_POS),   // One sample bit method enable
+    USART_CR3_CTSIE  = (1U << USART_CR3_CTSIE_POS),    // CTS interrupt enable
+    USART_CR3_CTSE   = (1U << USART_CR3_CTSE_POS),     // CTS enable
+    USART_CR3_RTSE   = (1U << USART_CR3_RTSE_POS),     // RTS enable
+    USART_CR3_DMAT   = (1U << USART_CR3_DMAT_POS),     // DMA enable transmitter
+    USART_CR3_DMAR   = (1U << USART_CR3_DMAR_POS),     // DMA enable receiver
+    USART_CR3_SCEN   = (1U << USART_CR3_SCEN_POS),     // Smartcard mode enable
+    USART_CR3_NACK   = (1U << USART_CR3_NACK_POS),     // Smartcard NACK enable
+    USART_CR3_HDSEL  = (1U << USART_CR3_HDSEL_POS),    // Half-duplex selection
+    USART_CR3_IRLP   = (1U << USART_CR3_IRLP_POS),     // IrDA low-power
+    USART_CR3_IREN   = (1U << USART_CR3_IREN_POS),     // IrDA mode enable
+    USART_CR3_EIE    = (1U << USART_CR3_EIE_POS),      // Error interrupt enable
+} usart_cr3_e;
+
+typedef enum : uint32_t {
+    USART_CR3_ONEBIT_MASK = 0b1U,   // 1 bit(s)
+    USART_CR3_CTSIE_MASK  = 0b1U,   // 1 bit(s)
+    USART_CR3_CTSE_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_RTSE_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_DMAT_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_DMAR_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_SCEN_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_NACK_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_HDSEL_MASK  = 0b1U,   // 1 bit(s)
+    USART_CR3_IRLP_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_IREN_MASK   = 0b1U,   // 1 bit(s)
+    USART_CR3_EIE_MASK    = 0b1U,   // 1 bit(s)
+} usart_cr3_mask_e;
+
+typedef enum : uint32_t {
+    USART_GTPR_GT_POS  = 8U,   // Guard time value
+    USART_GTPR_PSC_POS = 0U,   // Prescaler value
+} usart_gtpr_pos_e;
+
+typedef enum : uint32_t {
+    USART_GTPR_GT  = (1U << USART_GTPR_GT_POS),    // Guard time value
+    USART_GTPR_PSC = (1U << USART_GTPR_PSC_POS),   // Prescaler value
+} usart_gtpr_e;
+
+typedef enum : uint32_t {
+    USART_GTPR_GT_MASK  = 0b11111111U,   // 8 bit(s)
+    USART_GTPR_PSC_MASK = 0b11111111U,   // 8 bit(s)
+} usart_gtpr_mask_e;
+
+// clang-format on
 
 //======================================================================================//
 //                  Structure Definitions

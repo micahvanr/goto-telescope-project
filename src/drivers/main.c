@@ -19,8 +19,6 @@
 #include "printf.h"
 #include "gpio.h"
 
-// TODO: Change header file constant enums to be type uint32_t
-
 int main(void)
 {
     gpio_reset(GPIOA);

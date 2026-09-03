@@ -65,7 +65,7 @@ def find_peri():
 def bit_pos_out(reg, generic_peri_name):
     with open(output_file, "a") as f:
         if output_format == "enum":
-            print("typedef enum {", file=f)
+            print("typedef enum : uint32_t {", file=f)
 
         reg_name = str(reg.find('name').text).upper()
         max_offset_str_width = max(len(str(field.find('bitOffset').text)) for field in reg.iter('field'))
@@ -75,6 +75,7 @@ def bit_pos_out(reg, generic_peri_name):
 
             field_name = str(field.find('name').text).upper()
             field_offset = field.find('bitOffset').text
+            field_offset += "U"
             field_str = generic_peri_name.upper() + "_" + reg_name + "_" + field_name + "_POS"
             field_desc = field.find('description').text
             field_desc = str(field_desc).replace("\n", "")
@@ -97,7 +98,7 @@ def convert_width_to_string(width):
 def bit_mask_out(reg, generic_peri_name):
     with open(output_file, "a") as f:
         if output_format == "enum":
-            print("typedef enum {", file=f)
+            print("typedef enum : uint32_t {", file=f)
 
         reg_name = str(reg.find('name').text).upper()
         max_bitwidth_width = max(len(str(convert_width_to_string(field.find('bitWidth').text))) for field in reg.iter('field'))
@@ -107,6 +108,7 @@ def bit_mask_out(reg, generic_peri_name):
 
             field_name = str(field.find('name').text).upper()
             field_width = convert_width_to_string(field.find('bitWidth').text)
+            field_width += "U"
             field_str = generic_peri_name.upper() + "_" + reg_name + "_" + field_name + "_MASK"
             num_of_bits = field.find('bitWidth').text
 
@@ -122,7 +124,7 @@ def bit_mask_out(reg, generic_peri_name):
 def bit_out(reg, generic_peri_name):
     with open(output_file, "a") as f:
         if output_format == "enum":
-            print("typedef enum {", file=f)
+            print("typedef enum : uint32_t {", file=f)
 
         reg_name = str(reg.find('name').text).upper()
         max_pos_str_width = max(len(field.find('name').text) for field in reg.iter('field'))
@@ -139,7 +141,7 @@ def bit_out(reg, generic_peri_name):
             field_desc = re.sub(" +", " ", field_desc)
 
             if output_format == "enum":
-                print(f"    {field_name:{max_field_width}} = (1 << {field_pos + "),":{max_pos_str_width + 4}} // {field_desc}" , file=f)
+                print(f"    {field_name:{max_field_width}} = (1U << {field_pos + "),":{max_pos_str_width + 4}} // {field_desc}" , file=f)
             elif output_format == "macro":
                 print(f"#define {field_name:{max_field_width}} (1 << {field_pos + ")":{max_pos_str_width + 4}} // {field_desc}" , file=f)
 
@@ -220,10 +222,16 @@ open(output_file, 'w').close()
 
 reg_struct_out(peri_element, generic_peri_name)
 
+with open(output_file, "a") as f:
+    print("// clang-format off", file=f)
+
 for reg in peri_element.iter('register'):
     bit_pos_out(reg, generic_peri_name)
     bit_out(reg, generic_peri_name)
     bit_mask_out(reg, generic_peri_name)
+
+with open(output_file, "a") as f:
+    print("// clang-format on", file=f)
 
 print(f"File \"{output_file}\" generated.")
 

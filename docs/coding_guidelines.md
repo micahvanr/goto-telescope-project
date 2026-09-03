@@ -93,7 +93,8 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
     * Should be the main constant used
     * Append "_e" to the end of enum names to signify they are an enum
     * Make the type be "uint32_t" if there is even a slight chance the sign bit gets manipulated as enums are 
-    integers by default and changing the sign bit is undefined behavior.
+    integers by default and changing the sign bit is undefined behavior. Only leave if certain the sign bit wont
+    be modified.
 * Macros
     * Use paranthesis (even for single numbers) to avoid unexpected macro expansion
 * Constant variables
@@ -219,15 +220,17 @@ do {                        \
 ## Driver Constants
 ### Driver register constants
 #### Miscellaneous constants
-Register field constants should be created using the reg_constant_gen Python script. This keeps constants consistent
+* Register field constants should be created using the reg_constant_gen Python script. This keeps constants consistent
 and easy to create. If additional register related constants are needed name them as following
-and place them at the top of the register constants section. If using enums they should have a type 
-of "uint32_t" as enums are integers by default and if they are shifted to the end and change the sign bit.
-That is undefined behavior.
+and place them at the top of the register constants section. 
+* If using enums they should have a type  of "uint32_t" as enums are integers by default and if they 
+are shifted to the end and change the sign bit. That is undefined behavior.
+* Append "U" to the value to ensure it is interpreted as unsigned inside the enum. Other types of constants are fine
+and do not need this.
 ``` C
 // Example using USART. The position of the field was not generated cleanly.
 typedef enum : uint32_t {
-    USART_BRR_OVER8EN_CLEAR_POS = 3,
+    USART_BRR_OVER8EN_CLEAR_POS = 3U,
 } usart_reg_misc_e;
 ``` 
 

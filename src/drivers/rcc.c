@@ -36,9 +36,9 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     // Get register values
     rcc_pllcfgr_reg = RCC->PLLCFGR;
-    pllm            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLM0_POS) & RCC_PLLCFGR_PLLM_MASK);
-    plln            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLN0_POS) & RCC_PLLCFGR_PLLN_MASK);
-    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLP0_POS) & RCC_PLLCFGR_PLLP_MASK);
+    pllm            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLM0_POS) & RCC_PLLCFGR_PLLM0_MASK);
+    plln            = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLN0_POS) & RCC_PLLCFGR_PLLN0_MASK);
+    pllp_reg        = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLP0_POS) & RCC_PLLCFGR_PLLP0_MASK);
     pllp            = pllp_values[pllp_reg];
 
     pll_src = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLSRC_POS) & RCC_PLLCFGR_PLLSRC_MASK);
@@ -69,7 +69,7 @@ Note: None
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL)
-    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS_MASK);
+    clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS0_MASK);
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
     // Return clock depending on what the source is
