@@ -20,13 +20,18 @@ typedef enum {
 //                  Peripheral Constants
 //======================================================================================//
 
+//} Misc. Constants
+//=========================================//{
+
 // Used for callbacks
 typedef enum {
     USART_EVENT_CMPLT,
     USART_EVENT_ERROR,
 } usart_event_e;
 
-// Init check enum
+//} Initialization Handler Constants
+//=========================================//{
+
 typedef enum {
     USART1_INIT_NUM = 0,
     USART2_INIT_NUM = 1,
@@ -41,35 +46,48 @@ typedef enum {
     USART_INITIALIZED     = 1,
 } usart_init_check_e;
 
-//} Configuration Settings
+//} Interrupt Handler Constants
 //=========================================//{
 
-// TODO: Change to 0bx format
 typedef enum {
-    USART_OVERSAMPLING_16 = 0,
-    USART_OVERSAMPLING_8  = 1,
+    USART_MODE_NONE,
+    USART_MODE_TX,
+    USART_MODE_RX,
+} usart_mode_e;
+
+typedef enum {
+    USART_STATUS_READY = 0,
+    USART_STATUS_RUNNING,
+} usart_status_e;
+
+//} Config Options
+//=========================================//{
+
+typedef enum {
+    USART_OVERSAMPLING_16 = 0b0,
+    USART_OVERSAMPLING_8  = 0b1,
 } usart_oversampling_e;
 
 typedef enum : uint32_t {
-    USART_WORD_LENGTH_8_DATA_BITS = 0,
-    USART_WORD_LENGTH_9_DATA_BITS = 1,
+    USART_WORD_LENGTH_8_DATA_BITS = 0b0,
+    USART_WORD_LENGTH_9_DATA_BITS = 0b1,
 } usart_word_length_e;
 
 typedef enum : uint32_t {
-    USART_PARITY_CONTROL_DISABLE = 0,
-    USART_PARITY_CONTROL_ENABLE  = 1,
+    USART_PARITY_CONTROL_DISABLE = 0b0,
+    USART_PARITY_CONTROL_ENABLE  = 0b1,
 } usart_parity_control_e;
 
 typedef enum : uint32_t {
-    USART_PARITY_SEL_EVEN = 0,
-    USART_PARITY_SEL_ODD  = 1,
+    USART_PARITY_SEL_EVEN = 0b0,
+    USART_PARITY_SEL_ODD  = 0b1,
 } usart_parity_select_e;
 
 typedef enum : uint32_t {
-    USART_STOP_BITS_1   = 0,
-    USART_STOP_BITS_0_5 = 1,
-    USART_STOP_BITS_2   = 2,
-    USART_STOP_BITS_1_5 = 3,
+    USART_STOP_BITS_1   = 0b00,
+    USART_STOP_BITS_0_5 = 0b01,
+    USART_STOP_BITS_2   = 0b10,
+    USART_STOP_BITS_1_5 = 0b11,
 } usart_stop_bits_e;
 
 typedef enum {
@@ -87,16 +105,6 @@ typedef enum {
     USART_BAUDRATE_3MB    = 3000000,
 } usart_baudrate_e;
 
-typedef enum {
-    USART_MODE_NONE,
-    USART_MODE_TX,
-    USART_MODE_RX,
-} usart_mode_e;
-
-typedef enum {
-    USART_STATUS_READY = 0,
-    USART_STATUS_RUNNING,
-} usart_status_e;
 //======================================================================================//
 //                  Register Constants
 //======================================================================================//

@@ -36,9 +36,27 @@ typedef enum {
 //                  Peripheral Constants
 //======================================================================================//{
 
+//} Misc. Constants
+//=========================================//{
+
 typedef enum {
     TIM_MAX_NUM_TIMERS = 14,
-} tim_num_of_timers_e;
+} tim_gen_info_e;
+
+typedef enum {
+    TIM_TYPE_BASIC,
+    TIM_TYPE_GENERAL_2_5,
+    TIM_TYPE_GENERAL_9_14,
+    TIM_TYPE_ADVANCED,
+} tim_type_e;
+
+typedef enum {
+    TIM_UPDATE_NA    = 0b0,
+    TIM_UPDATE_FOUND = 0b1,
+} tim_status_e;
+
+//} Initialization Handler Constants
+//=========================================//{
 
 // Init check enum
 typedef enum {
@@ -63,22 +81,8 @@ typedef enum {
     TIM_INITIALIZED     = 1,
 } tim_init_check_e;
 
-typedef enum {
-    TIM_TYPE_BASIC,
-    TIM_TYPE_GENERAL_2_5,
-    TIM_TYPE_GENERAL_9_14,
-    TIM_TYPE_ADVANCED,
-} tim_type_e;
-
-typedef enum {
-    TIM_COUNTER_EN,
-    TIM_COUNTER_DI,
-} tim_counter_toggle_e;
-
-typedef enum {
-    TIM_UPDATE_NA    = 0b0,
-    TIM_UPDATE_FOUND = 0b1,
-} tim_status_e;
+//} API Function Argument Options
+//=========================================//{
 
 typedef enum {
     TIM_UNIT_S,  // Seconds
@@ -89,24 +93,8 @@ typedef enum {
     TIM_UNIT_MHZ,
 } tim_unit_of_time_e;
 
-//} Configuration Settings
+//} Config Options
 //=========================================//{
-// TODO: Organize config settings and state what handler they're apart of
-
-typedef enum {
-    TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately
-    TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now
-} tim_arr_preload_e;
-
-typedef enum {
-    TIM_AUTO_ARR_COUNT_DI = 0b0,
-    TIM_AUTO_ARR_COUNT_EN = 0b1,
-} tim_auto_arr_count_e;
-
-typedef enum {
-    TIM_ONE_PULSE_MODE_DI = 0b0,
-    TIM_ONE_PULSE_MODE_EN = 0b1,
-} tim_one_pulse_mode_e;
 
 // Numbers used to select register
 typedef enum {
@@ -116,6 +104,16 @@ typedef enum {
     TIM_CHANNEL_SEL_4 = 3,
     TIM_CHANNEL_NA,
 } tim_channel_sel_e;
+
+typedef enum {
+    TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately
+    TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now
+} tim_arr_preload_e;
+
+typedef enum {
+    TIM_ONE_PULSE_MODE_DI = 0b0,
+    TIM_ONE_PULSE_MODE_EN = 0b1,
+} tim_one_pulse_mode_e;
 
 typedef enum {
     TIM_CLK_SEL_INTERNAL         = 0b000,
@@ -145,6 +143,9 @@ typedef enum {
     TIM_ALIGN_CENTER_IT_UP      = 0b10,
     TIM_ALIGN_CENTER_IT_DOWN_UP = 0b11,
 } tim_align_mode_e;
+
+//} tim_ic_config Options
+//=========================================//{
 
 // DTS = dead-time and sampling clock (derived from CR1->CKD)
 typedef enum {
@@ -190,6 +191,9 @@ typedef enum {
     TIM_IC_EDGE_DETECTION_FALLING        = 0b01,
     TIM_IC_EDGE_DETECTION_RISING_FALLING = 0b101, // Special case where the bits are not adjacent to eachother
 } tim_ic_edge_detection_e;
+
+//} tim_oc_config Options
+//=========================================//{
 
 // clang-format off
 typedef enum {

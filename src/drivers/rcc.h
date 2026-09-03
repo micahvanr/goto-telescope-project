@@ -15,6 +15,9 @@ typedef enum {
 //                  Peripheral Constants
 //======================================================================================//{
 
+//} Misc. Constants
+//=========================================//{
+
 // TODO: Change frequencies for custom board when applicable
 typedef enum {
     HSI_CLOCK_FREQ = 16000000,
@@ -32,16 +35,19 @@ typedef enum {
 } clock_sources_e;
 
 typedef enum {
+    RCC_MCO1_SEL,
+    RCC_MCO2_SEL,
+} rcc_mco_sel_e;
+
+//} API Function Argument Options
+//=========================================//{
+
+typedef enum {
     AHB1_BUS = 0,
     AHB2_BUS = 1,
     APB1_BUS = 3,
     APB2_BUS = 4,
 } bus_types;
-
-typedef enum {
-    RCC_MCO1_SEL,
-    RCC_MCO2_SEL,
-} rcc_mco_sel_e;
 
 typedef enum {
     RCC_MCO_PRE_1 = 1,

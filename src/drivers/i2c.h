@@ -17,11 +17,22 @@ typedef enum {
 //                  Peripheral Constants
 //======================================================================================//
 
+//} Misc. Constants
+//=========================================//{
+
 // Used for callbacks
 typedef enum {
     I2C_EVENT_CMPLT,
     I2C_EVENT_ERROR,
 } i2c_event_e;
+
+// Write = 0, read = 1
+typedef enum {
+    I2C_READ_WRITE_BIT = (1 << 0),
+} i2c_read_write_bit_e;
+
+//} Initialization Handler Constants
+//=========================================//{
 
 // Init check enum
 typedef enum {
@@ -35,26 +46,8 @@ typedef enum {
     I2C_INITIALIZED     = 1,
 } i2c_init_check_e;
 
-typedef enum {
-    I2C1_STATUS_NUM = 0,
-    I2C2_STATUS_NUM = 1,
-    I2C3_STATUS_NUM = 2,
-} i2c_status_port_num_e;
-
-typedef enum {
-    I2C_REPEATED_START_DISABLE = 0,
-    I2C_REPEATED_START_ENABLE,
-} i2c_repeated_start_e;
-
-// Write = 0, read = 1
-typedef enum {
-    I2C_READ_WRITE_BIT = (1 << 0),
-} i2c_read_write_bit_e;
-
-typedef enum {
-    I2C_READ_SEL,
-    I2C_WRITE_SEL,
-} i2c_read_write_sel_e;
+//} Interrupt Handler Constants
+//=========================================//{
 
 typedef enum {
     I2C_STATUS_READY   = 0, // Default
@@ -65,24 +58,22 @@ typedef enum {
     I2C_STATUS_SLAVE_RX,
 } i2c_status_e;
 
-// TRISE
 typedef enum {
-    I2C_MAX_RISE_SM_1000_NS = 1000,
-    I2C_MAX_RISE_FM_300_NS  = 300,
-} i2c_max_rise_time_e;
+    I2C_REPEATED_START_DISABLE = 0,
+    I2C_REPEATED_START_ENABLE,
+} i2c_repeated_start_e;
 
-//} Configuration Settings
+//} Configuration Options
 //=========================================//{
 
-// TODO: Change to 0bx format
 typedef enum : uint32_t {
-    I2C_SPEED_MODE_STANDARD = 0,
-    I2C_SPEED_MODE_FAST     = 1,
+    I2C_SPEED_MODE_STANDARD = 0b0,
+    I2C_SPEED_MODE_FAST     = 0b1,
 } i2c_speed_mode_e;
 
 typedef enum : uint32_t {
-    I2C_FM_DUTY_2    = 0,
-    I2C_FM_DUTY_16_9 = 1,
+    I2C_FM_DUTY_2    = 0b0,
+    I2C_FM_DUTY_16_9 = 0b1,
 } i2c_fm_duty_cycle;
 
 typedef enum : uint32_t {

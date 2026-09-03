@@ -32,8 +32,8 @@ typedef enum {
 //                  Macros and Other Enums
 //======================================================================================//
 
-// Enums
-// General
+//} General Constants
+//=========================================//{
 typedef enum {
     PIN_NO_0  = 0,
     PIN_NO_1  = 1,
@@ -62,6 +62,9 @@ typedef enum {
     ENABLE  = 1,
     DISABLE = 0,
 } togglable_e;
+
+//} Interrupt Constants
+//=========================================//{
 
 // Only adding IRQ numbers when they are needed
 typedef enum {
@@ -117,6 +120,9 @@ typedef enum {
     IRQ_PRIORITY_15                  = 15,
     IRQ_NUM_PRIORITY_BITS_IMPLMENTED = 4,
 } irq_priority_e;
+
+//} Hardware Constants
+//=========================================//{
 
 typedef enum {
     LED_GREEN_PIN  = 12,

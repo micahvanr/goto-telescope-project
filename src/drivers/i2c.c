@@ -587,6 +587,9 @@ static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2
 
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
 {
+    uint32_t const I2C_MAX_RISE_SM_1000_NS = 1000;
+    uint32_t const I2C_MAX_RISE_FM_300_NS  = 300;
+
     uint32_t ccr_value            = 0;
     uint32_t trise_value          = 0;
     uint32_t desired_clock_khz    = p_i2c_handle->i2c_conf.clock_freq_hz / 1000;

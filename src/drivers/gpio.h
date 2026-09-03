@@ -22,12 +22,15 @@ typedef enum {
 //                  Peripheral Constants
 //======================================================================================//
 
+//} Initialization Handler Constants
+//=========================================//{
+
 typedef enum {
     GPIO_NOT_INITIALIZED = 0,
     GPIO_INITIALIZED     = 1,
 } gpio_init_check_e;
 
-//} Configuration Settings
+//} Configuration Options
 //=========================================//{
 
 typedef enum : uint32_t {

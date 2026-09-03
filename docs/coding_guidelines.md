@@ -247,10 +247,18 @@ typedef enum {
 ```
 
 ## File Organization
+Files should be organizated in the following ways. This is a general format, some files may not
+have all sections and they may have other sections. This is just a way to keep things consistent and 
+organized for constants that appear frequently.
 ### Header File Organization
 Driver header files should be organized in the following way:
 * Address Definitions
 * Peripheral Constants
+    * Misc. Constants
+    * Initialization Handler Constants 
+    * Interrupt Handler Constants
+    * API Function Argument Options
+    * Config Options (If multiple configs exist, name and separate them)
 * Register Constants
 * Structure Definitions
 * Peripheral Structure Macros

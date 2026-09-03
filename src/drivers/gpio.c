@@ -14,7 +14,6 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 // General helper functions
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
-// static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
 
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
