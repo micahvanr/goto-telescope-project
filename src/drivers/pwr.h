@@ -1,0 +1,16 @@
+#ifndef PWR_H
+#define PWR_H
+
+// * Address Definitions
+// * Peripheral Constants
+//     * Misc. Constants
+//     * Initialization Handler Constants 
+//     * Interrupt Handler Constants
+//     * API Function Argument Options
+//     * Config Options (If multiple configs exist, name and separate them)
+// * Register Constants
+// * Structure Definitions
+// * Peripheral Structure Macros
+// * Function API Prototypes
+
+#endif
