@@ -61,12 +61,15 @@ DRIVER_FILES =	main \
 				usart \
 				i2c \
 				tim \
+				rtc \
+				pwr
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \
 					i2c_test \
 					misc_test \
 					timer_test \
+					rtc_test
 
 COMMON_FILES = assert_handler \
 				printf \
