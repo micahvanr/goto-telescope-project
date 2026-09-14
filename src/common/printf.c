@@ -7,6 +7,7 @@
 #include "usart.h"
 
 static void printf_gpio_init();
+
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
  *             2021-2024, Haifa, Palestine/Israel
@@ -1695,6 +1696,17 @@ int fctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char 
     return ret;
 }
 
+// NOTE: All functions below this point have been added by myself
+
+/***************************************************************************
+Function: printf_gpio_init
+Overview: Initializes the GPIO ports for the USART TX pin
+Parameters: 
+    None
+Return: 
+    None
+Note: None
+***************************************************************************/
 static void printf_gpio_init()
 {
     gpio_handle printf_tx_gpio      = {0};
@@ -1710,6 +1722,15 @@ static void printf_gpio_init()
     gpio_init(&printf_tx_gpio);
 }
 
+/***************************************************************************
+Function: printf_init
+Overview: Initializes the USART peripheral for printf functionality
+Parameters: 
+    None
+Return: 
+    None
+Note: Uses USART2 and PA2
+***************************************************************************/
 void printf_init()
 {
     printf_gpio_init();
