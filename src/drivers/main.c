@@ -7,6 +7,7 @@
 // clang-format off
 // Test functions
 #include "common.h"
+#include "rtc_test.h"
 #include "test_types.h"
 #include "gpio_test.h"
 #include "timer_test.h"
@@ -16,12 +17,11 @@
 // clang-format on
 #include "assert_handler.h"
 #include "debug_tools.h"
-#include "printf.h"
 #include "gpio.h"
+#include "printf.h"
 
 int main(void)
 {
-    gpio_reset(GPIOA);
     // Uses USART2 and PA2 - change inside printf.h
     printf_init();
 
@@ -37,7 +37,7 @@ int main(void)
     toggle_debug_pin();
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test = GPIO_TEST_BLINK_LED;
+    test_type_e test = RTC_TEST_BASE;
     switch (test) {
 
     // GPIO tests
@@ -62,6 +62,8 @@ int main(void)
     case TIMER_TEST_OC_PWM:
     case TIMER_TEST_BASIC_IT:
     case TIMER_TEST_IC_IT:     timer_tests(test); break;
+
+    case RTC_TEST_BASE:        rtc_tests(test); break;
 
     // Misc tests
     case MISC_TEST_ASSERT:
