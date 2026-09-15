@@ -3,10 +3,44 @@
 #include "gpio.h"
 #include <stdint.h>
 
+
 //======================================================================================//}
 //                  Helper Function Prototypes
 //======================================================================================//{
 static void mco_gpio_pin_init(rcc_mco_sel_e mco_select);
+
+//======================================================================================//
+//                  Peripheral Function API Implementation
+//======================================================================================//
+
+/***************************************************************************
+Function: rcc_lsi_enable
+Overview: Enables the LSI oscillator
+Parameters: 
+    None
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rcc_lsi_enable(void)
+{
+    RCC->CSR |= RCC_CSR_LSION;
+}
+
+/***************************************************************************
+Function: rcc_lsi_rdy
+Overview: Checks if the LSI oscillator is ready
+Parameters: 
+    None
+Return: 
+    true
+    false
+Note: None
+***************************************************************************/
+bool rcc_lsi_rdy(void)
+{
+    return (RCC->CSR & RCC_CSR_LSIRDY) >> RCC_CSR_LSIRDY_POS;
+}
 
 /***************************************************************************
 Function: rcc_get_pll_freq_hz
@@ -143,6 +177,17 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     }
 }
 
+/***************************************************************************
+Function: rcc_get_timer_clock_freq_hz
+Overview: Gets the clock frequency depending on the bus of the timer
+Parameters:
+    bus: Different bus options to be returned
+        APB1_BUS
+        APB2_BUS
+Return: 
+    Clock frequency (hz) for the timer, given the corresponding bus its on
+Note: Use TIMER API function to get bus for timer
+***************************************************************************/
 uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
     uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
@@ -160,6 +205,92 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
     }
 
     return bus_clock;
+}
+
+/***************************************************************************
+Function: rcc_rtc_clock_enable
+Overview: Enables the RTC clock
+Parameters: 
+    None
+Return: 
+    None
+Note: Backup domain write protection must be disabled before this is allowed
+***************************************************************************/
+void rcc_rtc_clock_enable(void)
+{
+    RCC->BDCR |= RCC_BDCR_RTCEN;
+}
+
+/***************************************************************************
+Function: rcc_sel_rtc_clk_src
+Overview: Sets the RTC clock source
+Parameters: 
+    rtc_clk_sel: Clock source for RTC
+        RCC_BDCR_RTCSEL_NA 
+        RCC_BDCR_RTCSEL_LSE
+        RCC_BDCR_RTCSEL_LSI
+        RCC_BDCR_RTCSEL_HSE
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel)
+{
+    ASSERT((rtc_clk_sel == RCC_RTC_CLK_SRC_NA) || (rtc_clk_sel == RCC_RTC_CLK_SRC_LSE)
+           || (rtc_clk_sel == RCC_RTC_CLK_SRC_LSI) || (rtc_clk_sel == RCC_RTC_CLK_SRC_HSE));
+
+    RCC->BDCR &= ~(RCC_BDCR_RTCSEL_MASK << RCC_BDCR_RTCSEL0_POS);
+    RCC->BDCR |= rtc_clk_sel << RCC_BDCR_RTCSEL0_POS;
+}
+
+/***************************************************************************
+Function: rcc_set_rtc_hse_clk_pre
+Overview: Sets the HSE clock prescaler for the RTC peripheral
+Parameters: 
+    hse_pre: Prescaler to divide HSE by
+        RCC_CFGR_RTCPRE_NA
+        RCC_CFGR_RTCPRE_x (2 - 31)
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre)
+{
+    // NOTE: Fragile assert but much cleaner than checking against each enum value
+    ASSERT((hse_pre >= RCC_RTC_HSE_PRE_NA) && (hse_pre <= RCC_RTC_HSE_PRE_31));
+
+    RCC->CFGR &= ~(RCC_CFGR_RTCPRE_MASK << RCC_CFGR_RTCPRE_POS);
+    RCC->CFGR |= hse_pre << RCC_CFGR_RTCPRE_POS;
+}
+
+/***************************************************************************
+Function: rcc_get_rtc_clock_freq_hz
+Overview: Gets RTC clock frequency
+Parameters: 
+    None
+Return: 
+    Clock frequency (hz) for the RTC peripheral
+Note: None
+***************************************************************************/
+uint32_t rcc_get_rtc_clock_freq_hz(void)
+{
+    uint32_t rtc_clk_freq_hz          = 0;
+    uint8_t const RTC_CLK_SRC         = (rcc_rtc_clk_src_e)((RCC->BDCR >> RCC_BDCR_RTCSEL0_POS) & RCC_BDCR_RTCSEL_MASK );
+    uint8_t const RTC_HSE_CLK_PRE     = (rcc_rtc_hse_pre_e)((RCC->CFGR >> RCC_CFGR_RTCPRE_POS) & RCC_CFGR_RTCPRE_MASK);
+    uint16_t const rtc_hse_pre_opts[] = {0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15,
+                                         16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
+
+    switch (RTC_CLK_SRC) {
+    case RCC_RTC_CLK_SRC_NA:  ASSERT(false); break;
+    case RCC_RTC_CLK_SRC_LSE: rtc_clk_freq_hz = LSE_CLOCK_FREQ; break;
+    case RCC_RTC_CLK_SRC_LSI: rtc_clk_freq_hz = LSI_CLOCK_FREQ; break;
+    case RCC_RTC_CLK_SRC_HSE:
+        ASSERT(RTC_HSE_CLK_PRE != RCC_RTC_HSE_PRE_NA);
+        rtc_clk_freq_hz = HSE_CLOCK_FREQ / rtc_hse_pre_opts[RTC_HSE_CLK_PRE];
+        break;
+    }
+
+    return rtc_clk_freq_hz;
 }
 
 void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)

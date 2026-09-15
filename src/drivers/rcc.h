@@ -2,13 +2,14 @@
 #define RCC_H
 
 #include "common.h"
+#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Address Definitions
 //======================================================================================//{
 
 typedef enum {
-    RCC_BASE_ADDR = 0x40023800U,
+    RCC_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x3800U)),
 } rcc_base_addr_e;
 
 //======================================================================================//}
@@ -38,6 +39,47 @@ typedef enum {
     RCC_MCO1_SEL,
     RCC_MCO2_SEL,
 } rcc_mco_sel_e;
+
+typedef enum : uint32_t {
+    RCC_RTC_CLK_SRC_NA  = 0b00,
+    RCC_RTC_CLK_SRC_LSE = 0b01,
+    RCC_RTC_CLK_SRC_LSI = 0b10,
+    RCC_RTC_CLK_SRC_HSE = 0b11,
+} rcc_rtc_clk_src_e;
+
+typedef enum : uint32_t {
+    RCC_RTC_HSE_PRE_NA = 0b00000,
+    RCC_RTC_HSE_PRE_2  = 0b00010,
+    RCC_RTC_HSE_PRE_3  = 0b00011,
+    RCC_RTC_HSE_PRE_4  = 0b00100,
+    RCC_RTC_HSE_PRE_5  = 0b00101,
+    RCC_RTC_HSE_PRE_6  = 0b00110,
+    RCC_RTC_HSE_PRE_7  = 0b00111,
+    RCC_RTC_HSE_PRE_8  = 0b01000,
+    RCC_RTC_HSE_PRE_9  = 0b01001,
+    RCC_RTC_HSE_PRE_10 = 0b01010,
+    RCC_RTC_HSE_PRE_11 = 0b01011,
+    RCC_RTC_HSE_PRE_12 = 0b01100,
+    RCC_RTC_HSE_PRE_13 = 0b01101,
+    RCC_RTC_HSE_PRE_14 = 0b01110,
+    RCC_RTC_HSE_PRE_15 = 0b01111,
+    RCC_RTC_HSE_PRE_16 = 0b10000,
+    RCC_RTC_HSE_PRE_17 = 0b10001,
+    RCC_RTC_HSE_PRE_18 = 0b10010,
+    RCC_RTC_HSE_PRE_19 = 0b10011,
+    RCC_RTC_HSE_PRE_20 = 0b10100,
+    RCC_RTC_HSE_PRE_21 = 0b10101,
+    RCC_RTC_HSE_PRE_22 = 0b10110,
+    RCC_RTC_HSE_PRE_23 = 0b10111,
+    RCC_RTC_HSE_PRE_24 = 0b11000,
+    RCC_RTC_HSE_PRE_25 = 0b11001,
+    RCC_RTC_HSE_PRE_26 = 0b11010,
+    RCC_RTC_HSE_PRE_27 = 0b11011,
+    RCC_RTC_HSE_PRE_28 = 0b11100,
+    RCC_RTC_HSE_PRE_29 = 0b11101,
+    RCC_RTC_HSE_PRE_30 = 0b11110,
+    RCC_RTC_HSE_PRE_31 = 0b11111,
+} rcc_rtc_hse_pre_e;
 
 //} API Function Argument Options
 //=========================================//{
@@ -71,6 +113,10 @@ typedef enum {
 //======================================================================================//}
 //                  Register Constants
 //======================================================================================//{
+
+typedef enum : uint32_t {
+    RCC_BDCR_RTCSEL_MASK = 0b11U
+} rcc_reg_misc_e;
 
 // clang-format off
 typedef enum : uint32_t {
@@ -1126,10 +1172,19 @@ typedef __vo struct {
 //                  Peripheral Function APIs
 //======================================================================================//{
 
+void rcc_lsi_enable(void);
+bool rcc_lsi_rdy(void);
+
 uint32_t rcc_get_pll_freq_hz(void);
 uint32_t rcc_get_sys_clock_freq_hz(void);
 uint32_t rcc_get_bus_clock_freq_hz(bus_types bus);
 uint32_t rcc_get_timer_clock_freq_hz(bus_types bus);
+
+void rcc_rtc_clock_enable(void);
+void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel);
+void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre);
+uint32_t rcc_get_rtc_clock_freq_hz(void);
+
 void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
 
 #endif
