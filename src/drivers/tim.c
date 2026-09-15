@@ -1,5 +1,6 @@
 #include "tim.h"
 #include "assert_handler.h"
+#include "debug_tools.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 #include <limits.h>
@@ -127,7 +128,8 @@ void tim_init(tim_handler *const p_tim_handler)
     if ((p_tim_handler->timing_conf.auto_reload != 0) && (p_tim_handler->timing_conf.prescaler != 0)) {
         p_tim_handler->p_timx->PSC = p_tim_handler->timing_conf.prescaler - 1;
         p_tim_handler->p_timx->ARR = p_tim_handler->timing_conf.auto_reload - 1;
-        // Calculate ARR and PSC from given time and unit
+
+    // Calculate ARR and PSC from given time and unit
     } else if ((p_tim_handler->timing_conf.time != 0) && (p_tim_handler->timing_conf.unit != 0)) {
         set_prescaler_count(p_tim_handler->p_timx, p_tim_handler->timing_conf.time, p_tim_handler->timing_conf.unit);
     }
@@ -728,8 +730,8 @@ static inline void tim_clock_disable(tim_reg_def const *const p_timx)
 static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit)
 {
     uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
-    uint32_t prescaler = 1;
-    uint32_t count     = 1;
+    uint32_t prescaler       = 1;
+    uint32_t count           = 1;
     uint32_t unit_in_seconds = 0;
     uint32_t period;
 
@@ -907,7 +909,7 @@ static inline void set_tim_base_init_status(tim_reg_def const *const p_timx)
 
 static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx)
 {
-    return g_tim_peri_init & (1 << map_tim_peri_to_num(p_timx));
+    return 0b1 & (g_tim_peri_init >>  map_tim_peri_to_num(p_timx));
 }
 
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
@@ -915,7 +917,8 @@ static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, 
     g_tim_channel_init[map_tim_peri_to_num(p_timx)] |= (1 << channel);
 }
 
-static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
+static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx,
+                                                           tim_channel_sel_e const channel)
 {
-    return g_tim_channel_init[map_tim_peri_to_num(p_timx)] & (1 << channel);
+    return 0b1 & (g_tim_channel_init[map_tim_peri_to_num(p_timx)] >> channel);
 }

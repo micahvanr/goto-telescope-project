@@ -477,12 +477,12 @@ static inline void set_usart_init_status(usart_reg_def const *const p_usartx)
 
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx)
 {
-    // FIX: Fix the get init status function
     return 0b1 & (g_usart_port_init >> map_usart_ports_to_num(p_usartx));
 }
 
 // Sets the baudrate for the given USART peripheral
-static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode, usart_baudrate_e const baudrate)
+static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode,
+                         usart_baudrate_e const baudrate)
 {
     uint32_t temp_brr;
     uint32_t clock_freq;

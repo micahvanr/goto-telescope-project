@@ -156,8 +156,8 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t const *p_data, uint32_t const length,
-                         i2c_repeated_start_e const repeated_start)
+void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t const *p_data,
+                         uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
@@ -342,8 +342,8 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data, uint32_t const length,
-                            i2c_repeated_start_e const repeated_start)
+void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
+                            uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
@@ -377,8 +377,8 @@ Return:
     None
 Note: None
  ***************************************************************************/
-void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data, uint32_t const length,
-                           i2c_repeated_start_e const repeated_start)
+void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
+                           uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
@@ -582,7 +582,7 @@ static inline void set_i2c_init_status(i2c_reg_def const *const p_i2cx)
 
 static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2cx)
 {
-    return g_i2c_port_init & (1 << (map_i2c_ports_to_num(p_i2cx)));
+    return 0b1 & (g_i2c_port_init >> (map_i2c_ports_to_num(p_i2cx)));
 }
 
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
