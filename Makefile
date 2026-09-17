@@ -62,7 +62,8 @@ DRIVER_FILES =	main \
 				i2c \
 				tim \
 				rtc \
-				pwr
+				pwr \
+				exti
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \
