@@ -9,20 +9,48 @@
 //======================================================================================//{
 
 typedef enum {
-    EXTI_BASE_ADDR   = ((APB2_BASE_ADDR) + (0x3C00U)),
+    EXTI_BASE_ADDR = ((APB2_BASE_ADDR) + (0x3C00U)),
 } exti_base_addr_e;
 
 //======================================================================================//}
 //                  Peripheral Constants
 //======================================================================================//{
 
-// * Address Definitions
-// * Peripheral Constants
-//     * Misc. Constants
-//     * Initialization Handler Constants 
-//     * Interrupt Handler Constants
-//     * API Function Argument Options
-//     * Config Options (If multiple configs exist, name and separate them)
+//} API Function Argument/Return Options
+//=========================================//{
+
+typedef enum : uint32_t {
+    EXTI_LINE_NO_0  = 0,
+    EXTI_LINE_NO_1  = 1,
+    EXTI_LINE_NO_2  = 2,
+    EXTI_LINE_NO_3  = 3,
+    EXTI_LINE_NO_4  = 4,
+    EXTI_LINE_NO_5  = 5,
+    EXTI_LINE_NO_6  = 6,
+    EXTI_LINE_NO_7  = 7,
+    EXTI_LINE_NO_8  = 8,
+    EXTI_LINE_NO_9  = 9,
+    EXTI_LINE_NO_10 = 10,
+    EXTI_LINE_NO_11 = 11,
+    EXTI_LINE_NO_12 = 12,
+    EXTI_LINE_NO_13 = 13,
+    EXTI_LINE_NO_14 = 14,
+    EXTI_LINE_NO_15 = 15,
+    EXTI_LINE_NO_16 = 16,
+    EXTI_LINE_NO_17 = 17,
+    EXTI_LINE_NO_18 = 18,
+    EXTI_LINE_NO_19 = 19,
+    EXTI_LINE_NO_20 = 20,
+    EXTI_LINE_NO_21 = 21,
+    EXTI_LINE_NO_22 = 22,
+} exti_lines_e;
+
+// Applications:
+// - EXTI PR
+typedef enum : uint32_t {
+    EXTI_PEND_STATUS_NOT_TRIGGERED = 0b0,
+    EXTI_PEND_STATUS_TRIGGERED     = 0b1,
+} exti_pend_status_e;
 
 //======================================================================================//}
 //                  Register Constants
@@ -504,22 +532,30 @@ typedef enum : uint32_t {
 //======================================================================================//{
 
 typedef __vo struct {
-    uint32_t IMR;            // Interrupt mask register                             Offset: 0x0
-    uint32_t EMR;            // Event mask register                                 Offset: 0x4
-    uint32_t RTSR;           // Rising Trigger selection register                   Offset: 0x8
-    uint32_t FTSR;           // Falling Trigger selection register                  Offset: 0xC
-    uint32_t SWIER;          // Software interrupt event register                   Offset: 0x10
-    uint32_t PR;             // Pending register                                    Offset: 0x14
+    uint32_t IMR;   // Interrupt mask register                             Offset: 0x0
+    uint32_t EMR;   // Event mask register                                 Offset: 0x4
+    uint32_t RTSR;  // Rising Trigger selection register                   Offset: 0x8
+    uint32_t FTSR;  // Falling Trigger selection register                  Offset: 0xC
+    uint32_t SWIER; // Software interrupt event register                   Offset: 0x10
+    uint32_t PR;    // Pending register                                    Offset: 0x14
 } exti_reg_def;
 
 //======================================================================================//}
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define EXTI ((exti_reg_def *) EXTI_BASE_ADDR)
+#define EXTI ((exti_reg_def *)EXTI_BASE_ADDR)
 
 //======================================================================================//}
 //                  Function API Prototypes
 //======================================================================================//{
+
+void exti_it_config(exti_lines_e line_no, togglable_e toggle);
+void exti_event_config(exti_lines_e line_no, togglable_e toggle);
+void exti_rising_edge_config(exti_lines_e line_no, togglable_e toggle);
+void exti_falling_edge_config(exti_lines_e line_no, togglable_e toggle);
+void exti_software_it_event(exti_lines_e line_no);
+exti_pend_status_e exti_get_pending(exti_lines_e line_no);
+void exti_clear_pending(exti_lines_e line_no);
 
 #endif
