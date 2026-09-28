@@ -1,6 +1,8 @@
 #include "gpio.h"
 #include "assert_handler.h"
+#include "exti.h"
 #include "rcc.h"
+#include "syscfg.h"
 
 //======================================================================================//}
 //                  Helper Function Prototypes
@@ -115,44 +117,27 @@ Note: None
 ***************************************************************************/
 void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
-    uint8_t pin_no             = p_gpio_handle->gpio_conf.pin_no;
-    uint8_t exti_cr_reg_num    = pin_no / 4;
-    exti_lines_e exti_line_num = (exti_lines_e)pin_no;
+    exti_lines_e exti_line_num = (exti_lines_e)p_gpio_handle->gpio_conf.pin_no;
 
-    switch (toggle) {
-    case ENABLE:
-        // Enable the SYSCFG clock in RCC
-        RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-        // Enable the corresponding EXTI line in the EXTI control register of SYSCFG
-        SYSCFG->EXTICR[exti_cr_reg_num] |= (map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
+    syscfg_clock_enable();
 
-        // Enable the interrupt
-        EXTI->IMR |= (1 << exti_line_num);
+    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-        switch (p_gpio_handle->gpio_conf.it_trigger) {
-        case GPIO_IT_RT: EXTI->RTSR |= (1 << exti_line_num); break;
-        case GPIO_IT_FT: EXTI->FTSR |= (1 << exti_line_num); break;
-        case GPIO_IT_RFT:
-            EXTI->RTSR |= (1 << exti_line_num);
-            EXTI->FTSR |= (1 << exti_line_num);
-            break;
-        case GPIO_IT_NA: break;
-        }
-        irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
+    exti_it_config(exti_line_num, toggle);
+
+    switch (p_gpio_handle->gpio_conf.it_trigger) {
+    case GPIO_IT_RT: exti_rising_edge_config(exti_line_num, toggle); break;
+    case GPIO_IT_FT: exti_falling_edge_config(exti_line_num, toggle); break;
+    case GPIO_IT_RFT:
+        exti_falling_edge_config(exti_line_num, toggle);
+        exti_rising_edge_config(exti_line_num, toggle);
         break;
-
-    case DISABLE:
-        // Disable the corresponding EXTI line in the EXTI control register of SYSCFG
-        SYSCFG->EXTICR[exti_cr_reg_num] &=
-            ~(map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
-        // Disable the rising edge and falling edge interrupts
-        EXTI->RTSR &= ~(1 << exti_line_num);
-        EXTI->FTSR &= ~(1 << exti_line_num);
-        // Disable the interrupt in the processor
-        irq_config(map_exti_to_irq_num(exti_line_num), DISABLE);
-        break;
+    case GPIO_IT_NA: break;
     }
+
+    irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
 }
 
 /***************************************************************************

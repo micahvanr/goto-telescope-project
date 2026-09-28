@@ -1,6 +1,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 
+#include "exti.h"
 #include "stm32f4xx.h"
 
 //======================================================================================//
@@ -84,32 +85,6 @@ typedef enum : uint32_t {
     GPIO_PULL_UP   = 0b01,
     GPIO_PULL_DOWN = 0b10,
 } gpio_pullup_pulldown_e;
-
-typedef enum : uint32_t {
-    EXTI_LINE_NO_0  = 0,
-    EXTI_LINE_NO_1  = 1,
-    EXTI_LINE_NO_2  = 2,
-    EXTI_LINE_NO_3  = 3,
-    EXTI_LINE_NO_4  = 4,
-    EXTI_LINE_NO_5  = 5,
-    EXTI_LINE_NO_6  = 6,
-    EXTI_LINE_NO_7  = 7,
-    EXTI_LINE_NO_8  = 8,
-    EXTI_LINE_NO_9  = 9,
-    EXTI_LINE_NO_10 = 10,
-    EXTI_LINE_NO_11 = 11,
-    EXTI_LINE_NO_12 = 12,
-    EXTI_LINE_NO_13 = 13,
-    EXTI_LINE_NO_14 = 14,
-    EXTI_LINE_NO_15 = 15,
-    EXTI_LINE_NO_16 = 16,
-    EXTI_LINE_NO_17 = 17,
-    EXTI_LINE_NO_18 = 18,
-    EXTI_LINE_NO_19 = 19,
-    EXTI_LINE_NO_20 = 20,
-    EXTI_LINE_NO_21 = 21,
-    EXTI_LINE_NO_22 = 22,
-} exti_lines_e;
 
 //======================================================================================//
 //                  Register Constants

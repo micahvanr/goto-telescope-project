@@ -63,7 +63,8 @@ DRIVER_FILES =	main \
 				tim \
 				rtc \
 				pwr \
-				exti
+				exti \
+				syscfg
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \

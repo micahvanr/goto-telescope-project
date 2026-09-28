@@ -133,7 +133,7 @@ void tim_init(tim_handler *const p_tim_handler)
         p_tim_handler->p_timx->PSC = p_tim_handler->timing_conf.prescaler - 1;
         p_tim_handler->p_timx->ARR = p_tim_handler->timing_conf.auto_reload - 1;
 
-    // Calculate ARR and PSC from given time and unit
+        // Calculate ARR and PSC from given time and unit
     } else if ((p_tim_handler->timing_conf.time != 0) && (p_tim_handler->timing_conf.unit != 0)) {
         set_prescaler_count(p_tim_handler->p_timx, p_tim_handler->timing_conf.time, p_tim_handler->timing_conf.unit);
     }
