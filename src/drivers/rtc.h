@@ -2,6 +2,7 @@
 #define RTC_H
 
 #include "common.h"
+#include "exti.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 
@@ -20,38 +21,81 @@ typedef enum {
 //} Misc. Constants
 //=========================================//{
 
-//     * Misc. Constants
-//     * Initialization Handler Constants
-//     * Interrupt Handler Constants
-//     * API Function Argument Options
-//     * Config Options (If multiple configs exist, name and separate them)
+// TODO: Add applications section for enums
+// Register names or function names
+
+typedef enum {
+    RTC_EXTI_NO_ALARM     = EXTI_LINE_NO_17,
+    RTC_EXTI_NO_WAKE_UP   = EXTI_LINE_NO_22,
+    RTC_EXTI_NO_TIMESTAMP = EXTI_LINE_NO_21,
+} rtc_exti_line_no_e;
+
+// Applications:
+// - RTC ISR ALARxF
+typedef enum {
+    RTC_ALARM_STATUS_NOT_TRIGGERED = 0b0,
+    RTC_ALARM_STATUS_TRIGGERED     = 0b1,
+} rtc_alarm_status_e;
+
+//} API Function Argument/Return Options
+//=========================================//{
+
+typedef enum {
+    RTC_IT_OPT_NA,
+    RTC_IT_OPT_ALARM,
+    RTC_IT_OPT_WAKEUP,
+    RTC_IT_OPT_TIMESTAMP,
+    RTC_IT_OPT_TAMPER,
+} rtc_it_options_e;
+
+typedef enum {
+    RTC_AF1_SEL = 0b0,
+    RTC_AF2_SEL = 0b1,
+} rtc_alt_fn_sel_e;
+
+typedef enum {
+    RTC_TIMESTAMP_EDGE_RISING  = 0b0,
+    RTC_TIMESTAMP_EDGE_FALLING = 0b1,
+} rtc_timestamp_edge_e;
+
+typedef enum {
+    RTC_TIMESTAMP_STATUS_NOT_TRIGGERED = 0b0,
+    RTC_TIMESTAMP_STATUS_TRIGGERED     = 0b1,
+} rtc_timestamp_status_e;
+
+typedef enum {
+    RTC_WAKEUP_RTC_CLK_DIV16      = 0b000,
+    RTC_WAKEUP_RTC_CLK_DIV8       = 0b001,
+    RTC_WAKEUP_RTC_CLK_DIV4       = 0b010,
+    RTC_WAKEUP_RTC_CLK_DIV2       = 0b011,
+    RTC_WAKEUP_SPRE_CLK           = 0b100, // Usually 1 hz
+    RTC_WAKEUP_SPRE_CLK_EXTRA_BIT = 0b110, // Usually 1 hz + 2**16 is added to WUT counter value
+} rtc_wakeup_clk_sel_e;
+
+typedef enum {
+    RTC_WAKEUP_STATUS_NOT_TRIGGERED = 0b0,
+    RTC_WAKEUP_STATUS_TRIGGERED     = 0b1,
+} rtc_wakeup_status_e;
 
 //} Config Options
 //=========================================//{
 
-// Used in:
-// RTC CR FMT ref
+// Applications:
+// - RTC CR FMT
 typedef enum {
     RTC_TIME_FORMAT_24HR = 0b0,
     RTC_TIME_FORMAT_12HR = 0b1,
 } rtc_time_format_e;
 
-// RTC TR PM ref
+// Applications:
+// - RTC TR PM
 typedef enum {
     RTC_TIME_AM = 0b0,
     RTC_TIME_PM = 0b1,
 } rtc_time_am_pm_e;
 
-// Hour format of time being set
-// Hour format of general time
-
-// typedef enum {
-//     RTC_HOUR_FORMAT_24HR = 0b0,
-//     RTC_HOUR_FORMAT_12HR = 0b1,
-// } rtc_hour_format_e;
-
-// Used in:
-// RTC DR WDU ref
+// Applications:
+// - RTC DR WDU
 typedef enum {
     RTC_WEEKDAY_MONDAY    = 0b001,
     RTC_WEEKDAY_TUESDAY   = 0b010,
@@ -61,6 +105,49 @@ typedef enum {
     RTC_WEEKDAY_SATURDAY  = 0b110,
     RTC_WEEKDAY_SUNDAY    = 0b111,
 } rtc_weekdays_e;
+
+//} Alarm Config Options
+//=========================================//{
+
+typedef enum {
+    RTC_ALARM_A_SEL,
+    RTC_ALARM_B_SEL,
+} rtc_alarm_sel_e;
+
+// Applications:
+// - RTC ALRMxR MSK1
+typedef enum {
+    RTC_ALARM_SECONDS_MATCH     = 0b0,
+    RTC_ALARM_SECONDS_DONT_CARE = 0b1,
+} rtc_alarm_seconds_match_e;
+
+// Applications:
+// - RTC ALRMxR MSK2
+typedef enum {
+    RTC_ALARM_MINUTES_MATCH     = 0b0,
+    RTC_ALARM_MINUTES_DONT_CARE = 0b1,
+} rtc_alarm_minutes_match_e;
+
+// Applications:
+// - RTC ALRMxR MSK3
+typedef enum {
+    RTC_ALARM_HOURS_MATCH     = 0b0,
+    RTC_ALARM_HOURS_DONT_CARE = 0b1,
+} rtc_alarm_hours_match_e;
+
+// Applications:
+// - RTC ALRMxR MSK4
+typedef enum {
+    RTC_ALARM_DATEDAY_MATCH     = 0b0,
+    RTC_ALARM_DATEDAY_DONT_CARE = 0b1,
+} rtc_alarm_dateday_match_e;
+
+// Applications:
+// - RTC ALRMxR WDSEL
+typedef enum {
+    RTC_ALARM_WEEKDAY_SEL_DATE    = 0b0,
+    RTC_ALARM_WEEKDAY_SEL_WEEKDAY = 0b1,
+} rtc_alarm_daydate_sel_e;
 
 //======================================================================================//}
 //                  Register Constants
@@ -434,30 +521,33 @@ typedef enum : uint32_t {
 } rtc_shiftr_mask_e;
 
 typedef enum : uint32_t {
-    RTC_TSTR_ALARMOUTTYPE_POS = 18U,   // AFO_ALARM output type
-    RTC_TSTR_TSINSEL_POS      = 17U,   // TIMESTAMP mapping
-    RTC_TSTR_TAMP1INSEL_POS   = 16U,   // TAMPER1 mapping
-    RTC_TSTR_TAMPIE_POS       = 2U,    // Tamper interrupt enable
-    RTC_TSTR_TAMP1TRG_POS     = 1U,    // Active level for tamper 1
-    RTC_TSTR_TAMP1E_POS       = 0U,    // Tamper 1 detection enable
+    RTC_TSTR_PM_POS  = 22U, // AM/PM notation
+    RTC_TSTR_HT_POS  = 20U, // Hour tens in BCD format
+    RTC_TSTR_HU_POS  = 16U, // Hour units in BCD format
+    RTC_TSTR_MNT_POS = 12U, // Minute tens in BCD format
+    RTC_TSTR_MNU_POS = 8U,  // Minute units in BCD format
+    RTC_TSTR_ST_POS  = 4U,  // Second tens in BCD format
+    RTC_TSTR_SU_POS  = 0U,  // Second units in BCD format
 } rtc_tstr_pos_e;
 
 typedef enum : uint32_t {
-    RTC_TSTR_ALARMOUTTYPE = (1U << RTC_TSTR_ALARMOUTTYPE_POS),   // AFO_ALARM output type
-    RTC_TSTR_TSINSEL      = (1U << RTC_TSTR_TSINSEL_POS),        // TIMESTAMP mapping
-    RTC_TSTR_TAMP1INSEL   = (1U << RTC_TSTR_TAMP1INSEL_POS),     // TAMPER1 mapping
-    RTC_TSTR_TAMPIE       = (1U << RTC_TSTR_TAMPIE_POS),         // Tamper interrupt enable
-    RTC_TSTR_TAMP1TRG     = (1U << RTC_TSTR_TAMP1TRG_POS),       // Active level for tamper 1
-    RTC_TSTR_TAMP1E       = (1U << RTC_TSTR_TAMP1E_POS),         // Tamper 1 detection enable
+    RTC_TSTR_PM  = (1U << RTC_TSTR_PM_POS),  // AM/PM notation
+    RTC_TSTR_HT  = (1U << RTC_TSTR_HT_POS),  // Hour tens in BCD format
+    RTC_TSTR_HU  = (1U << RTC_TSTR_HU_POS),  // Hour units in BCD format
+    RTC_TSTR_MNT = (1U << RTC_TSTR_MNT_POS), // Minute tens in BCD format
+    RTC_TSTR_MNU = (1U << RTC_TSTR_MNU_POS), // Minute units in BCD format
+    RTC_TSTR_ST  = (1U << RTC_TSTR_ST_POS),  // Second tens in BCD format
+    RTC_TSTR_SU  = (1U << RTC_TSTR_SU_POS),  // Second units in BCD format
 } rtc_tstr_e;
 
 typedef enum : uint32_t {
-    RTC_TSTR_ALARMOUTTYPE_MASK = 0b1U,   // 1 bit(s)
-    RTC_TSTR_TSINSEL_MASK      = 0b1U,   // 1 bit(s)
-    RTC_TSTR_TAMP1INSEL_MASK   = 0b1U,   // 1 bit(s)
-    RTC_TSTR_TAMPIE_MASK       = 0b1U,   // 1 bit(s)
-    RTC_TSTR_TAMP1TRG_MASK     = 0b1U,   // 1 bit(s)
-    RTC_TSTR_TAMP1E_MASK       = 0b1U,   // 1 bit(s)
+    RTC_TSTR_PM_MASK  = 0b1U,    // 1 bit(s)
+    RTC_TSTR_HT_MASK  = 0b11U,   // 2 bit(s)
+    RTC_TSTR_HU_MASK  = 0b1111U, // 4 bit(s)
+    RTC_TSTR_MNT_MASK = 0b111U,  // 3 bit(s)
+    RTC_TSTR_MNU_MASK = 0b1111U, // 4 bit(s)
+    RTC_TSTR_ST_MASK  = 0b111U,  // 3 bit(s)
+    RTC_TSTR_SU_MASK  = 0b1111U, // 1 bit(s)
 } rtc_tstr_mask_e;
 
 typedef enum : uint32_t {
@@ -865,31 +955,62 @@ typedef __vo struct {
     uint32_t BKPR[20];   // backup register                                           Offset: 0x50
 } rtc_reg_def;
 
+// Time data definition (used to configure time)
 typedef struct {
-    uint32_t seconds;
-    uint32_t minutes;
-    uint32_t hours;
-    rtc_time_format_e time_format;
-    rtc_time_am_pm_e time_am_pm;
+    uint8_t seconds;               // Default: 0
+    uint8_t minutes;               // Default: 0
+    uint8_t hours;                 // Default: 0
+    rtc_time_format_e time_format; // Default: RTC_TIME_FORMAT_24HR
+    rtc_time_am_pm_e time_am_pm;   // Default: RTC_TIME_AM
 } rtc_time_data;
 
+// Date data definition (used to configure date)
 typedef struct {
-    uint32_t month;
-    uint32_t date;
-    uint32_t year;
-    rtc_weekdays_e weekday;
+    uint8_t month;          // Default: 0
+    uint8_t date;           // Default: 0
+    uint8_t year;           // Default: 0
+    rtc_weekdays_e weekday; // Default: ERROR
 } rtc_date_data;
 
+// RTC clock configuration definition (used to configure the input clock to the RTC)
 typedef struct {
-    rcc_rtc_clk_src_e rtc_sel;
-    rcc_rtc_hse_pre_e rtc_pre;
+    rcc_rtc_clk_src_e rtc_sel; // Default: RCC_RTC_CLK_SRC_NA
+    rcc_rtc_hse_pre_e rtc_pre; // Default: RCC_RTC_HSE_PRE_NA
 } rtc_config;
 
+// RTC handle definition (used to initialize the base RTC)
 typedef struct {
     rtc_time_data time_data;
     rtc_date_data date_data;
     rtc_config rtc_conf;
 } rtc_handler;
+
+// Alarm configuration definition
+typedef struct {
+    rtc_time_data time_data;
+    rtc_date_data date_data;
+    rtc_alarm_sel_e alarm_sel;               // Default: RTC_ALARM_A_SEL
+    rtc_alarm_seconds_match_e seconds_match; // Default: RTC_ALARM_SECONDS_MATCH
+    rtc_alarm_minutes_match_e minutes_match; // Default: RTC_ALARM_MINUTES_MATCH
+    rtc_alarm_hours_match_e hours_match;     // Default: RTC_ALARM_HOURS_MATCH
+    rtc_alarm_dateday_match_e date_match;    // Default: RTC_ALARM_DATE_MATCH
+    rtc_alarm_daydate_sel_e weekday_sel;     // Default: RTC_ALARM_WEEKDAY_SEL_DATE
+    togglable_e it_toggle;                   // Default: DISABLE
+} rtc_alarm_config;
+
+// Timestamp configuration definition
+typedef struct {
+    rtc_it_options_e it_opt;
+    rtc_alt_fn_sel_e alt_fn_sel;
+    rtc_timestamp_edge_e timestamp_edge;
+} rtc_timestamp_config;
+
+// Wakeup configuration defintion
+typedef struct {
+    rtc_wakeup_clk_sel_e clk_sel;
+    rtc_it_options_e it_opt;
+    uint16_t auto_reload_value;
+} rtc_wakeup_config;
 
 //======================================================================================//}
 //                  Peripheral Structure Macros
@@ -900,7 +1021,7 @@ typedef struct {
 //======================================================================================//}
 //                  Function API Prototypes
 //======================================================================================//{
-//
+
 void rtc_init(rtc_handler *const p_rtc_handler);
 
 rtc_time_am_pm_e rtc_get_time_format(void);
@@ -914,5 +1035,28 @@ uint8_t rtc_get_year(void);
 uint8_t rtc_get_month(void);
 uint8_t rtc_get_date(void);
 rtc_date_data rtc_get_date_data(void);
+
+void rtc_alarm_set(rtc_alarm_config alarm_conf);
+void rtc_alarm_set_seconds(rtc_alarm_sel_e alarm_sel, uint8_t seconds, rtc_alarm_seconds_match_e seconds_match);
+void rtc_alarm_set_minutes(rtc_alarm_sel_e alarm_sel, uint8_t minutes, rtc_alarm_minutes_match_e minutes_match);
+void rtc_alarm_set_hours(rtc_alarm_sel_e alarm_sel, uint8_t hours, rtc_alarm_hours_match_e hours_match);
+void rtc_alarm_set_date(rtc_alarm_sel_e alarm_sel, uint8_t date, rtc_alarm_dateday_match_e date_match);
+void rtc_alarm_set_day(rtc_alarm_sel_e alarm_sel, rtc_weekdays_e weekday, rtc_alarm_dateday_match_e date_match);
+void rtc_alarm_set_am_pm(rtc_alarm_sel_e alarm_sel, uint8_t am_pm);
+rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e alarm_sel);
+
+void rtc_it_config(rtc_it_options_e it_opt, togglable_e toggle);
+
+void rtc_timestamp_init(rtc_timestamp_config timestamp_conf);
+rtc_timestamp_status_e rtc_timestamp_read_status(void);
+void rtc_timestamp_clear_status(void);
+rtc_date_data rtc_timestamp_read_date(void);
+rtc_time_data rtc_timestamp_read_time(void);
+
+void rtc_wakeup_init(rtc_wakeup_config wakeup_conf);
+rtc_wakeup_status_e rtc_wakeup_get_status(void);
+void rtc_wakeup_clear_status(void);
+
+void rtc_it_handler(void);
 
 #endif

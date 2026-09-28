@@ -1,27 +1,39 @@
 #include "rtc.h"
 #include "assert_handler.h"
 #include "common.h"
+#include "exti.h"
 #include "pwr.h"
 #include "rcc.h"
+#include "stm32f4xx.h"
 #include <stdint.h>
-
-// Outline:
-// Get and configure RTC clock
-//  Make Asynch clock as high as possible
+#include <time.h>
 
 //======================================================================================//}
 //                  Helper Function Prototypes
 //======================================================================================//{
 
 static void congifure_rtc_clock(rtc_config rtc_conf);
-static void congifure_rtc_clock_asserts(rtc_config const rtc_conf);
+static void congifure_rtc_clock_asserts(rtc_config rtc_conf);
 static void set_rtc_time(rtc_time_data time_data);
-static void set_rtc_time_asserts(rtc_time_data const time_data);
+static void time_data_asserts(rtc_time_data time_data);
 static void set_rtc_date(rtc_date_data date_data);
-static void set_rtc_date_asserts(rtc_date_data const time_data);
+static void date_data_asserts(rtc_date_data time_data);
 static inline uint8_t convert_bcd_to_dec(uint8_t tens, uint8_t units);
 static inline void unlock_rtc(void);
 static void set_rtc_pre(void);
+static void enable_alarm(rtc_alarm_sel_e alarm_sel, togglable_e it_toggle);
+static void disable_alarm(rtc_alarm_sel_e alarm_sel);
+
+static inline void assert_seconds(uint8_t seconds);
+static inline void assert_minutes(uint8_t minutes);
+static inline void assert_hours(uint8_t hours);
+static inline void assert_am_pm(rtc_time_am_pm_e am_pm);
+static inline void assert_time_format(rtc_time_format_e hours);
+
+static inline void assert_date(uint8_t date);
+static inline void assert_month(uint8_t month);
+static inline void assert_year(uint8_t year);
+static inline void assert_weekday(rtc_weekdays_e weekday);
 
 //======================================================================================//}
 //                  Global Variables
@@ -141,8 +153,8 @@ rtc_time_data rtc_get_time_data(void)
     rtc_time_data time_data;
     uint32_t const TEMP_TR = RTC->TR;
     uint32_t const TEMP_CR = RTC->CR;
-    time_data.time_format  = (TEMP_TR >> RTC_TR_PM_POS) & RTC_TR_PM_MASK;
-    time_data.time_am_pm   = (TEMP_CR >> RTC_CR_FMT_POS) & RTC_CR_FMT_MASK;
+    time_data.time_format  = (TEMP_CR >> RTC_CR_FMT_POS) & RTC_CR_FMT_MASK;
+    time_data.time_am_pm   = (TEMP_TR >> RTC_TR_PM_POS) & RTC_TR_PM_MASK;
     // clang-format off
     time_data.hours   = convert_bcd_to_dec((TEMP_TR >> RTC_TR_HT_POS) & RTC_TR_HT_MASK, (TEMP_TR >> RTC_TR_HU_POS) & RTC_TR_HU_MASK);
     time_data.minutes = convert_bcd_to_dec((TEMP_TR >> RTC_TR_MNT_POS) & RTC_TR_MNT_MASK, (TEMP_TR >> RTC_TR_MNU_POS) & RTC_TR_MNU_MASK);
@@ -231,6 +243,467 @@ rtc_date_data rtc_get_date_data(void)
     return date_data;
 }
 
+/***************************************************************************
+Function: rtc_alarm_set
+Overview: Sets the alarm with the given settings in the configuration structure
+Parameters: 
+    alarm_conf: Contains settings for configuring the alarm
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_alarm_set(rtc_alarm_config const alarm_conf)
+{
+    // Initialize to 0 and don't bother resetting each field as all bits will be set
+    rtc_alarm_sel_e const alarm_sel = alarm_conf.alarm_sel;
+
+    time_data_asserts(alarm_conf.time_data);
+    date_data_asserts(alarm_conf.date_data);
+
+    disable_alarm(alarm_sel);
+
+    switch (alarm_conf.weekday_sel) {
+    case RTC_ALARM_WEEKDAY_SEL_DATE:
+        rtc_alarm_set_date(alarm_sel, alarm_conf.date_data.date, alarm_conf.date_match);
+        break;
+    case RTC_ALARM_WEEKDAY_SEL_WEEKDAY:
+        rtc_alarm_set_day(alarm_sel, alarm_conf.date_data.weekday, alarm_conf.date_match);
+        break;
+    }
+
+    // Seconds config
+    rtc_alarm_set_seconds(alarm_sel, alarm_conf.time_data.seconds, alarm_conf.seconds_match);
+
+    // Minutes config
+    rtc_alarm_set_minutes(alarm_sel, alarm_conf.time_data.minutes, alarm_conf.minutes_match);
+
+    // Hours config
+    rtc_alarm_set_hours(alarm_sel, alarm_conf.time_data.hours, alarm_conf.hours_match);
+
+    // AM/PM config
+    rtc_alarm_set_am_pm(alarm_sel, alarm_conf.time_data.time_am_pm);
+
+    enable_alarm(alarm_sel, alarm_conf.it_toggle);
+
+    rtc_it_config(RTC_IT_OPT_ALARM, alarm_conf.it_toggle);
+}
+
+void rtc_alarm_set_seconds(rtc_alarm_sel_e const alarm_sel, uint8_t const seconds,
+                           rtc_alarm_seconds_match_e const seconds_match)
+{
+    assert_seconds(seconds);
+
+    // NOTE: If the seconds field is set, the synchonous prescaler in RTC_PRER might need to be at least 3. See ref manual pg 805
+
+    uint32_t temp_alrmxr = 0;
+
+    temp_alrmxr |= seconds_match << RTC_ALRMAR_MSK1_POS;
+    temp_alrmxr |= (seconds / 10) << RTC_ALRMAR_ST_POS;
+    temp_alrmxr |= (seconds % 10) << RTC_ALRMAR_SU_POS;
+
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~((RTC_ALRMAR_MSK1_MASK << RTC_ALRMAR_MSK1_POS) | (RTC_ALRMAR_ST_MASK << RTC_ALRMAR_ST_POS)
+                         | (RTC_ALRMAR_SU_MASK << RTC_ALRMAR_SU_POS));
+        RTC->ALRMAR |= temp_alrmxr;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~((RTC_ALRMBR_MSK1_MASK << RTC_ALRMBR_MSK1_POS) | (RTC_ALRMBR_ST_MASK << RTC_ALRMBR_ST_POS)
+                         | (RTC_ALRMBR_SU_MASK << RTC_ALRMBR_SU_POS));
+        RTC->ALRMBR |= temp_alrmxr;
+        break;
+    }
+}
+
+void rtc_alarm_set_minutes(rtc_alarm_sel_e const alarm_sel, uint8_t const minutes,
+                           rtc_alarm_minutes_match_e const minutes_match)
+{
+    assert_minutes(minutes);
+
+    uint32_t temp_alrmxr = 0;
+
+    temp_alrmxr |= minutes_match << RTC_ALRMAR_MSK2_POS;
+    temp_alrmxr |= (minutes / 10) << RTC_ALRMAR_MNT_POS;
+    temp_alrmxr |= (minutes % 10) << RTC_ALRMAR_MNU_POS;
+
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~((RTC_ALRMAR_MSK2_MASK << RTC_ALRMAR_MSK2_POS) | (RTC_ALRMAR_MNT_MASK << RTC_ALRMAR_MNT_POS)
+                         | (RTC_ALRMAR_MNU_MASK << RTC_ALRMAR_MNU_POS));
+        RTC->ALRMAR |= temp_alrmxr;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~((RTC_ALRMBR_MSK2_MASK << RTC_ALRMBR_MSK2_POS) | (RTC_ALRMBR_MNT_MASK << RTC_ALRMBR_MNT_POS)
+                         | (RTC_ALRMBR_MNU_MASK << RTC_ALRMBR_MNU_POS));
+        RTC->ALRMBR |= temp_alrmxr;
+        break;
+    }
+}
+
+void rtc_alarm_set_hours(rtc_alarm_sel_e const alarm_sel, uint8_t const hours,
+                         rtc_alarm_hours_match_e const hours_match)
+{
+    assert_hours(hours);
+
+    uint32_t temp_alrmxr = 0;
+
+    temp_alrmxr |= hours_match << RTC_ALRMAR_MSK3_POS;
+    temp_alrmxr |= (hours / 10) << RTC_ALRMAR_HT_POS;
+    temp_alrmxr |= (hours % 10) << RTC_ALRMAR_HU_POS;
+
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~((RTC_ALRMAR_MSK3_MASK << RTC_ALRMAR_MSK3_POS) | (RTC_ALRMAR_HT_MASK << RTC_ALRMAR_HT_POS)
+                         | (RTC_ALRMAR_HU_MASK << RTC_ALRMAR_HU_POS));
+        RTC->ALRMAR |= temp_alrmxr;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~((RTC_ALRMBR_MSK3_MASK << RTC_ALRMBR_MSK3_POS) | (RTC_ALRMBR_HT_MASK << RTC_ALRMBR_HT_POS)
+                         | (RTC_ALRMBR_HU_MASK << RTC_ALRMBR_HU_POS));
+        RTC->ALRMBR |= temp_alrmxr;
+        break;
+    }
+}
+
+void rtc_alarm_set_date(rtc_alarm_sel_e const alarm_sel, uint8_t const date, rtc_alarm_dateday_match_e const date_match)
+{
+    assert_date(date);
+
+    uint32_t temp_alrmxr = 0;
+    // Date/day alarm
+    temp_alrmxr |= date_match << RTC_ALRMAR_MSK4_POS;
+    temp_alrmxr |= RTC_ALARM_WEEKDAY_SEL_DATE << RTC_ALRMAR_WDSEL_POS;
+    temp_alrmxr |= (date / 10) << RTC_ALRMAR_DT_POS;
+    temp_alrmxr |= (date % 10) << RTC_ALRMAR_DU_POS;
+
+    // Clear RTC date
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
+                         | (RTC_ALRMAR_DT_MASK << RTC_ALRMAR_DT_POS) | (RTC_ALRMAR_DU_MASK << RTC_ALRMAR_DU_POS));
+        RTC->ALRMAR |= temp_alrmxr;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
+                         | (RTC_ALRMAR_DT_MASK << RTC_ALRMAR_DT_POS) | (RTC_ALRMAR_DU_MASK << RTC_ALRMAR_DU_POS));
+        RTC->ALRMBR |= temp_alrmxr;
+        break;
+    }
+}
+void rtc_alarm_set_day(rtc_alarm_sel_e const alarm_sel, rtc_weekdays_e const weekday,
+                       rtc_alarm_dateday_match_e const date_match)
+{
+    assert_weekday(weekday);
+
+    uint32_t temp_alrmxr = 0;
+    temp_alrmxr |= date_match << RTC_ALRMAR_MSK4_POS;
+    temp_alrmxr |= RTC_ALARM_WEEKDAY_SEL_WEEKDAY << RTC_ALRMAR_WDSEL_POS;
+    temp_alrmxr |= weekday << RTC_ALRMAR_DU_POS;
+
+    // Clear RTC date
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
+                         | (RTC_ALRMAR_DT_MASK << RTC_ALRMAR_DT_POS) | (RTC_ALRMAR_DU_MASK << RTC_ALRMAR_DU_POS));
+        RTC->ALRMAR |= temp_alrmxr;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
+                         | (RTC_ALRMAR_DT_MASK << RTC_ALRMAR_DT_POS) | (RTC_ALRMAR_DU_MASK << RTC_ALRMAR_DU_POS));
+        RTC->ALRMBR |= temp_alrmxr;
+        break;
+    }
+}
+
+void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
+{
+    assert_am_pm(am_pm);
+
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->ALRMAR &= ~(RTC_ALRMAR_PM_MASK << RTC_ALRMAR_PM_POS);
+        RTC->ALRMAR |= am_pm << RTC_ALRMAR_PM_POS;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        RTC->ALRMBR &= ~(RTC_ALRMAR_PM_MASK << RTC_ALRMAR_PM_POS);
+        RTC->ALRMBR |= am_pm << RTC_ALRMAR_PM_POS;
+        break;
+    }
+}
+
+/***************************************************************************
+Function: rtc_alarm_x_get_status
+Overview: Gets alarm "x" status
+Parameters: 
+    None
+Return: 
+    rtc_alarm_status_e:
+        RTC_ALARM_STATUS_TRIGGERED 
+        RTC_ALARM_STATUS_MATCH     
+Note: None
+***************************************************************************/
+rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
+{
+    rtc_alarm_status_e alarm_status = RTC_ALARM_STATUS_NOT_TRIGGERED;
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL: alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK); break;
+    case RTC_ALARM_B_SEL: alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK); break;
+    }
+    return alarm_status;
+}
+
+/***************************************************************************
+Function: rtc_it_config
+Overview: Configures the given RTC related interrupt
+Parameters: 
+    it_opt: RTC interrupt options
+        RTC_IT_OPT_ALARM
+        RTC_IT_OPT_WAKE_UP
+        RTC_IT_OPT_TIMESTAMP
+        RTC_IT_OPT_TAMPER
+    toggle:
+        ENABLE  [1]
+        DISABLE [0]
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_it_config(rtc_it_options_e it_opt, togglable_e toggle)
+{
+    switch (it_opt) {
+    case RTC_IT_OPT_ALARM:
+        exti_it_config((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
+        exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
+        irq_config(RTC_ALARM_IRQ_NO_41, toggle);
+        break;
+
+    case RTC_IT_OPT_WAKEUP:
+        exti_it_config((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
+        exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
+        irq_config(RTC_WKUP_IRQ_NO_3, toggle);
+        break;
+
+    case RTC_IT_OPT_TIMESTAMP:
+        exti_it_config((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
+        exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
+        irq_config(TAMP_STAMP_IRQ_NO_2, toggle);
+        break;
+
+    case RTC_IT_OPT_NA:     break;
+    case RTC_IT_OPT_TAMPER: ASSERT(false); break;
+    }
+}
+
+/***************************************************************************
+Function: rtc_timestamp_init
+Overview: Initializes the RTC timestamp with the given settings in the timestamp_conf structure
+Parameters: 
+    timestamp_conf: Settings for timestamps
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
+{
+    RTC->CR |= RTC_CR_TSE;
+
+    if (timestamp_conf.it_opt == RTC_IT_OPT_TIMESTAMP) {
+        RTC->CR |= RTC_CR_TSIE;
+        rtc_it_config(timestamp_conf.it_opt, ENABLE);
+    }
+
+    // Map TIMESTAMP to AF
+    RTC->TAFCR &= ~(RTC_TAFCR_TSINSEL_MASK << RTC_TAFCR_TSINSEL_POS);
+    RTC->TAFCR |= timestamp_conf.alt_fn_sel << RTC_TAFCR_TSINSEL_POS;
+
+    RTC->CR &= ~(RTC_CR_TSEDGE_MASK << RTC_CR_TSEDGE_POS);
+    RTC->CR |= timestamp_conf.timestamp_edge << RTC_CR_TSEDGE_POS;
+}
+
+/***************************************************************************
+Function: rtc_timestamp_read_status
+Overview: Read the RTC timestamp status. Whether a timestamp has occured
+Parameters: 
+    None
+Return: 
+    rtc_timestamp_status_e: 
+        RTC_TIMESTAMP_STATUS_NOT_TRIGGERED 
+        RTC_TIMESTAMP_STATUS_TRIGGERED     
+Note: None
+***************************************************************************/
+rtc_timestamp_status_e rtc_timestamp_read_status(void)
+{
+    return RTC_ISR_TSF_MASK & (RTC->ISR >> RTC_ISR_TSF_POS);
+}
+
+/***************************************************************************
+Function: rtc_timestamp_clear_status
+Overview: Clear the RTC timestamp status
+Parameters: 
+    None
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_timestamp_clear_status(void)
+{
+    RTC->ISR &= ~(RTC_ISR_TSF);
+    if (RTC->ISR & RTC_ISR_TSOVF) {
+        RTC->ISR &= ~(RTC_ISR_TSOVF);
+    }
+}
+
+/***************************************************************************
+Function: rtc_timestamp_read_date
+Overview: Reads the timestamp date information and returns it into a structure
+Parameters: 
+    None
+Return: 
+    rtc_date_data: Structure of date info. Including the date, month, year, and weekday
+Note: None
+***************************************************************************/
+rtc_date_data rtc_timestamp_read_date(void)
+{
+    rtc_date_data timestamp_data = {0};
+
+    timestamp_data.date  = convert_bcd_to_dec((RTC->TSDR >> RTC_TSDR_DT_POS) & RTC_TSDR_DT_MASK,
+                                              (RTC->TSDR >> RTC_TSDR_DU_POS) & RTC_TSDR_DU_MASK);
+    timestamp_data.month = convert_bcd_to_dec((RTC->TSDR >> RTC_TSDR_MT_POS) & RTC_TSDR_MT_MASK,
+                                              (RTC->TSDR >> RTC_TSDR_MU_POS) & RTC_TSDR_MU_MASK);
+    timestamp_data.year  = 0;
+
+    timestamp_data.weekday = (RTC->TSDR >> RTC_TSDR_WDU_POS) & RTC_TSDR_WDU_MASK;
+
+    return timestamp_data;
+}
+
+/***************************************************************************
+Function: rtc_timestamp_read_time
+Overview: Reads the timestamp time information and returns it into a structure.
+Parameters: 
+    None
+Return: 
+    rtc_time_data: Structure of time info. Including the seconds, minutes, hours, and whether it is am/pm.
+Note: The time format is not directly returned. It can be derived from the am/pm data.
+***************************************************************************/
+rtc_time_data rtc_timestamp_read_time(void)
+{
+    rtc_time_data timestamp_data = {0};
+
+    timestamp_data.seconds    = convert_bcd_to_dec((RTC->TSTR >> RTC_TSTR_ST_POS) & RTC_TSTR_ST_MASK,
+                                                   (RTC->TSTR >> RTC_TSTR_SU_POS) & RTC_TSTR_SU_MASK);
+    timestamp_data.minutes    = convert_bcd_to_dec((RTC->TSTR >> RTC_TSTR_MNT_POS) & RTC_TSTR_MNT_MASK,
+                                                   (RTC->TSTR >> RTC_TSTR_MNU_POS) & RTC_TSTR_MNU_MASK);
+    timestamp_data.hours      = convert_bcd_to_dec((RTC->TSTR >> RTC_TSTR_HT_POS) & RTC_TSTR_HT_MASK,
+                                                   (RTC->TSTR >> RTC_TSTR_HU_POS) & RTC_TSTR_HU_MASK);
+    timestamp_data.time_am_pm = (RTC->TSTR >> RTC_TSTR_PM_POS) & RTC_TSTR_PM_MASK;
+
+    return timestamp_data;
+}
+
+/***************************************************************************
+Function: rtc_wakeup_init
+Overview: Initializes the RTC wakeup feature with the settings in the wakeup_conf structure
+Parameters: 
+    wakeup_conf: Settings for wakeup 
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
+{
+    RTC->CR &= ~RTC_CR_WUTE;
+
+    // Wait until updates allowed
+    while (!(RTC->ISR & RTC_ISR_WUTWF));
+
+    RTC->CR &= ~(RTC_CR_WCKSEL_MASK << RTC_CR_WCKSEL_POS);
+    RTC->CR |= wakeup_conf.clk_sel << RTC_CR_WCKSEL_POS;
+
+    RTC->WUTR &= ~RTC_WUTR_WUT_MASK;
+    RTC->WUTR |= wakeup_conf.auto_reload_value;
+
+    if (wakeup_conf.it_opt == RTC_IT_OPT_WAKEUP) {
+        RTC->CR |= RTC_CR_WUTIE;
+        rtc_it_config(wakeup_conf.it_opt, ENABLE);
+    }
+
+    rtc_wakeup_clear_status();
+
+    RTC->CR |= RTC_CR_WUTE;
+}
+
+/***************************************************************************
+Function: rtc_wakeup_get_status
+Overview: Reads the status of the wakeup and whether it has been triggered
+Parameters: 
+    None
+Return: 
+    rtc_wakeup_status_e: 
+        RTC_WAKEUP_STATUS_NOT_TRIGGERED 
+        RTC_WAKEUP_STATUS_TRIGGERED     
+Note: None
+***************************************************************************/
+rtc_wakeup_status_e rtc_wakeup_get_status(void)
+{
+    return ((RTC->ISR >> RTC_ISR_WUTF_POS) & RTC_ISR_WUTF_MASK);
+}
+
+/***************************************************************************
+Function: rtc_wakeup_clear_status
+Overview: Clears the status of the wakeup section of RTC
+Parameters: 
+    None
+Return: 
+    None
+Note: None
+***************************************************************************/
+void rtc_wakeup_clear_status(void)
+{
+    RTC->ISR &= ~(RTC_ISR_WUTF_MASK << RTC_ISR_WUTF_POS);
+}
+
+/***************************************************************************
+Function: rtc_it_handler
+Overview: Interrupt handler for RTC interrupts. Clears flags and ITs. 
+Parameters: 
+    None
+Return: 
+    None
+Note: Should be called within user written RTC specific IT handler
+***************************************************************************/
+void rtc_it_handler(void)
+{
+    uint32_t temp_isr = RTC->ISR;
+
+    if (temp_isr & RTC_ISR_ALRAF) {
+        RTC->ISR &= ~RTC_ISR_ALRAF;
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_ALARM);
+    }
+
+    if (temp_isr & RTC_ISR_ALRBF) {
+        RTC->ISR &= ~RTC_ISR_ALRBF;
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_ALARM);
+    }
+
+    if (temp_isr & RTC_ISR_WUTF) {
+        RTC->ISR &= ~RTC_ISR_WUTF;
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_WAKE_UP);
+    }
+
+    if (temp_isr & RTC_ISR_TSF) {
+        RTC->ISR &= ~RTC_ISR_TSF;
+        rtc_timestamp_clear_status();
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_TIMESTAMP);
+    }
+}
+
 //======================================================================================//}
 //                  Helper Function Implementation
 //======================================================================================//{
@@ -295,7 +768,6 @@ static void congifure_rtc_clock_asserts(rtc_config const rtc_conf)
     case RCC_RTC_HSE_PRE_31: found_setting = true; break;
     }
     ASSERT(found_setting);
-
 }
 
 static void set_rtc_time(rtc_time_data const time_data)
@@ -303,7 +775,7 @@ static void set_rtc_time(rtc_time_data const time_data)
     uint32_t temp_tr = RTC->TR;
     uint32_t temp_cr = RTC->CR;
 
-    set_rtc_time_asserts(time_data);
+    time_data_asserts(time_data);
 
     // Set general time format
     temp_cr &= ~(RTC_CR_FMT_MASK << RTC_CR_FMT_POS);
@@ -341,20 +813,20 @@ static void set_rtc_time(rtc_time_data const time_data)
     RTC->TR = temp_tr;
 }
 
-static void set_rtc_time_asserts(rtc_time_data const time_data)
+static void time_data_asserts(rtc_time_data const time_data)
 {
-    ASSERT((time_data.time_am_pm == RTC_TIME_AM) || (time_data.time_am_pm == RTC_TIME_PM));
-    ASSERT((time_data.time_format == RTC_TIME_FORMAT_12HR) || (time_data.time_format == RTC_TIME_FORMAT_24HR));
-    ASSERT(time_data.hours <= 23);
-    ASSERT(time_data.minutes <= 59);
-    ASSERT(time_data.seconds <= 59);
+    assert_time_format(time_data.time_format);
+    assert_am_pm(time_data.time_am_pm);
+    assert_hours(time_data.hours);
+    assert_minutes(time_data.minutes);
+    assert_seconds(time_data.seconds);
 }
 
 static void set_rtc_date(rtc_date_data const date_data)
 {
     uint32_t temp_dr = RTC->DR;
 
-    set_rtc_date_asserts(date_data);
+    date_data_asserts(date_data);
 
     // Set weekday
     temp_dr &= ~(RTC_DR_WDU_MASK << RTC_DR_WDU_POS);
@@ -387,23 +859,12 @@ static void set_rtc_date(rtc_date_data const date_data)
     RTC->DR = temp_dr;
 }
 
-static void set_rtc_date_asserts(rtc_date_data const date_data)
+static void date_data_asserts(rtc_date_data const date_data)
 {
-    uint8_t found_setting = false;
-    switch (date_data.weekday) {
-    case RTC_WEEKDAY_MONDAY:    found_setting = true; break;
-    case RTC_WEEKDAY_TUESDAY:   found_setting = true; break;
-    case RTC_WEEKDAY_WEDNESDAY: found_setting = true; break;
-    case RTC_WEEKDAY_THURSDAY:  found_setting = true; break;
-    case RTC_WEEKDAY_FRIDAY:    found_setting = true; break;
-    case RTC_WEEKDAY_SATURDAY:  found_setting = true; break;
-    case RTC_WEEKDAY_SUNDAY:    found_setting = true; break;
-    }
-    ASSERT(found_setting);
-
-    ASSERT(date_data.year <= 99);
-    ASSERT(date_data.month <= 12);
-    ASSERT(date_data.date <= 31);
+    assert_weekday(date_data.weekday);
+    assert_date(date_data.date);
+    assert_month(date_data.month);
+    assert_year(date_data.year);
 }
 
 static inline uint8_t convert_bcd_to_dec(uint8_t const tens, uint8_t const units)
@@ -449,4 +910,97 @@ static void set_rtc_pre(void)
     asynch_pre -= 1;
     RTC->PRER &= ~(RTC_PRER_PREDIV_A_MASK << RTC_PRER_PREDIV_A_POS);
     RTC->PRER |= asynch_pre << RTC_PRER_PREDIV_A_POS;
+}
+
+static void enable_alarm(rtc_alarm_sel_e const alarm_sel, togglable_e const it_toggle)
+{
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        RTC->CR |= RTC_CR_ALRAE;
+        if (it_toggle == ENABLE) {
+            RTC->CR |= RTC_CR_ALRAIE;
+        }
+        break;
+    case RTC_ALARM_B_SEL:
+        RTC->CR |= RTC_CR_ALRBE;
+        if (it_toggle == ENABLE) {
+            RTC->CR |= RTC_CR_ALRBIE;
+        }
+        break;
+    }
+}
+
+static void disable_alarm(rtc_alarm_sel_e const alarm_sel)
+{
+    // Turn off interrupts so we can modify the alarm
+    switch (alarm_sel) {
+    case RTC_ALARM_A_SEL:
+        // Wait till alarm update is allowed
+        while (!(RTC->ISR & RTC_ISR_ALRAWF));
+        RTC->CR &= ~RTC_CR_ALRAE;
+        RTC->CR &= ~RTC_CR_ALRAIE;
+        break;
+
+    case RTC_ALARM_B_SEL:
+        // Wait till alarm update is allowed
+        while (!(RTC->ISR & RTC_ISR_ALRBWF));
+        RTC->CR &= ~RTC_CR_ALRBE;
+        RTC->CR &= ~RTC_CR_ALRBIE;
+        break;
+    }
+}
+
+static inline void assert_seconds(uint8_t const seconds)
+{
+    ASSERT(seconds <= 59);
+}
+
+static inline void assert_minutes(uint8_t const minutes)
+{
+    ASSERT(minutes <= 59);
+}
+
+static inline void assert_hours(uint8_t const hours)
+{
+    ASSERT(hours <= 23);
+}
+
+static inline void assert_am_pm(rtc_time_am_pm_e const am_pm)
+{
+    ASSERT((am_pm == RTC_TIME_AM) || (am_pm == RTC_TIME_PM));
+}
+
+static inline void assert_time_format(rtc_time_format_e const time_format)
+{
+    ASSERT((time_format == RTC_TIME_FORMAT_12HR) || (time_format == RTC_TIME_FORMAT_24HR));
+}
+
+static inline void assert_date(uint8_t const date)
+{
+    ASSERT(date <= 31);
+}
+
+static inline void assert_month(uint8_t const month)
+{
+    ASSERT(month <= 12);
+}
+
+static inline void assert_year(uint8_t const year)
+{
+    ASSERT(year <= 99);
+}
+
+static inline void assert_weekday(rtc_weekdays_e const weekday)
+{
+    uint8_t found_setting = false;
+    switch (weekday) {
+    case RTC_WEEKDAY_MONDAY:    found_setting = true; break;
+    case RTC_WEEKDAY_TUESDAY:   found_setting = true; break;
+    case RTC_WEEKDAY_WEDNESDAY: found_setting = true; break;
+    case RTC_WEEKDAY_THURSDAY:  found_setting = true; break;
+    case RTC_WEEKDAY_FRIDAY:    found_setting = true; break;
+    case RTC_WEEKDAY_SATURDAY:  found_setting = true; break;
+    case RTC_WEEKDAY_SUNDAY:    found_setting = true; break;
+    }
+    ASSERT(found_setting);
 }
