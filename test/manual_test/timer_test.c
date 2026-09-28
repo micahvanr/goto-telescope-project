@@ -141,10 +141,10 @@ static void test_timer_freq(void)
 static void test_delay(void)
 {
     while (1) {
-        // tim_delay(1, TIM_UNIT_S);
-        // toggle_debug_pin();
-        tim_delay(100, TIM_UNIT_MS);
+        tim_delay(1, TIM_UNIT_S);
         toggle_debug_pin();
+        // tim_delay(100, TIM_UNIT_MS);
+        // toggle_debug_pin();
         // tim_delay(110, TIM_UNIT_US);
         // toggle_debug_pin();
     }
