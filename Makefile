@@ -114,7 +114,7 @@ release: OPTIMIZATION = -Os
 #}  Compiler and Linker Flags
 #============================================{
 CFLAGS = -mcpu=$(MACH) $(WFLAGS) $(addprefix -I , $(INCLUDE_DIRS)) \
-		 -mthumb -mfloat-abi=soft -std=gnu11 $(OPTIMIZATION) -g $(DEPENDFLAGS)
+		 -mthumb -mfloat-abi=soft -std=gnu2x $(OPTIMIZATION) -g $(DEPENDFLAGS)
 LDFLAGS = -mcpu=$(MACH) $(SPECS) -T $(LINKER) -Wl,-Map=$(TARGET).map $(OPTIMIZATION)
 
 #========================================================================================}
