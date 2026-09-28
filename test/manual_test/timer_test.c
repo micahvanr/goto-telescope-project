@@ -31,10 +31,6 @@ void timer_tests(test_type_e test)
 {
     timer1_init();
     timer8_init();
-    // while(1) {
-    //     toggle_debug_pin();
-    //     for (uint32_t i = 0; i < 5000; i++);
-    // }
 
     switch (test) {
     case TIMER_TEST_AUTO:     test_timer_auto(); break;
@@ -145,10 +141,10 @@ static void test_timer_freq(void)
 static void test_delay(void)
 {
     while (1) {
-        // tim_delay(1, TIM_UNIT_S);
-        // toggle_debug_pin();
-        tim_delay(100, TIM_UNIT_MS);
+        tim_delay(1, TIM_UNIT_S);
         toggle_debug_pin();
+        // tim_delay(100, TIM_UNIT_MS);
+        // toggle_debug_pin();
         // tim_delay(110, TIM_UNIT_US);
         // toggle_debug_pin();
     }

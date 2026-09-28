@@ -1,11 +1,12 @@
 #include "i2c.h"
 #include "assert_handler.h"
+#include "nvic.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 
-//========================================================//
-//          Helper Function Prototypes
-//========================================================//
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static inline void verify_i2c_init_asserts(i2c_handle const *const p_i2c_handle);
@@ -38,9 +39,9 @@ static void master_sb(i2c_handle *const p_i2c_handle);
 static void master_addr(i2c_handle *const p_i2c_handle);
 static void slave_addr(i2c_handle const *const p_i2c_handle);
 
-//========================================================//
-//          Global Variables
-//========================================================//
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 // I2C1 = bit pos 0
 // I2C2 = bit pos 1
@@ -156,8 +157,8 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t const *p_data, uint32_t const length,
-                         i2c_repeated_start_e const repeated_start)
+void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t const *p_data,
+                         uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
 
@@ -342,8 +343,8 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data, uint32_t const length,
-                            i2c_repeated_start_e const repeated_start)
+void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
+                            uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
@@ -377,8 +378,8 @@ Return:
     None
 Note: None
  ***************************************************************************/
-void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data, uint32_t const length,
-                           i2c_repeated_start_e const repeated_start)
+void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
+                           uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
 
@@ -448,11 +449,11 @@ Note: None
 void i2c_it_config(i2c_reg_def const *const p_i2cx, togglable_e const toggle)
 {
     if (p_i2cx == I2C1) {
-        irq_config(I2C1_EV_IRQ_NO_31, toggle);
+        nvic_irq_config(I2C1_EV_IRQ_NO_31, toggle);
     } else if (p_i2cx == I2C2) {
-        irq_config(I2C2_EV_IRQ_NO_33, toggle);
+        nvic_irq_config(I2C2_EV_IRQ_NO_33, toggle);
     } else if (p_i2cx == I2C3) {
-        irq_config(I2C3_EV_IRQ_NO_72, toggle);
+        nvic_irq_config(I2C3_EV_IRQ_NO_72, toggle);
     }
 }
 
@@ -582,11 +583,14 @@ static inline void set_i2c_init_status(i2c_reg_def const *const p_i2cx)
 
 static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2cx)
 {
-    return g_i2c_port_init & (1 << (map_i2c_ports_to_num(p_i2cx)));
+    return 0b1 & (g_i2c_port_init >> (map_i2c_ports_to_num(p_i2cx)));
 }
 
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
 {
+    uint32_t const I2C_MAX_RISE_SM_1000_NS = 1000;
+    uint32_t const I2C_MAX_RISE_FM_300_NS  = 300;
+
     uint32_t ccr_value            = 0;
     uint32_t trise_value          = 0;
     uint32_t desired_clock_khz    = p_i2c_handle->i2c_conf.clock_freq_hz / 1000;

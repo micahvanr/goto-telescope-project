@@ -3,6 +3,7 @@
 // ANY CHANGES WITH BE MARKED WITH "NOTE:"
 
 // NOTE: Function prototypes
+
 void printf_init(void);
 
 #define PRINTF_USART         USART2

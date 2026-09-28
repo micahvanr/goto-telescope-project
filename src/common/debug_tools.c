@@ -8,7 +8,7 @@ Parameters:
     None
 Return: 
     None
-Note: None
+Note: Uses PA3
 ***************************************************************************/
 void debug_pin_init(void)
 {
@@ -32,7 +32,7 @@ Parameters:
     None
 Return: 
     None
-Note: None
+Note: Uses PA3
 ***************************************************************************/
 void toggle_debug_pin(void)
 {
@@ -46,7 +46,7 @@ Parameters:
     None
 Return: 
     None
-Note: None
+Note: STM32F4Disc button is PA0
 ***************************************************************************/
 void debug_button_init(void)
 {

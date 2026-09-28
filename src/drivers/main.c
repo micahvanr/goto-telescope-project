@@ -6,6 +6,8 @@
 
 // clang-format off
 // Test functions
+#include "common.h"
+#include "rtc_test.h"
 #include "test_types.h"
 #include "gpio_test.h"
 #include "timer_test.h"
@@ -15,7 +17,18 @@
 // clang-format on
 #include "assert_handler.h"
 #include "debug_tools.h"
+#include "gpio.h"
 #include "printf.h"
+
+// TODO: Look into Barr C Coding Guidelines.
+// TODO: Fix function names with ^^^ (module_submod_verb_noun)
+// NOTE: Constants names are fine
+// NOTE: All enums should have a type defined
+
+// TODO: Add IndentCaseLabels: true to clang-format.
+// TODO: Not all enums need to be typedefined
+
+// TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
 
 int main(void)
 {
@@ -34,7 +47,7 @@ int main(void)
     toggle_debug_pin();
 
     // NOTE: Change this variable to run the correct test
-    test_type_e test = I2C_TEST_IT;
+    test_type_e test = RTC_TEST_TIMESTAMP;
     switch (test) {
 
     // GPIO tests
@@ -59,6 +72,11 @@ int main(void)
     case TIMER_TEST_OC_PWM:
     case TIMER_TEST_BASIC_IT:
     case TIMER_TEST_IC_IT:     timer_tests(test); break;
+
+    case RTC_TEST_BASE:
+    case RTC_TEST_ALARM:
+    case RTC_TEST_TIMESTAMP:
+    case RTC_TEST_WAKEUP:      rtc_tests(test); break;
 
     // Misc tests
     case MISC_TEST_ASSERT:

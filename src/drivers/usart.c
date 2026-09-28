@@ -1,11 +1,12 @@
 #include "usart.h"
 #include "assert_handler.h"
 #include "common.h"
+#include "nvic.h"
 #include "rcc.h"
 
-//========================================================//
-//          Helper Function Prototypes
-//========================================================//
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static void usart_init_asserts(usart_handle const *const p_usart_handle);
@@ -26,9 +27,9 @@ static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampl
 static void transfer_data(usart_handle *const p_usart_handle);
 static void recieve_data(usart_handle *const p_usart_handle);
 
-//========================================================//
-//          Global Variables
-//========================================================//
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 // Same concept with GPIO init variable but with USART ports instead.
 uint8_t g_usart_port_init = 0;
@@ -316,17 +317,17 @@ Note: None
 void usart_it_config(usart_reg_def const *const p_usartx, togglable_e const toggle)
 {
     if (p_usartx == USART1) {
-        irq_config(USART1_IRQ_NO_37, toggle);
+        nvic_irq_config(USART1_IRQ_NO_37, toggle);
     } else if (p_usartx == USART2) {
-        irq_config(USART2_IRQ_NO_38, toggle);
+        nvic_irq_config(USART2_IRQ_NO_38, toggle);
     } else if (p_usartx == USART3) {
-        irq_config(USART3_IRQ_NO_39, toggle);
+        nvic_irq_config(USART3_IRQ_NO_39, toggle);
     } else if (p_usartx == UART4) {
-        irq_config(UART4_IRQ_NO_52, toggle);
+        nvic_irq_config(UART4_IRQ_NO_52, toggle);
     } else if (p_usartx == UART5) {
-        irq_config(UART5_IRQ_NO_53, toggle);
+        nvic_irq_config(UART5_IRQ_NO_53, toggle);
     } else if (p_usartx == USART6) {
-        irq_config(USART6_IRQ_NO_71, toggle);
+        nvic_irq_config(USART6_IRQ_NO_71, toggle);
     }
 }
 
@@ -477,11 +478,12 @@ static inline void set_usart_init_status(usart_reg_def const *const p_usartx)
 
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx)
 {
-    return g_usart_port_init & (1 << map_usart_ports_to_num(p_usartx));
+    return 0b1 & (g_usart_port_init >> map_usart_ports_to_num(p_usartx));
 }
 
 // Sets the baudrate for the given USART peripheral
-static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode, usart_baudrate_e const baudrate)
+static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode,
+                         usart_baudrate_e const baudrate)
 {
     uint32_t temp_brr;
     uint32_t clock_freq;

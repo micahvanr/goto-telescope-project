@@ -1,10 +1,13 @@
 #include "gpio.h"
 #include "assert_handler.h"
+#include "exti.h"
+#include "nvic.h"
 #include "rcc.h"
+#include "syscfg.h"
 
-//========================================================//}
-//          Helper Function Prototypes
-//========================================================//{
+//======================================================================================//}
+//                  Helper Function Prototypes
+//======================================================================================//{
 
 // Assert helper functions
 static void gpio_init_asserts(gpio_handle const *const p_gpio_handle);
@@ -14,20 +17,19 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 // General helper functions
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
-// static inline bool verify_pin_initialized(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
 
 static inline void gpio_clock_enable(gpio_reg_def const *const p_gpiox);
 static inline void gpio_clock_disable(gpio_reg_def const *const p_gpiox);
 
-//========================================================//}
-//          Global Variables
-//========================================================//{
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 // This variable is used to check/set a pins initialzation status.
 // It is an array with a length of 8 and each element is 16 bits wide.
 // Each element in the array represents a port and each bit inside the variable represents a pin.
 // If a bit in a specific element is 0, that means it has not been initialized. If it is a 1, it has been.
-uint16_t g_gpio_pin_init[8] = {0};
+__vo uint16_t g_gpio_pin_init[8] = {0};
 
 //======================================================================================//}
 //                  Peripheral Function API Implementation
@@ -116,44 +118,27 @@ Note: None
 ***************************************************************************/
 void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
-    uint8_t pin_no             = p_gpio_handle->gpio_conf.pin_no;
-    uint8_t exti_cr_reg_num    = pin_no / 4;
-    exti_lines_e exti_line_num = (exti_lines_e)pin_no;
+    exti_lines_e exti_line_num = (exti_lines_e)p_gpio_handle->gpio_conf.pin_no;
 
-    switch (toggle) {
-    case ENABLE:
-        // Enable the SYSCFG clock in RCC
-        RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-        // Enable the corresponding EXTI line in the EXTI control register of SYSCFG
-        SYSCFG->EXTICR[exti_cr_reg_num] |= (map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
+    syscfg_clock_enable();
 
-        // Enable the interrupt
-        EXTI->IMR |= (1 << exti_line_num);
+    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-        switch (p_gpio_handle->gpio_conf.it_trigger) {
-        case GPIO_IT_RT: EXTI->RTSR |= (1 << exti_line_num); break;
-        case GPIO_IT_FT: EXTI->FTSR |= (1 << exti_line_num); break;
-        case GPIO_IT_RFT:
-            EXTI->RTSR |= (1 << exti_line_num);
-            EXTI->FTSR |= (1 << exti_line_num);
-            break;
-        case GPIO_IT_NA: break;
-        }
-        irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
+    exti_it_config(exti_line_num, toggle);
+
+    switch (p_gpio_handle->gpio_conf.it_trigger) {
+    case GPIO_IT_RT: exti_rising_edge_config(exti_line_num, toggle); break;
+    case GPIO_IT_FT: exti_falling_edge_config(exti_line_num, toggle); break;
+    case GPIO_IT_RFT:
+        exti_falling_edge_config(exti_line_num, toggle);
+        exti_rising_edge_config(exti_line_num, toggle);
         break;
-
-    case DISABLE:
-        // Disable the corresponding EXTI line in the EXTI control register of SYSCFG
-        SYSCFG->EXTICR[exti_cr_reg_num] &=
-            ~(map_gpio_ports_to_num(p_gpio_handle->p_gpiox) << (4 * (exti_line_num % 4)));
-        // Disable the rising edge and falling edge interrupts
-        EXTI->RTSR &= ~(1 << exti_line_num);
-        EXTI->FTSR &= ~(1 << exti_line_num);
-        // Disable the interrupt in the processor
-        irq_config(map_exti_to_irq_num(exti_line_num), DISABLE);
-        break;
+    case GPIO_IT_NA: break;
     }
+
+    nvic_irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
 }
 
 /***************************************************************************

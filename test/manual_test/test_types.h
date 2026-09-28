@@ -21,6 +21,12 @@ typedef enum {
     TIMER_TEST_IC_IT,
     TIMER_TEST_BASIC_IT,
 
+    // RTC test options
+    RTC_TEST_BASE,
+    RTC_TEST_ALARM,
+    RTC_TEST_TIMESTAMP,
+    RTC_TEST_WAKEUP,
+
     // Misc tests options
     MISC_TEST_ASSERT,
     MISC_TEST_GET_CLOCK,
