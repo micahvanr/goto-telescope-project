@@ -64,7 +64,8 @@ DRIVER_FILES =	main \
 				rtc \
 				pwr \
 				exti \
-				syscfg
+				syscfg \
+				nvic
 
 MANUAL_TEST_FILES = gpio_test \
 					usart_test \
