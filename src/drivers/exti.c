@@ -62,8 +62,8 @@ Note: None
 void exti_rising_edge_config(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  EXTI->FTSR |= (1 << line_no); break;
-    case DISABLE: EXTI->FTSR &= ~(1 << line_no); break;
+    case ENABLE:  EXTI->RTSR |= (1 << line_no); break;
+    case DISABLE: EXTI->RTSR &= ~(1 << line_no); break;
     }
 }
 
