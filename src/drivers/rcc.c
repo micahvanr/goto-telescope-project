@@ -3,7 +3,6 @@
 #include "gpio.h"
 #include <stdint.h>
 
-
 //======================================================================================//}
 //                  Helper Function Prototypes
 //======================================================================================//{
@@ -275,7 +274,7 @@ Note: None
 uint32_t rcc_get_rtc_clock_freq_hz(void)
 {
     uint32_t rtc_clk_freq_hz          = 0;
-    uint8_t const RTC_CLK_SRC         = (rcc_rtc_clk_src_e)((RCC->BDCR >> RCC_BDCR_RTCSEL0_POS) & RCC_BDCR_RTCSEL_MASK );
+    uint8_t const RTC_CLK_SRC         = (rcc_rtc_clk_src_e)((RCC->BDCR >> RCC_BDCR_RTCSEL0_POS) & RCC_BDCR_RTCSEL_MASK);
     uint8_t const RTC_HSE_CLK_PRE     = (rcc_rtc_hse_pre_e)((RCC->CFGR >> RCC_CFGR_RTCPRE_POS) & RCC_CFGR_RTCPRE_MASK);
     uint16_t const rtc_hse_pre_opts[] = {0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15,
                                          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};

@@ -25,7 +25,6 @@ void pwr_backup_write_protection_dis(void)
     PWR->CR |= PWR_CR_DBP;
     dummy_read = PWR->CR;
     UNUSED(dummy_read);
-
 }
 
 //======================================================================================//}
