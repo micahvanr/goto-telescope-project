@@ -1,6 +1,7 @@
 #include "tim.h"
 #include "assert_handler.h"
 #include "debug_tools.h"
+#include "printf.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
 #include <limits.h>
@@ -57,24 +58,27 @@ the software may not be able to keep up
 ***************************************************************************/
 void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
+    // TODO: Move to seperate function?
     static uint8_t initialized = false;
     tim_handler delay_handler  = {0};
 
+    delay_handler.p_timx = DELAY_TIMER;
     if (initialized == false) {
-        delay_handler.p_timx                  = DELAY_TIMER;
         delay_handler.tim_conf.preload        = TIM_ARR_PRELOAD_EN;
         delay_handler.tim_conf.one_pulse_mode = TIM_ONE_PULSE_MODE_DI;
         delay_handler.tim_conf.clock_sel      = TIM_CLK_SEL_INTERNAL;
 
         delay_handler.timing_conf.time = period;
         delay_handler.timing_conf.unit = unit;
+
+        tim_init(&delay_handler);
+        initialized = true;
     }
 
-    tim_init(&delay_handler);
     tim_start(delay_handler.p_timx);
 
     while (tim_read_base_status(delay_handler.p_timx) != TIM_UPDATE_FOUND);
-    tim_reset_base_status(DELAY_TIMER);
+    tim_reset_base_status(delay_handler.p_timx);
 }
 
 /***************************************************************************
@@ -202,17 +206,6 @@ static void tim_base_init_asserts(tim_handler const *const p_tim_handler)
     case TIM_ALIGN_CENTER_IT_DOWN:    found_setting = true; break;
     case TIM_ALIGN_CENTER_IT_UP:      found_setting = true; break;
     case TIM_ALIGN_CENTER_IT_DOWN_UP: found_setting = true; break;
-    }
-    ASSERT(found_setting);
-
-    found_setting = false;
-    switch (p_tim_handler->timing_conf.unit) {
-    case TIM_UNIT_S:   found_setting = true; break;
-    case TIM_UNIT_MS:  found_setting = true; break;
-    case TIM_UNIT_US:  found_setting = true; break;
-    case TIM_UNIT_HZ:  found_setting = true; break;
-    case TIM_UNIT_KHZ: found_setting = true; break;
-    case TIM_UNIT_MHZ: found_setting = true; break;
     }
     ASSERT(found_setting);
 }
@@ -729,6 +722,18 @@ static inline void tim_clock_disable(tim_reg_def const *const p_timx)
 
 static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit)
 {
+
+    uint32_t found_setting = false;
+    switch (unit) {
+    case TIM_UNIT_S:   found_setting = true; break;
+    case TIM_UNIT_MS:  found_setting = true; break;
+    case TIM_UNIT_US:  found_setting = true; break;
+    case TIM_UNIT_HZ:  found_setting = true; break;
+    case TIM_UNIT_KHZ: found_setting = true; break;
+    case TIM_UNIT_MHZ: found_setting = true; break;
+    }
+    ASSERT(found_setting);
+
     uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
     uint32_t prescaler       = 1;
     uint32_t count           = 1;
@@ -909,7 +914,7 @@ static inline void set_tim_base_init_status(tim_reg_def const *const p_timx)
 
 static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx)
 {
-    return 0b1 & (g_tim_peri_init >>  map_tim_peri_to_num(p_timx));
+    return 0b1 & (g_tim_peri_init >> map_tim_peri_to_num(p_timx));
 }
 
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)

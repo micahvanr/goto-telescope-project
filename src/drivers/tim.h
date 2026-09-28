@@ -85,9 +85,10 @@ typedef enum {
 //=========================================//{
 
 typedef enum {
-    TIM_UNIT_S,  // Seconds
-    TIM_UNIT_MS, // Miliseconds
-    TIM_UNIT_US, // Microseconds
+    // Cannot start from 0. When initializing a value of 0 is assumed to be uninitialized
+    TIM_UNIT_S = 1, // Seconds
+    TIM_UNIT_MS,    // Miliseconds
+    TIM_UNIT_US,    // Microseconds
     TIM_UNIT_HZ,
     TIM_UNIT_KHZ,
     TIM_UNIT_MHZ,
@@ -856,7 +857,7 @@ typedef struct {
     uint32_t auto_reload;    // Default: 0
     uint32_t prescaler;      // Default: 0
     uint32_t time;           // Default: 0
-    tim_unit_of_time_e unit; // Default: TIM_UNIT_S
+    tim_unit_of_time_e unit; // Default: NA
 } tim_timing_config;
 
 // Base timer handler
