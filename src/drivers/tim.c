@@ -1,6 +1,7 @@
 #include "tim.h"
 #include "assert_handler.h"
 #include "debug_tools.h"
+#include "nvic.h"
 #include "printf.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
@@ -326,33 +327,33 @@ Note: None
 void tim_it_config(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
-        irq_config(TIM1_CC_IRQ_NO_27, toggle);
+        nvic_irq_config(TIM1_CC_IRQ_NO_27, toggle);
         return;
     } else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8)) {
-        irq_config(TIM8_CC_IRQ_NO_46, toggle);
+        nvic_irq_config(TIM8_CC_IRQ_NO_46, toggle);
         return;
     }
 
     if (p_timx == TIM9) {
-        irq_config(TIM1_BRK_TIM9_IRQ_NO_24, toggle);
+        nvic_irq_config(TIM1_BRK_TIM9_IRQ_NO_24, toggle);
     } else if ((p_timx == TIM1) || (p_timx == TIM10)) {
-        irq_config(TIM1_UP_TIM10_IRQ_NO_25, toggle);
+        nvic_irq_config(TIM1_UP_TIM10_IRQ_NO_25, toggle);
     } else if (p_timx == TIM11) {
-        irq_config(TIM1_TRG_COM_TIM11_IRQ_NO_26, toggle);
+        nvic_irq_config(TIM1_TRG_COM_TIM11_IRQ_NO_26, toggle);
     } else if (p_timx == TIM2) {
-        irq_config(TIM2_IRQ_NO_28, toggle);
+        nvic_irq_config(TIM2_IRQ_NO_28, toggle);
     } else if (p_timx == TIM3) {
-        irq_config(TIM3_IRQ_NO_29, toggle);
+        nvic_irq_config(TIM3_IRQ_NO_29, toggle);
     } else if (p_timx == TIM4) {
-        irq_config(TIM4_IRQ_NO_30, toggle);
+        nvic_irq_config(TIM4_IRQ_NO_30, toggle);
     } else if (p_timx == TIM12) {
-        irq_config(TIM8_BRK_TIM12_IRQ_NO_43, toggle);
+        nvic_irq_config(TIM8_BRK_TIM12_IRQ_NO_43, toggle);
     } else if ((p_timx == TIM8) || (p_timx == TIM13)) {
-        irq_config(TIM8_UP_TIM13_IRQ_NO_44, toggle);
+        nvic_irq_config(TIM8_UP_TIM13_IRQ_NO_44, toggle);
     } else if (p_timx == TIM14) {
-        irq_config(TIM8_TRG_COM_TIM14_IRQ_NO_45, toggle);
+        nvic_irq_config(TIM8_TRG_COM_TIM14_IRQ_NO_45, toggle);
     } else if (p_timx == TIM7) {
-        irq_config(TIM7_IRQ_NO_55, toggle);
+        nvic_irq_config(TIM7_IRQ_NO_55, toggle);
     }
 }
 

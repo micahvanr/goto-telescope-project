@@ -1,6 +1,7 @@
 #include "usart.h"
 #include "assert_handler.h"
 #include "common.h"
+#include "nvic.h"
 #include "rcc.h"
 
 //======================================================================================//}
@@ -316,17 +317,17 @@ Note: None
 void usart_it_config(usart_reg_def const *const p_usartx, togglable_e const toggle)
 {
     if (p_usartx == USART1) {
-        irq_config(USART1_IRQ_NO_37, toggle);
+        nvic_irq_config(USART1_IRQ_NO_37, toggle);
     } else if (p_usartx == USART2) {
-        irq_config(USART2_IRQ_NO_38, toggle);
+        nvic_irq_config(USART2_IRQ_NO_38, toggle);
     } else if (p_usartx == USART3) {
-        irq_config(USART3_IRQ_NO_39, toggle);
+        nvic_irq_config(USART3_IRQ_NO_39, toggle);
     } else if (p_usartx == UART4) {
-        irq_config(UART4_IRQ_NO_52, toggle);
+        nvic_irq_config(UART4_IRQ_NO_52, toggle);
     } else if (p_usartx == UART5) {
-        irq_config(UART5_IRQ_NO_53, toggle);
+        nvic_irq_config(UART5_IRQ_NO_53, toggle);
     } else if (p_usartx == USART6) {
-        irq_config(USART6_IRQ_NO_71, toggle);
+        nvic_irq_config(USART6_IRQ_NO_71, toggle);
     }
 }
 

@@ -1,6 +1,7 @@
 #include "gpio.h"
 #include "assert_handler.h"
 #include "exti.h"
+#include "nvic.h"
 #include "rcc.h"
 #include "syscfg.h"
 
@@ -137,7 +138,7 @@ void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e const to
     case GPIO_IT_NA: break;
     }
 
-    irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
+    nvic_irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
 }
 
 /***************************************************************************

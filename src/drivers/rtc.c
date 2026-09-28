@@ -2,6 +2,7 @@
 #include "assert_handler.h"
 #include "common.h"
 #include "exti.h"
+#include "nvic.h"
 #include "pwr.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
@@ -480,19 +481,19 @@ void rtc_it_config(rtc_it_options_e it_opt, togglable_e toggle)
     case RTC_IT_OPT_ALARM:
         exti_it_config((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
         exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
-        irq_config(RTC_ALARM_IRQ_NO_41, toggle);
+        nvic_irq_config(RTC_ALARM_IRQ_NO_41, toggle);
         break;
 
     case RTC_IT_OPT_WAKEUP:
         exti_it_config((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
         exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
-        irq_config(RTC_WKUP_IRQ_NO_3, toggle);
+        nvic_irq_config(RTC_WKUP_IRQ_NO_3, toggle);
         break;
 
     case RTC_IT_OPT_TIMESTAMP:
         exti_it_config((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
         exti_rising_edge_config((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
-        irq_config(TAMP_STAMP_IRQ_NO_2, toggle);
+        nvic_irq_config(TAMP_STAMP_IRQ_NO_2, toggle);
         break;
 
     case RTC_IT_OPT_NA:     break;
