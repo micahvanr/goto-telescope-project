@@ -257,7 +257,7 @@ Driver header files should be organized in the following way:
     * Misc. Constants
     * Initialization Handler Constants 
     * Interrupt Handler Constants
-    * API Function Argument Options
+    * API Function Argument/Return Options
     * Config Options (If multiple configs exist, name and separate them)
 * Register Constants
 * Structure Definitions
