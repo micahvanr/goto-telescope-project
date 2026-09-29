@@ -1,6 +1,27 @@
 # Intro
-This document contains the coding guidelines I will follow in order to keep the project consistent and readable. 
-Some guidelines are my personal preferance while others are best practices.  
+The coding guidelines I will be following will be the Barr Group's Embedded C Coding Standard. It is
+a set of rules/guidelines for embedded C and it focuses on preventing bugs. The sections listed here 
+follow the section structure in the Barr C standard and expland on those sections with some additional
+sections. These guidelines are to keep the project files consistent and easy to read. 
+
+# Barr C Standard
+The Barr C coding guidelines document can be downloaded for free from [here](https://barrgroup.com/embedded-c-coding-standard). 
+This standard provides a very solid foundation with reasoning behind each rule beyond just style preference. 
+Most rules aim to keep bugs from appearing in the first place. Some rules I have chosen to not use or modify slightly. 
+These rules will be listed in their corresponding section along with their reasoning. Any code that 
+breaks these rules should have comments explaining why the rule was broken.
+
+
+# General Rules
+# Comment Rules
+# White Space Rules
+###### Line Width should be limited to ~~80~~ 120 
+* I will not be printing my code out and I'd prefer to not have too many line breaks.
+# Modules Rules
+# Data Type Rules
+# Function Rules (Procedure Rules)
+# Variables Rules
+# Statement Rules
 
 # Style
 ## Naming
