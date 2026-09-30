@@ -41,8 +41,9 @@ functions that can be categorized. I prefer verb-noun function names as I find t
     * get/set: Instead of read/write unless read/write makes a lot more sense.
     * is_x: Used when returning bool.
     * clear
-    * config
-    * assert_**x**_param: Used putting assertions for parameters for **x** in seperate function
+    * config: Prefer to not use enable/disable_x as that increases code size. Instead use config_x 
+    with parameter to enable or disable the object.
+    * assert_**x**_param: Used putting assertions for parameters for **x** in seperate function.
 
 # Variables Rules
 

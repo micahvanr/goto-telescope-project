@@ -406,7 +406,7 @@ void i2c_slave_transmit_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data
 void i2c_slave_receive_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data, uint32_t length);
 
 // Interrupt handling
-void i2c_it_config(i2c_reg_def const *const p_i2cx, togglable_e toggle);
+void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e toggle);
 void i2c_it_handler(i2c_handle *const p_i2c_handle);
 
 // User implement callback function to handle
