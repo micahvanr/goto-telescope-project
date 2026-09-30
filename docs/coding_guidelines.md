@@ -13,14 +13,38 @@ breaks these rules should have comments explaining why the rule was broken.
 
 
 # General Rules
+
 # Comment Rules
+
 # White Space Rules
-###### Line Width should be limited to ~~80~~ 120 
-* I will not be printing my code out and I'd prefer to not have too many line breaks.
+* Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
+not have too many line breaks.
+
 # Modules Rules
+
 # Data Type Rules
+
 # Function Rules (Procedure Rules)
+
+## Naming Conventions
+* Function names should follow the following standard: This process adds more consistency when creating
+functions that can be categorized. I prefer verb-noun function names as I find them more natural.
+    * module_submod_verb_noun
+        * module: The logical module the function is apart of. Should be the file name. Private functions
+        are not required to include this.
+        * submod: *Optional.* The logical sub module. 
+        * verb: The action being performed.
+        * noun: *Optional.* What the action is being performed on or to. Necessary when what is being 
+        manipulated requires more detail than just the module name.
+
+* Prefer to use the following verbs:
+    * get/set: Instead of read/write unless read/write makes a lot more sense.
+    * is_x: Used when returning bool.
+    * clear
+    * config
+
 # Variables Rules
+
 # Statement Rules
 
 # Style

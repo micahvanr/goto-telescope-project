@@ -550,11 +550,11 @@ typedef __vo struct {
 //                  Function API Prototypes
 //======================================================================================//{
 
-void exti_it_config(exti_lines_e line_no, togglable_e toggle);
-void exti_event_config(exti_lines_e line_no, togglable_e toggle);
-void exti_rising_edge_config(exti_lines_e line_no, togglable_e toggle);
-void exti_falling_edge_config(exti_lines_e line_no, togglable_e toggle);
-void exti_software_it_event(exti_lines_e line_no);
+void exti_config_interrupt(exti_lines_e line_no, togglable_e toggle);
+void exti_config_event(exti_lines_e line_no, togglable_e toggle);
+void exti_config_rising_edge(exti_lines_e line_no, togglable_e toggle);
+void exti_config_falling_edge(exti_lines_e line_no, togglable_e toggle);
+void exti_trigger_software_it_event(exti_lines_e line_no);
 exti_pend_status_e exti_get_pending(exti_lines_e line_no);
 void exti_clear_pending(exti_lines_e line_no);
 

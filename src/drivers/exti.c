@@ -5,7 +5,7 @@
 //======================================================================================//{
 
 /***************************************************************************
-Function: exti_it_config
+Function: exti_config_interrupt
 Overview: Enables or disable the interrupts for the specified EXTI line
 Parameters: 
     line_no:
@@ -17,7 +17,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_it_config(exti_lines_e line_no, togglable_e toggle)
+void exti_config_interrupt(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
     case ENABLE:  EXTI->IMR |= (1 << line_no); break;
@@ -26,7 +26,7 @@ void exti_it_config(exti_lines_e line_no, togglable_e toggle)
 }
 
 /***************************************************************************
-Function: exti_it_config
+Function: exti_config_event
 Overview: Enables or disables the events for the specified EXTI line
 Parameters: 
     line_no:
@@ -38,7 +38,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_event_config(exti_lines_e line_no, togglable_e toggle)
+void exti_config_event(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
     case ENABLE:  EXTI->EMR |= (1 << line_no); break;
@@ -47,7 +47,7 @@ void exti_event_config(exti_lines_e line_no, togglable_e toggle)
 }
 
 /***************************************************************************
-Function: exti_rising_edge_config
+Function: exti_config_rising_edge
 Overview: Enables or disables the rising edge trigger for the specified EXTI line
 Parameters: 
     line_no:
@@ -59,7 +59,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_rising_edge_config(exti_lines_e line_no, togglable_e toggle)
+void exti_config_rising_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
     case ENABLE:  EXTI->RTSR |= (1 << line_no); break;
@@ -68,7 +68,7 @@ void exti_rising_edge_config(exti_lines_e line_no, togglable_e toggle)
 }
 
 /***************************************************************************
-Function: exti_falling_edge_config
+Function: exti_config_falling_edge
 Overview: Enables or disables the falling edge trigger for the specified EXTI line
 Parameters: 
     line_no:
@@ -80,7 +80,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_falling_edge_config(exti_lines_e line_no, togglable_e toggle)
+void exti_config_falling_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
     case ENABLE:  EXTI->FTSR |= (1 << line_no); break;
@@ -89,7 +89,7 @@ void exti_falling_edge_config(exti_lines_e line_no, togglable_e toggle)
 }
 
 /***************************************************************************
-Function: exti_software_it_event 
+Function: exti_trigger_software_it_event 
 Overview: Triggers a software interrupt/event for the specified EXTI line
 Parameters: 
     line_no:
@@ -98,7 +98,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_software_it_event(exti_lines_e line_no)
+void exti_trigger_software_it_event(exti_lines_e line_no)
 {
     EXTI->SWIER |= (1 << line_no);
 }

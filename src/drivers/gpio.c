@@ -126,14 +126,14 @@ void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e const to
 
     syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-    exti_it_config(exti_line_num, toggle);
+    exti_config_interrupt(exti_line_num, toggle);
 
     switch (p_gpio_handle->gpio_conf.it_trigger) {
-    case GPIO_IT_RT: exti_rising_edge_config(exti_line_num, toggle); break;
-    case GPIO_IT_FT: exti_falling_edge_config(exti_line_num, toggle); break;
+    case GPIO_IT_RT: exti_config_rising_edge(exti_line_num, toggle); break;
+    case GPIO_IT_FT: exti_config_falling_edge(exti_line_num, toggle); break;
     case GPIO_IT_RFT:
-        exti_falling_edge_config(exti_line_num, toggle);
-        exti_rising_edge_config(exti_line_num, toggle);
+        exti_config_falling_edge(exti_line_num, toggle);
+        exti_config_rising_edge(exti_line_num, toggle);
         break;
     case GPIO_IT_NA: break;
     }
