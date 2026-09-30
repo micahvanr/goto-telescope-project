@@ -5,7 +5,7 @@
 //======================================================================================//{
 
 /***************************************************************************
-Function: exti_config_interrupt
+Function: exti_config_it
 Overview: Enables or disable the interrupts for the specified EXTI line
 Parameters: 
     line_no:
@@ -17,7 +17,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void exti_config_interrupt(exti_lines_e line_no, togglable_e toggle)
+void exti_config_it(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
     case ENABLE:  EXTI->IMR |= (1 << line_no); break;

@@ -42,6 +42,7 @@ functions that can be categorized. I prefer verb-noun function names as I find t
     * is_x: Used when returning bool.
     * clear
     * config
+    * assert_**x**_param: Used putting assertions for parameters for **x** in seperate function
 
 # Variables Rules
 

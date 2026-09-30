@@ -20,6 +20,8 @@
 #include "gpio.h"
 #include "printf.h"
 
+// TODO: Add project roadmap using mermaid markdown
+
 // TODO: Look into Barr C Coding Guidelines.
 // TODO: Fix function names with ^^^ (module_submod_verb_noun)
 // NOTE: Constants names are fine

@@ -724,7 +724,7 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pi
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no);
 void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no);
 
-void gpio_it_config(gpio_handle const *const p_gpio_handle, togglable_e toggle);
+void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e toggle);
 void gpio_it_handler(exti_lines_e exti_line);
 
 #endif
