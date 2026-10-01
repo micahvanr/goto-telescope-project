@@ -250,4 +250,3 @@ int vfctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char
 #endif /* PRINTF_H_ */
 
 // *End of file*
-

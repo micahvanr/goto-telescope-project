@@ -848,4 +848,3 @@ static void slave_addr(i2c_handle const *const p_i2c_handle)
 }
 
 // *End of file*
-

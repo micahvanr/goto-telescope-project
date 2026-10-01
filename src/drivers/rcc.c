@@ -416,4 +416,3 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
 }
 
 // *End of file*
-

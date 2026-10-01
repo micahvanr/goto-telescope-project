@@ -1190,4 +1190,3 @@ void rcc_config_mco(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_pre
 #endif
 
 // *End of file*
-

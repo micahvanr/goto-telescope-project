@@ -1045,4 +1045,3 @@ static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *co
 }
 
 // *End of file*
-

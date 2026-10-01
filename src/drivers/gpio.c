@@ -400,4 +400,3 @@ static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglabl
 }
 
 // *End of file*
-

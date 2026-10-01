@@ -941,4 +941,3 @@ bus_types tim_get_bus(tim_reg_def const *const p_timx);
 #endif
 
 // *End of file*
-

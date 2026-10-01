@@ -81,4 +81,3 @@ void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
 //======================================================================================//{
 
 // *End of file*
-

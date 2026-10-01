@@ -78,4 +78,3 @@ void nvic_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 #endif
 
 // *End of file*
-

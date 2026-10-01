@@ -197,4 +197,3 @@ void RTC_Alarm_IRQHandler(void)
 }
 
 // *End of file*
-

@@ -410,4 +410,3 @@ void __weak usart_callback(usart_handle *p_usart_handle, usart_event_e event);
 #endif
 
 // *End of file*
-

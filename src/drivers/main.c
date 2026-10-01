@@ -21,6 +21,7 @@
 #include "printf.h"
 
 // TODO: Add project roadmap using mermaid markdown
+// TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
 
 // TODO: Look into Barr C Coding Guidelines.
 // NOTE: Constants names are fine
@@ -101,4 +102,3 @@ int main(void)
 }
 
 // *End of file*
-

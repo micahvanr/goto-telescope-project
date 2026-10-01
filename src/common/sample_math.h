@@ -10,4 +10,3 @@ uint32_t add(uint32_t num1, uint32_t num2);
 #endif
 
 // *End of file*
-

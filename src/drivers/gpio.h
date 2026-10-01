@@ -730,4 +730,3 @@ void gpio_it_handler(exti_lines_e exti_line);
 #endif
 
 // *End of file*
-

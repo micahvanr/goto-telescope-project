@@ -1041,4 +1041,3 @@ static inline void assert_weekday_param(rtc_weekdays_e const weekday)
 }
 
 // *End of file*
-

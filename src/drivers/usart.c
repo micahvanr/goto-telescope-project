@@ -604,4 +604,3 @@ static void recieve_data(usart_handle *const p_usart_handle)
 }
 
 // *End of file*
-

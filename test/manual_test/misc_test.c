@@ -50,4 +50,3 @@ static void test_printf(void)
 }
 
 // *End of file*
-
