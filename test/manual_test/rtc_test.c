@@ -70,7 +70,8 @@ static void standard_output_rtc_data(void)
 
     if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM) {
         am_pm[0] = 'A';
-    } else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM) {
+    }
+    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM) {
         am_pm[0] = 'P';
     }
     printf_("Time: %d:%d:%d %s\n", g_rtc_handle.time_data.hours, g_rtc_handle.time_data.minutes,

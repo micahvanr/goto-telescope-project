@@ -74,7 +74,8 @@ static void test_gpio_read_write(void)
         gpio_read_result         = gpio_read(GPIOA, PIN_NUM_0);
         if (gpio_read_result) {
             gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, HIGH);
-        } else {
+        }
+        else {
             gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, LOW);
         }
         for (uint32_t i = 0; i < 500000; i++);

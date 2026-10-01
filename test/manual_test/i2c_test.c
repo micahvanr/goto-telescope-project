@@ -41,7 +41,8 @@ void i2c_tests(test_type_e test)
             test_i2c_slave_receive();
             break;
         }
-    } else if (test == I2C_TEST_IT) {
+    }
+    else if (test == I2C_TEST_IT) {
         switch (test_mode) {
         case I2C_TEST_STM_MASTER_TX:
             test_i2c_master_transmit_it();
@@ -56,7 +57,8 @@ void i2c_tests(test_type_e test)
             test_i2c_slave_receive_it();
             break;
         }
-    } else {
+    }
+    else {
         ASSERT(false);
     }
 }

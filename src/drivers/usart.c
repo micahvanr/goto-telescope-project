@@ -332,15 +332,20 @@ void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 
     if (p_usartx == USART1) {
         nvic_irq_config(USART1_IRQ_NUM_37, toggle);
-    } else if (p_usartx == USART2) {
+    }
+    else if (p_usartx == USART2) {
         nvic_irq_config(USART2_IRQ_NUM_38, toggle);
-    } else if (p_usartx == USART3) {
+    }
+    else if (p_usartx == USART3) {
         nvic_irq_config(USART3_IRQ_NUM_39, toggle);
-    } else if (p_usartx == UART4) {
+    }
+    else if (p_usartx == UART4) {
         nvic_irq_config(UART4_IRQ_NUM_52, toggle);
-    } else if (p_usartx == UART5) {
+    }
+    else if (p_usartx == UART5) {
         nvic_irq_config(UART5_IRQ_NUM_53, toggle);
-    } else if (p_usartx == USART6) {
+    }
+    else if (p_usartx == USART6) {
         nvic_irq_config(USART6_IRQ_NUM_71, toggle);
     }
 }
@@ -446,17 +451,21 @@ static inline void usart_config_clock(usart_reg_def const *const p_usartx, toggl
                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                              : 0;
-    } else if ((ENABLE == toggle) && (APB2_BUS == usart_bus)) {
+    }
+    else if ((ENABLE == toggle) && (APB2_BUS == usart_bus)) {
         RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
-    } else if ((DISABLE == toggle) && (APB1_BUS == usart_bus)) {
+    }
+    else if ((DISABLE == toggle) && (APB1_BUS == usart_bus)) {
         RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
                        : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
                        : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
                        : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                               : 0;
-    } else if ((DISABLE == toggle) && (APB2_BUS == usart_bus)) {
+    }
+    else if ((DISABLE == toggle) && (APB2_BUS == usart_bus)) {
         RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
-    } else {
+    }
+    else {
         ASSERT(false);
     }
 }
@@ -465,17 +474,23 @@ static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *
 {
     if (p_usartx == USART1) {
         return USART1_INIT_NUM;
-    } else if (p_usartx == USART2) {
+    }
+    else if (p_usartx == USART2) {
         return USART2_INIT_NUM;
-    } else if (p_usartx == USART3) {
+    }
+    else if (p_usartx == USART3) {
         return USART3_INIT_NUM;
-    } else if (p_usartx == UART4) {
+    }
+    else if (p_usartx == UART4) {
         return UART4_INIT_NUM;
-    } else if (p_usartx == UART5) {
+    }
+    else if (p_usartx == UART5) {
         return UART5_INIT_NUM;
-    } else if (p_usartx == USART6) {
+    }
+    else if (p_usartx == USART6) {
         return USART6_INIT_NUM;
-    } else {
+    }
+    else {
         ASSERT(0);
     }
     return 0;

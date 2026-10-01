@@ -134,7 +134,8 @@ void tim_init(tim_handle *const p_tim_handle)
         p_tim_handle->p_timx->ARR = p_tim_handle->timing_conf.auto_reload - 1;
 
         // Calculate ARR and PSC from given time and unit.
-    } else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0)) {
+    }
+    else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0)) {
         set_prescaler_count(p_tim_handle->p_timx, p_tim_handle->timing_conf.time, p_tim_handle->timing_conf.unit);
     }
     // Set ARR preload
@@ -330,30 +331,40 @@ void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const chan
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
         nvic_irq_config(TIM1_CC_IRQ_NUM_27, toggle);
         return;
-    } else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8)) {
+    }
+    else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8)) {
         nvic_irq_config(TIM8_CC_IRQ_NUM_46, toggle);
         return;
     }
 
     if (p_timx == TIM9) {
         nvic_irq_config(TIM1_BRK_TIM9_IRQ_NUM_24, toggle);
-    } else if ((p_timx == TIM1) || (p_timx == TIM10)) {
+    }
+    else if ((p_timx == TIM1) || (p_timx == TIM10)) {
         nvic_irq_config(TIM1_UP_TIM10_IRQ_NUM_25, toggle);
-    } else if (p_timx == TIM11) {
+    }
+    else if (p_timx == TIM11) {
         nvic_irq_config(TIM1_TRG_COM_TIM11_IRQ_NUM_26, toggle);
-    } else if (p_timx == TIM2) {
+    }
+    else if (p_timx == TIM2) {
         nvic_irq_config(TIM2_IRQ_NUM_28, toggle);
-    } else if (p_timx == TIM3) {
+    }
+    else if (p_timx == TIM3) {
         nvic_irq_config(TIM3_IRQ_NUM_29, toggle);
-    } else if (p_timx == TIM4) {
+    }
+    else if (p_timx == TIM4) {
         nvic_irq_config(TIM4_IRQ_NUM_30, toggle);
-    } else if (p_timx == TIM12) {
+    }
+    else if (p_timx == TIM12) {
         nvic_irq_config(TIM8_BRK_TIM12_IRQ_NUM_43, toggle);
-    } else if ((p_timx == TIM8) || (p_timx == TIM13)) {
+    }
+    else if ((p_timx == TIM8) || (p_timx == TIM13)) {
         nvic_irq_config(TIM8_UP_TIM13_IRQ_NUM_44, toggle);
-    } else if (p_timx == TIM14) {
+    }
+    else if (p_timx == TIM14) {
         nvic_irq_config(TIM8_TRG_COM_TIM14_IRQ_NUM_45, toggle);
-    } else if (p_timx == TIM7) {
+    }
+    else if (p_timx == TIM7) {
         nvic_irq_config(TIM7_IRQ_NUM_55, toggle);
     }
 }
@@ -660,7 +671,8 @@ bus_types tim_get_bus(tim_reg_def const *const p_timx)
         return APB2_BUS;
 
         // If TIMER peripheral on APB1
-    } else {
+    }
+    else {
         return APB1_BUS;
     }
 }
@@ -680,14 +692,16 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                       : (p_timx == TIM13) ? RCC_APB1ENR_TIM13EN
                       : (p_timx == TIM14) ? RCC_APB1ENR_TIM14EN
                                           : 0;
-    } else if ((ENABLE == toggle) && (APB2_BUS == tim_bus)) {
+    }
+    else if ((ENABLE == toggle) && (APB2_BUS == tim_bus)) {
         RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
                       : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
                       : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
                       : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
                       : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
                                           : 0;
-    } else if ((DISABLE == toggle) && (APB1_BUS == tim_bus)) {
+    }
+    else if ((DISABLE == toggle) && (APB1_BUS == tim_bus)) {
         RCC->APB1RSTR |= (p_timx == TIM2)  ? RCC_APB1RSTR_TIM2RST
                        : (p_timx == TIM3)  ? RCC_APB1RSTR_TIM3RST
                        : (p_timx == TIM4)  ? RCC_APB1RSTR_TIM4RST
@@ -707,7 +721,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                       : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
                       : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
                                           : 0;
-    } else {
+    }
+    else {
         ASSERT(false);
     }
 }
@@ -830,12 +845,14 @@ static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t cons
     uint32_t max;
     if ((p_timx == TIM2) || (p_timx == TIM5)) {
         max = UINT32_MAX;
-    } else {
+    }
+    else {
         max = UINT16_MAX;
     }
     if (check_num < (max / factor)) {
         return false;
-    } else {
+    }
+    else {
         return true;
     }
 }
@@ -855,12 +872,15 @@ static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 {
     if ((p_timx == TIM6) || (p_timx == TIM7)) {
         return TIM_TYPE_BASIC;
-    } else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5)) {
+    }
+    else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5)) {
         return TIM_TYPE_GENERAL_2_5;
-    } else if ((p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11) || (p_timx == TIM12) || (p_timx == TIM13)
-               || (p_timx == TIM14)) {
+    }
+    else if ((p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11) || (p_timx == TIM12) || (p_timx == TIM13)
+             || (p_timx == TIM14)) {
         return TIM_TYPE_GENERAL_9_14;
-    } else if ((p_timx == TIM1) || (p_timx == TIM8)) {
+    }
+    else if ((p_timx == TIM1) || (p_timx == TIM8)) {
         return TIM_TYPE_ADVANCED;
     }
     return 0;
@@ -895,33 +915,47 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 {
     if (p_timx == TIM1) {
         return TIM1_INIT_NUM;
-    } else if (p_timx == TIM2) {
+    }
+    else if (p_timx == TIM2) {
         return TIM2_INIT_NUM;
-    } else if (p_timx == TIM3) {
+    }
+    else if (p_timx == TIM3) {
         return TIM3_INIT_NUM;
-    } else if (p_timx == TIM4) {
+    }
+    else if (p_timx == TIM4) {
         return TIM4_INIT_NUM;
-    } else if (p_timx == TIM5) {
+    }
+    else if (p_timx == TIM5) {
         return TIM5_INIT_NUM;
-    } else if (p_timx == TIM6) {
+    }
+    else if (p_timx == TIM6) {
         return TIM6_INIT_NUM;
-    } else if (p_timx == TIM7) {
+    }
+    else if (p_timx == TIM7) {
         return TIM7_INIT_NUM;
-    } else if (p_timx == TIM8) {
+    }
+    else if (p_timx == TIM8) {
         return TIM8_INIT_NUM;
-    } else if (p_timx == TIM9) {
+    }
+    else if (p_timx == TIM9) {
         return TIM9_INIT_NUM;
-    } else if (p_timx == TIM10) {
+    }
+    else if (p_timx == TIM10) {
         return TIM10_INIT_NUM;
-    } else if (p_timx == TIM11) {
+    }
+    else if (p_timx == TIM11) {
         return TIM11_INIT_NUM;
-    } else if (p_timx == TIM12) {
+    }
+    else if (p_timx == TIM12) {
         return TIM12_INIT_NUM;
-    } else if (p_timx == TIM13) {
+    }
+    else if (p_timx == TIM13) {
         return TIM13_INIT_NUM;
-    } else if (p_timx == TIM14) {
+    }
+    else if (p_timx == TIM14) {
         return TIM14_INIT_NUM;
-    } else {
+    }
+    else {
         ASSERT(0);
     }
     return 0;

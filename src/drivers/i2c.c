@@ -218,7 +218,8 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t const target_addr, ui
 
     if (length != 1) {
         config_ack(p_i2cx, ENABLE);
-    } else {
+    }
+    else {
         config_ack(p_i2cx, DISABLE);
     }
 
@@ -459,9 +460,11 @@ void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e const toggle)
 
     if (p_i2cx == I2C1) {
         nvic_irq_config(I2C1_EV_IRQ_NUM_31, toggle);
-    } else if (p_i2cx == I2C2) {
+    }
+    else if (p_i2cx == I2C2) {
         nvic_irq_config(I2C2_EV_IRQ_NUM_33, toggle);
-    } else if (p_i2cx == I2C3) {
+    }
+    else if (p_i2cx == I2C3) {
         nvic_irq_config(I2C3_EV_IRQ_NUM_72, toggle);
     }
 }
@@ -580,11 +583,14 @@ static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const 
 {
     if (p_i2cx == I2C1) {
         return I2C1_INIT_NUM;
-    } else if (p_i2cx == I2C2) {
+    }
+    else if (p_i2cx == I2C2) {
         return I2C2_INIT_NUM;
-    } else if (p_i2cx == I2C3) {
+    }
+    else if (p_i2cx == I2C3) {
         return I2C3_INIT_NUM;
-    } else {
+    }
+    else {
         ASSERT(0);
     }
     return 0;

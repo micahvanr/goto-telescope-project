@@ -346,7 +346,8 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
             RCC->CFGR &= ~(RCC_CFGR_MCO1PRE_MASK << RCC_CFGR_MCO1PRE_POS);
-        } else {
+        }
+        else {
             RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1PRE_POS;
         }
         init_mco_gpio_pin(RCC_MCO1_SEL);
@@ -358,7 +359,8 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
         if (mco_prescaler == RCC_MCO_PRE_1) {
             RCC->CFGR &= ~(RCC_CFGR_MCO2PRE_MASK << RCC_CFGR_MCO2PRE_POS);
-        } else {
+        }
+        else {
             RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2PRE_POS;
         }
         init_mco_gpio_pin(RCC_MCO2_SEL);

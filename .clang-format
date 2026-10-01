@@ -11,6 +11,7 @@ BraceWrapping:
     AfterStruct: false
     BeforeWhile: false
     IndentBraces: false
+    BeforeElse: true
 
 AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Empty
@@ -18,12 +19,13 @@ AllowShortFunctionsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortCaseExpressionOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowAllParametersOfDeclarationOnNextLine: false
 AlignConsecutiveShortCaseStatements: 
     Enabled: true
     AcrossEmptyLines: true
     AcrossComments: true
     AlignCaseColons: false
-AllowAllParametersOfDeclarationOnNextLine: false
 AlignConsecutiveMacros: true
 AlignConsecutiveAssignments: true
 AlignTrailingComments: Always
