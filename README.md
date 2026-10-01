@@ -33,16 +33,16 @@ Based on the pitchfork layout
 
 | Directory| Description|
 |-------------------|-----------------------------------------------------------------------|
-| build/| Build output (object files + executables)|
-| docs/| Documentation (ex. coding standards, images)|
-| external/| External dependencies|
-| src/| Source files (.c/.h) contains linker script and startup file|
-| src/app/| Source files for application layer|
-| src/bsp/| Source files for other modules and chips (board support package layer)|
-| src/drivers/| Source files for drivers layer|
-| src/common/| Source files for code that drivers and app use|
-| test/| Makefile with test source files |
-| tools/| Any tools used such as dockerfile and unit testing frameworks|
+| build/ | Build output (object files + executables) |
+| docs/ | Documentation (ex. coding standards, images) |
+| external/ | External dependencies |
+| src/ | Source files (.c/.h) contains linker script and startup file|
+| src/app/ | Source files for application layer |
+| src/bsp/ | Source files for other modules and chips (board support package layer) |
+| src/drivers/ | Source files for drivers layer |
+| src/common/ | Source files for code that drivers and app use |
+| test/ | Makefile with test source files |
+| tools/ | Any tools used such as dockerfile and unit testing frameworks |
 
 ## Build
 The way I will be building the project is through a Makefile and by using a compile commands generator (Bear in this case).
