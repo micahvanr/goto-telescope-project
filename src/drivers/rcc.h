@@ -1172,19 +1172,19 @@ typedef __vo struct {
 //                  Peripheral Function APIs
 //======================================================================================//{
 
-void rcc_lsi_enable(void);
-bool rcc_lsi_rdy(void);
+void rcc_config_lsi(togglable_e toggle);
+bool rcc_lsi_is_rdy(void);
 
 uint32_t rcc_get_pll_freq_hz(void);
 uint32_t rcc_get_sys_clock_freq_hz(void);
 uint32_t rcc_get_bus_clock_freq_hz(bus_types bus);
 uint32_t rcc_get_timer_clock_freq_hz(bus_types bus);
 
-void rcc_rtc_clock_enable(void);
+void rcc_config_rtc_clock(togglable_e toggle);
 void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel);
 void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre);
 uint32_t rcc_get_rtc_clock_freq_hz(void);
 
-void rcc_mco_config(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
+void rcc_config_mco(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
 
 #endif

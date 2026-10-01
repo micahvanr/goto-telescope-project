@@ -63,7 +63,7 @@ void rtc_init(rtc_handler *const p_rtc_handler)
 
     // RCC Config
     // Enable clock to RTC
-    rcc_rtc_clock_enable();
+    rcc_config_rtc_clock(ENABLE);
 
     congifure_rtc_clock(p_rtc_handler->rtc_conf);
 
@@ -715,8 +715,8 @@ static void congifure_rtc_clock(rtc_config const rtc_conf)
 
     rcc_set_rtc_clk_src(rtc_conf.rtc_sel);
     if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI) {
-        rcc_lsi_enable();
-        while (!rcc_lsi_rdy());
+        rcc_config_lsi(ENABLE);
+        while (!rcc_lsi_is_rdy());
     }
     if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_HSE) {
         rcc_set_rtc_pre(rtc_conf.rtc_pre);

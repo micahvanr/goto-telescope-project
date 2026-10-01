@@ -1,33 +1,39 @@
 #include "rcc.h"
 #include "assert_handler.h"
 #include "gpio.h"
+#include "stm32f4xx.h"
 #include <stdint.h>
 
 //======================================================================================//}
 //                  Helper Function Prototypes
 //======================================================================================//{
-static void mco_gpio_pin_init(rcc_mco_sel_e mco_select);
+static void init_mco_gpio_pin(rcc_mco_sel_e mco_select);
 
 //======================================================================================//
 //                  Peripheral Function API Implementation
 //======================================================================================//
 
 /***************************************************************************
-Function: rcc_lsi_enable
-Overview: Enables the LSI oscillator
+Function: rcc_config_lsi
+Overview: Enables or disables the LSI oscillator
 Parameters: 
-    None
+    toggle:
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
 ***************************************************************************/
-void rcc_lsi_enable(void)
+void rcc_config_lsi(togglable_e toggle)
 {
-    RCC->CSR |= RCC_CSR_LSION;
+    switch (toggle) {
+    case ENABLE:  RCC->CSR |= RCC_CSR_LSION; break;
+    case DISABLE: RCC->CSR &= ~RCC_CSR_LSION; break;
+    }
 }
 
 /***************************************************************************
-Function: rcc_lsi_rdy
+Function: rcc_lsi_is_rdy
 Overview: Checks if the LSI oscillator is ready
 Parameters: 
     None
@@ -36,7 +42,7 @@ Return:
     false
 Note: None
 ***************************************************************************/
-bool rcc_lsi_rdy(void)
+bool rcc_lsi_is_rdy(void)
 {
     return (RCC->CSR & RCC_CSR_LSIRDY) >> RCC_CSR_LSIRDY_POS;
 }
@@ -207,17 +213,20 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 }
 
 /***************************************************************************
-Function: rcc_rtc_clock_enable
-Overview: Enables the RTC clock
+Function: rcc_config_rtc_clock
+Overview: Enables or disables the RTC clock
 Parameters: 
     None
 Return: 
     None
 Note: Backup domain write protection must be disabled before this is allowed
 ***************************************************************************/
-void rcc_rtc_clock_enable(void)
+void rcc_config_rtc_clock(togglable_e toggle)
 {
-    RCC->BDCR |= RCC_BDCR_RTCEN;
+    switch (toggle) {
+    case ENABLE:  RCC->BDCR |= RCC_BDCR_RTCEN; break;
+    case DISABLE: RCC->BDCR &= ~RCC_BDCR_RTCEN; break;
+    }
 }
 
 /***************************************************************************
@@ -292,7 +301,7 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
     return rtc_clk_freq_hz;
 }
 
-void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
+void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 
     switch (mco_clk_src) {
@@ -307,7 +316,7 @@ void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         } else {
             RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1PRE_POS;
         }
-        mco_gpio_pin_init(RCC_MCO1_SEL);
+        init_mco_gpio_pin(RCC_MCO1_SEL);
         break;
     case RCC_MCO2_SYSCLK_SRC:
     case RCC_MCO2_PLLI2S_SRC:
@@ -319,7 +328,7 @@ void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         } else {
             RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2PRE_POS;
         }
-        mco_gpio_pin_init(RCC_MCO2_SEL);
+        init_mco_gpio_pin(RCC_MCO2_SEL);
         break;
     default: ASSERT(false);
     }
@@ -328,7 +337,7 @@ void rcc_mco_config(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
 //======================================================================================//
 //                  Helper Function Implementation
 //======================================================================================//
-static void mco_gpio_pin_init(rcc_mco_sel_e const mco_select)
+static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
 {
     gpio_handle mco_gpio_pin;
     mco_gpio_pin.gpio_conf.mode            = GPIO_MODE_ALT_FN;
