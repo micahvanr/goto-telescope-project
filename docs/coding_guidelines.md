@@ -16,6 +16,9 @@ breaks these rules should have comments explaining why the rule was broken.
 ## Which C?
 Exception to not alter or rename keyword is with the assert library. Including this add a lot of bloat
 and I prefer my own implementation.
+## Line Widths
+* Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
+not have too many line breaks.
 
 ## Common Abbreviations
 See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
@@ -23,8 +26,9 @@ See [common_abbreviations.md](common_abbreviations.md) file for table of all abb
 # Comment Rules
 
 # White Space Rules
-* Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
-not have too many line breaks.
+## Blank Lines
+Exception to no line of code shall contain more than one statement with assertion statements to check parameters.
+Breaking these statements up makes it more easier to read. Otherwise this rule remains intact.
 
 # Modules Rules
 

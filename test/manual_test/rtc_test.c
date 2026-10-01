@@ -28,11 +28,20 @@ static void test_rtc_wakeup(void);
 void rtc_tests(test_type_e test)
 {
     switch (test) {
-    case RTC_TEST_BASE:      test_rtc_base(); break;
-    case RTC_TEST_ALARM:     test_rtc_alarm(); break;
-    case RTC_TEST_TIMESTAMP: test_rtc_timestamp(); break;
-    case RTC_TEST_WAKEUP:    test_rtc_wakeup(); break;
-    default:                 ASSERT(false);
+    case RTC_TEST_BASE:
+        test_rtc_base();
+        break;
+    case RTC_TEST_ALARM:
+        test_rtc_alarm();
+        break;
+    case RTC_TEST_TIMESTAMP:
+        test_rtc_timestamp();
+        break;
+    case RTC_TEST_WAKEUP:
+        test_rtc_wakeup();
+        break;
+    default:
+        ASSERT(false);
     }
 }
 

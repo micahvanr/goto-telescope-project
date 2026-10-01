@@ -129,13 +129,18 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
     exti_config_it(exti_line_num, toggle);
 
     switch (p_gpio_handle->gpio_conf.it_trigger) {
-    case GPIO_IT_RT: exti_config_rising_edge(exti_line_num, toggle); break;
-    case GPIO_IT_FT: exti_config_falling_edge(exti_line_num, toggle); break;
+    case GPIO_IT_RT:
+        exti_config_rising_edge(exti_line_num, toggle);
+        break;
+    case GPIO_IT_FT:
+        exti_config_falling_edge(exti_line_num, toggle);
+        break;
     case GPIO_IT_RFT:
         exti_config_falling_edge(exti_line_num, toggle);
         exti_config_rising_edge(exti_line_num, toggle);
         break;
-    case GPIO_IT_NA: break;
+    case GPIO_IT_NA:
+        break;
     }
 
     nvic_irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
@@ -175,8 +180,12 @@ void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_no, pin_logi
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
     switch (pin_level) {
-    case HIGH: p_gpiox->ODR |= (1 << pin_no); break;
-    case LOW:  p_gpiox->ODR &= ~(1 << pin_no); break;
+    case HIGH:
+        p_gpiox->ODR |= (1 << pin_no);
+        break;
+    case LOW:
+        p_gpiox->ODR &= ~(1 << pin_no);
+        break;
     }
 }
 
@@ -224,6 +233,7 @@ void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_no)
 
 static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
 {
+    // clang-format off
     uint8_t found_setting = false;
 
     // Peripheral check
@@ -327,6 +337,7 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
     case GPIO_PULL_DOWN: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 // Map GPIO ports to codes for setting GPIO interrupts and other functions.
@@ -346,14 +357,14 @@ static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions.
 static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
 {
-    return (line_num == EXTI_LINE_NUM_0)                                     ? EXTI0_IRQ_NUM_6
-         : (line_num == EXTI_LINE_NUM_1)                                     ? EXTI1_IRQ_NUM_7
-         : (line_num == EXTI_LINE_NUM_2)                                     ? EXTI2_IRQ_NUM_8
-         : (line_num == EXTI_LINE_NUM_3)                                     ? EXTI3_IRQ_NUM_9
-         : (line_num == EXTI_LINE_NUM_4)                                     ? EXTI3_IRQ_NUM_9
+    return (line_num == EXTI_LINE_NUM_0)                                      ? EXTI0_IRQ_NUM_6
+         : (line_num == EXTI_LINE_NUM_1)                                      ? EXTI1_IRQ_NUM_7
+         : (line_num == EXTI_LINE_NUM_2)                                      ? EXTI2_IRQ_NUM_8
+         : (line_num == EXTI_LINE_NUM_3)                                      ? EXTI3_IRQ_NUM_9
+         : (line_num == EXTI_LINE_NUM_4)                                      ? EXTI3_IRQ_NUM_9
          : ((line_num >= EXTI_LINE_NUM_5) && (line_num <= EXTI_LINE_NUM_9))   ? EXTI9_5_IRQ_NUM_23
          : ((line_num >= EXTI_LINE_NUM_10) && (line_num <= EXTI_LINE_NUM_15)) ? EXTI15_10_IRQ_NUM_40
-                                                                            : 0;
+                                                                              : 0;
 }
 
 static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
@@ -374,7 +385,11 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox)); break;
-    case DISABLE: RCC->AHB1ENR &= ~(1 << map_gpio_ports_to_num(p_gpiox)); break;
+    case ENABLE:
+        RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
+        break;
+    case DISABLE:
+        RCC->AHB1ENR &= ~(1 << map_gpio_ports_to_num(p_gpiox));
+        break;
     }
 }

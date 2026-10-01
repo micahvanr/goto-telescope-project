@@ -4,6 +4,8 @@
 //                  Peripheral Function API Implementation
 //======================================================================================//{
 
+// TODO: Add asserts to ensure line no is correct
+
 /***************************************************************************
 Function: exti_config_it
 Overview: Enables or disable the interrupts for the specified EXTI line.
@@ -11,8 +13,8 @@ Parameters:
     line_no:
         EXTI_LINE_NUM_x (0-22)
     toggle:
-        ENABLE  [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -20,8 +22,12 @@ Note: None
 void exti_config_it(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  EXTI->IMR |= (1 << line_no); break;
-    case DISABLE: EXTI->IMR &= ~(1 << line_no); break;
+    case ENABLE:
+        EXTI->IMR |= (1 << line_no);
+        break;
+    case DISABLE:
+        EXTI->IMR &= ~(1 << line_no);
+        break;
     }
 }
 
@@ -32,8 +38,8 @@ Parameters:
     line_no:
         EXTI_LINE_NUM_x (0-22)
     toggle:
-        ENABLE  [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -41,8 +47,12 @@ Note: None
 void exti_config_event(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  EXTI->EMR |= (1 << line_no); break;
-    case DISABLE: EXTI->EMR &= ~(1 << line_no); break;
+    case ENABLE:
+        EXTI->EMR |= (1 << line_no);
+        break;
+    case DISABLE:
+        EXTI->EMR &= ~(1 << line_no);
+        break;
     }
 }
 
@@ -53,8 +63,8 @@ Parameters:
     line_no:
         EXTI_LINE_NUM_x (0-22)
     toggle:
-        ENABLE  [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -62,8 +72,12 @@ Note: None
 void exti_config_rising_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  EXTI->RTSR |= (1 << line_no); break;
-    case DISABLE: EXTI->RTSR &= ~(1 << line_no); break;
+    case ENABLE:
+        EXTI->RTSR |= (1 << line_no);
+        break;
+    case DISABLE:
+        EXTI->RTSR &= ~(1 << line_no);
+        break;
     }
 }
 
@@ -74,8 +88,8 @@ Parameters:
     line_no:
         EXTI_LINE_NUM_x (0-22)
     toggle:
-        ENABLE  [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -83,8 +97,12 @@ Note: None
 void exti_config_falling_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  EXTI->FTSR |= (1 << line_no); break;
-    case DISABLE: EXTI->FTSR &= ~(1 << line_no); break;
+    case ENABLE:
+        EXTI->FTSR |= (1 << line_no);
+        break;
+    case DISABLE:
+        EXTI->FTSR &= ~(1 << line_no);
+        break;
     }
 }
 

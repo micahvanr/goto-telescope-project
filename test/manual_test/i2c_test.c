@@ -28,17 +28,33 @@ void i2c_tests(test_type_e test)
     // PB7 - SDA
     if (test == I2C_TEST_REG) {
         switch (test_mode) {
-        case I2C_TEST_STM_MASTER_TX: test_i2c_master_transmit(); break;
-        case I2C_TEST_STM_MASTER_RX: test_i2c_master_receive(); break;
-        case I2C_TEST_STM_SLAVE_TX:  test_i2c_slave_transmit(); break;
-        case I2C_TEST_STM_SLAVE_RX:  test_i2c_slave_receive(); break;
+        case I2C_TEST_STM_MASTER_TX:
+            test_i2c_master_transmit();
+            break;
+        case I2C_TEST_STM_MASTER_RX:
+            test_i2c_master_receive();
+            break;
+        case I2C_TEST_STM_SLAVE_TX:
+            test_i2c_slave_transmit();
+            break;
+        case I2C_TEST_STM_SLAVE_RX:
+            test_i2c_slave_receive();
+            break;
         }
     } else if (test == I2C_TEST_IT) {
         switch (test_mode) {
-        case I2C_TEST_STM_MASTER_TX: test_i2c_master_transmit_it(); break;
-        case I2C_TEST_STM_MASTER_RX: test_i2c_master_receive_it(); break;
-        case I2C_TEST_STM_SLAVE_TX:  test_i2c_slave_transmit_it(); break;
-        case I2C_TEST_STM_SLAVE_RX:  test_i2c_slave_receive_it(); break;
+        case I2C_TEST_STM_MASTER_TX:
+            test_i2c_master_transmit_it();
+            break;
+        case I2C_TEST_STM_MASTER_RX:
+            test_i2c_master_receive_it();
+            break;
+        case I2C_TEST_STM_SLAVE_TX:
+            test_i2c_slave_transmit_it();
+            break;
+        case I2C_TEST_STM_SLAVE_RX:
+            test_i2c_slave_receive_it();
+            break;
         }
     } else {
         ASSERT(false);

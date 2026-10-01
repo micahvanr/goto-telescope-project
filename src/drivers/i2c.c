@@ -88,6 +88,7 @@ void i2c_init(i2c_handle *const p_i2c_handle)
 
 static inline void assert_i2c_handle_param(i2c_handle const *const p_i2c_handle)
 {
+    // clang-format off
     uint8_t found_setting = false;
 
     // Peripheral check
@@ -122,6 +123,7 @@ static inline void assert_i2c_handle_param(i2c_handle const *const p_i2c_handle)
     case I2C_CLK_FREQ_400KHZ: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 /***************************************************************************
@@ -520,7 +522,9 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
             }
             break;
 
-        default: ASSERT(false); break;
+        default:
+            ASSERT(false);
+            break;
         }
         break;
 
@@ -555,12 +559,16 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
                 close_com(p_i2c_handle);
             }
             break;
-        default: ASSERT(false); break;
+        default:
+            ASSERT(false);
+            break;
         }
 
         break;
 
-    default: ASSERT(false); break;
+    default:
+        ASSERT(false);
+        break;
     }
     UNUSED(dummy_read);
 }
@@ -631,8 +639,12 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
 
         // Set CCR
         switch (p_i2c_handle->i2c_conf.fm_duty_cycle) {
-        case I2C_FM_DUTY_2:    ccr_value = ((peripheral_clock_khz) / (3 * (desired_clock_khz))); break;
-        case I2C_FM_DUTY_16_9: ccr_value = ((peripheral_clock_khz) / (25 * (desired_clock_khz))); break;
+        case I2C_FM_DUTY_2:
+            ccr_value = ((peripheral_clock_khz) / (3 * (desired_clock_khz)));
+            break;
+        case I2C_FM_DUTY_16_9:
+            ccr_value = ((peripheral_clock_khz) / (25 * (desired_clock_khz)));
+            break;
         }
         break;
 
@@ -668,11 +680,16 @@ static inline void send_address(i2c_reg_def *const p_i2cx, uint8_t const target_
     // Clears SB and writes address.
     switch (i2c_status) {
     case I2C_STATUS_MASTER_TX:
-    case I2C_STATUS_SLAVE_TX:  p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT); break;
+    case I2C_STATUS_SLAVE_TX:
+        p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT);
+        break;
     case I2C_STATUS_MASTER_RX:
-    case I2C_STATUS_SLAVE_RX:  p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT); break;
+    case I2C_STATUS_SLAVE_RX:
+        p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT);
+        break;
 
-    default:                   ASSERT(false);
+    default:
+        ASSERT(false);
     }
 }
 
@@ -687,8 +704,12 @@ static inline void clear_address_flag(i2c_reg_def const *const p_i2cx)
 static inline void config_ack(i2c_reg_def *const p_i2cx, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  p_i2cx->CR1 |= I2C_CR1_ACK; break;
-    case DISABLE: p_i2cx->CR1 &= ~I2C_CR1_ACK; break;
+    case ENABLE:
+        p_i2cx->CR1 |= I2C_CR1_ACK;
+        break;
+    case DISABLE:
+        p_i2cx->CR1 &= ~I2C_CR1_ACK;
+        break;
     }
 }
 
@@ -714,8 +735,10 @@ static inline void close_com(i2c_handle *const p_i2c_handle)
     i2c_config_it(p_i2c_handle->p_i2cx, DISABLE);
     switch (p_i2c_handle->i2c_it_data.status) {
     case I2C_STATUS_SLAVE_RX:
-    case I2C_STATUS_SLAVE_TX: config_ack(p_i2c_handle->p_i2cx, DISABLE); break;
-    default:                  ;
+    case I2C_STATUS_SLAVE_TX:
+        config_ack(p_i2c_handle->p_i2cx, DISABLE);
+        break;
+    default:;
     }
     p_i2c_handle->i2c_it_data.status      = I2C_STATUS_READY;
     p_i2c_handle->i2c_it_data.txrx_length = 0;

@@ -16,7 +16,8 @@ AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: false
 AlignConsecutiveShortCaseStatements: 
     Enabled: true
     AcrossEmptyLines: true

@@ -27,8 +27,12 @@ Note: None
 void rcc_config_lsi(togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  RCC->CSR |= RCC_CSR_LSION; break;
-    case DISABLE: RCC->CSR &= ~RCC_CSR_LSION; break;
+    case ENABLE:
+        RCC->CSR |= RCC_CSR_LSION;
+        break;
+    case DISABLE:
+        RCC->CSR &= ~RCC_CSR_LSION;
+        break;
     }
 }
 
@@ -84,9 +88,15 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     // Select PLL clock source frequency.
     switch (pll_src) {
-    case CLOCK_SRC_HSI: pll_input_clk_freq = HSI_CLOCK_FREQ; break;
-    case CLOCK_SRC_HSE: pll_input_clk_freq = HSE_CLOCK_FREQ; break;
-    default:            ASSERT(false); break;
+    case CLOCK_SRC_HSI:
+        pll_input_clk_freq = HSI_CLOCK_FREQ;
+        break;
+    case CLOCK_SRC_HSE:
+        pll_input_clk_freq = HSE_CLOCK_FREQ;
+        break;
+    default:
+        ASSERT(false);
+        break;
     }
 
     // Calculations of PLL output frequency.
@@ -113,10 +123,15 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
 
     // Return clock depending on what the source is.
     switch (clock_source) {
-    case CLOCK_SRC_HSI: return HSI_CLOCK_FREQ;
-    case CLOCK_SRC_HSE: return HSE_CLOCK_FREQ;
-    case CLOCK_SRC_PLL: return rcc_get_pll_freq_hz();
-    default:            ASSERT(false); return 0;
+    case CLOCK_SRC_HSI:
+        return HSI_CLOCK_FREQ;
+    case CLOCK_SRC_HSE:
+        return HSE_CLOCK_FREQ;
+    case CLOCK_SRC_PLL:
+        return rcc_get_pll_freq_hz();
+    default:
+        ASSERT(false);
+        return 0;
     }
 }
 
@@ -166,7 +181,8 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 
     switch (bus) {
     case AHB1_BUS:
-    case AHB2_BUS: return ahb_clock;
+    case AHB2_BUS:
+        return ahb_clock;
     case APB1_BUS:
         apb1_ppre1_reg = ((RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK);
         apb1_prescaler = ((apb1_ppre1_reg & 0b100) != 0) ? apb_clock_prescaler[apb1_ppre1_reg & ~(0b100)] : 1;
@@ -178,7 +194,9 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
         apb2_clock     = ahb_clock / apb2_prescaler;
         return apb2_clock;
 
-    default: ASSERT(false); return 0;
+    default:
+        ASSERT(false);
+        return 0;
     }
 }
 
@@ -200,9 +218,14 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
     uint8_t const APB_PRESCALER = 1 << 2;
 
     switch (bus) {
-    case APB1_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK; break;
-    case APB2_BUS: bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK; break;
-    default:       ASSERT(false);
+    case APB1_BUS:
+        bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK;
+        break;
+    case APB2_BUS:
+        bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK;
+        break;
+    default:
+        ASSERT(false);
     }
 
     if (bus_prescaler & APB_PRESCALER) {
@@ -224,8 +247,12 @@ Note: Backup domain write protection must be disabled before this is allowed.
 void rcc_config_rtc_clock(togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:  RCC->BDCR |= RCC_BDCR_RTCEN; break;
-    case DISABLE: RCC->BDCR &= ~RCC_BDCR_RTCEN; break;
+    case ENABLE:
+        RCC->BDCR |= RCC_BDCR_RTCEN;
+        break;
+    case DISABLE:
+        RCC->BDCR &= ~RCC_BDCR_RTCEN;
+        break;
     }
 }
 
@@ -289,9 +316,15 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
                                          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
 
     switch (RTC_CLK_SRC) {
-    case RCC_RTC_CLK_SRC_NA:  ASSERT(false); break;
-    case RCC_RTC_CLK_SRC_LSE: rtc_clk_freq_hz = LSE_CLOCK_FREQ; break;
-    case RCC_RTC_CLK_SRC_LSI: rtc_clk_freq_hz = LSI_CLOCK_FREQ; break;
+    case RCC_RTC_CLK_SRC_NA:
+        ASSERT(false);
+        break;
+    case RCC_RTC_CLK_SRC_LSE:
+        rtc_clk_freq_hz = LSE_CLOCK_FREQ;
+        break;
+    case RCC_RTC_CLK_SRC_LSI:
+        rtc_clk_freq_hz = LSI_CLOCK_FREQ;
+        break;
     case RCC_RTC_CLK_SRC_HSE:
         ASSERT(RTC_HSE_CLK_PRE != RCC_RTC_HSE_PRE_NA);
         rtc_clk_freq_hz = HSE_CLOCK_FREQ / rtc_hse_pre_opts[RTC_HSE_CLK_PRE];
@@ -330,7 +363,8 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         }
         init_mco_gpio_pin(RCC_MCO2_SEL);
         break;
-    default: ASSERT(false);
+    default:
+        ASSERT(false);
     }
 }
 
@@ -359,7 +393,8 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
         mco_gpio_pin.p_gpiox          = GPIOC;
         mco_gpio_pin.gpio_conf.pin_no = PIN_NUM_9;
         break;
-    default: ASSERT(false);
+    default:
+        ASSERT(false);
     }
     gpio_init(&mco_gpio_pin);
 }

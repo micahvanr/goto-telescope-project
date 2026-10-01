@@ -94,6 +94,7 @@ void usart_init(usart_handle *const p_usart_handle)
 // Check each setting of the handle and ensure it is one of the available enum values.
 static void assert_usart_handle_param(usart_handle const *const p_usart_handle)
 {
+    // clang-format off
     uint8_t found_setting = false;
 
     // Peripheral check
@@ -165,6 +166,7 @@ static void assert_usart_handle_param(usart_handle const *const p_usart_handle)
     case USART_WORD_LENGTH_9_DATA_BITS: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 /***************************************************************************
@@ -390,7 +392,8 @@ void usart_it_handler(usart_handle *const p_usart_handle)
         }
 
         break;
-    default: ASSERT(false);
+    default:
+        ASSERT(false);
     }
 }
 

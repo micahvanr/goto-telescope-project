@@ -1251,7 +1251,8 @@ static printf_flags_t parse_flags(const char **format)
             flags |= FLAGS_HASH;
             (*format)++;
             break;
-        default: return flags;
+        default:
+            return flags;
         }
     } while (true);
 }
@@ -1358,7 +1359,8 @@ static inline void format_string_loop(output_gadget_t *output, const char *forma
                     flags |= FLAGS_INT64;
                 }
                 break;
-            default: break;
+            default:
+                break;
             }
             break;
         }
@@ -1399,7 +1401,8 @@ static inline void format_string_loop(output_gadget_t *output, const char *forma
                                                       : FLAGS_LONG_LONG;
             ADVANCE_IN_FORMAT_STRING(format);
             break;
-        default: break;
+        default:
+            break;
         }
 
         /* evaluate specifier */

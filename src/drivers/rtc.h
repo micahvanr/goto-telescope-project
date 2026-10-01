@@ -21,7 +21,7 @@ typedef enum {
 //} Misc. Constants
 //=========================================//{
 
-// TODO: Add applications section for enums
+// TODO: Add applications section for enums.
 // Register names or function names
 
 typedef enum {

@@ -5,6 +5,6 @@
 #include <stdint.h>
 
 #define UNUSED(x) (void)(x)
-#define __weak __attribute__((weak))
+#define __weak    __attribute__((weak))
 
 #endif

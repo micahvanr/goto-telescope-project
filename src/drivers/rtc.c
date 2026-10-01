@@ -455,8 +455,12 @@ rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
 {
     rtc_alarm_status_e alarm_status = RTC_ALARM_STATUS_NOT_TRIGGERED;
     switch (alarm_sel) {
-    case RTC_ALARM_A_SEL: alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK); break;
-    case RTC_ALARM_B_SEL: alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK); break;
+    case RTC_ALARM_A_SEL:
+        alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
+        break;
+    case RTC_ALARM_B_SEL:
+        alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK);
+        break;
     }
     return alarm_status;
 }
@@ -498,8 +502,11 @@ void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
         nvic_irq_config(TAMP_STAMP_IRQ_NUM_2, toggle);
         break;
 
-    case RTC_IT_OPT_NA:     break;
-    case RTC_IT_OPT_TAMPER: ASSERT(false); break;
+    case RTC_IT_OPT_NA:
+        break;
+    case RTC_IT_OPT_TAMPER:
+        ASSERT(false);
+        break;
     }
 }
 
@@ -727,6 +734,7 @@ static void set_rtc_clock(rtc_config const rtc_conf)
 
 static void assert_rtc_config_param(rtc_config const rtc_conf)
 {
+    // clang-format off
     uint8_t found_setting = false;
     switch (rtc_conf.rtc_sel) {
     case RCC_RTC_CLK_SRC_NA:  found_setting = true; break;
@@ -771,6 +779,7 @@ static void assert_rtc_config_param(rtc_config const rtc_conf)
     case RCC_RTC_HSE_PRE_31: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 static void set_rtc_time(rtc_time_data const time_data)
@@ -989,6 +998,7 @@ static inline void assert_year_param(uint8_t const year)
 
 static inline void assert_weekday_param(rtc_weekdays_e const weekday)
 {
+    // clang-format off
     uint8_t found_setting = false;
     switch (weekday) {
     case RTC_WEEKDAY_MONDAY:    found_setting = true; break;
@@ -1000,4 +1010,5 @@ static inline void assert_weekday_param(rtc_weekdays_e const weekday)
     case RTC_WEEKDAY_SUNDAY:    found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }

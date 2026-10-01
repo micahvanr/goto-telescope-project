@@ -9,10 +9,17 @@ static void test_gpio_it(void);
 void gpio_tests(test_type_e test)
 {
     switch (test) {
-    case GPIO_TEST_BLINK_LED:  test_gpio_blink_led(); break;
-    case GPIO_TEST_READ_WRITE: test_gpio_read_write(); break;
-    case GPIO_TEST_IT:         test_gpio_it(); break;
-    default:                   ASSERT(false);
+    case GPIO_TEST_BLINK_LED:
+        test_gpio_blink_led();
+        break;
+    case GPIO_TEST_READ_WRITE:
+        test_gpio_read_write();
+        break;
+    case GPIO_TEST_IT:
+        test_gpio_it();
+        break;
+    default:
+        ASSERT(false);
     }
 
     while (1);

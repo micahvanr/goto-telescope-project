@@ -9,10 +9,17 @@ static void test_printf(void);
 void misc_tests(test_type_e test)
 {
     switch (test) {
-    case MISC_TEST_ASSERT:    test_assert(); break;
-    case MISC_TEST_GET_CLOCK: test_get_clock(); break;
-    case MISC_TEST_PRINTF:    test_printf(); break;
-    default:                  ASSERT(false);
+    case MISC_TEST_ASSERT:
+        test_assert();
+        break;
+    case MISC_TEST_GET_CLOCK:
+        test_get_clock();
+        break;
+    case MISC_TEST_PRINTF:
+        test_printf();
+        break;
+    default:
+        ASSERT(false);
     }
 }
 

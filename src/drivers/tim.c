@@ -154,6 +154,7 @@ void tim_init(tim_handle *const p_tim_handle)
 // Check each setting of the handle and ensure it is one of the available enum values.
 static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
 {
+    // clang-format off
     uint8_t found_setting = false;
 
     assert_tim_peri_param(p_tim_handle->p_timx);
@@ -208,6 +209,7 @@ static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
     case TIM_ALIGN_CENTER_IT_DOWN_UP: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 /***************************************************************************
@@ -398,6 +400,7 @@ void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 // Check each setting of the config and ensure it is one of the available enum values.
 static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_config const ic_config)
 {
+    // clang-format off
     uint8_t found_setting;
 
     assert_tim_peri_param(p_timx);
@@ -465,6 +468,7 @@ static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_c
     case TIM_IC_EDGE_DETECTION_RISING_FALLING: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 /***************************************************************************
@@ -517,6 +521,7 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 // Check each setting of the config and ensure it is one of the available enum values.
 static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_config const oc_config)
 {
+    // clang-format off
     uint8_t found_setting;
     assert_tim_peri_param(p_timx);
 
@@ -556,6 +561,7 @@ static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_c
     case TIM_ARR_PRELOAD_EN: found_setting = true; break;
     }
     ASSERT(found_setting);
+    // clang-format on
 }
 
 /***************************************************************************
@@ -711,12 +717,24 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 
     uint32_t found_setting = false;
     switch (unit) {
-    case TIM_UNIT_S:   found_setting = true; break;
-    case TIM_UNIT_MS:  found_setting = true; break;
-    case TIM_UNIT_US:  found_setting = true; break;
-    case TIM_UNIT_HZ:  found_setting = true; break;
-    case TIM_UNIT_KHZ: found_setting = true; break;
-    case TIM_UNIT_MHZ: found_setting = true; break;
+    case TIM_UNIT_S:
+        found_setting = true;
+        break;
+    case TIM_UNIT_MS:
+        found_setting = true;
+        break;
+    case TIM_UNIT_US:
+        found_setting = true;
+        break;
+    case TIM_UNIT_HZ:
+        found_setting = true;
+        break;
+    case TIM_UNIT_KHZ:
+        found_setting = true;
+        break;
+    case TIM_UNIT_MHZ:
+        found_setting = true;
+        break;
     }
     ASSERT(found_setting);
 
@@ -731,20 +749,34 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     uint8_t const FACTOR_2 = 2;
 
     switch (unit) {
-    case TIM_UNIT_MHZ: time *= 1000; [[fallthrough]];
-    case TIM_UNIT_KHZ: time *= 1000; [[fallthrough]];
+    case TIM_UNIT_MHZ:
+        time *= 1000;
+        [[fallthrough]];
+    case TIM_UNIT_KHZ:
+        time *= 1000;
+        [[fallthrough]];
     case TIM_UNIT_HZ:
         period = 1000000 / time;
         unit   = TIM_UNIT_US;
         break;
-    default: period = time; break;
+    default:
+        period = time;
+        break;
     }
 
     switch (unit) {
-    case TIM_UNIT_S:  unit_in_seconds = 1; break;
-    case TIM_UNIT_MS: unit_in_seconds = 1000; break;
-    case TIM_UNIT_US: unit_in_seconds = 1000000; break;
-    default:          ASSERT(false); break;
+    case TIM_UNIT_S:
+        unit_in_seconds = 1;
+        break;
+    case TIM_UNIT_MS:
+        unit_in_seconds = 1000;
+        break;
+    case TIM_UNIT_US:
+        unit_in_seconds = 1000000;
+        break;
+    default:
+        ASSERT(false);
+        break;
     }
 
     clk_freq = rcc_get_timer_clock_freq_hz(tim_get_bus(p_timx));
@@ -836,6 +868,7 @@ static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 
 static void assert_tim_peri_param(tim_reg_def const *const p_timx)
 {
+    // clang-format off
     uint8_t found_setting = false;
 
     // Peripheral check
@@ -855,6 +888,7 @@ static void assert_tim_peri_param(tim_reg_def const *const p_timx)
                   : (p_timx == TIM14) ? true
                                       : false;
     ASSERT(found_setting);
+    // clang-format on
 }
 
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
