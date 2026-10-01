@@ -16,21 +16,24 @@
 //======================================================================================//{
 
 /***************************************************************************
-Function: syscfg_clock_enable
-Overview: Enables the SYSCFG clock inside RCC
+Function: syscfg_config_clock
+Overview: Enables or disables the SYSCFG clock inside RCC
 Parameters: 
     None
 Return: 
     None
 Note: None
 ***************************************************************************/
-void syscfg_clock_enable(void)
+void syscfg_config_clock(togglable_e toggle)
 {
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+    switch (toggle) {
+    case ENABLE:  RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN; break;
+    case DISABLE: RCC->APB2ENR &= ~RCC_APB2ENR_SYSCFGEN; break;
+    }
 }
 
 /***************************************************************************
-Function: syscfg_exti_config
+Function: syscfg_config_exti
 Overview: Configures the GPIO EXTI interrupt lines
 Parameters: 
     port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below
@@ -51,7 +54,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void syscfg_exti_config(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
+void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
 {
     uint8_t reg_num = exti_line % 4;
     // shift amount is exti x width multiplied by 0-3

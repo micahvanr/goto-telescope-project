@@ -120,11 +120,11 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
 {
     exti_lines_e exti_line_num = (exti_lines_e)p_gpio_handle->gpio_conf.pin_no;
 
-    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
+    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-    syscfg_clock_enable();
+    syscfg_config_clock(ENABLE);
 
-    syscfg_exti_config(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
+    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
     exti_config_it(exti_line_num, toggle);
 
