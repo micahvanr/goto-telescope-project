@@ -39,7 +39,7 @@ functions that can be categorized. I prefer verb-noun function names as I find t
 
 * Prefer to use the following verbs:
     * get/set: Instead of read/write unless read/write makes a lot more sense.
-    * is_x: Used when returning bool.
+    * is_x: Used when returning bool. Is allowed to be after the noun as it makes more sense.
     * clear
     * config: Prefer to not use enable/disable_x as that increases code size. Instead use config_x 
     with parameter to enable or disable the object.

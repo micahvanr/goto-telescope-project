@@ -13,28 +13,30 @@
 //                  Helper Function Prototypes
 //======================================================================================//{
 
-static void congifure_rtc_clock(rtc_config rtc_conf);
-static void congifure_rtc_clock_asserts(rtc_config rtc_conf);
+static void set_rtc_clock(rtc_config rtc_conf);
 static void set_rtc_time(rtc_time_data time_data);
-static void time_data_asserts(rtc_time_data time_data);
 static void set_rtc_date(rtc_date_data date_data);
-static void date_data_asserts(rtc_date_data time_data);
+
+static void assert_rtc_config_param(rtc_config rtc_conf);
+static void assert_time_data_param(rtc_time_data time_data);
+static void assert_date_data_param(rtc_date_data time_data);
+
 static inline uint8_t convert_bcd_to_dec(uint8_t tens, uint8_t units);
 static inline void unlock_rtc(void);
 static void set_rtc_pre(void);
 static void enable_alarm(rtc_alarm_sel_e alarm_sel, togglable_e it_toggle);
 static void disable_alarm(rtc_alarm_sel_e alarm_sel);
 
-static inline void assert_seconds(uint8_t seconds);
-static inline void assert_minutes(uint8_t minutes);
-static inline void assert_hours(uint8_t hours);
-static inline void assert_am_pm(rtc_time_am_pm_e am_pm);
-static inline void assert_time_format(rtc_time_format_e hours);
+static inline void assert_seconds_param(uint8_t seconds);
+static inline void assert_minutes_param(uint8_t minutes);
+static inline void assert_hours_param(uint8_t hours);
+static inline void assert_am_pm_param(rtc_time_am_pm_e am_pm);
+static inline void assert_time_format_param(rtc_time_format_e hours);
 
-static inline void assert_date(uint8_t date);
-static inline void assert_month(uint8_t month);
-static inline void assert_year(uint8_t year);
-static inline void assert_weekday(rtc_weekdays_e weekday);
+static inline void assert_date_param(uint8_t date);
+static inline void assert_month_param(uint8_t month);
+static inline void assert_year_param(uint8_t year);
+static inline void assert_weekday_param(rtc_weekdays_e weekday);
 
 //======================================================================================//}
 //                  Global Variables
@@ -65,7 +67,7 @@ void rtc_init(rtc_handler *const p_rtc_handler)
     // Enable clock to RTC
     rcc_config_rtc_clock(ENABLE);
 
-    congifure_rtc_clock(p_rtc_handler->rtc_conf);
+    set_rtc_clock(p_rtc_handler->rtc_conf);
 
     // NOTE: RTC is locked be default, must be unlocked first to change most registers
     unlock_rtc();
@@ -258,8 +260,8 @@ void rtc_alarm_set(rtc_alarm_config const alarm_conf)
     // Initialize to 0 and don't bother resetting each field as all bits will be set
     rtc_alarm_sel_e const alarm_sel = alarm_conf.alarm_sel;
 
-    time_data_asserts(alarm_conf.time_data);
-    date_data_asserts(alarm_conf.date_data);
+    assert_time_data_param(alarm_conf.time_data);
+    assert_date_data_param(alarm_conf.date_data);
 
     disable_alarm(alarm_sel);
 
@@ -286,13 +288,13 @@ void rtc_alarm_set(rtc_alarm_config const alarm_conf)
 
     enable_alarm(alarm_sel, alarm_conf.it_toggle);
 
-    rtc_it_config(RTC_IT_OPT_ALARM, alarm_conf.it_toggle);
+    rtc_config_it(RTC_IT_OPT_ALARM, alarm_conf.it_toggle);
 }
 
 void rtc_alarm_set_seconds(rtc_alarm_sel_e const alarm_sel, uint8_t const seconds,
                            rtc_alarm_seconds_match_e const seconds_match)
 {
-    assert_seconds(seconds);
+    assert_seconds_param(seconds);
 
     // NOTE: If the seconds field is set, the synchonous prescaler in RTC_PRER might need to be at least 3. See ref manual pg 805
 
@@ -320,7 +322,7 @@ void rtc_alarm_set_seconds(rtc_alarm_sel_e const alarm_sel, uint8_t const second
 void rtc_alarm_set_minutes(rtc_alarm_sel_e const alarm_sel, uint8_t const minutes,
                            rtc_alarm_minutes_match_e const minutes_match)
 {
-    assert_minutes(minutes);
+    assert_minutes_param(minutes);
 
     uint32_t temp_alrmxr = 0;
 
@@ -346,7 +348,7 @@ void rtc_alarm_set_minutes(rtc_alarm_sel_e const alarm_sel, uint8_t const minute
 void rtc_alarm_set_hours(rtc_alarm_sel_e const alarm_sel, uint8_t const hours,
                          rtc_alarm_hours_match_e const hours_match)
 {
-    assert_hours(hours);
+    assert_hours_param(hours);
 
     uint32_t temp_alrmxr = 0;
 
@@ -371,7 +373,7 @@ void rtc_alarm_set_hours(rtc_alarm_sel_e const alarm_sel, uint8_t const hours,
 
 void rtc_alarm_set_date(rtc_alarm_sel_e const alarm_sel, uint8_t const date, rtc_alarm_dateday_match_e const date_match)
 {
-    assert_date(date);
+    assert_date_param(date);
 
     uint32_t temp_alrmxr = 0;
     // Date/day alarm
@@ -398,7 +400,7 @@ void rtc_alarm_set_date(rtc_alarm_sel_e const alarm_sel, uint8_t const date, rtc
 void rtc_alarm_set_day(rtc_alarm_sel_e const alarm_sel, rtc_weekdays_e const weekday,
                        rtc_alarm_dateday_match_e const date_match)
 {
-    assert_weekday(weekday);
+    assert_weekday_param(weekday);
 
     uint32_t temp_alrmxr = 0;
     temp_alrmxr |= date_match << RTC_ALRMAR_MSK4_POS;
@@ -423,7 +425,7 @@ void rtc_alarm_set_day(rtc_alarm_sel_e const alarm_sel, rtc_weekdays_e const wee
 
 void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
 {
-    assert_am_pm(am_pm);
+    assert_am_pm_param(am_pm);
 
     switch (alarm_sel) {
     case RTC_ALARM_A_SEL:
@@ -460,7 +462,7 @@ rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
 }
 
 /***************************************************************************
-Function: rtc_it_config
+Function: rtc_config_it
 Overview: Configures the given RTC related interrupt
 Parameters: 
     it_opt: RTC interrupt options
@@ -475,7 +477,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void rtc_it_config(rtc_it_options_e it_opt, togglable_e toggle)
+void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
 {
     switch (it_opt) {
     case RTC_IT_OPT_ALARM:
@@ -516,7 +518,7 @@ void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
 
     if (timestamp_conf.it_opt == RTC_IT_OPT_TIMESTAMP) {
         RTC->CR |= RTC_CR_TSIE;
-        rtc_it_config(timestamp_conf.it_opt, ENABLE);
+        rtc_config_it(timestamp_conf.it_opt, ENABLE);
     }
 
     // Map TIMESTAMP to AF
@@ -632,7 +634,7 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
 
     if (wakeup_conf.it_opt == RTC_IT_OPT_WAKEUP) {
         RTC->CR |= RTC_CR_WUTIE;
-        rtc_it_config(wakeup_conf.it_opt, ENABLE);
+        rtc_config_it(wakeup_conf.it_opt, ENABLE);
     }
 
     rtc_wakeup_clear_status();
@@ -709,9 +711,9 @@ void rtc_it_handler(void)
 //                  Helper Function Implementation
 //======================================================================================//{
 
-static void congifure_rtc_clock(rtc_config const rtc_conf)
+static void set_rtc_clock(rtc_config const rtc_conf)
 {
-    congifure_rtc_clock_asserts(rtc_conf);
+    assert_rtc_config_param(rtc_conf);
 
     rcc_set_rtc_clk_src(rtc_conf.rtc_sel);
     if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI) {
@@ -723,7 +725,7 @@ static void congifure_rtc_clock(rtc_config const rtc_conf)
     }
 }
 
-static void congifure_rtc_clock_asserts(rtc_config const rtc_conf)
+static void assert_rtc_config_param(rtc_config const rtc_conf)
 {
     uint8_t found_setting = false;
     switch (rtc_conf.rtc_sel) {
@@ -776,7 +778,7 @@ static void set_rtc_time(rtc_time_data const time_data)
     uint32_t temp_tr = RTC->TR;
     uint32_t temp_cr = RTC->CR;
 
-    time_data_asserts(time_data);
+    assert_time_data_param(time_data);
 
     // Set general time format
     temp_cr &= ~(RTC_CR_FMT_MASK << RTC_CR_FMT_POS);
@@ -814,20 +816,20 @@ static void set_rtc_time(rtc_time_data const time_data)
     RTC->TR = temp_tr;
 }
 
-static void time_data_asserts(rtc_time_data const time_data)
+static void assert_time_data_param(rtc_time_data const time_data)
 {
-    assert_time_format(time_data.time_format);
-    assert_am_pm(time_data.time_am_pm);
-    assert_hours(time_data.hours);
-    assert_minutes(time_data.minutes);
-    assert_seconds(time_data.seconds);
+    assert_time_format_param(time_data.time_format);
+    assert_am_pm_param(time_data.time_am_pm);
+    assert_hours_param(time_data.hours);
+    assert_minutes_param(time_data.minutes);
+    assert_seconds_param(time_data.seconds);
 }
 
 static void set_rtc_date(rtc_date_data const date_data)
 {
     uint32_t temp_dr = RTC->DR;
 
-    date_data_asserts(date_data);
+    assert_date_data_param(date_data);
 
     // Set weekday
     temp_dr &= ~(RTC_DR_WDU_MASK << RTC_DR_WDU_POS);
@@ -860,12 +862,12 @@ static void set_rtc_date(rtc_date_data const date_data)
     RTC->DR = temp_dr;
 }
 
-static void date_data_asserts(rtc_date_data const date_data)
+static void assert_date_data_param(rtc_date_data const date_data)
 {
-    assert_weekday(date_data.weekday);
-    assert_date(date_data.date);
-    assert_month(date_data.month);
-    assert_year(date_data.year);
+    assert_weekday_param(date_data.weekday);
+    assert_date_param(date_data.date);
+    assert_month_param(date_data.month);
+    assert_year_param(date_data.year);
 }
 
 static inline uint8_t convert_bcd_to_dec(uint8_t const tens, uint8_t const units)
@@ -951,47 +953,47 @@ static void disable_alarm(rtc_alarm_sel_e const alarm_sel)
     }
 }
 
-static inline void assert_seconds(uint8_t const seconds)
+static inline void assert_seconds_param(uint8_t const seconds)
 {
     ASSERT(seconds <= 59);
 }
 
-static inline void assert_minutes(uint8_t const minutes)
+static inline void assert_minutes_param(uint8_t const minutes)
 {
     ASSERT(minutes <= 59);
 }
 
-static inline void assert_hours(uint8_t const hours)
+static inline void assert_hours_param(uint8_t const hours)
 {
     ASSERT(hours <= 23);
 }
 
-static inline void assert_am_pm(rtc_time_am_pm_e const am_pm)
+static inline void assert_am_pm_param(rtc_time_am_pm_e const am_pm)
 {
     ASSERT((am_pm == RTC_TIME_AM) || (am_pm == RTC_TIME_PM));
 }
 
-static inline void assert_time_format(rtc_time_format_e const time_format)
+static inline void assert_time_format_param(rtc_time_format_e const time_format)
 {
     ASSERT((time_format == RTC_TIME_FORMAT_12HR) || (time_format == RTC_TIME_FORMAT_24HR));
 }
 
-static inline void assert_date(uint8_t const date)
+static inline void assert_date_param(uint8_t const date)
 {
     ASSERT(date <= 31);
 }
 
-static inline void assert_month(uint8_t const month)
+static inline void assert_month_param(uint8_t const month)
 {
     ASSERT(month <= 12);
 }
 
-static inline void assert_year(uint8_t const year)
+static inline void assert_year_param(uint8_t const year)
 {
     ASSERT(year <= 99);
 }
 
-static inline void assert_weekday(rtc_weekdays_e const weekday)
+static inline void assert_weekday_param(rtc_weekdays_e const weekday)
 {
     uint8_t found_setting = false;
     switch (weekday) {

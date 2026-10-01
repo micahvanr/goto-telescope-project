@@ -1045,7 +1045,7 @@ void rtc_alarm_set_day(rtc_alarm_sel_e alarm_sel, rtc_weekdays_e weekday, rtc_al
 void rtc_alarm_set_am_pm(rtc_alarm_sel_e alarm_sel, uint8_t am_pm);
 rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e alarm_sel);
 
-void rtc_it_config(rtc_it_options_e it_opt, togglable_e toggle);
+void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle);
 
 void rtc_timestamp_init(rtc_timestamp_config timestamp_conf);
 rtc_timestamp_status_e rtc_timestamp_read_status(void);
