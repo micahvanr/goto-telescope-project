@@ -104,7 +104,7 @@ typedef __vo struct {
 //                  Function API Prototypes
 //======================================================================================//{
 
-void pwr_clock_enable(void);
-void pwr_backup_write_protection_dis(void);
+void pwr_config_clock(togglable_e toggle);
+void pwr_disable_backup_write_prot(void);
 
 #endif

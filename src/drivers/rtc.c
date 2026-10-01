@@ -58,8 +58,8 @@ void rtc_init(rtc_handler *const p_rtc_handler)
     uint8_t const UPDATE_ALLOWED = (1 << 6);
 
     // NOTE: PWR has to be disable backup write protection in order to write to certain parts of RCC
-    pwr_clock_enable();
-    pwr_backup_write_protection_dis();
+    pwr_config_clock(ENABLE);
+    pwr_disable_backup_write_prot();
 
     // RCC Config
     // Enable clock to RTC
