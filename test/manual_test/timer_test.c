@@ -24,8 +24,8 @@ static void timer_ic_gpio_pin_init(void);
 
 uint32_t count_to_period(uint32_t count);
 
-tim_handler g_tim1_handle = {0};
-tim_handler g_tim8_handle = {0};
+tim_handle g_tim1_handle = {0};
+tim_handle g_tim8_handle = {0};
 
 void timer_tests(test_type_e test)
 {
@@ -102,8 +102,8 @@ static void test_timer_auto(void)
     tim_start(g_tim1_handle.p_timx);
 
     while (1) {
-        while (tim_read_base_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
-        tim_reset_base_status(g_tim1_handle.p_timx);
+        while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
+        tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
     }
 }
@@ -117,8 +117,8 @@ static void test_timer_manual(void)
     tim_start(g_tim1_handle.p_timx);
 
     while (1) {
-        while (tim_read_base_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
-        tim_reset_base_status(g_tim1_handle.p_timx);
+        while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
+        tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
     }
 }
@@ -132,8 +132,8 @@ static void test_timer_freq(void)
     tim_start(g_tim1_handle.p_timx);
 
     while (1) {
-        while (tim_read_base_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
-        tim_reset_base_status(g_tim1_handle.p_timx);
+        while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
+        tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
     }
 }
@@ -169,8 +169,8 @@ static void test_oc_pwm(void)
     tim_start(g_tim1_handle.p_timx);
 
     while (1) {
-        // while (tim_read_base_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
-        // tim_reset_base_status(g_tim1_handle.p_timx);
+        // while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
+        // tim_reset_status(g_tim1_handle.p_timx);
         // toggle_debug_pin();
     }
 }
@@ -226,13 +226,13 @@ void TIM8_CC_IRQHandler(void)
         printf_("Diff: %lu", diff);
     }
     prev_value = curr_value;
-    tim_reset_base_status(g_tim8_handle.p_timx);
+    tim_reset_status(g_tim8_handle.p_timx);
 }
 
 void TIM1_UP_TIM10_IRQHandler(void)
 {
     toggle_debug_pin();
-    tim_reset_base_status(g_tim1_handle.p_timx);
+    tim_reset_status(g_tim1_handle.p_timx);
 }
 
 uint32_t count_to_period(uint32_t count)
@@ -243,7 +243,7 @@ uint32_t count_to_period(uint32_t count)
     uint32_t period;
     uint32_t const TIME_MS = 1000;
 
-    base_freq_hz    = rcc_get_timer_clock_freq_hz(get_tim_bus(g_tim8_handle.p_timx));
+    base_freq_hz    = rcc_get_timer_clock_freq_hz(tim_get_bus(g_tim8_handle.p_timx));
     timer_prescaler = g_tim8_handle.p_timx->PSC + 1;
     timer_freq_hz   = base_freq_hz / timer_prescaler;
     period          = (count * TIME_MS) / timer_freq_hz;

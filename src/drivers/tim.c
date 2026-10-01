@@ -14,22 +14,21 @@
 //======================================================================================//{
 
 // Assert helper functions
-static void tim_base_init_asserts(tim_handler const *const p_tim_handler);
-static void tim_ic_init_asserts(tim_reg_def const *const p_timx, tim_ic_config const ic_config);
-static void tim_oc_init_asserts(tim_reg_def const *const p_timx, tim_oc_config const oc_config);
-static void tim_peri_assert(tim_reg_def const *const p_timx);
+static void assert_tim_handle_param(tim_handle const *const p_tim_handle);
+static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_config const ic_config);
+static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_config const oc_config);
+static void assert_tim_peri_param(tim_reg_def const *const p_timx);
 
 // General helper functions
-static inline void tim_clock_enable(tim_reg_def const *const p_timx);
-static inline void tim_clock_disable(tim_reg_def const *const p_timx);
+static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e toggle);
 static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit);
-static inline bool overflow_check(tim_reg_def const *const p_timx, uint32_t check_num, uint32_t factor);
+static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t check_num, uint32_t factor);
 static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t duty_cycle);
 static tim_type_e get_tim_type(tim_reg_def const *const p_timx);
 
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx);
-static inline void set_tim_base_init_status(tim_reg_def const *const p_timx);
-static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx);
+static inline void set_tim_init_status(tim_reg_def const *const p_timx);
+static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx);
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 
@@ -61,7 +60,7 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
     // TODO: Move to seperate function?
     static uint8_t initialized = false;
-    tim_handler delay_handler  = {0};
+    tim_handle delay_handler  = {0};
 
     delay_handler.p_timx = DELAY_TIMER;
     if (initialized == false) {
@@ -78,8 +77,8 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 
     tim_start(delay_handler.p_timx);
 
-    while (tim_read_base_status(delay_handler.p_timx) != TIM_UPDATE_FOUND);
-    tim_reset_base_status(delay_handler.p_timx);
+    while (tim_read_status(delay_handler.p_timx) != TIM_UPDATE_FOUND);
+    tim_reset_status(delay_handler.p_timx);
 }
 
 /***************************************************************************
@@ -91,90 +90,90 @@ Return:
     None
 Note: Check handler's substructures for default values
 ***************************************************************************/
-void tim_init(tim_handler *const p_tim_handler)
+void tim_init(tim_handle *const p_tim_handle)
 {
     tim_type_e timer_type;
-    uint32_t temp_cr1  = p_tim_handler->p_timx->CR1;
-    uint32_t temp_smcr = p_tim_handler->p_timx->SMCR;
+    uint32_t temp_cr1  = p_tim_handle->p_timx->CR1;
+    uint32_t temp_smcr = p_tim_handle->p_timx->SMCR;
 
-    tim_base_init_asserts(p_tim_handler);
+    assert_tim_handle_param(p_tim_handle);
 
-    set_tim_base_init_status(p_tim_handler->p_timx);
+    set_tim_init_status(p_tim_handle->p_timx);
 
-    timer_type = get_tim_type(p_tim_handler->p_timx);
+    timer_type = get_tim_type(p_tim_handle->p_timx);
 
-    tim_clock_enable(p_tim_handler->p_timx);
+    tim_config_clock(p_tim_handle->p_timx, ENABLE);
 
     // One pulse mode
     temp_cr1 &= ~(TIM_CR1_OPM);
-    temp_cr1 |= p_tim_handler->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
+    temp_cr1 |= p_tim_handle->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
 
     if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)) {
         // Set direction
         temp_cr1 &= ~(TIM_CR1_DIR);
-        temp_cr1 |= p_tim_handler->tim_conf.direction << TIM_CR1_DIR_POS;
+        temp_cr1 |= p_tim_handle->tim_conf.direction << TIM_CR1_DIR_POS;
         // Set align mode
         temp_cr1 &= ~(TIM_CR1_CMS_MASK << TIM_CR1_DIR_POS);
-        temp_cr1 |= p_tim_handler->tim_conf.align_mode << TIM_CR1_CMS_POS;
+        temp_cr1 |= p_tim_handle->tim_conf.align_mode << TIM_CR1_CMS_POS;
     }
 
     if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)
         || (timer_type == TIM_TYPE_GENERAL_9_14)) {
         temp_smcr &= ~(TIM_SMCR_SMS_MASK << TIM_SMCR_SMS_POS);
-        temp_smcr |= p_tim_handler->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
-        if (p_tim_handler->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL) {
+        temp_smcr |= p_tim_handle->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
+        if (p_tim_handle->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL) {
             temp_smcr &= ~(TIM_SMCR_TS_MASK << TIM_SMCR_TS_POS);
-            temp_smcr |= p_tim_handler->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
+            temp_smcr |= p_tim_handle->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
         }
     }
 
     // Set prescaler and auto reload value
     // Use manual ARR and PSC
-    if ((p_tim_handler->timing_conf.auto_reload != 0) && (p_tim_handler->timing_conf.prescaler != 0)) {
-        p_tim_handler->p_timx->PSC = p_tim_handler->timing_conf.prescaler - 1;
-        p_tim_handler->p_timx->ARR = p_tim_handler->timing_conf.auto_reload - 1;
+    if ((p_tim_handle->timing_conf.auto_reload != 0) && (p_tim_handle->timing_conf.prescaler != 0)) {
+        p_tim_handle->p_timx->PSC = p_tim_handle->timing_conf.prescaler - 1;
+        p_tim_handle->p_timx->ARR = p_tim_handle->timing_conf.auto_reload - 1;
 
         // Calculate ARR and PSC from given time and unit
-    } else if ((p_tim_handler->timing_conf.time != 0) && (p_tim_handler->timing_conf.unit != 0)) {
-        set_prescaler_count(p_tim_handler->p_timx, p_tim_handler->timing_conf.time, p_tim_handler->timing_conf.unit);
+    } else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0)) {
+        set_prescaler_count(p_tim_handle->p_timx, p_tim_handle->timing_conf.time, p_tim_handle->timing_conf.unit);
     }
     // Set ARR preload
     // (if preload is off, the count value will count to this new value immediately)
     // (if preload is on, the count value will count to the new value after finishing what its counting to now)
     // This value is set after the prescaler and counter are set and only if a value has been set
     // otherwise a garbage value will be set in the PSC register
-    if ((p_tim_handler->p_timx->PSC != 0) && (p_tim_handler->p_timx->ARR != 0)) {
+    if ((p_tim_handle->p_timx->PSC != 0) && (p_tim_handle->p_timx->ARR != 0)) {
         temp_cr1 &= ~(TIM_CR1_ARPE);
-        temp_cr1 |= p_tim_handler->tim_conf.preload << TIM_CR1_ARPE_POS;
+        temp_cr1 |= p_tim_handle->tim_conf.preload << TIM_CR1_ARPE_POS;
     }
 
-    p_tim_handler->p_timx->CR1  = temp_cr1;
-    p_tim_handler->p_timx->SMCR = temp_smcr;
+    p_tim_handle->p_timx->CR1  = temp_cr1;
+    p_tim_handle->p_timx->SMCR = temp_smcr;
 }
 
 // Check each setting of the handle and ensure it is one of the available enum values
-static void tim_base_init_asserts(tim_handler const *const p_tim_handler)
+static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
 {
     uint8_t found_setting = false;
 
-    tim_peri_assert(p_tim_handler->p_timx);
+    assert_tim_peri_param(p_tim_handle->p_timx);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.preload) {
+    switch (p_tim_handle->tim_conf.preload) {
     case TIM_ARR_PRELOAD_DI: found_setting = true; break;
     case TIM_ARR_PRELOAD_EN: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.one_pulse_mode) {
+    switch (p_tim_handle->tim_conf.one_pulse_mode) {
     case TIM_ONE_PULSE_MODE_DI: found_setting = true; break;
     case TIM_ONE_PULSE_MODE_EN: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.clock_sel) {
+    switch (p_tim_handle->tim_conf.clock_sel) {
     case TIM_CLK_SEL_INTERNAL:         found_setting = true; break;
     case TIM_CLK_SEL_INTERNAL_TRIGGER: found_setting = true; break;
     case TIM_CLK_SEL_EXTERNAL:         found_setting = true; break;
@@ -182,7 +181,7 @@ static void tim_base_init_asserts(tim_handler const *const p_tim_handler)
     ASSERT(found_setting);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.trigger_sel) {
+    switch (p_tim_handle->tim_conf.trigger_sel) {
     case TIM_TRIGGER_SEL_ITR0:    found_setting = true; break;
     case TIM_TRIGGER_SEL_ITR1:    found_setting = true; break;
     case TIM_TRIGGER_SEL_ITR2:    found_setting = true; break;
@@ -195,14 +194,14 @@ static void tim_base_init_asserts(tim_handler const *const p_tim_handler)
     ASSERT(found_setting);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.direction) {
+    switch (p_tim_handle->tim_conf.direction) {
     case TIM_CNT_DIR_UP:   found_setting = true; break;
     case TIM_CNT_DIR_DOWN: found_setting = true; break;
     }
     ASSERT(found_setting);
 
     found_setting = false;
-    switch (p_tim_handler->tim_conf.align_mode) {
+    switch (p_tim_handle->tim_conf.align_mode) {
     case TIM_ALIGN_EDGE:              found_setting = true; break;
     case TIM_ALIGN_CENTER_IT_DOWN:    found_setting = true; break;
     case TIM_ALIGN_CENTER_IT_UP:      found_setting = true; break;
@@ -223,7 +222,7 @@ Note: None
 ***************************************************************************/
 void tim_reset(tim_reg_def const *const p_timx)
 {
-    tim_clock_disable(p_timx);
+    tim_config_clock(p_timx, DISABLE);
 }
 
 /***************************************************************************
@@ -238,7 +237,7 @@ Note: None
 ***************************************************************************/
 void tim_start(tim_reg_def *const p_timx)
 {
-    if (get_tim_base_init_status(p_timx) == TIM_NOT_INITIALIZED) {
+    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED) {
         ASSERT(false);
     }
     p_timx->CR1 |= TIM_CR1_CEN;
@@ -256,11 +255,11 @@ Note: None
 ***************************************************************************/
 void tim_start_it(tim_reg_def *const p_timx)
 {
-    if (get_tim_base_init_status(p_timx) == TIM_NOT_INITIALIZED) {
+    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED) {
         ASSERT(false);
     }
     p_timx->DIER |= TIM_DIER_UIE;
-    tim_it_config(p_timx, TIM_CHANNEL_NA, ENABLE);
+    tim_config_it(p_timx, TIM_CHANNEL_NA, ENABLE);
     p_timx->CR1 |= TIM_CR1_CEN;
 }
 
@@ -303,13 +302,13 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
         ASSERT(false);
     }
 
-    tim_it_config(p_timx, channel, ENABLE);
+    tim_config_it(p_timx, channel, ENABLE);
     p_timx->DIER |= TIM_DIER_CC1IE << channel;
     p_timx->CCER |= 1 << ENABLE_REG_SHIFT;
 }
 
 /***************************************************************************
-Function: tim_it_config
+Function: tim_config_it
 Overview: Configures the given TIMER base peripheral and/or channel
 Parameters: 
     p_timx: TIMER peripheral structure
@@ -324,7 +323,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_it_config(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
+void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
         nvic_irq_config(TIM1_CC_IRQ_NO_27, toggle);
@@ -375,7 +374,7 @@ void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
     uint8_t const MODE_REG_SHIFT   = (ic_config.channel_num % 2) * 8;
     uint8_t const ENABLE_REG_SHIFT = (ic_config.channel_num * 4);
 
-    tim_ic_init_asserts(p_timx, ic_config);
+    assert_tim_ic_config_param(p_timx, ic_config);
 
     set_tim_channel_init_status(p_timx, ic_config.channel_num);
 
@@ -397,11 +396,11 @@ void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 }
 
 // Check each setting of the config and ensure it is one of the available enum values
-static void tim_ic_init_asserts(tim_reg_def const *const p_timx, tim_ic_config const ic_config)
+static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_config const ic_config)
 {
     uint8_t found_setting;
 
-    tim_peri_assert(p_timx);
+    assert_tim_peri_param(p_timx);
 
     found_setting = false;
     switch (ic_config.channel_num) {
@@ -486,7 +485,7 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
     uint8_t const MODE_REG_SHIFT   = (oc_config.channel_num % 2) * 8;
     uint8_t const ENABLE_REG_SHIFT = (oc_config.channel_num * 4);
 
-    tim_oc_init_asserts(p_timx, oc_config);
+    assert_tim_oc_config_param(p_timx, oc_config);
 
     set_tim_channel_init_status(p_timx, oc_config.channel_num);
 
@@ -516,10 +515,10 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 }
 
 // Check each setting of the config and ensure it is one of the available enum values
-static void tim_oc_init_asserts(tim_reg_def const *const p_timx, tim_oc_config const oc_config)
+static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_config const oc_config)
 {
     uint8_t found_setting;
-    tim_peri_assert(p_timx);
+    assert_tim_peri_param(p_timx);
 
     found_setting = false;
     switch (oc_config.channel_num) {
@@ -560,7 +559,7 @@ static void tim_oc_init_asserts(tim_reg_def const *const p_timx, tim_oc_config c
 }
 
 /***************************************************************************
-Function: tim_read_base_status
+Function: tim_read_status
 Overview: Reads the status update flag
 Parameters: 
     p_timx: TIMER peripheral
@@ -571,13 +570,13 @@ Return:
     TIM_UPDATE_FOUND [1]
 Note: None
 ***************************************************************************/
-tim_status_e tim_read_base_status(tim_reg_def const *const p_timx)
+tim_status_e tim_read_status(tim_reg_def const *const p_timx)
 {
     return (tim_status_e)(p_timx->SR & TIM_SR_UIF);
 }
 
 /***************************************************************************
-Function: tim_reset_base_status
+Function: tim_reset_status
 Overview: Resets the status update flag for the timer
 Parameters: 
     p_timx: TIMER peripheral
@@ -586,7 +585,7 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void tim_reset_base_status(tim_reg_def *const p_timx)
+void tim_reset_status(tim_reg_def *const p_timx)
 {
     p_timx->SR &= ~TIM_SR_UIF;
 }
@@ -609,7 +608,7 @@ tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channe
 }
 
 /***************************************************************************
-Function: tim_reset_base_status
+Function: tim_reset_status
 Overview: Resets the status update flag for the given channel
 Parameters: 
     p_timx: TIMER peripheral
@@ -648,7 +647,7 @@ uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const 
 //                  Helper Function Implementation
 //======================================================================================//
 
-bus_types get_tim_bus(tim_reg_def const *const p_timx)
+bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
     // If TIMER peripheral on APB2
     if ((p_timx == TIM1) || (p_timx == TIM8) || (p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11)) {
@@ -660,12 +659,11 @@ bus_types get_tim_bus(tim_reg_def const *const p_timx)
     }
 }
 
-static inline void tim_clock_enable(tim_reg_def const *const p_timx)
+static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e toggle)
 {
+    bus_types const tim_bus = tim_get_bus(p_timx);
 
-    switch (get_tim_bus(p_timx)) {
-
-    case APB1_BUS:
+    if ((ENABLE == toggle) && (APB1_BUS == tim_bus)) {
         RCC->APB1ENR |= (p_timx == TIM2)  ? RCC_APB1ENR_TIM2EN
                       : (p_timx == TIM3)  ? RCC_APB1ENR_TIM3EN
                       : (p_timx == TIM4)  ? RCC_APB1ENR_TIM4EN
@@ -676,26 +674,14 @@ static inline void tim_clock_enable(tim_reg_def const *const p_timx)
                       : (p_timx == TIM13) ? RCC_APB1ENR_TIM13EN
                       : (p_timx == TIM14) ? RCC_APB1ENR_TIM14EN
                                           : 0;
-        break;
-
-    case APB2_BUS:
+    } else if ((ENABLE == toggle) && (APB2_BUS == tim_bus)) {
         RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
                       : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
                       : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
                       : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
                       : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
                                           : 0;
-        break;
-
-    default: ASSERT(false);
-    }
-}
-
-static inline void tim_clock_disable(tim_reg_def const *const p_timx)
-{
-    switch (get_tim_bus(p_timx)) {
-
-    case APB1_BUS:
+    } else if ((DISABLE == toggle) && (APB1_BUS == tim_bus)) {
         RCC->APB1RSTR |= (p_timx == TIM2)  ? RCC_APB1RSTR_TIM2RST
                        : (p_timx == TIM3)  ? RCC_APB1RSTR_TIM3RST
                        : (p_timx == TIM4)  ? RCC_APB1RSTR_TIM4RST
@@ -706,18 +692,17 @@ static inline void tim_clock_disable(tim_reg_def const *const p_timx)
                        : (p_timx == TIM13) ? RCC_APB1RSTR_TIM13RST
                        : (p_timx == TIM14) ? RCC_APB1RSTR_TIM14RST
                                            : 0;
-        break;
+    }
 
-    case APB2_BUS:
-        RCC->APB2RSTR |= (p_timx == TIM1)  ? RCC_APB2RSTR_TIM1RST
-                       : (p_timx == TIM8)  ? RCC_APB2RSTR_TIM8RST
-                       : (p_timx == TIM9)  ? RCC_APB2RSTR_TIM9RST
-                       : (p_timx == TIM10) ? RCC_APB2RSTR_TIM10RST
-                       : (p_timx == TIM11) ? RCC_APB2RSTR_TIM11RST
-                                           : 0;
-        break;
-
-    default: ASSERT(false);
+    else if ((DISABLE == toggle) && (APB2_BUS == tim_bus)) {
+        RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
+                      : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
+                      : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
+                      : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
+                      : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
+                                          : 0;
+    } else {
+        ASSERT(false);
     }
 }
 
@@ -762,7 +747,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     default:          ASSERT(false); break;
     }
 
-    clk_freq = rcc_get_timer_clock_freq_hz(get_tim_bus(p_timx));
+    clk_freq = rcc_get_timer_clock_freq_hz(tim_get_bus(p_timx));
 
     // Finding the highest prescaler value:
     // Increase the prescaler value until one of the following is true
@@ -772,7 +757,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     // This series of operations will result in a high prescaler value while maintaining accuracy
 
     while (((clk_freq % FACTOR_5) == 0) && (((clk_freq / FACTOR_5) % unit_in_seconds) == 0)
-           && !overflow_check(p_timx, prescaler, FACTOR_5)) {
+           && !check_overflow(p_timx, prescaler, FACTOR_5)) {
         clk_freq /= FACTOR_5;
         prescaler *= FACTOR_5;
 
@@ -781,7 +766,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     }
 
     while (((clk_freq % FACTOR_3) == 0) && (((clk_freq / FACTOR_3) % unit_in_seconds) == 0)
-           && !overflow_check(p_timx, prescaler, FACTOR_3)) {
+           && !check_overflow(p_timx, prescaler, FACTOR_3)) {
         clk_freq /= FACTOR_3;
         prescaler *= FACTOR_3;
 
@@ -790,7 +775,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     }
 
     while (((clk_freq % FACTOR_2) == 0) && (((clk_freq / FACTOR_2) % unit_in_seconds) == 0)
-           && !overflow_check(p_timx, prescaler, FACTOR_2)
+           && !check_overflow(p_timx, prescaler, FACTOR_2)
            && (((clk_freq / (FACTOR_2 * unit_in_seconds)) * period) > 1)) {
         clk_freq /= FACTOR_2;
         prescaler *= FACTOR_2;
@@ -808,7 +793,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 
 // Checks multiplication against an unsigned 16 bit variable
 // Returns true if there is an overflow
-static inline bool overflow_check(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
+static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
 {
     uint32_t max;
     if ((p_timx == TIM2) || (p_timx == TIM5)) {
@@ -849,7 +834,7 @@ static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
     return 0;
 }
 
-static void tim_peri_assert(tim_reg_def const *const p_timx)
+static void assert_tim_peri_param(tim_reg_def const *const p_timx)
 {
     uint8_t found_setting = false;
 
@@ -908,12 +893,12 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
     return 0;
 }
 
-static inline void set_tim_base_init_status(tim_reg_def const *const p_timx)
+static inline void set_tim_init_status(tim_reg_def const *const p_timx)
 {
     g_tim_peri_init |= (1 << map_tim_peri_to_num(p_timx));
 }
 
-static inline tim_init_check_e get_tim_base_init_status(tim_reg_def const *const p_timx)
+static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx)
 {
     return 0b1 & (g_tim_peri_init >> map_tim_peri_to_num(p_timx));
 }

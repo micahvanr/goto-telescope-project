@@ -865,7 +865,7 @@ typedef struct {
     tim_reg_def *p_timx;
     tim_config tim_conf;
     tim_timing_config timing_conf;
-} tim_handler;
+} tim_handle;
 
 // Timer input capture channel settings
 typedef struct {
@@ -913,7 +913,7 @@ typedef struct {
 // Delay functions
 void tim_delay(uint32_t time, tim_unit_of_time_e unit);
 
-void tim_init(tim_handler *const p_tim_handler);
+void tim_init(tim_handle *const p_tim_handle);
 void tim_reset(tim_reg_def const *const p_timx);
 
 void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config ic_config);
@@ -924,15 +924,15 @@ void tim_start_it(tim_reg_def *const p_timx);
 void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 
-void tim_it_config(tim_reg_def const *const p_timx, tim_channel_sel_e channel, togglable_e toggle);
+void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e channel, togglable_e toggle);
 
-tim_status_e tim_read_base_status(tim_reg_def const *const p_timx);
-void tim_reset_base_status(tim_reg_def *const p_timx);
+tim_status_e tim_read_status(tim_reg_def const *const p_timx);
+void tim_reset_status(tim_reg_def *const p_timx);
 tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 
 uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channel);
-bus_types get_tim_bus(tim_reg_def const *const p_timx);
+bus_types tim_get_bus(tim_reg_def const *const p_timx);
 
 //} Other Configuration
 //=========================================//{
