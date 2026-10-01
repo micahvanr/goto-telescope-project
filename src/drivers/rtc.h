@@ -1060,3 +1060,6 @@ void rtc_wakeup_clear_status(void);
 void rtc_it_handler(void);
 
 #endif
+
+// *End of file*
+

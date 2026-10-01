@@ -79,3 +79,6 @@ pin_logic_level_e read_debug_button(void)
 {
     return gpio_read(DEBUG_BUTTON_PORT, DEBUG_BUTTUN_PIN_NUM);
 }
+
+// *End of file*
+

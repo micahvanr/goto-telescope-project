@@ -6,3 +6,6 @@
 void usart_tests(test_type_e test);
 
 #endif
+
+// *End of file*
+

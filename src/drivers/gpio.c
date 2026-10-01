@@ -398,3 +398,6 @@ static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglabl
             break;
     }
 }
+
+// *End of file*
+

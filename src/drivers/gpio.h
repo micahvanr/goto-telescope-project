@@ -728,3 +728,6 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e toggle);
 void gpio_it_handler(exti_lines_e exti_line);
 
 #endif
+
+// *End of file*
+

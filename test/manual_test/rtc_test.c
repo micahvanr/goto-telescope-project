@@ -195,3 +195,6 @@ void RTC_Alarm_IRQHandler(void)
     }
     rtc_it_handler();
 }
+
+// *End of file*
+

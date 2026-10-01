@@ -34,6 +34,8 @@ AlignEscapedNewlines: LeftWithLastLine
 AlignAfterOpenBracket: true
 IndentCaseLabels: true
 SpaceAfterCStyleCast: true
+LineEnding: LF
 BreakBinaryOperations: Never
+MaxEmptyLinesToKeep: 1
 BreakBeforeBinaryOperators: NonAssignment
 ReflowComments: Never

@@ -1039,3 +1039,6 @@ static inline void assert_weekday_param(rtc_weekdays_e const weekday)
     ASSERT(found_setting);
     // clang-format on
 }
+
+// *End of file*
+

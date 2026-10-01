@@ -408,3 +408,6 @@ void usart_it_handler(usart_handle *const p_usart_handle);
 void __weak usart_callback(usart_handle *p_usart_handle, usart_event_e event);
 
 #endif
+
+// *End of file*
+

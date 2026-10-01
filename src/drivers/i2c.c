@@ -846,3 +846,6 @@ static void slave_addr(i2c_handle const *const p_i2c_handle)
 {
     clear_address_flag(p_i2c_handle->p_i2cx);
 }
+
+// *End of file*
+

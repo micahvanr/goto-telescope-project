@@ -1916,3 +1916,6 @@ void putchar_(char c)
 {
     usart_transmit_single_byte(PRINTF_USART, c);
 }
+
+// *End of file*
+

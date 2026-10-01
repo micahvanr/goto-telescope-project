@@ -19,3 +19,6 @@
 void assert_handler(void);
 
 #endif
+
+// *End of file*
+

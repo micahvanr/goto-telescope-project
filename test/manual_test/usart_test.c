@@ -125,3 +125,6 @@ void USART2_IRQHandler(void)
 {
     usart_it_handler(&g_usart_test_handle);
 }
+
+// *End of file*
+

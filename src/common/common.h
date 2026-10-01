@@ -8,3 +8,6 @@
 #define __weak    __attribute__((weak))
 
 #endif
+
+// *End of file*
+

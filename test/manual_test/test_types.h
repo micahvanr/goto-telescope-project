@@ -34,3 +34,6 @@ typedef enum {
 } test_type_e;
 
 #endif
+
+// *End of file*
+

@@ -602,3 +602,6 @@ static void recieve_data(usart_handle *const p_usart_handle)
     p_usart_handle->usart_it_data.txrx_length--;
     p_usart_handle->usart_it_data.txrx_buffer++;
 }
+
+// *End of file*
+

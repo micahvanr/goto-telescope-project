@@ -202,3 +202,6 @@ void I2C1_ER_IRQHandler()
 {
     ASSERT(false);
 }
+
+// *End of file*
+

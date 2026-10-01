@@ -48,3 +48,6 @@ static void test_printf(void)
         for (uint32_t i = 0; i < 50000; i++);
     }
 }
+
+// *End of file*
+

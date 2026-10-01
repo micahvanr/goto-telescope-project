@@ -156,3 +156,6 @@ void exti_clear_pending(exti_lines_e line_no)
 {
     EXTI->PR |= (1 << line_no);
 }
+
+// *End of file*
+

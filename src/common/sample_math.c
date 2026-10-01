@@ -19,3 +19,6 @@ uint32_t add(uint32_t num1, uint32_t num2)
 {
     return extern_add(num1, num2);
 }
+
+// *End of file*
+

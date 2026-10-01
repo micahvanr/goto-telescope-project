@@ -413,3 +413,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle);
 void __weak i2c_callback(i2c_handle *p_i2c_handle, i2c_event_e event);
 
 #endif
+
+// *End of file*
+

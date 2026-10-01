@@ -1188,3 +1188,6 @@ uint32_t rcc_get_rtc_clock_freq_hz(void);
 void rcc_config_mco(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
 
 #endif
+
+// *End of file*
+

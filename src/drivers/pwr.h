@@ -108,3 +108,6 @@ void pwr_config_clock(togglable_e toggle);
 void pwr_disable_backup_write_prot(void);
 
 #endif
+
+// *End of file*
+

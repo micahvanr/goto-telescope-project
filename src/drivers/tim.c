@@ -1043,3 +1043,6 @@ static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *co
 {
     return 0b1 & (g_tim_channel_init[map_tim_peri_to_num(p_timx)] >> channel);
 }
+
+// *End of file*
+

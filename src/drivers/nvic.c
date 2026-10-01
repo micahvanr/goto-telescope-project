@@ -69,3 +69,6 @@ void nvic_irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
 //======================================================================================//}
 //                  Helper Function Implementation
 //======================================================================================//{
+
+// *End of file*
+

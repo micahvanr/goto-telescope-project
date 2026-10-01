@@ -76,3 +76,6 @@ void nvic_irq_config(irq_number_e irq_num, togglable_e toggle);
 void nvic_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 
 #endif
+
+// *End of file*
+

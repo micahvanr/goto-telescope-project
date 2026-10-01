@@ -273,3 +273,6 @@ uint32_t count_to_period(uint32_t count)
 
     return period;
 }
+
+// *End of file*
+

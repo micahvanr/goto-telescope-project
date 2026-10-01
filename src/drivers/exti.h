@@ -559,3 +559,6 @@ exti_pend_status_e exti_get_pending(exti_lines_e line_no);
 void exti_clear_pending(exti_lines_e line_no);
 
 #endif
+
+// *End of file*
+
