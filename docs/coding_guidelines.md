@@ -13,6 +13,10 @@ breaks these rules should have comments explaining why the rule was broken.
 
 
 # General Rules
+## Which C?
+Exception to not alter or rename keyword is with the assert library. Including this add a lot of bloat
+and I prefer my own implementation.
+
 ## Common Abbreviations
 See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
 
