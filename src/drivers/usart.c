@@ -3,22 +3,19 @@
 #include "common.h"
 #include "nvic.h"
 #include "rcc.h"
+#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Helper Function Prototypes
 //======================================================================================//{
 
 // Assert helper functions
-static void usart_init_asserts(usart_handle const *const p_usart_handle);
+static void assert_usart_handle_param(usart_handle const *const p_usart_handle);
 static inline void set_usart_init_status(usart_reg_def const *const p_usartx);
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx);
 
 // General helper functions
-static inline void usart_clock_enable(usart_reg_def const *const p_usartx);
-static inline void usart_clock_disable(usart_reg_def const *const p_usartx);
-
-static inline void enable_interrupts(usart_reg_def *const p_usartx);
-static inline void disable_interrupts(usart_reg_def *const p_usartx);
+static inline void usart_config_clock(usart_reg_def const *const p_usartx, togglable_e toggle);
 
 static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx);
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
@@ -52,13 +49,13 @@ void usart_init(usart_handle *const p_usart_handle)
     uint32_t temp_cr1 = p_usart_handle->p_usartx->CR1;
 
     // Ensure handle structure values are valid
-    usart_init_asserts(p_usart_handle);
+    assert_usart_handle_param(p_usart_handle);
 
     // Initialize the port in the init variable
     set_usart_init_status(p_usart_handle->p_usartx);
 
     // Enable clock of USART peripheral
-    usart_clock_enable(p_usart_handle->p_usartx);
+    usart_config_clock(p_usart_handle->p_usartx, ENABLE);
 
     // Enable USART peripheral
     temp_cr1 |= USART_CR1_UE;
@@ -95,7 +92,7 @@ void usart_init(usart_handle *const p_usart_handle)
 }
 
 // Check each setting of the handle and ensure it is one of the available enum values
-static void usart_init_asserts(usart_handle const *const p_usart_handle)
+static void assert_usart_handle_param(usart_handle const *const p_usart_handle)
 {
     uint8_t found_setting = false;
 
@@ -181,7 +178,7 @@ Note: None
 ***************************************************************************/
 void usart_reset(usart_reg_def const *const p_usartx)
 {
-    usart_clock_disable(p_usartx);
+    usart_config_clock(p_usartx, DISABLE);
 }
 
 /***************************************************************************
@@ -265,7 +262,7 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_TX;
 
-    enable_interrupts(p_usart_handle->p_usartx);
+    usart_config_it(p_usart_handle->p_usartx, ENABLE);
 }
 
 /***************************************************************************
@@ -297,11 +294,12 @@ void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data,
     if (p_usart_handle->usart_conf.parity_control == USART_PARITY_CONTROL_ENABLE) {
         p_usart_handle->p_usartx->CR1 |= USART_CR1_PCE;
     }
-    enable_interrupts(p_usart_handle->p_usartx);
+
+    usart_config_it(p_usart_handle->p_usartx, ENABLE);
 }
 
 /***************************************************************************
-Function: usart_it_config
+Function: usart_config_it
 Overview: Enables or disables the given USART peripheral interrupts
 Parameters:
     p_usartx: USART peripheral 
@@ -314,8 +312,22 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void usart_it_config(usart_reg_def const *const p_usartx, togglable_e const toggle)
+void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 {
+    uint32_t temp_cr1 = p_usartx->CR1;
+    switch (toggle) {
+    case ENABLE:
+        usart_config_it(p_usartx, ENABLE);
+        temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
+        p_usartx->CR1 = temp_cr1;
+        break;
+    case DISABLE:
+        temp_cr1 &=
+            ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
+        p_usartx->CR1 = temp_cr1;
+        break;
+    }
+
     if (p_usartx == USART1) {
         nvic_irq_config(USART1_IRQ_NO_37, toggle);
     } else if (p_usartx == USART2) {
@@ -358,7 +370,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             recieve_data(p_usart_handle);
         }
         if (p_usart_handle->usart_it_data.txrx_length == 0) {
-            disable_interrupts(p_usart_handle->p_usartx);
+            usart_config_it(p_usart_handle->p_usartx, DISABLE);
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
             usart_callback(p_usart_handle, USART_EVENT_CMPLT);
         }
@@ -371,7 +383,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             transfer_data(p_usart_handle);
         }
         if ((p_usart_handle->usart_it_data.txrx_length == 0) && (status_reg & USART_SR_TC)) {
-            disable_interrupts(p_usart_handle->p_usartx);
+            usart_config_it(p_usart_handle->p_usartx, DISABLE);
             p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
             p_usart_handle->usart_it_data.status = USART_STATUS_READY;
             usart_callback(p_usart_handle, USART_EVENT_CMPLT);
@@ -419,35 +431,30 @@ static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx)
         return APB2_BUS;
     }
 }
-static inline void usart_clock_enable(usart_reg_def const *const p_usartx)
+
+static inline void usart_config_clock(usart_reg_def const *const p_usartx, togglable_e toggle)
 {
-    switch (get_usart_bus(p_usartx)) {
-    case APB1_BUS:
+    bus_types const usart_bus = get_usart_bus(p_usartx);
+
+    if ((ENABLE == toggle) && (APB1_BUS == usart_bus)) {
+
         RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                              : 0;
-        break;
-    case APB2_BUS:
+    } else if ((ENABLE == toggle) && (APB2_BUS == usart_bus)) {
         RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
-        break;
-    default: ASSERT(false);
-    }
-}
-static inline void usart_clock_disable(usart_reg_def const *const p_usartx)
-{
-    // If USART peripheral on APB1
-    if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
+    } else if ((DISABLE == toggle) && (APB1_BUS == usart_bus)) {
         RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
                        : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
                        : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
                        : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
                                               : 0;
-    }
-    // If USART peripheral on APB2
-    else {
+    } else if ((DISABLE == toggle) && (APB2_BUS == usart_bus)) {
         RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
+    } else {
+        ASSERT(false);
     }
 }
 
@@ -543,19 +550,4 @@ static void recieve_data(usart_handle *const p_usart_handle)
     *p_usart_handle->usart_it_data.txrx_buffer = p_usart_handle->p_usartx->DR;
     p_usart_handle->usart_it_data.txrx_length--;
     p_usart_handle->usart_it_data.txrx_buffer++;
-}
-
-static inline void enable_interrupts(usart_reg_def *const p_usartx)
-{
-    usart_it_config(p_usartx, ENABLE);
-    uint32_t temp_cr1 = p_usartx->CR1;
-    temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
-    p_usartx->CR1 = temp_cr1;
-}
-
-static inline void disable_interrupts(usart_reg_def *const p_usartx)
-{
-    uint32_t temp_cr1 = p_usartx->CR1;
-    temp_cr1 &= ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
-    p_usartx->CR1 = temp_cr1;
 }

@@ -60,7 +60,7 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
     // TODO: Move to seperate function?
     static uint8_t initialized = false;
-    tim_handle delay_handler  = {0};
+    tim_handle delay_handler   = {0};
 
     delay_handler.p_timx = DELAY_TIMER;
     if (initialized == false) {
