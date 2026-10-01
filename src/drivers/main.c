@@ -22,12 +22,8 @@
 
 // TODO: Add project roadmap using mermaid markdown
 // TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
-
-// TODO: Look into Barr C Coding Guidelines.
-// NOTE: Constants names are fine
-// NOTE: All enums should have a type defined
-
-// TODO: Not all enums need to be typedefined
+// TODO: Change config_x (enable/disable) to toggable_x
+// TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
 // TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
 
