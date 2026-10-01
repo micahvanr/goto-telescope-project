@@ -58,12 +58,12 @@ static void i2c1_gpio_init(void)
 
     // PB6 - SCL
     i2c1_pins.p_gpiox          = GPIOB;
-    i2c1_pins.gpio_conf.pin_no = PIN_NO_6;
+    i2c1_pins.gpio_conf.pin_no = PIN_NUM_6;
     gpio_init(&i2c1_pins);
 
     // PB7 - SDA
     i2c1_pins.p_gpiox          = GPIOB;
-    i2c1_pins.gpio_conf.pin_no = PIN_NO_7;
+    i2c1_pins.gpio_conf.pin_no = PIN_NUM_7;
     gpio_init(&i2c1_pins);
 }
 

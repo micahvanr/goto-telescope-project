@@ -685,7 +685,7 @@ typedef __vo struct {
 
 // Configuration definition (used to initialize and configure gpio port settings)
 typedef struct {
-    pin_number_e pin_no;                    // Default: PIN_NO_0
+    pin_number_e pin_no;                    // Default: PIN_NUM_0
     gpio_modes_e mode;                      // Default: GPIO_MODE_INPUT
     gpio_output_type_e output_type;         // Default: GPIO_OPTYPE_PUSH_PULL
     gpio_output_speed_e output_speed;       // Default: GPIO_OSPEED_LOW

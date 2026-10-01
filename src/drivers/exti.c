@@ -9,7 +9,7 @@ Function: exti_config_it
 Overview: Enables or disable the interrupts for the specified EXTI line
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
     toggle:
         ENABLE  [1]
         DISABLE [0]
@@ -30,7 +30,7 @@ Function: exti_config_event
 Overview: Enables or disables the events for the specified EXTI line
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
     toggle:
         ENABLE  [1]
         DISABLE [0]
@@ -51,7 +51,7 @@ Function: exti_config_rising_edge
 Overview: Enables or disables the rising edge trigger for the specified EXTI line
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
     toggle:
         ENABLE  [1]
         DISABLE [0]
@@ -72,7 +72,7 @@ Function: exti_config_falling_edge
 Overview: Enables or disables the falling edge trigger for the specified EXTI line
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
     toggle:
         ENABLE  [1]
         DISABLE [0]
@@ -93,7 +93,7 @@ Function: exti_trigger_software_it_event
 Overview: Triggers a software interrupt/event for the specified EXTI line
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
 Return: 
     None
 Note: None
@@ -108,7 +108,7 @@ Function: exti_get_pending
 Overview: Returns whether the EXTI line has a pending trigger
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
 Return: 
     exti_pend_status_e 
         EXTI_PEND_STATUS_NOT_TRIGGERED 
@@ -125,7 +125,7 @@ Function: exti_clear_pending
 Overview: Clears the specified EXTI line's pending trigger
 Parameters: 
     line_no:
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
 Return: 
     None
 Note: None

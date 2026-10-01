@@ -326,33 +326,33 @@ Note: None
 void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
-        nvic_irq_config(TIM1_CC_IRQ_NO_27, toggle);
+        nvic_irq_config(TIM1_CC_IRQ_NUM_27, toggle);
         return;
     } else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8)) {
-        nvic_irq_config(TIM8_CC_IRQ_NO_46, toggle);
+        nvic_irq_config(TIM8_CC_IRQ_NUM_46, toggle);
         return;
     }
 
     if (p_timx == TIM9) {
-        nvic_irq_config(TIM1_BRK_TIM9_IRQ_NO_24, toggle);
+        nvic_irq_config(TIM1_BRK_TIM9_IRQ_NUM_24, toggle);
     } else if ((p_timx == TIM1) || (p_timx == TIM10)) {
-        nvic_irq_config(TIM1_UP_TIM10_IRQ_NO_25, toggle);
+        nvic_irq_config(TIM1_UP_TIM10_IRQ_NUM_25, toggle);
     } else if (p_timx == TIM11) {
-        nvic_irq_config(TIM1_TRG_COM_TIM11_IRQ_NO_26, toggle);
+        nvic_irq_config(TIM1_TRG_COM_TIM11_IRQ_NUM_26, toggle);
     } else if (p_timx == TIM2) {
-        nvic_irq_config(TIM2_IRQ_NO_28, toggle);
+        nvic_irq_config(TIM2_IRQ_NUM_28, toggle);
     } else if (p_timx == TIM3) {
-        nvic_irq_config(TIM3_IRQ_NO_29, toggle);
+        nvic_irq_config(TIM3_IRQ_NUM_29, toggle);
     } else if (p_timx == TIM4) {
-        nvic_irq_config(TIM4_IRQ_NO_30, toggle);
+        nvic_irq_config(TIM4_IRQ_NUM_30, toggle);
     } else if (p_timx == TIM12) {
-        nvic_irq_config(TIM8_BRK_TIM12_IRQ_NO_43, toggle);
+        nvic_irq_config(TIM8_BRK_TIM12_IRQ_NUM_43, toggle);
     } else if ((p_timx == TIM8) || (p_timx == TIM13)) {
-        nvic_irq_config(TIM8_UP_TIM13_IRQ_NO_44, toggle);
+        nvic_irq_config(TIM8_UP_TIM13_IRQ_NUM_44, toggle);
     } else if (p_timx == TIM14) {
-        nvic_irq_config(TIM8_TRG_COM_TIM14_IRQ_NO_45, toggle);
+        nvic_irq_config(TIM8_TRG_COM_TIM14_IRQ_NUM_45, toggle);
     } else if (p_timx == TIM7) {
-        nvic_irq_config(TIM7_IRQ_NO_55, toggle);
+        nvic_irq_config(TIM7_IRQ_NUM_55, toggle);
     }
 }
 

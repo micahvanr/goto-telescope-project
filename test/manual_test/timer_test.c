@@ -74,7 +74,7 @@ static void timer_oc_gpio_pin_init(void)
     // PE9 - TIM1_CH1
     gpio_handle tim2_ch3_pin           = {0};
     tim2_ch3_pin.p_gpiox               = GPIOE;
-    tim2_ch3_pin.gpio_conf.pin_no      = PIN_NO_9;
+    tim2_ch3_pin.gpio_conf.pin_no      = PIN_NUM_9;
     tim2_ch3_pin.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     tim2_ch3_pin.gpio_conf.mode        = GPIO_MODE_ALT_FN;
     tim2_ch3_pin.gpio_conf.alt_fn_no   = GPIO_ALT_FN_1;
@@ -86,7 +86,7 @@ static void timer_ic_gpio_pin_init(void)
     // PC6 - TIM1_CH1
     gpio_handle tim2_ch3_pin         = {0};
     tim2_ch3_pin.p_gpiox             = GPIOC;
-    tim2_ch3_pin.gpio_conf.pin_no    = PIN_NO_6;
+    tim2_ch3_pin.gpio_conf.pin_no    = PIN_NUM_6;
     tim2_ch3_pin.gpio_conf.mode      = GPIO_MODE_ALT_FN;
     tim2_ch3_pin.gpio_conf.alt_fn_no = GPIO_ALT_FN_3;
     gpio_init(&tim2_ch3_pin);

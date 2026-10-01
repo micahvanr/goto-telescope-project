@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 #define UNUSED(x) (void)(x)
-#define __vo      volatile
-#define __weak    __attribute__((weak))
+// TODO: Delete volatile
+#define __vo   volatile
+#define __weak __attribute__((weak))
 
 #endif

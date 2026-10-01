@@ -352,12 +352,12 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
     case RCC_MCO1_SEL:
         // MCO1 - PA8
         mco_gpio_pin.p_gpiox          = GPIOA;
-        mco_gpio_pin.gpio_conf.pin_no = PIN_NO_8;
+        mco_gpio_pin.gpio_conf.pin_no = PIN_NUM_8;
         break;
     case RCC_MCO2_SEL:
         // MCO2 - PC9
         mco_gpio_pin.p_gpiox          = GPIOC;
-        mco_gpio_pin.gpio_conf.pin_no = PIN_NO_9;
+        mco_gpio_pin.gpio_conf.pin_no = PIN_NUM_9;
         break;
     default: ASSERT(false);
     }

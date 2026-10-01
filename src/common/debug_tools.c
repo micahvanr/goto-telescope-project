@@ -14,7 +14,7 @@ void debug_pin_init(void)
 {
     gpio_handle debug_pin      = {0};
     debug_pin.p_gpiox          = DEBUG_PIN_PORT;
-    debug_pin.gpio_conf.pin_no = DEBUG_PIN_NO;
+    debug_pin.gpio_conf.pin_no = DEBUG_PIN_NUM;
 
     debug_pin.gpio_conf.alt_fn_no    = GPIO_ALT_FN_NA;
     debug_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
@@ -36,7 +36,7 @@ Note: Uses PA3
 ***************************************************************************/
 void toggle_debug_pin(void)
 {
-    gpio_toggle(DEBUG_PIN_PORT, DEBUG_PIN_NO);
+    gpio_toggle(DEBUG_PIN_PORT, DEBUG_PIN_NUM);
 }
 
 /***************************************************************************
@@ -52,7 +52,7 @@ void debug_button_init(void)
 {
     gpio_handle debug_button      = {0};
     debug_button.p_gpiox          = DEBUG_BUTTON_PORT;
-    debug_button.gpio_conf.pin_no = DEBUG_BUTTUN_PIN_NO;
+    debug_button.gpio_conf.pin_no = DEBUG_BUTTUN_PIN_NUM;
 
     debug_button.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
     debug_button.gpio_conf.it_trigger      = GPIO_IT_NA;
@@ -77,5 +77,5 @@ Note: Connected to pull down resistor:
 ***************************************************************************/
 pin_logic_level_e read_debug_button(void)
 {
-    return gpio_read(DEBUG_BUTTON_PORT, DEBUG_BUTTUN_PIN_NO);
+    return gpio_read(DEBUG_BUTTON_PORT, DEBUG_BUTTUN_PIN_NUM);
 }

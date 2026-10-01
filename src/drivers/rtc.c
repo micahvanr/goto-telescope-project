@@ -481,21 +481,21 @@ void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
 {
     switch (it_opt) {
     case RTC_IT_OPT_ALARM:
-        exti_config_it((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
-        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NO_ALARM, toggle);
-        nvic_irq_config(RTC_ALARM_IRQ_NO_41, toggle);
+        exti_config_it((exti_lines_e)RTC_EXTI_NUM_ALARM, toggle);
+        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NUM_ALARM, toggle);
+        nvic_irq_config(RTC_ALARM_IRQ_NUM_41, toggle);
         break;
 
     case RTC_IT_OPT_WAKEUP:
-        exti_config_it((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
-        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NO_WAKE_UP, toggle);
-        nvic_irq_config(RTC_WKUP_IRQ_NO_3, toggle);
+        exti_config_it((exti_lines_e)RTC_EXTI_NUM_WAKE_UP, toggle);
+        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NUM_WAKE_UP, toggle);
+        nvic_irq_config(RTC_WKUP_IRQ_NUM_3, toggle);
         break;
 
     case RTC_IT_OPT_TIMESTAMP:
-        exti_config_it((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
-        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NO_TIMESTAMP, toggle);
-        nvic_irq_config(TAMP_STAMP_IRQ_NO_2, toggle);
+        exti_config_it((exti_lines_e)RTC_EXTI_NUM_TIMESTAMP, toggle);
+        exti_config_rising_edge((exti_lines_e)RTC_EXTI_NUM_TIMESTAMP, toggle);
+        nvic_irq_config(TAMP_STAMP_IRQ_NUM_2, toggle);
         break;
 
     case RTC_IT_OPT_NA:     break;
@@ -687,23 +687,23 @@ void rtc_it_handler(void)
 
     if (temp_isr & RTC_ISR_ALRAF) {
         RTC->ISR &= ~RTC_ISR_ALRAF;
-        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_ALARM);
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_ALARM);
     }
 
     if (temp_isr & RTC_ISR_ALRBF) {
         RTC->ISR &= ~RTC_ISR_ALRBF;
-        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_ALARM);
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_ALARM);
     }
 
     if (temp_isr & RTC_ISR_WUTF) {
         RTC->ISR &= ~RTC_ISR_WUTF;
-        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_WAKE_UP);
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_WAKE_UP);
     }
 
     if (temp_isr & RTC_ISR_TSF) {
         RTC->ISR &= ~RTC_ISR_TSF;
         rtc_timestamp_clear_status();
-        exti_clear_pending((exti_lines_e)RTC_EXTI_NO_TIMESTAMP);
+        exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_TIMESTAMP);
     }
 }
 

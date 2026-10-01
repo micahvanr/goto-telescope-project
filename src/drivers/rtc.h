@@ -25,9 +25,9 @@ typedef enum {
 // Register names or function names
 
 typedef enum {
-    RTC_EXTI_NO_ALARM     = EXTI_LINE_NO_17,
-    RTC_EXTI_NO_WAKE_UP   = EXTI_LINE_NO_22,
-    RTC_EXTI_NO_TIMESTAMP = EXTI_LINE_NO_21,
+    RTC_EXTI_NUM_ALARM     = EXTI_LINE_NUM_17,
+    RTC_EXTI_NUM_WAKE_UP   = EXTI_LINE_NUM_22,
+    RTC_EXTI_NUM_TIMESTAMP = EXTI_LINE_NUM_21,
 } rtc_exti_line_no_e;
 
 // Applications:

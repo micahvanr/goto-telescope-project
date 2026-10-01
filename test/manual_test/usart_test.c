@@ -38,12 +38,12 @@ static void usart_gpio_init(void)
 
     // PD6 - RX
     gpio_usart.p_gpiox          = GPIOD;
-    gpio_usart.gpio_conf.pin_no = PIN_NO_6;
+    gpio_usart.gpio_conf.pin_no = PIN_NUM_6;
     gpio_init(&gpio_usart);
 
     // PD5 - TX
     gpio_usart.p_gpiox          = GPIOD;
-    gpio_usart.gpio_conf.pin_no = PIN_NO_5;
+    gpio_usart.gpio_conf.pin_no = PIN_NUM_5;
     gpio_init(&gpio_usart);
 }
 

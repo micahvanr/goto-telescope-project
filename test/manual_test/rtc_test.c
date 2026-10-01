@@ -110,7 +110,7 @@ static void test_rtc_timestamp(void)
 
     gpio_handle timestamp_pin               = {0};
     timestamp_pin.p_gpiox                   = GPIOC;
-    timestamp_pin.gpio_conf.pin_no          = PIN_NO_13;
+    timestamp_pin.gpio_conf.pin_no          = PIN_NUM_13;
     timestamp_pin.gpio_conf.mode            = GPIO_MODE_INPUT;
     timestamp_pin.gpio_conf.output_type     = GPIO_OPTYPE_OPEN_DRAIN;
     timestamp_pin.gpio_conf.pullup_pulldown = GPIO_PULL_UP;

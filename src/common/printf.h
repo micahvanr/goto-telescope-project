@@ -8,7 +8,7 @@ void printf_init(void);
 
 #define PRINTF_USART         USART2
 #define PRINTF_USART_TX_PORT GPIOA
-#define PRINTF_USART_TX_PIN  PIN_NO_2
+#define PRINTF_USART_TX_PIN  PIN_NUM_2
 
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>

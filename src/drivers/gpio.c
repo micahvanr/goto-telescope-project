@@ -146,7 +146,7 @@ Function: gpio_it_handler
 Overview: Function to be called inside application EXTI interrupt so it can clear the corresponding EXTI line
 Parameters:
     exti_line: EXTI line that needs to be cleared
-        EXTI_LINE_NO_x (0-22)
+        EXTI_LINE_NUM_x (0-22)
 Return: 
     None
 Note: None
@@ -163,7 +163,7 @@ Overview: Sets a pin on a given port to high or low
 Parameters:
     p_gpiox: Register structure for the GPIO port
     pin_no: Pin number for to be changed
-        PIN_NO_x (0-15)
+        PIN_NUM_x (0-15)
     pin_level: Pin logic level
         HIGH (1) 
         LOW (0)
@@ -187,7 +187,7 @@ Parameters:
     p_gpiox: Register structure for the GPIO port
         GPIOx (A-H)
     pin_no:
-        PIN_NO_x (0-15)
+        PIN_NUM_x (0-15)
 Return: 
     pin_logic_level_e: Level of the port/pin read from
         HIGH (1) 
@@ -207,7 +207,7 @@ Parameters:
     p_gpiox: Register structure for the GPIO port
         GPIOx (A-H)
     pin_no:
-        PIN_NO_x (0-15)
+        PIN_NUM_x (0-15)
 Return: 
     None
 Note: None
@@ -300,22 +300,22 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
     // Pin number check
     found_setting = false;
     switch (p_gpio_handle->gpio_conf.pin_no) {
-    case PIN_NO_0:  found_setting = true; break;
-    case PIN_NO_1:  found_setting = true; break;
-    case PIN_NO_2:  found_setting = true; break;
-    case PIN_NO_3:  found_setting = true; break;
-    case PIN_NO_4:  found_setting = true; break;
-    case PIN_NO_5:  found_setting = true; break;
-    case PIN_NO_6:  found_setting = true; break;
-    case PIN_NO_7:  found_setting = true; break;
-    case PIN_NO_8:  found_setting = true; break;
-    case PIN_NO_9:  found_setting = true; break;
-    case PIN_NO_10: found_setting = true; break;
-    case PIN_NO_11: found_setting = true; break;
-    case PIN_NO_12: found_setting = true; break;
-    case PIN_NO_13: found_setting = true; break;
-    case PIN_NO_14: found_setting = true; break;
-    case PIN_NO_15: found_setting = true; break;
+    case PIN_NUM_0:  found_setting = true; break;
+    case PIN_NUM_1:  found_setting = true; break;
+    case PIN_NUM_2:  found_setting = true; break;
+    case PIN_NUM_3:  found_setting = true; break;
+    case PIN_NUM_4:  found_setting = true; break;
+    case PIN_NUM_5:  found_setting = true; break;
+    case PIN_NUM_6:  found_setting = true; break;
+    case PIN_NUM_7:  found_setting = true; break;
+    case PIN_NUM_8:  found_setting = true; break;
+    case PIN_NUM_9:  found_setting = true; break;
+    case PIN_NUM_10: found_setting = true; break;
+    case PIN_NUM_11: found_setting = true; break;
+    case PIN_NUM_12: found_setting = true; break;
+    case PIN_NUM_13: found_setting = true; break;
+    case PIN_NUM_14: found_setting = true; break;
+    case PIN_NUM_15: found_setting = true; break;
     }
     ASSERT(found_setting);
 
@@ -346,14 +346,14 @@ static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
 static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
 {
-    return (line_num == EXTI_LINE_NO_0)                                     ? EXTI0_IRQ_NO_6
-         : (line_num == EXTI_LINE_NO_1)                                     ? EXTI1_IRQ_NO_7
-         : (line_num == EXTI_LINE_NO_2)                                     ? EXTI2_IRQ_NO_8
-         : (line_num == EXTI_LINE_NO_3)                                     ? EXTI3_IRQ_NO_9
-         : (line_num == EXTI_LINE_NO_4)                                     ? EXTI3_IRQ_NO_9
-         : ((line_num >= EXTI_LINE_NO_5) && (line_num <= EXTI_LINE_NO_9))   ? EXTI9_5_IRQ_NO_23
-         : ((line_num >= EXTI_LINE_NO_10) && (line_num <= EXTI_LINE_NO_15)) ? EXTI15_10_IRQ_NO_40
-                                                                            : 0;
+    return (line_num == EXTI_LINE_NUM_0)                                      ? EXTI0_IRQ_NUM_6
+         : (line_num == EXTI_LINE_NUM_1)                                      ? EXTI1_IRQ_NUM_7
+         : (line_num == EXTI_LINE_NUM_2)                                      ? EXTI2_IRQ_NUM_8
+         : (line_num == EXTI_LINE_NUM_3)                                      ? EXTI3_IRQ_NUM_9
+         : (line_num == EXTI_LINE_NUM_4)                                      ? EXTI3_IRQ_NUM_9
+         : ((line_num >= EXTI_LINE_NUM_5) && (line_num <= EXTI_LINE_NUM_9))   ? EXTI9_5_IRQ_NUM_23
+         : ((line_num >= EXTI_LINE_NUM_10) && (line_num <= EXTI_LINE_NUM_15)) ? EXTI15_10_IRQ_NUM_40
+                                                                              : 0;
 }
 
 static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)

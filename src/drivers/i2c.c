@@ -460,11 +460,11 @@ void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e const toggle)
     }
 
     if (p_i2cx == I2C1) {
-        nvic_irq_config(I2C1_EV_IRQ_NO_31, toggle);
+        nvic_irq_config(I2C1_EV_IRQ_NUM_31, toggle);
     } else if (p_i2cx == I2C2) {
-        nvic_irq_config(I2C2_EV_IRQ_NO_33, toggle);
+        nvic_irq_config(I2C2_EV_IRQ_NUM_33, toggle);
     } else if (p_i2cx == I2C3) {
-        nvic_irq_config(I2C3_EV_IRQ_NO_72, toggle);
+        nvic_irq_config(I2C3_EV_IRQ_NUM_72, toggle);
     }
 }
 
