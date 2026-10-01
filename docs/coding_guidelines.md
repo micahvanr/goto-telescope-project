@@ -8,29 +8,45 @@ sections. These guidelines are to keep the project files consistent and easy to 
 The Barr C coding guidelines document can be downloaded for free from [here](https://barrgroup.com/embedded-c-coding-standard). 
 This standard provides a very solid foundation with reasoning behind each rule beyond just style preference. 
 Most rules aim to keep bugs from appearing in the first place. Some rules I have chosen to not use or modify slightly. 
-These rules will be listed in their corresponding section along with their reasoning. Any code that 
-breaks these rules should have comments explaining why the rule was broken.
+These rules will be listed in their corresponding section along with their reasoning. In addition, I may expand on 
+these rules in those sections. Any code that breaks these rules should have comments explaining why the rule was broken.
 
 
 # General Rules
 ## Which C?
-Exception to not alter or rename keyword is with the assert library. Including this add a lot of bloat
+* Exception: Do not alter or rename keyword except with the assert library. Including this add a lot of bloat
 and I prefer my own implementation.
+
 ## Line Widths
-* Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
+* Exception: Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
 not have too many line breaks.
 
 ## Common Abbreviations
 See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
 
 # Comment Rules
+* Code should be self documenting. Comments should not explain what is going on unless it is complex and requires 
+explaination. Comments should explain why something is necessary and sometimes how.
+* Use "//" for single and multi line comments except for function comment blocks.
 
 # White Space Rules
 ## Blank Lines
-Exception to no line of code shall contain more than one statement with assertion statements to check parameters.
+* Exception: No line of code shall contain more than one statement except with assertion statements to check parameters.
 Breaking these statements up makes it more easier to read. Otherwise this rule remains intact.
 
 # Modules Rules
+## Header Files
+* Header files should be in the general format of: comment block, include statements, constants, public structures, 
+and public function prototypes.
+* See [Header File Layout](#header-file-layout) for driver specific layout.
+
+## Source Files
+* Source files should be in the general format of: comment block, include statements, constants, private structures, 
+    private global variables, private function prototypes, public function implementation, and private function implementation.
+* See [Source File Layout](#source-file-layout) for driver specific layout.
+
+## File Templates
+See [templates/](../src/templates/) to view specific source and header file templates.
 
 # Data Type Rules
 
@@ -303,31 +319,37 @@ typedef enum {
 } peri_reg_misc_e;
 ```
 
-## File Organization
+## File Layout
 Files should be organizated in the following ways. This is a general format, some files may not
 have all sections and they may have other sections. This is just a way to keep things consistent and 
 organized for constants that appear frequently.
-### Header File Organization
-Driver header files should be organized in the following way:
-* Address Definitions
-* Peripheral Constants
-    * Misc. Constants
-    * Initialization Handler Constants 
-    * Interrupt Handler Constants
-    * API Function Argument/Return Options
+
+### Header File Layout
+Driver header files should be organized in the following way: See [driver.h](../src/templates/driver.h) for template.
+* Comment Block
+    * Include Statements
+* Public Constants
+    * Address Definitions
     * Config Options (If multiple configs exist, name and separate them)
-* Register Constants
+    * API Function Argument/Return Options
+    * Callback Options
+    * Interrupt Handler Constants
+    * Misc. Constants
 * Structure Definitions
 * Peripheral Structure Macros
-* Function API Prototypes
+* Public Function Prototypes
 
-### Source File organization
-Driver source files should be organized in the following way:
-* Include files
-* Helper Function Prototypes
+### Source File Layout
+Driver source files should be organized in the following way: See [driver.c](../src/templates/driver.c) for template.
+* Comment Block
+    * Include Statements
+* Private Constants
+    * Initialization Handler Constants
+    * Register Constants
 * Global Variables
-* Peripheral Function API Implementation
-* Helper Function Implementation
+* Private Function Prototypes
+* Public Function Implementation
+* Private Function Implementation
 
 ## Driver Implementation 
 ### Initialization

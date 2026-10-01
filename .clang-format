@@ -12,7 +12,6 @@ BraceWrapping:
     BeforeWhile: false
     IndentBraces: false
     BeforeElse: true
-
 AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: false
