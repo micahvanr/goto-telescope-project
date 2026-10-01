@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define UNUSED(x) (void)(x)
+#define UNUSED(x) (void) (x)
 #define __weak    __attribute__((weak))
 
 #endif

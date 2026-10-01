@@ -21,8 +21,8 @@ void assert_handler(void)
 static void blink_led(void)
 {
     // Blink LED
-    uint32_t *p_rcc_ahb1enr  = (uint32_t *)(RCC_BASE_ADDR + 0x30);
-    uint32_t *p_gpio_led_reg = (uint32_t *)(GPIOA_BASE_ADDR + ((LED_RED_PORT) * 0x0400));
+    uint32_t *p_rcc_ahb1enr  = (uint32_t *) (RCC_BASE_ADDR + 0x30);
+    uint32_t *p_gpio_led_reg = (uint32_t *) (GPIOA_BASE_ADDR + ((LED_RED_PORT) * 0x0400));
 
     // Enable clock on led port
     *p_rcc_ahb1enr |= (1 << LED_RED_PORT);

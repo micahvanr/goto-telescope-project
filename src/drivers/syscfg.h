@@ -178,7 +178,7 @@ typedef volatile struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define SYSCFG ((syscfg_reg_def *)SYSCFG_BASE_ADDR)
+#define SYSCFG ((syscfg_reg_def *) SYSCFG_BASE_ADDR)
 
 //======================================================================================//}
 //                  Funciton API Prototypes

@@ -98,7 +98,7 @@ typedef volatile struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define PWR ((pwr_reg_def *)PWR_BASE_ADDR)
+#define PWR ((pwr_reg_def *) PWR_BASE_ADDR)
 
 //======================================================================================//}
 //                  Function API Prototypes

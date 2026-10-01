@@ -1016,7 +1016,7 @@ typedef struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define RTC ((rtc_reg_def *)RTC_BASE_ADDR)
+#define RTC ((rtc_reg_def *) RTC_BASE_ADDR)
 
 //======================================================================================//}
 //                  Function API Prototypes

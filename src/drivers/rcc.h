@@ -1166,7 +1166,7 @@ typedef volatile struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define RCC ((rcc_reg_def *)RCC_BASE_ADDR)
+#define RCC ((rcc_reg_def *) RCC_BASE_ADDR)
 
 //======================================================================================//}
 //                  Peripheral Function APIs

@@ -544,7 +544,7 @@ typedef volatile struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define EXTI ((exti_reg_def *)EXTI_BASE_ADDR)
+#define EXTI ((exti_reg_def *) EXTI_BASE_ADDR)
 
 //======================================================================================//}
 //                  Function API Prototypes

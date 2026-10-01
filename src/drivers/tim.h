@@ -891,20 +891,20 @@ typedef struct {
 //                  Peripheral Structure Macros
 //======================================================================================//{
 
-#define TIM1  ((tim_reg_def *)TIM1_BASE_ADDR)
-#define TIM2  ((tim_reg_def *)TIM2_BASE_ADDR)
-#define TIM3  ((tim_reg_def *)TIM3_BASE_ADDR)
-#define TIM4  ((tim_reg_def *)TIM4_BASE_ADDR)
-#define TIM5  ((tim_reg_def *)TIM5_BASE_ADDR)
-#define TIM6  ((tim_reg_def *)TIM6_BASE_ADDR)
-#define TIM7  ((tim_reg_def *)TIM7_BASE_ADDR)
-#define TIM8  ((tim_reg_def *)TIM8_BASE_ADDR)
-#define TIM9  ((tim_reg_def *)TIM9_BASE_ADDR)
-#define TIM10 ((tim_reg_def *)TIM10_BASE_ADDR)
-#define TIM11 ((tim_reg_def *)TIM11_BASE_ADDR)
-#define TIM12 ((tim_reg_def *)TIM12_BASE_ADDR)
-#define TIM13 ((tim_reg_def *)TIM13_BASE_ADDR)
-#define TIM14 ((tim_reg_def *)TIM14_BASE_ADDR)
+#define TIM1  ((tim_reg_def *) TIM1_BASE_ADDR)
+#define TIM2  ((tim_reg_def *) TIM2_BASE_ADDR)
+#define TIM3  ((tim_reg_def *) TIM3_BASE_ADDR)
+#define TIM4  ((tim_reg_def *) TIM4_BASE_ADDR)
+#define TIM5  ((tim_reg_def *) TIM5_BASE_ADDR)
+#define TIM6  ((tim_reg_def *) TIM6_BASE_ADDR)
+#define TIM7  ((tim_reg_def *) TIM7_BASE_ADDR)
+#define TIM8  ((tim_reg_def *) TIM8_BASE_ADDR)
+#define TIM9  ((tim_reg_def *) TIM9_BASE_ADDR)
+#define TIM10 ((tim_reg_def *) TIM10_BASE_ADDR)
+#define TIM11 ((tim_reg_def *) TIM11_BASE_ADDR)
+#define TIM12 ((tim_reg_def *) TIM12_BASE_ADDR)
+#define TIM13 ((tim_reg_def *) TIM13_BASE_ADDR)
+#define TIM14 ((tim_reg_def *) TIM14_BASE_ADDR)
 
 //======================================================================================//}
 //                  Function API Prototypes

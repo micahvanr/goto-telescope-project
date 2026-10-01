@@ -614,7 +614,7 @@ Note: None
 ***************************************************************************/
 tim_status_e tim_read_status(tim_reg_def const *const p_timx)
 {
-    return (tim_status_e)(p_timx->SR & TIM_SR_UIF);
+    return (tim_status_e) (p_timx->SR & TIM_SR_UIF);
 }
 
 /***************************************************************************
@@ -646,7 +646,7 @@ Note: None
 ***************************************************************************/
 tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
-    return (tim_status_e)((p_timx->SR & (TIM_SR_CC1IF << channel)) >> TIM_SR_CC1IF_POS);
+    return (tim_status_e) ((p_timx->SR & (TIM_SR_CC1IF << channel)) >> TIM_SR_CC1IF_POS);
 }
 
 /***************************************************************************

@@ -33,6 +33,7 @@ AlignOperands: AlignAfterOperator
 AlignEscapedNewlines: LeftWithLastLine
 AlignAfterOpenBracket: true
 IndentCaseLabels: true
+SpaceAfterCStyleCast: true
 BreakBinaryOperations: Never
 BreakBeforeBinaryOperators: NonAssignment
 ReflowComments: Never

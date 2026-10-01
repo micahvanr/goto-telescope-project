@@ -591,7 +591,7 @@ static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e con
 
 static void transfer_data(usart_handle *const p_usart_handle)
 {
-    p_usart_handle->p_usartx->DR = (uint32_t)*p_usart_handle->usart_it_data.txrx_buffer;
+    p_usart_handle->p_usartx->DR = (uint32_t) *p_usart_handle->usart_it_data.txrx_buffer;
     p_usart_handle->usart_it_data.txrx_length--;
     p_usart_handle->usart_it_data.txrx_buffer++;
 }

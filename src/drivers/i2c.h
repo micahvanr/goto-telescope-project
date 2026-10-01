@@ -375,9 +375,9 @@ typedef struct {
 //                  Peripheral Structure Macros
 //======================================================================================//
 
-#define I2C1 ((i2c_reg_def *)I2C1_BASE_ADDR)
-#define I2C2 ((i2c_reg_def *)I2C2_BASE_ADDR)
-#define I2C3 ((i2c_reg_def *)I2C3_BASE_ADDR)
+#define I2C1 ((i2c_reg_def *) I2C1_BASE_ADDR)
+#define I2C2 ((i2c_reg_def *) I2C2_BASE_ADDR)
+#define I2C3 ((i2c_reg_def *) I2C3_BASE_ADDR)
 
 //======================================================================================//
 //                  Function API Prototypes

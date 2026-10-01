@@ -120,7 +120,7 @@ Note: None
 ***************************************************************************/
 void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
-    exti_lines_e exti_line_num = (exti_lines_e)p_gpio_handle->gpio_conf.pin_no;
+    exti_lines_e exti_line_num = (exti_lines_e) p_gpio_handle->gpio_conf.pin_no;
 
     syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
@@ -210,7 +210,7 @@ Note: None
 pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
-    return (pin_logic_level_e)(p_gpiox->IDR & (1 << pin_no));
+    return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_no));
 }
 
 /***************************************************************************

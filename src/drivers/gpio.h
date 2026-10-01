@@ -704,14 +704,14 @@ typedef struct {
 //                  Peripheral Structure Macros
 //======================================================================================//
 
-#define GPIOA ((gpio_reg_def *)GPIOA_BASE_ADDR)
-#define GPIOB ((gpio_reg_def *)GPIOB_BASE_ADDR)
-#define GPIOC ((gpio_reg_def *)GPIOC_BASE_ADDR)
-#define GPIOD ((gpio_reg_def *)GPIOD_BASE_ADDR)
-#define GPIOE ((gpio_reg_def *)GPIOE_BASE_ADDR)
-#define GPIOF ((gpio_reg_def *)GPIOF_BASE_ADDR)
-#define GPIOG ((gpio_reg_def *)GPIOG_BASE_ADDR)
-#define GPIOH ((gpio_reg_def *)GPIOH_BASE_ADDR)
+#define GPIOA ((gpio_reg_def *) GPIOA_BASE_ADDR)
+#define GPIOB ((gpio_reg_def *) GPIOB_BASE_ADDR)
+#define GPIOC ((gpio_reg_def *) GPIOC_BASE_ADDR)
+#define GPIOD ((gpio_reg_def *) GPIOD_BASE_ADDR)
+#define GPIOE ((gpio_reg_def *) GPIOE_BASE_ADDR)
+#define GPIOF ((gpio_reg_def *) GPIOF_BASE_ADDR)
+#define GPIOG ((gpio_reg_def *) GPIOG_BASE_ADDR)
+#define GPIOH ((gpio_reg_def *) GPIOH_BASE_ADDR)
 
 //======================================================================================//
 //                  Function API prototypes

@@ -375,12 +375,12 @@ typedef struct {
 //                  Peripheral Structure Macros
 //======================================================================================//
 
-#define USART1 ((usart_reg_def *)USART1_BASE_ADDR)
-#define USART2 ((usart_reg_def *)USART2_BASE_ADDR)
-#define USART3 ((usart_reg_def *)USART3_BASE_ADDR)
-#define UART4  ((usart_reg_def *)UART4_BASE_ADDR)
-#define UART5  ((usart_reg_def *)UART5_BASE_ADDR)
-#define USART6 ((usart_reg_def *)USART6_BASE_ADDR)
+#define USART1 ((usart_reg_def *) USART1_BASE_ADDR)
+#define USART2 ((usart_reg_def *) USART2_BASE_ADDR)
+#define USART3 ((usart_reg_def *) USART3_BASE_ADDR)
+#define UART4  ((usart_reg_def *) UART4_BASE_ADDR)
+#define UART5  ((usart_reg_def *) UART5_BASE_ADDR)
+#define USART6 ((usart_reg_def *) USART6_BASE_ADDR)
 
 //======================================================================================//
 //                  Function API Prototypes

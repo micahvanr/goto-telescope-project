@@ -57,7 +57,7 @@ static void usart2_init(void)
 {
     g_usart_test_handle.p_usartx                     = USART2;
     g_usart_test_handle.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
-    g_usart_test_handle.usart_conf.baudrate          = (usart_baudrate_e)USART_COM_SPEED;
+    g_usart_test_handle.usart_conf.baudrate          = (usart_baudrate_e) USART_COM_SPEED;
     g_usart_test_handle.usart_conf.parity_control    = USART_PARITY_CONTROL_DISABLE;
     g_usart_test_handle.usart_conf.parity_select     = USART_PARITY_SEL_EVEN;
     g_usart_test_handle.usart_conf.stop_bits         = USART_STOP_BITS_1;
@@ -82,10 +82,10 @@ static void test_usart_txrx(void)
 
         // Receive string back
         usart_receive(g_usart_test_handle.p_usartx, &rx_length, 1);
-        usart_receive(g_usart_test_handle.p_usartx, (uint8_t *)rx_data, rx_length);
+        usart_receive(g_usart_test_handle.p_usartx, (uint8_t *) rx_data, rx_length);
 
         // Ensure string returns expected value
-        if (strcmp((char *)expected_rx, (char *)rx_data) != 0)
+        if (strcmp((char *) expected_rx, (char *) rx_data) != 0)
         {
             ASSERT(false);
         }
@@ -110,10 +110,10 @@ static void test_usart_txrx_it(void)
 
         // Receive string back
         usart_receive_it(&g_usart_test_handle, &rx_length, 1);
-        usart_receive_it(&g_usart_test_handle, (uint8_t *)rx_data, rx_length);
+        usart_receive_it(&g_usart_test_handle, (uint8_t *) rx_data, rx_length);
 
         // Ensure string returns expected value
-        if (strcmp((char *)expected_rx, (char *)rx_data) != 0)
+        if (strcmp((char *) expected_rx, (char *) rx_data) != 0)
         {
             ASSERT(false);
         }
