@@ -29,7 +29,7 @@ static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglabl
 // It is an array with a length of 8 and each element is 16 bits wide.
 // Each element in the array represents a port and each bit inside the variable represents a pin.
 // If a bit in a specific element is 0, that means it has not been initialized. If it is a 1, it has been.
-__vo uint16_t g_gpio_pin_init[8] = {0};
+volatile uint16_t g_gpio_pin_init[8] = {0};
 
 //======================================================================================//}
 //                  Peripheral Function API Implementation
@@ -346,14 +346,14 @@ static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions
 static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
 {
-    return (line_num == EXTI_LINE_NUM_0)                                      ? EXTI0_IRQ_NUM_6
-         : (line_num == EXTI_LINE_NUM_1)                                      ? EXTI1_IRQ_NUM_7
-         : (line_num == EXTI_LINE_NUM_2)                                      ? EXTI2_IRQ_NUM_8
-         : (line_num == EXTI_LINE_NUM_3)                                      ? EXTI3_IRQ_NUM_9
-         : (line_num == EXTI_LINE_NUM_4)                                      ? EXTI3_IRQ_NUM_9
+    return (line_num == EXTI_LINE_NUM_0)                                     ? EXTI0_IRQ_NUM_6
+         : (line_num == EXTI_LINE_NUM_1)                                     ? EXTI1_IRQ_NUM_7
+         : (line_num == EXTI_LINE_NUM_2)                                     ? EXTI2_IRQ_NUM_8
+         : (line_num == EXTI_LINE_NUM_3)                                     ? EXTI3_IRQ_NUM_9
+         : (line_num == EXTI_LINE_NUM_4)                                     ? EXTI3_IRQ_NUM_9
          : ((line_num >= EXTI_LINE_NUM_5) && (line_num <= EXTI_LINE_NUM_9))   ? EXTI9_5_IRQ_NUM_23
          : ((line_num >= EXTI_LINE_NUM_10) && (line_num <= EXTI_LINE_NUM_15)) ? EXTI15_10_IRQ_NUM_40
-                                                                              : 0;
+                                                                            : 0;
 }
 
 static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)

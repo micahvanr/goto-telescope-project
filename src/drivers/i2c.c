@@ -482,7 +482,7 @@ Note: Should be called from the ISR function
  ***************************************************************************/
 void i2c_it_handler(i2c_handle *const p_i2c_handle)
 {
-    uint32_t __vo dummy_read = 0;
+    uint32_t volatile dummy_read = 0;
 
     switch (p_i2c_handle->i2c_it_data.status) {
 
@@ -662,7 +662,7 @@ static inline void generate_stop_condition(i2c_reg_def *const p_i2cx)
 }
 static inline void clear_start_flag(i2c_reg_def const *const p_i2cx)
 {
-    uint32_t __vo dummy_read;
+    uint32_t volatile dummy_read;
     dummy_read = p_i2cx->SR1;
     UNUSED(dummy_read);
 }
@@ -682,7 +682,7 @@ static inline void send_address(i2c_reg_def *const p_i2cx, uint8_t const target_
 
 static inline void clear_address_flag(i2c_reg_def const *const p_i2cx)
 {
-    uint32_t __vo dummy_read;
+    uint32_t volatile dummy_read;
     dummy_read = p_i2cx->SR1;
     dummy_read = p_i2cx->SR2;
     UNUSED(dummy_read);

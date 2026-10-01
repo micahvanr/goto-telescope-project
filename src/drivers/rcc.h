@@ -1125,7 +1125,7 @@ typedef enum : uint32_t {
 //======================================================================================//{
 
 // RCC Register Definition Structure
-typedef __vo struct {
+typedef volatile struct {
     uint32_t CR;          // clock control register                                        Offset: 0x0
     uint32_t PLLCFGR;     // PLL configuration register                                    Offset: 0x4
     uint32_t CFGR;        // clock configuration register                                  Offset: 0x8

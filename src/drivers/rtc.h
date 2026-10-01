@@ -931,7 +931,7 @@ typedef enum : uint32_t {
 //                  Structure Definitions
 //======================================================================================//{
 
-typedef __vo struct {
+typedef volatile struct {
     uint32_t TR;         // time register                                             Offset: 0x0
     uint32_t DR;         // date register                                             Offset: 0x4
     uint32_t CR;         // control register                                          Offset: 0x8

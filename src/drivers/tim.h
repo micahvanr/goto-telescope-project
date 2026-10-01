@@ -822,7 +822,7 @@ typedef enum : uint32_t {
 //                  Structure Definitions
 //======================================================================================//{
 
-typedef __vo struct {
+typedef volatile struct {
     uint32_t CR1;     // control register 1                                 Offset: 0x0
     uint32_t CR2;     // control register 2                                 Offset: 0x4
     uint32_t SMCR;    // slave mode control register                        Offset: 0x8

@@ -671,7 +671,7 @@ typedef enum : uint32_t {
 //======================================================================================//
 
 // Register definition
-typedef __vo struct {
+typedef volatile struct {
     uint32_t MODER;   // GPIO port mode register                    Offset: 0x0
     uint32_t OTYPER;  // GPIO port output type register             Offset: 0x4
     uint32_t OSPEEDR; // GPIO port output speed register            Offset: 0x8

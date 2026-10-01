@@ -335,7 +335,7 @@ typedef enum : uint32_t {
 //======================================================================================//
 
 // Register definition
-typedef __vo struct {
+typedef volatile struct {
     uint32_t CR1;   // Control register 1         Offset: 0x0
     uint32_t CR2;   // Control register 2         Offset: 0x4
     uint32_t OAR1;  // Own address register 1     Offset: 0x8
@@ -360,7 +360,7 @@ typedef struct {
     uint8_t *txrx_buffer;
     uint32_t txrx_length;
     uint8_t target_addr;
-    __vo i2c_status_e status;
+    volatile i2c_status_e status;
     i2c_repeated_start_e repeated_start; // Default: I2C_REPEATED_START_DISABLE
 } i2c_it_data;
 

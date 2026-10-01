@@ -336,7 +336,7 @@ typedef enum : uint32_t {
 //                  Structure Definitions
 //======================================================================================//
 
-typedef __vo struct {
+typedef volatile struct {
     uint32_t SR;   // Status register                        Offset: 0x0
     uint32_t DR;   // Data register                          Offset: 0x4
     uint32_t BRR;  // Baud rate register                     Offset: 0x8
@@ -361,7 +361,7 @@ typedef struct {
     uint8_t *txrx_buffer;
     uint32_t txrx_length;
     usart_mode_e mode;
-    __vo usart_status_e status; // Default: USART_STATUS_READY
+    volatile usart_status_e status; // Default: USART_STATUS_READY
 } usart_it_data;
 
 // Handle definition (used to configure and handle the USART features)

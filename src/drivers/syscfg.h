@@ -165,7 +165,7 @@ typedef enum : uint32_t {
 //                  Structure Definitions
 //======================================================================================//{
 
-typedef __vo struct {
+typedef volatile struct {
     uint32_t MEMRM;      // memory remap register                            Offset: 0x0
     uint32_t PMC;        // peripheral mode configuration register           Offset: 0x4
     uint32_t EXTICR[4];  // external interrupt configuration register       Offset: 0x8
