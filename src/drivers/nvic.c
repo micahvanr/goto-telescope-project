@@ -14,10 +14,13 @@
 
 /***************************************************************************
 Function: nvic_irq_config
-Overview: Takes an IRQ number and enables or disables it inside the NVIC or processor of MCU
+Overview: Takes an IRQ number and enables or disables it inside the NVIC or processor of MCU.
 Parameters:
-    irq_num - IRQ number that needs to be enabled or disables
-    toggle  - ENABLE or DISABLE
+    irq_num: IRQ number that needs to be enabled or disables.
+        See irq_number_e enum
+    toggle:
+        ENABLE
+        DISABLE
 Return: None
 Note: None
 ***************************************************************************/
@@ -43,12 +46,13 @@ void nvic_irq_config(irq_number_e const irq_num, togglable_e const toggle)
 
 /***************************************************************************
 Function: nvic_irq_priority
-Overview: Takes an IRQ number and configures the priority of the IRQ 
+Overview: Takes an IRQ number and configures the priority of the IRQ .
 Parameters:
-    irq_num - IRQ number to modify the priority of
-    irq_pri - IRQ priority number -> lower number means higher priority
+    irq_num: IRQ number to modify the priority of.
+    irq_pri: IRQ priority number -> lower number means higher priority.
+       IRQ_PRIORITY_x (0-15) 
 Return: None
-Note: Only 4 of the 8 bits are implemented in the stm32f4xx MCUs so 16 levels or priority
+Note: Only 4 of the 8 bits are implemented in the stm32f4xx MCUs so 16 levels or priority.
 ***************************************************************************/
 void nvic_irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
 {

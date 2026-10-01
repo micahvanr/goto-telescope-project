@@ -19,7 +19,7 @@ typedef enum {
 //} Misc. Constants
 //=========================================//{
 
-// TODO: Change frequencies for custom board when applicable
+// TODO: Change frequencies for custom board when applicable.
 typedef enum {
     HSI_CLOCK_FREQ = 16000000,
     HSE_CLOCK_FREQ = 8000000, // Only for discovery board -> will need to be changed for custom board

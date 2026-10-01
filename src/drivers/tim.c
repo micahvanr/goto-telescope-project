@@ -44,7 +44,7 @@ uint8_t g_tim_channel_init[TIM_MAX_NUM_TIMERS] = {0};
 
 /***************************************************************************
 Function: tim_delay 
-Overview: Creates a delay for a given amount of time
+Overview: Creates a delay for a given amount of time.
 Parameters: 
     time: Time for delay
     unit: Unit of time
@@ -54,7 +54,7 @@ Parameters:
 Return: 
     None
 Note: Care should be taken when using us unit as the delay can be too short and 
-the software may not be able to keep up
+the software may not be able to keep up.
 ***************************************************************************/
 void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
@@ -83,12 +83,12 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 
 /***************************************************************************
 Function: tim_init
-Overview: Initializes the TIMER peripheral inside the handle with the settings in the configuration structure
+Overview: Initializes the TIMER peripheral inside the handle with the settings in the configuration structure.
 Parameters:
-    p_tim_handle: Structure with the corresponding settings to configure the TIMER peripheral
+    p_tim_handle: Structure with the corresponding settings to configure the TIMER peripheral.
 Return: 
     None
-Note: Check handler's substructures for default values
+Note: Check handler's substructures for default values.
 ***************************************************************************/
 void tim_init(tim_handle *const p_tim_handle)
 {
@@ -127,21 +127,21 @@ void tim_init(tim_handle *const p_tim_handle)
         }
     }
 
-    // Set prescaler and auto reload value
-    // Use manual ARR and PSC
+    // Set prescaler and auto reload value.
+    // Use manual ARR and PSC.
     if ((p_tim_handle->timing_conf.auto_reload != 0) && (p_tim_handle->timing_conf.prescaler != 0)) {
         p_tim_handle->p_timx->PSC = p_tim_handle->timing_conf.prescaler - 1;
         p_tim_handle->p_timx->ARR = p_tim_handle->timing_conf.auto_reload - 1;
 
-        // Calculate ARR and PSC from given time and unit
+        // Calculate ARR and PSC from given time and unit.
     } else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0)) {
         set_prescaler_count(p_tim_handle->p_timx, p_tim_handle->timing_conf.time, p_tim_handle->timing_conf.unit);
     }
     // Set ARR preload
     // (if preload is off, the count value will count to this new value immediately)
     // (if preload is on, the count value will count to the new value after finishing what its counting to now)
-    // This value is set after the prescaler and counter are set and only if a value has been set
-    // otherwise a garbage value will be set in the PSC register
+    // This value is set after the prescaler and counter are set and only if a value has been set.
+    // otherwise a garbage value will be set in the PSC register.
     if ((p_tim_handle->p_timx->PSC != 0) && (p_tim_handle->p_timx->ARR != 0)) {
         temp_cr1 &= ~(TIM_CR1_ARPE);
         temp_cr1 |= p_tim_handle->tim_conf.preload << TIM_CR1_ARPE_POS;
@@ -151,7 +151,7 @@ void tim_init(tim_handle *const p_tim_handle)
     p_tim_handle->p_timx->SMCR = temp_smcr;
 }
 
-// Check each setting of the handle and ensure it is one of the available enum values
+// Check each setting of the handle and ensure it is one of the available enum values.
 static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
 {
     uint8_t found_setting = false;
@@ -212,7 +212,7 @@ static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
 
 /***************************************************************************
 Function: tim_reset 
-Overview: Resets the given timer
+Overview: Resets the given timer.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -227,7 +227,7 @@ void tim_reset(tim_reg_def const *const p_timx)
 
 /***************************************************************************
 Function: tim_start
-Overview: Starts the counter on the given timer
+Overview: Starts the counter on the given timer.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -245,7 +245,7 @@ void tim_start(tim_reg_def *const p_timx)
 
 /***************************************************************************
 Function: tim_start_it
-Overview: Starts the counter on the given timer with interrupts enabled
+Overview: Starts the counter on the given timer with interrupts enabled.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -265,7 +265,7 @@ void tim_start_it(tim_reg_def *const p_timx)
 
 /***************************************************************************
 Function: tim_channel_start
-Overview: Enables the counter on the given timer
+Overview: Enables the counter on the given timer.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -286,7 +286,7 @@ void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channe
 
 /***************************************************************************
 Function: tim_channel_start
-Overview: Enables the counter on the given timer
+Overview: Enables the counter on the given timer.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -309,16 +309,16 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 
 /***************************************************************************
 Function: tim_config_it
-Overview: Configures the given TIMER base peripheral and/or channel
+Overview: Configures the given TIMER base peripheral and/or channel.
 Parameters: 
-    p_timx: TIMER peripheral structure
+    p_timx: TIMER peripheral structure.
         TIMx (1-14)
-    channel: Channel to be configured
+    channel: Channel to be configured.
         TIM_CHANNEL_SEL_x (1-4)
         TIM_CHANNEL_NA
     toggle: 
-        ENABLE [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -358,18 +358,18 @@ void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const chan
 
 /***************************************************************************
 Function: tim_ic_init 
-Overview: Initializes the TIMER input capture with the settings in the configuration structure
+Overview: Initializes the TIMER input capture with the settings in the configuration structure.
 Parameters: 
-    p_timx: TIMER peripheral structure
+    p_timx: TIMER peripheral structure.
         TIMx (1-14)
-    ic_config: Input capture configuration settings
+    ic_config: Input capture configuration settings.
 Return: 
     None
 Note: None
 ***************************************************************************/
 void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 {
-    // Either % the channel num and start from 1 or dont and start channel num from 0
+    // Either % the channel num and start from 1 or dont and start channel num from 0.
     uint8_t const MODE_REG         = ic_config.channel_num / 2;
     uint8_t const MODE_REG_SHIFT   = (ic_config.channel_num % 2) * 8;
     uint8_t const ENABLE_REG_SHIFT = (ic_config.channel_num * 4);
@@ -395,7 +395,7 @@ void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
     p_timx->CCER |= (1 << ENABLE_REG_SHIFT) << TIM_CCER_CC1E_POS;
 }
 
-// Check each setting of the config and ensure it is one of the available enum values
+// Check each setting of the config and ensure it is one of the available enum values.
 static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_config const ic_config)
 {
     uint8_t found_setting;
@@ -469,18 +469,18 @@ static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_c
 
 /***************************************************************************
 Function: tim_oc_init 
-Overview: Initializes the TIMER output compare with the settings in the configuration structure
+Overview: Initializes the TIMER output compare with the settings in the configuration structure.
 Parameters: 
-    p_timx: TIMER peripheral structure
+    p_timx: TIMER peripheral structure.
         TIMx (1-14)
-    oc_config: Output compare configuration settings
+    oc_config: Output compare configuration settings.
 Return: 
     None
 Note: None
 ***************************************************************************/
 void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 {
-    // Either % the channel num and start from 1 or dont and start channel num from 0
+    // Either % the channel num and start from 1 or dont and start channel num from 0.
     uint8_t const MODE_REG         = oc_config.channel_num / 2;
     uint8_t const MODE_REG_SHIFT   = (oc_config.channel_num % 2) * 8;
     uint8_t const ENABLE_REG_SHIFT = (oc_config.channel_num * 4);
@@ -489,7 +489,7 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 
     set_tim_channel_init_status(p_timx, oc_config.channel_num);
 
-    // Ensure channel in output mode
+    // Ensure channel in output mode.
     p_timx->CCMR[MODE_REG] &= ~(TIM_CCMR1_OUTPUT_CC1S_MASK << MODE_REG_SHIFT);
 
     // Select oc mode
@@ -501,11 +501,11 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
     // Select preload
     p_timx->CCMR[MODE_REG] |= (oc_config.arr_preload << MODE_REG_SHIFT) << TIM_CCMR1_OUTPUT_OC1PE_POS;
 
-    // Set the CCR value manually
+    // Set the CCR value manually.
     if (oc_config.ccr_value != 0) {
         p_timx->CCR[oc_config.channel_num] = oc_config.ccr_value;
     }
-    // Set CCR value based on PWM duty cycle
+    // Set CCR value based on PWM duty cycle.
     else if (oc_config.duty_cycle != 0) {
         p_timx->CCR[oc_config.channel_num] = get_ccr_pwm(p_timx, oc_config.duty_cycle);
     }
@@ -514,7 +514,7 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
     p_timx->BDTR |= TIM_BDTR_MOE;
 }
 
-// Check each setting of the config and ensure it is one of the available enum values
+// Check each setting of the config and ensure it is one of the available enum values.
 static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_config const oc_config)
 {
     uint8_t found_setting;
@@ -560,14 +560,14 @@ static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_c
 
 /***************************************************************************
 Function: tim_read_status
-Overview: Reads the status update flag
+Overview: Reads the status update flag.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
 Return: 
     tim_status_e: Status of timer:
-    TIM_UPDATE_NA    [0]
-    TIM_UPDATE_FOUND [1]
+    TIM_UPDATE_NA
+    TIM_UPDATE_FOUND
 Note: None
 ***************************************************************************/
 tim_status_e tim_read_status(tim_reg_def const *const p_timx)
@@ -577,7 +577,7 @@ tim_status_e tim_read_status(tim_reg_def const *const p_timx)
 
 /***************************************************************************
 Function: tim_reset_status
-Overview: Resets the status update flag for the timer
+Overview: Resets the status update flag for the timer.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
@@ -592,14 +592,14 @@ void tim_reset_status(tim_reg_def *const p_timx)
 
 /***************************************************************************
 Function: tim_read_channel_status
-Overview: Reads the status update flag
+Overview: Reads the status update flag.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
 Return: 
     tim_status_e: Status of timer:
-    TIM_UPDATE_NA    [0]
-    TIM_UPDATE_FOUND [1]
+    TIM_UPDATE_NA
+    TIM_UPDATE_FOUND
 Note: None
 ***************************************************************************/
 tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
@@ -609,11 +609,11 @@ tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channe
 
 /***************************************************************************
 Function: tim_reset_status
-Overview: Resets the status update flag for the given channel
+Overview: Resets the status update flag for the given channel.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
-    channel: Channel to be configured
+    channel: Channel to be configured.
         TIM_CHANNEL_SEL_x (1-4)
         TIM_CHANNEL_NA
 Return: 
@@ -627,15 +627,15 @@ void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e const
 
 /***************************************************************************
 Function: tim_get_channel_ccr
-Overview: Gets the given TIMER's channel CCR value
+Overview: Gets the given TIMER's channel CCR value.
 Parameters: 
     p_timx: TIMER peripheral
         TIMx (1-14)
-    channel: Channel to be configured
+    channel: Channel to be configured.
         TIM_CHANNEL_SEL_x (1-4)
         TIM_CHANNEL_NA
 Return: 
-    uint32_t: CCR value of channel
+    uint32_t: CCR value of channel.
 Note: None
 ***************************************************************************/
 uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
@@ -720,7 +720,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     }
     ASSERT(found_setting);
 
-    uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler
+    uint32_t clk_freq; // Represents clock frequency of what the clock would be according to new prescaler.
     uint32_t prescaler       = 1;
     uint32_t count           = 1;
     uint32_t unit_in_seconds = 0;
@@ -750,11 +750,11 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     clk_freq = rcc_get_timer_clock_freq_hz(tim_get_bus(p_timx));
 
     // Finding the highest prescaler value:
-    // Increase the prescaler value until one of the following is true
-    // - Dividing clock by new prescaler value results in decimal number
-    // - The prescaler value is too large for 16 bits (32 bits for TIM2/TIM5)
-    // - The new count value is 0
-    // This series of operations will result in a high prescaler value while maintaining accuracy
+    // Increase the prescaler value until one of the following is true.
+    // - Dividing clock by new prescaler value results in decimal number.
+    // - The prescaler value is too large for 16 bits (32 bits for TIM2/TIM5).
+    // - The new count value is 0.
+    // This series of operations will result in a high prescaler value while maintaining accuracy.
 
     while (((clk_freq % FACTOR_5) == 0) && (((clk_freq / FACTOR_5) % unit_in_seconds) == 0)
            && !check_overflow(p_timx, prescaler, FACTOR_5)) {
@@ -791,8 +791,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     p_timx->ARR = count;
 }
 
-// Checks multiplication against an unsigned 16 bit variable
-// Returns true if there is an overflow
+// Checks multiplication against an unsigned 16 bit variable.
+// Returns true if there is an overflow.
 static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
 {
     uint32_t max;

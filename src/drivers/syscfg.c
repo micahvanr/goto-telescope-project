@@ -17,7 +17,7 @@
 
 /***************************************************************************
 Function: syscfg_config_clock
-Overview: Enables or disables the SYSCFG clock inside RCC
+Overview: Enables or disables the SYSCFG clock inside RCC.
 Parameters: 
     None
 Return: 
@@ -34,9 +34,9 @@ void syscfg_config_clock(togglable_e toggle)
 
 /***************************************************************************
 Function: syscfg_config_exti
-Overview: Configures the GPIO EXTI interrupt lines
+Overview: Configures the GPIO EXTI interrupt lines.
 Parameters: 
-    port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below
+    port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below.
         GPIOA [0]
         GPIOB [1]
         GPIOC [2]
@@ -45,7 +45,7 @@ Parameters:
         GPIOF [5]
         GPIOG [6]
         GPIOH [7]
-    exti_line: EXTI line number ie. the pin number of the GPIO pin
+    exti_line: EXTI line number ie. the pin number of the GPIO pin.
         0-15
     toggle:
         ENABLE
@@ -57,7 +57,7 @@ Note: None
 void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
 {
     uint8_t reg_num = exti_line % 4;
-    // shift amount is exti x width multiplied by 0-3
+    // shift amount is exti x width multiplied by 0-3.
     uint8_t shift_amount = 4 * (exti_line % 4);
 
     switch (toggle) {

@@ -17,7 +17,7 @@
 
 /***************************************************************************
 Function: pwr_config_clock 
-Overview: Enables or disables the clock to the PWR peripheral
+Overview: Enables or disables the clock to the PWR peripheral.
 Parameters: 
     toggle:
         ENABLE
@@ -36,7 +36,7 @@ void pwr_config_clock(togglable_e toggle)
 
 /***************************************************************************
 Function: pwr_disable_backup_write_prot
-Overview: Disables the write protection for the RTC Backup registers and backup SRAM
+Overview: Disables the write protection for the RTC Backup registers and backup SRAM.
 Parameters: 
     None
 Return: 

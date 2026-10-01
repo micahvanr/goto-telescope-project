@@ -48,9 +48,9 @@ static inline void assert_weekday_param(rtc_weekdays_e weekday);
 
 /***************************************************************************
 Function: rtc_init 
-Overview: Initializes the RTC peripheral inside the handle with the settings in the configuration structure
+Overview: Initializes the RTC peripheral inside the handle with the settings in the configuration structure.
 Parameters:
-    p_rtc_handle: Structure with the corresponding settings to configure the RTC peripheral
+    p_rtc_handle: Structure with the corresponding settings to configure the RTC peripheral.
 Return: 
     None
 Note: None
@@ -85,11 +85,11 @@ void rtc_init(rtc_handler *const p_rtc_handler)
 
 /***************************************************************************
 Function: rtc_get_time_format
-Overview: Gets the time format (AM/PM)
+Overview: Gets the time format (AM/PM).
 Parameters: 
     None
 Return: 
-    rtc_time_format_e: Time format of current time 
+    rtc_time_format_e: Time format of current time.
         RTC_TIME_FORMAT_AM_24HR
         RTC_TIME_FORMAT_PM_12HR
 Note: None
@@ -101,7 +101,7 @@ rtc_time_am_pm_e rtc_get_time_format(void)
 
 /***************************************************************************
 Function: rtc_get_hours
-Overview: Gets the RTC hours
+Overview: Gets the RTC hours.
 Parameters: 
     None
 Return: 
@@ -115,7 +115,7 @@ uint8_t rtc_get_hours(void)
 
 /***************************************************************************
 Function: rtc_get_minutes
-Overview: Gets the RTC minutes
+Overview: Gets the RTC minutes.
 Parameters: 
     None
 Return: 
@@ -130,7 +130,7 @@ uint8_t rtc_get_minutes(void)
 
 /***************************************************************************
 Function: rtc_get_seconds
-Overview: Gets the RTC seconds
+Overview: Gets the RTC seconds.
 Parameters: 
     None
 Return: 
@@ -144,11 +144,11 @@ uint8_t rtc_get_seconds(void)
 
 /***************************************************************************
 Function: rtc_get_time_data
-Overview: Gets the RTC time and returns a structure
+Overview: Gets the RTC time and returns a structure.
 Parameters: 
     None
 Return: 
-    Structure with RTC time data
+    Structure with RTC time data.
 Note: None
 ***************************************************************************/
 rtc_time_data rtc_get_time_data(void)
@@ -169,7 +169,7 @@ rtc_time_data rtc_get_time_data(void)
 
 /***************************************************************************
 Function: rtc_get_weekday
-Overview: Gets the RTC weekday
+Overview: Gets the RTC weekday.
 Parameters: 
     None
 Return: 
@@ -183,7 +183,7 @@ rtc_weekdays_e rtc_get_weekday(void)
 
 /***************************************************************************
 Function: rtc_get_year
-Overview: Gets the RTC year
+Overview: Gets the RTC year.
 Parameters: 
     None
 Return: 
@@ -197,7 +197,7 @@ uint8_t rtc_get_year(void)
 
 /***************************************************************************
 Function: rtc_get_month
-Overview: Gets the RTC month
+Overview: Gets the RTC month.
 Parameters: 
     None
 Return: 
@@ -211,7 +211,7 @@ uint8_t rtc_get_month(void)
 
 /***************************************************************************
 Function: rtc_get_date
-Overview: Gets the RTC date
+Overview: Gets the RTC date.
 Parameters: 
     None
 Return: 
@@ -225,11 +225,11 @@ uint8_t rtc_get_date(void)
 
 /***************************************************************************
 Function: rtc_get_date_data
-Overview: Gets the RTC date and returns a structure
+Overview: Gets the RTC date and returns a structure.
 Parameters: 
     None
 Return: 
-    Structure with RTC date data
+    Structure with RTC date data.
 Note: None
 ***************************************************************************/
 rtc_date_data rtc_get_date_data(void)
@@ -248,16 +248,16 @@ rtc_date_data rtc_get_date_data(void)
 
 /***************************************************************************
 Function: rtc_alarm_set
-Overview: Sets the alarm with the given settings in the configuration structure
+Overview: Sets the alarm with the given settings in the configuration structure.
 Parameters: 
-    alarm_conf: Contains settings for configuring the alarm
+    alarm_conf: Contains settings for configuring the alarm.
 Return: 
     None
 Note: None
 ***************************************************************************/
 void rtc_alarm_set(rtc_alarm_config const alarm_conf)
 {
-    // Initialize to 0 and don't bother resetting each field as all bits will be set
+    // Initialize to 0 and don't bother resetting each field as all bits will be set.
     rtc_alarm_sel_e const alarm_sel = alarm_conf.alarm_sel;
 
     assert_time_data_param(alarm_conf.time_data);
@@ -442,7 +442,7 @@ void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
 
 /***************************************************************************
 Function: rtc_alarm_x_get_status
-Overview: Gets alarm "x" status
+Overview: Gets alarm "x" status.
 Parameters: 
     None
 Return: 
@@ -463,16 +463,16 @@ rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
 
 /***************************************************************************
 Function: rtc_config_it
-Overview: Configures the given RTC related interrupt
+Overview: Configures the given RTC related interrupt.
 Parameters: 
-    it_opt: RTC interrupt options
+    it_opt: RTC interrupt options.
         RTC_IT_OPT_ALARM
         RTC_IT_OPT_WAKE_UP
         RTC_IT_OPT_TIMESTAMP
         RTC_IT_OPT_TAMPER
     toggle:
-        ENABLE  [1]
-        DISABLE [0]
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -505,9 +505,9 @@ void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
 
 /***************************************************************************
 Function: rtc_timestamp_init
-Overview: Initializes the RTC timestamp with the given settings in the timestamp_conf structure
+Overview: Initializes the RTC timestamp with the given settings in the timestamp_conf structure.
 Parameters: 
-    timestamp_conf: Settings for timestamps
+    timestamp_conf: Settings for timestamps.
 Return: 
     None
 Note: None
@@ -531,7 +531,7 @@ void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
 
 /***************************************************************************
 Function: rtc_timestamp_read_status
-Overview: Read the RTC timestamp status. Whether a timestamp has occured
+Overview: Read the RTC timestamp status. Whether a timestamp has occured.
 Parameters: 
     None
 Return: 
@@ -547,7 +547,7 @@ rtc_timestamp_status_e rtc_timestamp_read_status(void)
 
 /***************************************************************************
 Function: rtc_timestamp_clear_status
-Overview: Clear the RTC timestamp status
+Overview: Clear the RTC timestamp status.
 Parameters: 
     None
 Return: 
@@ -564,11 +564,11 @@ void rtc_timestamp_clear_status(void)
 
 /***************************************************************************
 Function: rtc_timestamp_read_date
-Overview: Reads the timestamp date information and returns it into a structure
+Overview: Reads the timestamp date information and returns it into a structure.
 Parameters: 
     None
 Return: 
-    rtc_date_data: Structure of date info. Including the date, month, year, and weekday
+    rtc_date_data: Structure of date info. Including the date, month, year, and weekday.
 Note: None
 ***************************************************************************/
 rtc_date_data rtc_timestamp_read_date(void)
@@ -612,9 +612,9 @@ rtc_time_data rtc_timestamp_read_time(void)
 
 /***************************************************************************
 Function: rtc_wakeup_init
-Overview: Initializes the RTC wakeup feature with the settings in the wakeup_conf structure
+Overview: Initializes the RTC wakeup feature with the settings in the wakeup_conf structure.
 Parameters: 
-    wakeup_conf: Settings for wakeup 
+    wakeup_conf: Settings for wakeup.
 Return: 
     None
 Note: None
@@ -623,7 +623,7 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
 {
     RTC->CR &= ~RTC_CR_WUTE;
 
-    // Wait until updates allowed
+    // Wait until updates allowed.
     while (!(RTC->ISR & RTC_ISR_WUTWF));
 
     RTC->CR &= ~(RTC_CR_WCKSEL_MASK << RTC_CR_WCKSEL_POS);
@@ -644,7 +644,7 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
 
 /***************************************************************************
 Function: rtc_wakeup_get_status
-Overview: Reads the status of the wakeup and whether it has been triggered
+Overview: Reads the status of the wakeup and whether it has been triggered.
 Parameters: 
     None
 Return: 
@@ -660,7 +660,7 @@ rtc_wakeup_status_e rtc_wakeup_get_status(void)
 
 /***************************************************************************
 Function: rtc_wakeup_clear_status
-Overview: Clears the status of the wakeup section of RTC
+Overview: Clears the status of the wakeup section of RTC.
 Parameters: 
     None
 Return: 
@@ -679,7 +679,7 @@ Parameters:
     None
 Return: 
     None
-Note: Should be called within user written RTC specific IT handler
+Note: Should be called within user written RTC specific IT handler.
 ***************************************************************************/
 void rtc_it_handler(void)
 {
@@ -890,16 +890,10 @@ static void set_rtc_pre(void)
     uint32_t asynch_pre;
     uint32_t rtc_clk = 0;
 
-    // Procedure:
-    // Calculate asynch prescaler
-    // Calculate synch prescaler from *asynch clock*
-    // Set synch prescaler in reg
-    // Set asynch prescaler in reg
-
     rtc_clk = rcc_get_rtc_clock_freq_hz();
 
     asynch_pre = 128; // Highest 7-bit number
-    // If dividing RTC input clock results in remainder, then reduce prescaler by factor of 2
+    // If dividing RTC input clock results in remainder, then reduce prescaler by factor of 2.
     while (rtc_clk % asynch_pre) {
         asynch_pre /= FACTOR_2;
     }
@@ -935,17 +929,17 @@ static void enable_alarm(rtc_alarm_sel_e const alarm_sel, togglable_e const it_t
 
 static void disable_alarm(rtc_alarm_sel_e const alarm_sel)
 {
-    // Turn off interrupts so we can modify the alarm
+    // Turn off interrupts so we can modify the alarm.
     switch (alarm_sel) {
     case RTC_ALARM_A_SEL:
-        // Wait till alarm update is allowed
+        // Wait till alarm update is allowed.
         while (!(RTC->ISR & RTC_ISR_ALRAWF));
         RTC->CR &= ~RTC_CR_ALRAE;
         RTC->CR &= ~RTC_CR_ALRAIE;
         break;
 
     case RTC_ALARM_B_SEL:
-        // Wait till alarm update is allowed
+        // Wait till alarm update is allowed.
         while (!(RTC->ISR & RTC_ISR_ALRBWF));
         RTC->CR &= ~RTC_CR_ALRBE;
         RTC->CR &= ~RTC_CR_ALRBIE;

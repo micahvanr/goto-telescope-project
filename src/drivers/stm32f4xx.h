@@ -52,7 +52,7 @@ typedef enum {
 //} Interrupt Constants
 //=========================================//{
 
-// Only adding IRQ numbers when they are needed
+// Only adding IRQ numbers when they are needed.
 typedef enum {
     WWDG_IRQ_NUM_0                = 0,
     PVDPVD_IRQ_NUM_1              = 1,

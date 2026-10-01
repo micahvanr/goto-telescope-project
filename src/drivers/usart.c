@@ -37,9 +37,9 @@ uint8_t g_usart_port_init = 0;
 
 /***************************************************************************
 Function: usart_init
-Overview: Initializes the USART peripheral inside the handle with the settings in the configuration structure
+Overview: Initializes the USART peripheral inside the handle with the settings in the configuration structure.
 Parameters:
-    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral
+    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral.
 Return: 
     None
 Note: None
@@ -48,13 +48,13 @@ void usart_init(usart_handle *const p_usart_handle)
 {
     uint32_t temp_cr1 = p_usart_handle->p_usartx->CR1;
 
-    // Ensure handle structure values are valid
+    // Ensure handle structure values are valid.
     assert_usart_handle_param(p_usart_handle);
 
-    // Initialize the port in the init variable
+    // Initialize the port in the init variable.
     set_usart_init_status(p_usart_handle->p_usartx);
 
-    // Enable clock of USART peripheral
+    // Enable clock of USART peripheral.
     usart_config_clock(p_usart_handle->p_usartx, ENABLE);
 
     // Enable USART peripheral
@@ -91,7 +91,7 @@ void usart_init(usart_handle *const p_usart_handle)
                  p_usart_handle->usart_conf.baudrate);
 }
 
-// Check each setting of the handle and ensure it is one of the available enum values
+// Check each setting of the handle and ensure it is one of the available enum values.
 static void assert_usart_handle_param(usart_handle const *const p_usart_handle)
 {
     uint8_t found_setting = false;
@@ -169,9 +169,9 @@ static void assert_usart_handle_param(usart_handle const *const p_usart_handle)
 
 /***************************************************************************
 Function: usart_reset
-Overview: Disables the clock for the given USART peripheral, resetting it
+Overview: Disables the clock for the given USART peripheral, resetting it.
 Parameters:
-    p_usart_handle: USART register peripheral to be reset
+    p_usart_handle: USART register peripheral to be reset.
 Return: 
     None
 Note: None
@@ -183,13 +183,13 @@ void usart_reset(usart_reg_def const *const p_usartx)
 
 /***************************************************************************
 Function: usart_transmit (blocking)
-Overview: Writes an array of data into the given usart peripheral
+Overview: Writes an array of data into the given usart peripheral.
 Parameters:
-    p_usartx: USART register peripheral to be written to
+    p_usartx: USART register peripheral to be written to.
         USARTx (1, 2, 3, 6) or
         UARTx (4, 5)
-    p_data: Array of data bytes to write to peripheral
-    length: Length of data array
+    p_data: Array of data bytes to write to peripheral.
+    length: Length of data array.
 Return: 
     None
 Note: 
@@ -212,16 +212,16 @@ void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32
 
 /***************************************************************************
 Function: usart_receive (blocking)
-Overview: Reads an array of data from the given usart peripheral
+Overview: Reads an array of data from the given usart peripheral.
 Parameters:
-    p_usartx: USART register peripheral to be read from
+    p_usartx: USART register peripheral to be read from.
         USARTx (1, 2, 3, 6) or
         UARTx (4, 5)
-    p_data: Array of data bytes to read from peripheral
-    length: Length of data array
+    p_data: Array of data bytes to read from peripheral.
+    length: Length of data array.
 Return: 
     None
-Note: 9 Bit write with no parity not implemented
+Note: 9 Bit write with no parity not implemented.
 ***************************************************************************/
 void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t const length)
 {
@@ -237,11 +237,11 @@ void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t cons
 
 /***************************************************************************
 Function: usart_transmit_it (non-blocking)
-Overview: Uses interrupts to write data with the USART peripheral
+Overview: Uses interrupts to write data with the USART peripheral.
 Parameters:
-    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral
-    p_data: Pointer to where data should be written from
-    length: Length in bytes of data
+    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral.
+    p_data: Pointer to where data should be written from.
+    length: Length in bytes of data.
 Return: 
     None
 Note: 
@@ -253,11 +253,11 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
 {
     ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until usart is available (blocking).
     while (p_usart_handle->usart_it_data.status == USART_STATUS_RUNNING);
     p_usart_handle->usart_it_data.status = USART_STATUS_RUNNING;
 
-    // Configure transfer settings
+    // Configure transfer settings.
     p_usart_handle->usart_it_data.txrx_length = length;
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_TX;
@@ -267,26 +267,26 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
 
 /***************************************************************************
 Function: usart_receive_it (non-blocking)
-Overview: Uses interrupts to read data with the USART peripheral
+Overview: Uses interrupts to read data with the USART peripheral.
 Parameters:
-    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral
-    p_data: Pointer to where data should be read from
-    length: Length in bytes of data
+    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral.
+    p_data: Pointer to where data should be read from.
+    length: Length in bytes of data.
 Return: 
     None
 Note: 
-    9 Bit write with no parity not implemented
+    9 Bit write with no parity not implemented.
     If the USART peripheral is busy transmitting/receiving, it will poll until it is available.
 ***************************************************************************/
 void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
     ASSERT(get_usart_init_status(p_usart_handle->p_usartx) == USART_INITIALIZED);
 
-    // Wait until usart is available (blocking)
+    // Wait until usart is available (blocking).
     while (p_usart_handle->usart_it_data.status == USART_STATUS_RUNNING);
     p_usart_handle->usart_it_data.status = USART_STATUS_RUNNING;
 
-    // Configure read settings
+    // Configure read settings.
     p_usart_handle->usart_it_data.txrx_length = length;
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_RX;
@@ -300,14 +300,14 @@ void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data,
 
 /***************************************************************************
 Function: usart_config_it
-Overview: Enables or disables the given USART peripheral interrupts
+Overview: Enables or disables the given USART peripheral interrupts.
 Parameters:
     p_usartx: USART peripheral 
         USARTx (1, 2, 3, 6) or
         UARTx (4, 5)
     toggle: 
-        ENABLE (1)
-        DISABLE (0)
+        ENABLE
+        DISABLE
 Return: 
     None
 Note: None
@@ -347,14 +347,14 @@ void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 Function: usart_it_handler
 Overview: 
 Parameters:
-    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral
+    p_usart_handle: Structure with the corresponding settings to configure the USART peripheral.
 Return: 
     None
-Note: Should be called from the ISR function
+Note: Should be called from the ISR function.
 ***************************************************************************/
 void usart_it_handler(usart_handle *const p_usart_handle)
 {
-    // Check for flags
+    // Check for flags.
     uint32_t status_reg = p_usart_handle->p_usartx->SR;
 
     switch (p_usart_handle->usart_it_data.mode) {
@@ -378,7 +378,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
 
     // Tranfer data
     case USART_MODE_TX:
-        //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty
+        //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty.
         if ((p_usart_handle->p_usartx->SR & USART_SR_TXE) && (p_usart_handle->usart_it_data.txrx_length != 0)) {
             transfer_data(p_usart_handle);
         }
@@ -396,16 +396,16 @@ void usart_it_handler(usart_handle *const p_usart_handle)
 
 /***************************************************************************
 Function: usart_transmit_single_byte
-Overview: Writes 1 byte of data into the given usart peripheral
+Overview: Writes 1 byte of data into the given usart peripheral.
 Parameters:
-    p_usartx: USART register peripheral to be written to
+    p_usartx: USART register peripheral to be written to.
         USARTx (1, 2, 3, 6) or
         UARTx (4, 5)
-    data: Byte of data to be sent
+    data: Byte of data to be sent.
 Return: 
     None
 Note: 
-    Used for printf implementation
+    Used for printf implementation.
 ***************************************************************************/
 void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const data)
 {
@@ -422,11 +422,11 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
 
 static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx)
 {
-    // If USART peripheral on APB1
+    // If USART peripheral on APB1.
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5)) {
         return APB1_BUS;
     }
-    // If USART peripheral on APB2
+    // If USART peripheral on APB2.
     else {
         return APB2_BUS;
     }
@@ -488,7 +488,7 @@ static inline usart_init_check_e get_usart_init_status(usart_reg_def const *cons
     return 0b1 & (g_usart_port_init >> map_usart_ports_to_num(p_usartx));
 }
 
-// Sets the baudrate for the given USART peripheral
+// Sets the baudrate for the given USART peripheral.
 static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e const oversampling_mode,
                          usart_baudrate_e const baudrate)
 {
@@ -501,7 +501,7 @@ static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e con
     uint32_t div_fraction;
     uint32_t over8;
 
-    // If over8 enabled, it will be 8, otherwise it will be 16
+    // If over8 enabled, it will be 8, otherwise it will be 16.
     over8 = (8 * (2 - oversampling_mode));
 
     // Get clock frequency
@@ -515,22 +515,22 @@ static void set_baudrate(usart_reg_def *const p_usartx, usart_oversampling_e con
     usart_div    = ((100 * clock_freq) / (over8 * baudrate));
     div_fraction = (usart_div - (div_mantissa * 100));
 
-    // Fraction part must be multiplied by over8 then rounded
+    // Fraction part must be multiplied by over8 then rounded.
     div_fraction = (div_fraction * over8);
     div_fraction = (div_fraction + 50) / 100;
 
-    // If fraction part is too big, carry into mantissa section
+    // If fraction part is too big, carry into mantissa section.
     if (div_fraction == 0x10) {
         div_mantissa += 1;
         div_fraction = 0;
     }
 
-    // Set up variable to write into register
+    // Set up variable to write into register.
     temp_brr = 0;
     temp_brr |= (div_fraction << USART_BRR_DIV_FRACTION_POS);
     temp_brr |= (div_mantissa << USART_BRR_DIV_MANTISSA_POS);
 
-    // 3rd bit must be kept clear if over8 is used
+    // 3rd bit must be kept clear if over8 is used.
     if (oversampling_mode == USART_OVERSAMPLING_8) {
         temp_brr &= ~(1 << USART_BRR_OVER8EN_CLEAR_POS);
     }

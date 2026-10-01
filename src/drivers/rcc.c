@@ -15,7 +15,7 @@ static void init_mco_gpio_pin(rcc_mco_sel_e mco_select);
 
 /***************************************************************************
 Function: rcc_config_lsi
-Overview: Enables or disables the LSI oscillator
+Overview: Enables or disables the LSI oscillator.
 Parameters: 
     toggle:
         ENABLE
@@ -34,7 +34,7 @@ void rcc_config_lsi(togglable_e toggle)
 
 /***************************************************************************
 Function: rcc_lsi_is_rdy
-Overview: Checks if the LSI oscillator is ready
+Overview: Checks if the LSI oscillator is ready.
 Parameters: 
     None
 Return: 
@@ -49,7 +49,7 @@ bool rcc_lsi_is_rdy(void)
 
 /***************************************************************************
 Function: rcc_get_pll_freq_hz
-Overview: Gets the PLL clock frequency from the PLL register in RCC
+Overview: Gets the PLL clock frequency from the PLL register in RCC.
 Parameters:
     None
 Return: 
@@ -82,14 +82,14 @@ uint32_t rcc_get_pll_freq_hz(void)
 
     pll_src = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLSRC_POS) & RCC_PLLCFGR_PLLSRC_MASK);
 
-    // Select PLL clock source frequency
+    // Select PLL clock source frequency.
     switch (pll_src) {
     case CLOCK_SRC_HSI: pll_input_clk_freq = HSI_CLOCK_FREQ; break;
     case CLOCK_SRC_HSE: pll_input_clk_freq = HSE_CLOCK_FREQ; break;
     default:            ASSERT(false); break;
     }
 
-    // Calculations of PLL output frequency
+    // Calculations of PLL output frequency.
     vco_clk_freq        = (pll_input_clk_freq) * (plln / pllm);
     pll_output_clk_freq = vco_clk_freq / pllp;
 
@@ -98,7 +98,7 @@ uint32_t rcc_get_pll_freq_hz(void)
 
 /***************************************************************************
 Function: rcc_get_sys_clock_freq_hz
-Overview: Gets the system clock frequency depending on what the current clock source is
+Overview: Gets the system clock frequency depending on what the current clock source is.
 Parameters:
     None
 Return: 
@@ -107,11 +107,11 @@ Note: None
 ***************************************************************************/
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
-    // Get active clock source (HSI/HSE/PLL)
+    // Get active clock source (HSI/HSE/PLL).
     clock_sources_e clock_source = (clock_sources_e)((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS0_MASK);
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
-    // Return clock depending on what the source is
+    // Return clock depending on what the source is.
     switch (clock_source) {
     case CLOCK_SRC_HSI: return HSI_CLOCK_FREQ;
     case CLOCK_SRC_HSE: return HSE_CLOCK_FREQ;
@@ -122,15 +122,15 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
 
 /***************************************************************************
 Function: rcc_get_bus_clock_freq_hz
-Overview: Gets the given bus clock frequency depending on what the system clock is and what the prescaler values are set to
+Overview: Gets the given bus clock frequency depending on what the system clock is and what the prescaler values are set to.
 Parameters:
-    bus: Different bus options to be returned
+    bus: Different bus options to be returned.
         AHB1_BUS
         AHB2_BUS
         APB1_BUS
         APB2_BUS
 Return: 
-    Clock frequency (hz) for the given bus
+    Clock frequency (hz) for the given bus.
 Note: None
 ***************************************************************************/
 uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
@@ -153,14 +153,14 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     uint8_t apb2_prescaler;
     uint32_t apb2_clock;
 
-    // Calculate different clocks (AHB1/AHB2/APB1/APB2) from prescalers
+    // Calculate different clocks (AHB1/AHB2/APB1/APB2) from prescalers.
 
-    // Get active system clock source (HSI/HSE/PLL) - Use function to get the clock for that source
+    // Get active system clock source (HSI/HSE/PLL) - Use function to get the clock for that source.
     sysclock_freq = rcc_get_sys_clock_freq_hz();
 
     // Calculate AHB clock
     ahb_prescaler = ((RCC->CFGR >> RCC_CFGR_HPRE_POS) & RCC_CFGR_HPRE_MASK);
-    // If 4th bit is 1, select prescaler, otherwise the prescaler is 1
+    // If 4th bit is 1, select prescaler, otherwise the prescaler is 1.
     ahb_prescaler = ((ahb_prescaler & 0b1000) != 0) ? ahb_clock_prescaler[ahb_prescaler & ~(0b1000)] : 1;
     ahb_clock     = sysclock_freq / ahb_prescaler;
 
@@ -184,14 +184,14 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 
 /***************************************************************************
 Function: rcc_get_timer_clock_freq_hz
-Overview: Gets the clock frequency depending on the bus of the timer
+Overview: Gets the clock frequency depending on the bus of the timer.
 Parameters:
-    bus: Different bus options to be returned
+    bus: Different bus options to be returned.
         APB1_BUS
         APB2_BUS
 Return: 
-    Clock frequency (hz) for the timer, given the corresponding bus its on
-Note: Use TIMER API function to get bus for timer
+    Clock frequency (hz) for the timer, given the corresponding bus its on.
+Note: Use TIMER API function to get bus for timer.
 ***************************************************************************/
 uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
@@ -214,12 +214,12 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 
 /***************************************************************************
 Function: rcc_config_rtc_clock
-Overview: Enables or disables the RTC clock
+Overview: Enables or disables the RTC clock.
 Parameters: 
     None
 Return: 
     None
-Note: Backup domain write protection must be disabled before this is allowed
+Note: Backup domain write protection must be disabled before this is allowed.
 ***************************************************************************/
 void rcc_config_rtc_clock(togglable_e toggle)
 {
@@ -231,7 +231,7 @@ void rcc_config_rtc_clock(togglable_e toggle)
 
 /***************************************************************************
 Function: rcc_sel_rtc_clk_src
-Overview: Sets the RTC clock source
+Overview: Sets the RTC clock source.
 Parameters: 
     rtc_clk_sel: Clock source for RTC
         RCC_BDCR_RTCSEL_NA 
@@ -253,9 +253,9 @@ void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel)
 
 /***************************************************************************
 Function: rcc_set_rtc_hse_clk_pre
-Overview: Sets the HSE clock prescaler for the RTC peripheral
+Overview: Sets the HSE clock prescaler for the RTC peripheral.
 Parameters: 
-    hse_pre: Prescaler to divide HSE by
+    hse_pre: Prescaler to divide HSE by.
         RCC_CFGR_RTCPRE_NA
         RCC_CFGR_RTCPRE_x (2 - 31)
 Return: 
@@ -273,11 +273,11 @@ void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre)
 
 /***************************************************************************
 Function: rcc_get_rtc_clock_freq_hz
-Overview: Gets RTC clock frequency
+Overview: Gets RTC clock frequency.
 Parameters: 
     None
 Return: 
-    Clock frequency (hz) for the RTC peripheral
+    Clock frequency (hz) for the RTC peripheral.
 Note: None
 ***************************************************************************/
 uint32_t rcc_get_rtc_clock_freq_hz(void)

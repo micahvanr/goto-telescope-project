@@ -107,8 +107,8 @@ typedef enum {
 } tim_channel_sel_e;
 
 typedef enum {
-    TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately
-    TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now
+    TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately.
+    TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now.
 } tim_arr_preload_e;
 
 typedef enum {
@@ -148,7 +148,7 @@ typedef enum {
 //} tim_ic_config Options
 //=========================================//{
 
-// DTS = dead-time and sampling clock (derived from CR1->CKD)
+// DTS = dead-time and sampling clock (derived from CR1->CKD).
 typedef enum {
     TIM_DTS_FREQ_CLK_INT        = 0b00,
     TIM_DTS_FREQ_CLK_INT_MULT_2 = 0b01,
@@ -156,8 +156,8 @@ typedef enum {
 } tim_dts_mult_e;
 
 typedef enum {
-    TIM_INPUT_MAP_MAIN         = 0b01, // Input will match the channel number
-    TIM_INPUT_MAP_TI_ALTERNATE = 0b10, // Input will be the alternate channel number (either +- 1)
+    TIM_INPUT_MAP_MAIN         = 0b01, // Input will match the channel number.
+    TIM_INPUT_MAP_TI_ALTERNATE = 0b10, // Input will be the alternate channel number (either +- 1).
     TIM_INPUT_MAP_TRC          = 0b11,
 } tim_input_map_type_e;
 
@@ -190,7 +190,7 @@ typedef enum {
 typedef enum {
     TIM_IC_EDGE_DETECTION_RISING         = 0b00,
     TIM_IC_EDGE_DETECTION_FALLING        = 0b01,
-    TIM_IC_EDGE_DETECTION_RISING_FALLING = 0b101, // Special case where the bits are not adjacent to eachother
+    TIM_IC_EDGE_DETECTION_RISING_FALLING = 0b101, // Special case where the bits are not adjacent to eachother.
 } tim_ic_edge_detection_e;
 
 //} tim_oc_config Options
@@ -198,14 +198,14 @@ typedef enum {
 
 // clang-format off
 typedef enum {
-    TIM_OC_OPM_FROZEN         = 0b000, // Comparison between output compare register and counter has no effect on OCxREF
-    TIM_OC_OPM_EQ_ACTIVE      = 0b001, // Sets OCxREF active level on match
-    TIM_OC_OPM_EQ_INACTIVE    = 0b010, // Sets OCxREF inactive level on match
-    TIM_OC_OPM_TOGGLE         = 0b011, // Toggles OCxREF when there is a match
-    TIM_OC_OPM_FORCE_INACTIVE = 0b100, // Forces OCxREF low
-    TIM_OC_OPM_FORCE_ACTIVE   = 0b101, // Forces OCxREF high
-    TIM_OC_OPM_PWM_1          = 0b110, // Upcounting: OCxREF is active when count < CCR, else it is inactive. Downcounting: Vice versa
-    TIM_OC_OPM_PWM_2          = 0b111, // Upcounting: OCxREF is inactive when count < CCR, else it is active. Downcounting: Vice versa
+    TIM_OC_OPM_FROZEN         = 0b000, // Comparison between output compare register and counter has no effect on OCxREF.
+    TIM_OC_OPM_EQ_ACTIVE      = 0b001, // Sets OCxREF active level on match.
+    TIM_OC_OPM_EQ_INACTIVE    = 0b010, // Sets OCxREF inactive level on match.
+    TIM_OC_OPM_TOGGLE         = 0b011, // Toggles OCxREF when there is a match.
+    TIM_OC_OPM_FORCE_INACTIVE = 0b100, // Forces OCxREF low.
+    TIM_OC_OPM_FORCE_ACTIVE   = 0b101, // Forces OCxREF high.
+    TIM_OC_OPM_PWM_1          = 0b110, // Upcounting: OCxREF is active when count < CCR, else it is inactive. Downcounting: Vice versa.
+    TIM_OC_OPM_PWM_2          = 0b111, // Upcounting: OCxREF is inactive when count < CCR, else it is active. Downcounting: Vice versa.
 } tim_oc_output_mode_e;
 // clang-format on
 
