@@ -13,6 +13,8 @@ breaks these rules should have comments explaining why the rule was broken.
 
 
 # General Rules
+## Common Abbreviations
+See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
 
 # Comment Rules
 
