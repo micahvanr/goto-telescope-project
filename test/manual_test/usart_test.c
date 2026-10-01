@@ -18,7 +18,8 @@ void usart_tests(test_type_e test)
     usart_gpio_init();
     usart2_init();
 
-    switch (test) {
+    switch (test)
+    {
         // PD6 - RX
         // PD5 - TX
         case USART_TEST_RXTX:
@@ -73,7 +74,8 @@ static void test_usart_txrx(void)
     uint8_t rx_length;
     uint8_t rx_data[20] = {0};
 
-    while (1) {
+    while (1)
+    {
         // Send string
         usart_transmit(g_usart_test_handle.p_usartx, &tx_length, 1);
         usart_transmit(g_usart_test_handle.p_usartx, tx_data, tx_length);
@@ -83,7 +85,8 @@ static void test_usart_txrx(void)
         usart_receive(g_usart_test_handle.p_usartx, (uint8_t *)rx_data, rx_length);
 
         // Ensure string returns expected value
-        if (strcmp((char *)expected_rx, (char *)rx_data) != 0) {
+        if (strcmp((char *)expected_rx, (char *)rx_data) != 0)
+        {
             ASSERT(false);
         }
         for (uint32_t i = 0; i < 10000; i++);
@@ -99,7 +102,8 @@ static void test_usart_txrx_it(void)
     static uint8_t rx_length             = 0;
     static uint8_t rx_data[20]           = {0};
 
-    while (1) {
+    while (1)
+    {
         // Send string
         usart_transmit_it(&g_usart_test_handle, &tx_length, 1);
         usart_transmit_it(&g_usart_test_handle, tx_data, tx_length);
@@ -109,7 +113,8 @@ static void test_usart_txrx_it(void)
         usart_receive_it(&g_usart_test_handle, (uint8_t *)rx_data, rx_length);
 
         // Ensure string returns expected value
-        if (strcmp((char *)expected_rx, (char *)rx_data) != 0) {
+        if (strcmp((char *)expected_rx, (char *)rx_data) != 0)
+        {
             ASSERT(false);
         }
         for (uint32_t i = 0; i < 10000; i++);

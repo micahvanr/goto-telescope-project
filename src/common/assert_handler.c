@@ -37,8 +37,11 @@ static void blink_led(void)
     p_gpio_led_reg += 4; // Move to offset 0x14 - Output data register
 
     // Toggle LED
-    while (1) {
+    while (1)
+    {
         *p_gpio_led_reg ^= (1 << LED_RED_PIN);
-        for (uint32_t i = 0; i < 1000000; i++) {}
+        for (uint32_t i = 0; i < 1000000; i++)
+        {
+        }
     }
 }

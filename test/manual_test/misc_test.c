@@ -8,7 +8,8 @@ static void test_printf(void);
 
 void misc_tests(test_type_e test)
 {
-    switch (test) {
+    switch (test)
+    {
         case MISC_TEST_ASSERT:
             test_assert();
             break;
@@ -41,7 +42,8 @@ static void test_get_clock(void)
 
 static void test_printf(void)
 {
-    while (1) {
+    while (1)
+    {
         printf_("Test");
         for (uint32_t i = 0; i < 50000; i++);
     }

@@ -48,7 +48,8 @@ int main(void)
 
     // NOTE: Change this variable to run the correct test
     test_type_e test = RTC_TEST_TIMESTAMP;
-    switch (test) {
+    switch (test)
+    {
 
         // GPIO tests
         case GPIO_TEST_BLINK_LED:

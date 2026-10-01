@@ -265,7 +265,8 @@ void rtc_alarm_set(rtc_alarm_config const alarm_conf)
 
     disable_alarm(alarm_sel);
 
-    switch (alarm_conf.weekday_sel) {
+    switch (alarm_conf.weekday_sel)
+    {
         case RTC_ALARM_WEEKDAY_SEL_DATE:
             rtc_alarm_set_date(alarm_sel, alarm_conf.date_data.date, alarm_conf.date_match);
             break;
@@ -304,7 +305,8 @@ void rtc_alarm_set_seconds(rtc_alarm_sel_e const alarm_sel, uint8_t const second
     temp_alrmxr |= (seconds / 10) << RTC_ALRMAR_ST_POS;
     temp_alrmxr |= (seconds % 10) << RTC_ALRMAR_SU_POS;
 
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &= ~((RTC_ALRMAR_MSK1_MASK << RTC_ALRMAR_MSK1_POS) | (RTC_ALRMAR_ST_MASK << RTC_ALRMAR_ST_POS)
                              | (RTC_ALRMAR_SU_MASK << RTC_ALRMAR_SU_POS));
@@ -330,7 +332,8 @@ void rtc_alarm_set_minutes(rtc_alarm_sel_e const alarm_sel, uint8_t const minute
     temp_alrmxr |= (minutes / 10) << RTC_ALRMAR_MNT_POS;
     temp_alrmxr |= (minutes % 10) << RTC_ALRMAR_MNU_POS;
 
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &= ~((RTC_ALRMAR_MSK2_MASK << RTC_ALRMAR_MSK2_POS) | (RTC_ALRMAR_MNT_MASK << RTC_ALRMAR_MNT_POS)
                              | (RTC_ALRMAR_MNU_MASK << RTC_ALRMAR_MNU_POS));
@@ -356,7 +359,8 @@ void rtc_alarm_set_hours(rtc_alarm_sel_e const alarm_sel, uint8_t const hours,
     temp_alrmxr |= (hours / 10) << RTC_ALRMAR_HT_POS;
     temp_alrmxr |= (hours % 10) << RTC_ALRMAR_HU_POS;
 
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &= ~((RTC_ALRMAR_MSK3_MASK << RTC_ALRMAR_MSK3_POS) | (RTC_ALRMAR_HT_MASK << RTC_ALRMAR_HT_POS)
                              | (RTC_ALRMAR_HU_MASK << RTC_ALRMAR_HU_POS));
@@ -383,7 +387,8 @@ void rtc_alarm_set_date(rtc_alarm_sel_e const alarm_sel, uint8_t const date, rtc
     temp_alrmxr |= (date % 10) << RTC_ALRMAR_DU_POS;
 
     // Clear RTC date
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &=
                 ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
@@ -410,7 +415,8 @@ void rtc_alarm_set_day(rtc_alarm_sel_e const alarm_sel, rtc_weekdays_e const wee
     temp_alrmxr |= weekday << RTC_ALRMAR_DU_POS;
 
     // Clear RTC date
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &=
                 ~((RTC_ALRMAR_MSK4_MASK << RTC_ALRMAR_MSK4_POS) | (RTC_ALRMAR_WDSEL_MASK << RTC_ALRMAR_WDSEL_POS)
@@ -431,7 +437,8 @@ void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
 {
     assert_am_pm_param(am_pm);
 
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->ALRMAR &= ~(RTC_ALRMAR_PM_MASK << RTC_ALRMAR_PM_POS);
             RTC->ALRMAR |= am_pm << RTC_ALRMAR_PM_POS;
@@ -458,7 +465,8 @@ Note: None
 rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
 {
     rtc_alarm_status_e alarm_status = RTC_ALARM_STATUS_NOT_TRIGGERED;
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
             break;
@@ -487,7 +495,8 @@ Note: None
 ***************************************************************************/
 void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
 {
-    switch (it_opt) {
+    switch (it_opt)
+    {
         case RTC_IT_OPT_ALARM:
             exti_config_it((exti_lines_e)RTC_EXTI_NUM_ALARM, toggle);
             exti_config_rising_edge((exti_lines_e)RTC_EXTI_NUM_ALARM, toggle);
@@ -527,7 +536,8 @@ void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
 {
     RTC->CR |= RTC_CR_TSE;
 
-    if (timestamp_conf.it_opt == RTC_IT_OPT_TIMESTAMP) {
+    if (timestamp_conf.it_opt == RTC_IT_OPT_TIMESTAMP)
+    {
         RTC->CR |= RTC_CR_TSIE;
         rtc_config_it(timestamp_conf.it_opt, ENABLE);
     }
@@ -568,7 +578,8 @@ Note: None
 void rtc_timestamp_clear_status(void)
 {
     RTC->ISR &= ~(RTC_ISR_TSF);
-    if (RTC->ISR & RTC_ISR_TSOVF) {
+    if (RTC->ISR & RTC_ISR_TSOVF)
+    {
         RTC->ISR &= ~(RTC_ISR_TSOVF);
     }
 }
@@ -643,7 +654,8 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
     RTC->WUTR &= ~RTC_WUTR_WUT_MASK;
     RTC->WUTR |= wakeup_conf.auto_reload_value;
 
-    if (wakeup_conf.it_opt == RTC_IT_OPT_WAKEUP) {
+    if (wakeup_conf.it_opt == RTC_IT_OPT_WAKEUP)
+    {
         RTC->CR |= RTC_CR_WUTIE;
         rtc_config_it(wakeup_conf.it_opt, ENABLE);
     }
@@ -696,22 +708,26 @@ void rtc_it_handler(void)
 {
     uint32_t temp_isr = RTC->ISR;
 
-    if (temp_isr & RTC_ISR_ALRAF) {
+    if (temp_isr & RTC_ISR_ALRAF)
+    {
         RTC->ISR &= ~RTC_ISR_ALRAF;
         exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_ALARM);
     }
 
-    if (temp_isr & RTC_ISR_ALRBF) {
+    if (temp_isr & RTC_ISR_ALRBF)
+    {
         RTC->ISR &= ~RTC_ISR_ALRBF;
         exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_ALARM);
     }
 
-    if (temp_isr & RTC_ISR_WUTF) {
+    if (temp_isr & RTC_ISR_WUTF)
+    {
         RTC->ISR &= ~RTC_ISR_WUTF;
         exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_WAKE_UP);
     }
 
-    if (temp_isr & RTC_ISR_TSF) {
+    if (temp_isr & RTC_ISR_TSF)
+    {
         RTC->ISR &= ~RTC_ISR_TSF;
         rtc_timestamp_clear_status();
         exti_clear_pending((exti_lines_e)RTC_EXTI_NUM_TIMESTAMP);
@@ -727,11 +743,13 @@ static void set_rtc_clock(rtc_config const rtc_conf)
     assert_rtc_config_param(rtc_conf);
 
     rcc_set_rtc_clk_src(rtc_conf.rtc_sel);
-    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI) {
+    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI)
+    {
         rcc_config_lsi(ENABLE);
         while (!rcc_lsi_is_rdy());
     }
-    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_HSE) {
+    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_HSE)
+    {
         rcc_set_rtc_pre(rtc_conf.rtc_pre);
     }
 }
@@ -907,7 +925,8 @@ static void set_rtc_pre(void)
 
     asynch_pre = 128; // Highest 7-bit number
     // If dividing RTC input clock results in remainder, then reduce prescaler by factor of 2.
-    while (rtc_clk % asynch_pre) {
+    while (rtc_clk % asynch_pre)
+    {
         asynch_pre /= FACTOR_2;
     }
 
@@ -924,16 +943,19 @@ static void set_rtc_pre(void)
 
 static void enable_alarm(rtc_alarm_sel_e const alarm_sel, togglable_e const it_toggle)
 {
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             RTC->CR |= RTC_CR_ALRAE;
-            if (it_toggle == ENABLE) {
+            if (it_toggle == ENABLE)
+            {
                 RTC->CR |= RTC_CR_ALRAIE;
             }
             break;
         case RTC_ALARM_B_SEL:
             RTC->CR |= RTC_CR_ALRBE;
-            if (it_toggle == ENABLE) {
+            if (it_toggle == ENABLE)
+            {
                 RTC->CR |= RTC_CR_ALRBIE;
             }
             break;
@@ -943,7 +965,8 @@ static void enable_alarm(rtc_alarm_sel_e const alarm_sel, togglable_e const it_t
 static void disable_alarm(rtc_alarm_sel_e const alarm_sel)
 {
     // Turn off interrupts so we can modify the alarm.
-    switch (alarm_sel) {
+    switch (alarm_sel)
+    {
         case RTC_ALARM_A_SEL:
             // Wait till alarm update is allowed.
             while (!(RTC->ISR & RTC_ISR_ALRAWF));

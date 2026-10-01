@@ -28,7 +28,8 @@ Note: None
 ***************************************************************************/
 void pwr_config_clock(togglable_e toggle)
 {
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             RCC->APB1ENR |= RCC_APB1ENR_PWREN;
             break;

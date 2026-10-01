@@ -27,7 +27,8 @@ static void test_rtc_wakeup(void);
 
 void rtc_tests(test_type_e test)
 {
-    switch (test) {
+    switch (test)
+    {
         case RTC_TEST_BASE:
             test_rtc_base();
             break;
@@ -68,10 +69,12 @@ static void standard_output_rtc_data(void)
     g_rtc_handle.time_data = rtc_get_time_data();
     g_rtc_handle.date_data = rtc_get_date_data();
 
-    if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM) {
+    if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM)
+    {
         am_pm[0] = 'A';
     }
-    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM) {
+    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM)
+    {
         am_pm[0] = 'P';
     }
     printf_("Time: %d:%d:%d %s\n", g_rtc_handle.time_data.hours, g_rtc_handle.time_data.minutes,
@@ -82,7 +85,8 @@ static void standard_output_rtc_data(void)
 static void test_rtc_base(void)
 {
 
-    while (1) {
+    while (1)
+    {
         tim_delay(1, TIM_UNIT_S);
         standard_output_rtc_data();
     }
@@ -108,7 +112,8 @@ static void test_rtc_alarm(void)
     alarm_conf.it_toggle = ENABLE;
 
     rtc_alarm_set(alarm_conf);
-    while (1) {
+    while (1)
+    {
         tim_delay(1, TIM_UNIT_S);
         standard_output_rtc_data();
     }
@@ -133,10 +138,12 @@ static void test_rtc_timestamp(void)
 
     rtc_timestamp_init(timestamp_conf);
 
-    while (1) {
+    while (1)
+    {
         tim_delay(1, TIM_UNIT_S);
         standard_output_rtc_data();
-        if (rtc_timestamp_read_status() == RTC_TIMESTAMP_STATUS_TRIGGERED) {
+        if (rtc_timestamp_read_status() == RTC_TIMESTAMP_STATUS_TRIGGERED)
+        {
             rtc_timestamp_clear_status();
             for (uint32_t i = 0; i < 5000; i++);
         }
@@ -154,7 +161,8 @@ static void test_rtc_wakeup(void)
     toggle_debug_pin();
     rtc_wakeup_init(wakeup_conf);
 
-    while (1) {
+    while (1)
+    {
         // standard_output_rtc_data();
     }
 }
@@ -181,7 +189,8 @@ void RTC_WKUP_IRQHandler(void)
 
 void RTC_Alarm_IRQHandler(void)
 {
-    if (rtc_alarm_get_status(RTC_ALARM_A_SEL) == RTC_ALARM_STATUS_TRIGGERED) {
+    if (rtc_alarm_get_status(RTC_ALARM_A_SEL) == RTC_ALARM_STATUS_TRIGGERED)
+    {
         printf_("Alarm triggered");
     }
     rtc_it_handler();

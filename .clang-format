@@ -6,7 +6,7 @@ BreakBeforeBraces: Custom
 BraceWrapping:
     AfterFunction: true
     AfterCaseLabel: false
-    AfterControlStatement: Never
+    AfterControlStatement: Always
     AfterEnum: false
     AfterStruct: false
     BeforeWhile: false
@@ -31,6 +31,7 @@ AlignConsecutiveAssignments: true
 AlignTrailingComments: Always
 AlignOperands: AlignAfterOperator 
 AlignEscapedNewlines: LeftWithLastLine
+AlignAfterOpenBracket: true
 IndentCaseLabels: true
 BreakBinaryOperations: Never
 BreakBeforeBinaryOperators: NonAssignment

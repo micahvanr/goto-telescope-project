@@ -26,7 +26,8 @@ Note: None
 ***************************************************************************/
 void syscfg_config_clock(togglable_e toggle)
 {
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
             break;
@@ -64,7 +65,8 @@ void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
     // shift amount is exti x width multiplied by 0-3.
     uint8_t shift_amount = 4 * (exti_line % 4);
 
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             SYSCFG->EXTICR[reg_num] |= port_num << shift_amount;
             break;

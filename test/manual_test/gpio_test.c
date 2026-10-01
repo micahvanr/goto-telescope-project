@@ -8,7 +8,8 @@ static void test_gpio_it(void);
 
 void gpio_tests(test_type_e test)
 {
-    switch (test) {
+    switch (test)
+    {
         case GPIO_TEST_BLINK_LED:
             test_gpio_blink_led();
             break;
@@ -41,9 +42,12 @@ static void test_gpio_blink_led(void)
 
     gpio_init(&gpio_test);
 
-    while (1) {
+    while (1)
+    {
         gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no);
-        for (uint32_t i = 0; i < 500000; i++) {}
+        for (uint32_t i = 0; i < 500000; i++)
+        {
+        }
     }
 }
 
@@ -69,13 +73,16 @@ static void test_gpio_read_write(void)
     gpio_test.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     gpio_init(&gpio_test);
 
-    while (1) {
+    while (1)
+    {
         uint8_t gpio_read_result = 0;
         gpio_read_result         = gpio_read(GPIOA, PIN_NUM_0);
-        if (gpio_read_result) {
+        if (gpio_read_result)
+        {
             gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, HIGH);
         }
-        else {
+        else
+        {
             gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, LOW);
         }
         for (uint32_t i = 0; i < 500000; i++);

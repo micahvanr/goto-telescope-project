@@ -32,7 +32,8 @@ void nvic_irq_config(irq_number_e const irq_num, togglable_e const toggle)
     uint8_t nvic_it_reg  = (irq_num / 32);
     uint32_t nvic_it_bit = (irq_num % 32);
 
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             p_nvic_iser += nvic_it_reg;
             *p_nvic_iser |= (1 << nvic_it_bit); // 1000000

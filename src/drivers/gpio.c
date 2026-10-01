@@ -61,7 +61,8 @@ void gpio_init(gpio_handle *const p_gpio_handle)
 
     // Set alternate function mode
     // NOTE: Done before rest of config otherwise it may trigger undesired pin bouncing.
-    if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA) {
+    if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA)
+    {
         uint8_t afr_reg;
         afr_reg = pin_no / 8;
         p_gpio_handle->p_gpiox->AFR[afr_reg] &= ~(GPIO_AFRL_AFRL0_MASK << (4 * (pin_no % 8)));
@@ -85,7 +86,8 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_no));
 
     // Set interrupt mode
-    if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA) {
+    if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA)
+    {
         gpio_config_it(p_gpio_handle, ENABLE);
     }
 }
@@ -128,7 +130,8 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
 
     exti_config_it(exti_line_num, toggle);
 
-    switch (p_gpio_handle->gpio_conf.it_trigger) {
+    switch (p_gpio_handle->gpio_conf.it_trigger)
+    {
         case GPIO_IT_RT:
             exti_config_rising_edge(exti_line_num, toggle);
             break;
@@ -179,7 +182,8 @@ Note: None
 void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_no, pin_logic_level_e const pin_level)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
-    switch (pin_level) {
+    switch (pin_level)
+    {
         case HIGH:
             p_gpiox->ODR |= (1 << pin_no);
             break;
@@ -384,7 +388,8 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 
 static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglable_e toggle)
 {
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
             break;

@@ -32,7 +32,8 @@ void timer_tests(test_type_e test)
     timer1_init();
     timer8_init();
 
-    switch (test) {
+    switch (test)
+    {
         case TIMER_TEST_AUTO:
             test_timer_auto();
             break;
@@ -116,7 +117,8 @@ static void test_timer_auto(void)
     printf_("First count: %lu", g_tim1_handle.p_timx->CNT);
     tim_start(g_tim1_handle.p_timx);
 
-    while (1) {
+    while (1)
+    {
         while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
         tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
@@ -131,7 +133,8 @@ static void test_timer_manual(void)
     tim_init(&g_tim1_handle);
     tim_start(g_tim1_handle.p_timx);
 
-    while (1) {
+    while (1)
+    {
         while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
         tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
@@ -146,7 +149,8 @@ static void test_timer_freq(void)
     tim_init(&g_tim1_handle);
     tim_start(g_tim1_handle.p_timx);
 
-    while (1) {
+    while (1)
+    {
         while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
         tim_reset_status(g_tim1_handle.p_timx);
         toggle_debug_pin();
@@ -155,7 +159,8 @@ static void test_timer_freq(void)
 
 static void test_delay(void)
 {
-    while (1) {
+    while (1)
+    {
         tim_delay(1, TIM_UNIT_S);
         toggle_debug_pin();
         // tim_delay(100, TIM_UNIT_MS);
@@ -183,7 +188,8 @@ static void test_oc_pwm(void)
     tim_channel_start(g_tim1_handle.p_timx, pwm_config.channel_num);
     tim_start(g_tim1_handle.p_timx);
 
-    while (1) {
+    while (1)
+    {
         // while (tim_read_status(g_tim1_handle.p_timx) != TIM_UPDATE_FOUND);
         // tim_reset_status(g_tim1_handle.p_timx);
         // toggle_debug_pin();
@@ -230,9 +236,11 @@ void TIM8_CC_IRQHandler(void)
     curr_value = tim_get_channel_ccr(g_tim8_handle.p_timx, TIM_CHANNEL_SEL_1);
     printf_("Prev: %lu", prev_value);
     printf_("Curr: %lu", curr_value);
-    if (prev_value != 0) {
+    if (prev_value != 0)
+    {
         uint32_t diff;
-        if (prev_value > curr_value) {
+        if (prev_value > curr_value)
+        {
             curr_value -= arr_value / 2;
             prev_value -= arr_value / 2;
         }

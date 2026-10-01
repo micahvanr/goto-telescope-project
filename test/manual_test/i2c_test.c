@@ -26,8 +26,10 @@ void i2c_tests(test_type_e test)
 
     // PB6 - SCL
     // PB7 - SDA
-    if (test == I2C_TEST_REG) {
-        switch (test_mode) {
+    if (test == I2C_TEST_REG)
+    {
+        switch (test_mode)
+        {
             case I2C_TEST_STM_MASTER_TX:
                 test_i2c_master_transmit();
                 break;
@@ -42,8 +44,10 @@ void i2c_tests(test_type_e test)
                 break;
         }
     }
-    else if (test == I2C_TEST_IT) {
-        switch (test_mode) {
+    else if (test == I2C_TEST_IT)
+    {
+        switch (test_mode)
+        {
             case I2C_TEST_STM_MASTER_TX:
                 test_i2c_master_transmit_it();
                 break;
@@ -58,7 +62,8 @@ void i2c_tests(test_type_e test)
                 break;
         }
     }
-    else {
+    else
+    {
         ASSERT(false);
     }
 }
@@ -100,7 +105,8 @@ static void test_i2c_master_transmit(void)
     uint8_t tx_data[] = "STM master transmit";
     uint8_t tx_len    = sizeof(tx_data) - 1;
 
-    while (1) {
+    while (1)
+    {
         i2c_master_transmit(I2C1, I2C_ARDUINO_ADDR, tx_data, tx_len, I2C_REPEATED_START_DISABLE);
         for (uint32_t i = 0; i < 5000; i++);
     }
@@ -111,7 +117,8 @@ static void test_i2c_slave_transmit(void)
     uint8_t tx_data[] = "STM slave transmit";
     uint8_t tx_len    = sizeof(tx_data) - 1;
 
-    while (1) {
+    while (1)
+    {
         i2c_slave_transmit(I2C1, tx_data, tx_len);
     }
 }
@@ -122,7 +129,8 @@ static void test_i2c_master_receive(void)
     uint8_t rx_len            = sizeof(expected_string) - 1;
     uint8_t rx_data[32];
 
-    while (1) {
+    while (1)
+    {
         i2c_master_receive(I2C1, I2C_ARDUINO_ADDR, rx_data, rx_len, I2C_REPEATED_START_DISABLE);
         for (uint32_t i = 0; i < 5000; i++);
     }
@@ -134,7 +142,8 @@ static void test_i2c_slave_receive(void)
     uint8_t rx_len            = sizeof(expected_string) - 1;
     uint8_t rx_data[32];
 
-    while (1) {
+    while (1)
+    {
         i2c_slave_receive(I2C1, rx_data, rx_len);
     }
 }
@@ -143,7 +152,8 @@ static void test_i2c_master_transmit_it(void)
     static uint8_t tx_data[] = "STM master transmit";
     static uint8_t tx_len    = sizeof(tx_data) - 1;
 
-    while (1) {
+    while (1)
+    {
         i2c_master_transmit_it(&g_i2c_handle, I2C_ARDUINO_ADDR, tx_data, tx_len, I2C_REPEATED_START_DISABLE);
         for (uint32_t i = 0; i < 5000; i++);
     }
@@ -153,7 +163,8 @@ static void test_i2c_slave_transmit_it(void)
     static uint8_t tx_data[] = "STM slave transmit";
     static uint8_t tx_len    = sizeof(tx_data) - 1;
 
-    while (1) {
+    while (1)
+    {
         i2c_slave_transmit_it(&g_i2c_handle, tx_data, tx_len);
     }
 }
@@ -164,7 +175,8 @@ static void test_i2c_master_receive_it(void)
     static uint8_t rx_len            = sizeof(expected_string) - 1;
     static uint8_t rx_data[32];
 
-    while (1) {
+    while (1)
+    {
         i2c_master_receive_it(&g_i2c_handle, I2C_ARDUINO_ADDR, rx_data, rx_len, I2C_REPEATED_START_DISABLE);
         for (uint32_t i = 0; i < 5000; i++);
     }
@@ -176,7 +188,8 @@ static void test_i2c_slave_receive_it(void)
     static uint8_t rx_len            = sizeof(expected_string) - 1;
     static uint8_t rx_data[32];
 
-    while (1) {
+    while (1)
+    {
         i2c_slave_receive_it(&g_i2c_handle, rx_data, rx_len);
     }
 }

@@ -26,7 +26,8 @@ Note: None
 ***************************************************************************/
 void rcc_config_lsi(togglable_e toggle)
 {
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             RCC->CSR |= RCC_CSR_LSION;
             break;
@@ -87,7 +88,8 @@ uint32_t rcc_get_pll_freq_hz(void)
     pll_src = ((rcc_pllcfgr_reg >> RCC_PLLCFGR_PLLSRC_POS) & RCC_PLLCFGR_PLLSRC_MASK);
 
     // Select PLL clock source frequency.
-    switch (pll_src) {
+    switch (pll_src)
+    {
         case CLOCK_SRC_HSI:
             pll_input_clk_freq = HSI_CLOCK_FREQ;
             break;
@@ -122,7 +124,8 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
     // Return clock depending on what the source is.
-    switch (clock_source) {
+    switch (clock_source)
+    {
         case CLOCK_SRC_HSI:
             return HSI_CLOCK_FREQ;
         case CLOCK_SRC_HSE:
@@ -179,7 +182,8 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     ahb_prescaler = ((ahb_prescaler & 0b1000) != 0) ? ahb_clock_prescaler[ahb_prescaler & ~(0b1000)] : 1;
     ahb_clock     = sysclock_freq / ahb_prescaler;
 
-    switch (bus) {
+    switch (bus)
+    {
         case AHB1_BUS:
         case AHB2_BUS:
             return ahb_clock;
@@ -217,7 +221,8 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
     uint8_t bus_prescaler       = 0;
     uint8_t const APB_PRESCALER = 1 << 2;
 
-    switch (bus) {
+    switch (bus)
+    {
         case APB1_BUS:
             bus_prescaler = (RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK;
             break;
@@ -228,7 +233,8 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
             ASSERT(false);
     }
 
-    if (bus_prescaler & APB_PRESCALER) {
+    if (bus_prescaler & APB_PRESCALER)
+    {
         return 2 * bus_clock;
     }
 
@@ -246,7 +252,8 @@ Note: Backup domain write protection must be disabled before this is allowed.
 ***************************************************************************/
 void rcc_config_rtc_clock(togglable_e toggle)
 {
-    switch (toggle) {
+    switch (toggle)
+    {
         case ENABLE:
             RCC->BDCR |= RCC_BDCR_RTCEN;
             break;
@@ -315,7 +322,8 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
     uint16_t const rtc_hse_pre_opts[] = {0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15,
                                          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
 
-    switch (RTC_CLK_SRC) {
+    switch (RTC_CLK_SRC)
+    {
         case RCC_RTC_CLK_SRC_NA:
             ASSERT(false);
             break;
@@ -337,17 +345,20 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
 void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 
-    switch (mco_clk_src) {
+    switch (mco_clk_src)
+    {
 
         case RCC_MCO1_HSI_SRC:
         case RCC_MCO1_LSE_SRC:
         case RCC_MCO1_HSE_SRC:
         case RCC_MCO1_PLL_SRC:
             RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
-            if (mco_prescaler == RCC_MCO_PRE_1) {
+            if (mco_prescaler == RCC_MCO_PRE_1)
+            {
                 RCC->CFGR &= ~(RCC_CFGR_MCO1PRE_MASK << RCC_CFGR_MCO1PRE_POS);
             }
-            else {
+            else
+            {
                 RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO1PRE_POS;
             }
             init_mco_gpio_pin(RCC_MCO1_SEL);
@@ -357,10 +368,12 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         case RCC_MCO2_HSE_SRC:
         case RCC_MCO2_PLL_SRC:
             RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
-            if (mco_prescaler == RCC_MCO_PRE_1) {
+            if (mco_prescaler == RCC_MCO_PRE_1)
+            {
                 RCC->CFGR &= ~(RCC_CFGR_MCO2PRE_MASK << RCC_CFGR_MCO2PRE_POS);
             }
-            else {
+            else
+            {
                 RCC->CFGR |= (mco_prescaler + 2) << RCC_CFGR_MCO2PRE_POS;
             }
             init_mco_gpio_pin(RCC_MCO2_SEL);
@@ -384,7 +397,8 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
     mco_gpio_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
     mco_gpio_pin.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
 
-    switch (mco_select) {
+    switch (mco_select)
+    {
         case RCC_MCO1_SEL:
             // MCO1 - PA8
             mco_gpio_pin.p_gpiox          = GPIOA;

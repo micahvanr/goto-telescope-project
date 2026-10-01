@@ -63,7 +63,8 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
     tim_handle delay_handler   = {0};
 
     delay_handler.p_timx = DELAY_TIMER;
-    if (initialized == false) {
+    if (initialized == false)
+    {
         delay_handler.tim_conf.preload        = TIM_ARR_PRELOAD_EN;
         delay_handler.tim_conf.one_pulse_mode = TIM_ONE_PULSE_MODE_DI;
         delay_handler.tim_conf.clock_sel      = TIM_CLK_SEL_INTERNAL;
@@ -108,7 +109,8 @@ void tim_init(tim_handle *const p_tim_handle)
     temp_cr1 &= ~(TIM_CR1_OPM);
     temp_cr1 |= p_tim_handle->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
 
-    if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)) {
+    if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5))
+    {
         // Set direction
         temp_cr1 &= ~(TIM_CR1_DIR);
         temp_cr1 |= p_tim_handle->tim_conf.direction << TIM_CR1_DIR_POS;
@@ -118,10 +120,12 @@ void tim_init(tim_handle *const p_tim_handle)
     }
 
     if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)
-        || (timer_type == TIM_TYPE_GENERAL_9_14)) {
+        || (timer_type == TIM_TYPE_GENERAL_9_14))
+    {
         temp_smcr &= ~(TIM_SMCR_SMS_MASK << TIM_SMCR_SMS_POS);
         temp_smcr |= p_tim_handle->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
-        if (p_tim_handle->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL) {
+        if (p_tim_handle->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL)
+        {
             temp_smcr &= ~(TIM_SMCR_TS_MASK << TIM_SMCR_TS_POS);
             temp_smcr |= p_tim_handle->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
         }
@@ -129,13 +133,15 @@ void tim_init(tim_handle *const p_tim_handle)
 
     // Set prescaler and auto reload value.
     // Use manual ARR and PSC.
-    if ((p_tim_handle->timing_conf.auto_reload != 0) && (p_tim_handle->timing_conf.prescaler != 0)) {
+    if ((p_tim_handle->timing_conf.auto_reload != 0) && (p_tim_handle->timing_conf.prescaler != 0))
+    {
         p_tim_handle->p_timx->PSC = p_tim_handle->timing_conf.prescaler - 1;
         p_tim_handle->p_timx->ARR = p_tim_handle->timing_conf.auto_reload - 1;
 
         // Calculate ARR and PSC from given time and unit.
     }
-    else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0)) {
+    else if ((p_tim_handle->timing_conf.time != 0) && (p_tim_handle->timing_conf.unit != 0))
+    {
         set_prescaler_count(p_tim_handle->p_timx, p_tim_handle->timing_conf.time, p_tim_handle->timing_conf.unit);
     }
     // Set ARR preload
@@ -143,7 +149,8 @@ void tim_init(tim_handle *const p_tim_handle)
     // (if preload is on, the count value will count to the new value after finishing what its counting to now)
     // This value is set after the prescaler and counter are set and only if a value has been set.
     // otherwise a garbage value will be set in the PSC register.
-    if ((p_tim_handle->p_timx->PSC != 0) && (p_tim_handle->p_timx->ARR != 0)) {
+    if ((p_tim_handle->p_timx->PSC != 0) && (p_tim_handle->p_timx->ARR != 0))
+    {
         temp_cr1 &= ~(TIM_CR1_ARPE);
         temp_cr1 |= p_tim_handle->tim_conf.preload << TIM_CR1_ARPE_POS;
     }
@@ -240,7 +247,8 @@ Note: None
 ***************************************************************************/
 void tim_start(tim_reg_def *const p_timx)
 {
-    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED) {
+    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
+    {
         ASSERT(false);
     }
     p_timx->CR1 |= TIM_CR1_CEN;
@@ -258,7 +266,8 @@ Note: None
 ***************************************************************************/
 void tim_start_it(tim_reg_def *const p_timx)
 {
-    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED) {
+    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
+    {
         ASSERT(false);
     }
     p_timx->DIER |= TIM_DIER_UIE;
@@ -280,7 +289,8 @@ void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channe
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED) {
+    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED)
+    {
         ASSERT(false);
     }
 
@@ -301,7 +311,8 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED) {
+    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED)
+    {
         ASSERT(false);
     }
 
@@ -328,43 +339,55 @@ Note: None
 ***************************************************************************/
 void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
-    if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1)) {
+    if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1))
+    {
         nvic_irq_config(TIM1_CC_IRQ_NUM_27, toggle);
         return;
     }
-    else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8)) {
+    else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8))
+    {
         nvic_irq_config(TIM8_CC_IRQ_NUM_46, toggle);
         return;
     }
 
-    if (p_timx == TIM9) {
+    if (p_timx == TIM9)
+    {
         nvic_irq_config(TIM1_BRK_TIM9_IRQ_NUM_24, toggle);
     }
-    else if ((p_timx == TIM1) || (p_timx == TIM10)) {
+    else if ((p_timx == TIM1) || (p_timx == TIM10))
+    {
         nvic_irq_config(TIM1_UP_TIM10_IRQ_NUM_25, toggle);
     }
-    else if (p_timx == TIM11) {
+    else if (p_timx == TIM11)
+    {
         nvic_irq_config(TIM1_TRG_COM_TIM11_IRQ_NUM_26, toggle);
     }
-    else if (p_timx == TIM2) {
+    else if (p_timx == TIM2)
+    {
         nvic_irq_config(TIM2_IRQ_NUM_28, toggle);
     }
-    else if (p_timx == TIM3) {
+    else if (p_timx == TIM3)
+    {
         nvic_irq_config(TIM3_IRQ_NUM_29, toggle);
     }
-    else if (p_timx == TIM4) {
+    else if (p_timx == TIM4)
+    {
         nvic_irq_config(TIM4_IRQ_NUM_30, toggle);
     }
-    else if (p_timx == TIM12) {
+    else if (p_timx == TIM12)
+    {
         nvic_irq_config(TIM8_BRK_TIM12_IRQ_NUM_43, toggle);
     }
-    else if ((p_timx == TIM8) || (p_timx == TIM13)) {
+    else if ((p_timx == TIM8) || (p_timx == TIM13))
+    {
         nvic_irq_config(TIM8_UP_TIM13_IRQ_NUM_44, toggle);
     }
-    else if (p_timx == TIM14) {
+    else if (p_timx == TIM14)
+    {
         nvic_irq_config(TIM8_TRG_COM_TIM14_IRQ_NUM_45, toggle);
     }
-    else if (p_timx == TIM7) {
+    else if (p_timx == TIM7)
+    {
         nvic_irq_config(TIM7_IRQ_NUM_55, toggle);
     }
 }
@@ -517,11 +540,13 @@ void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
     p_timx->CCMR[MODE_REG] |= (oc_config.arr_preload << MODE_REG_SHIFT) << TIM_CCMR1_OUTPUT_OC1PE_POS;
 
     // Set the CCR value manually.
-    if (oc_config.ccr_value != 0) {
+    if (oc_config.ccr_value != 0)
+    {
         p_timx->CCR[oc_config.channel_num] = oc_config.ccr_value;
     }
     // Set CCR value based on PWM duty cycle.
-    else if (oc_config.duty_cycle != 0) {
+    else if (oc_config.duty_cycle != 0)
+    {
         p_timx->CCR[oc_config.channel_num] = get_ccr_pwm(p_timx, oc_config.duty_cycle);
     }
 
@@ -667,12 +692,14 @@ uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const 
 bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
     // If TIMER peripheral on APB2
-    if ((p_timx == TIM1) || (p_timx == TIM8) || (p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11)) {
+    if ((p_timx == TIM1) || (p_timx == TIM8) || (p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11))
+    {
         return APB2_BUS;
 
         // If TIMER peripheral on APB1
     }
-    else {
+    else
+    {
         return APB1_BUS;
     }
 }
@@ -681,7 +708,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
 {
     bus_types const tim_bus = tim_get_bus(p_timx);
 
-    if ((ENABLE == toggle) && (APB1_BUS == tim_bus)) {
+    if ((ENABLE == toggle) && (APB1_BUS == tim_bus))
+    {
         RCC->APB1ENR |= (p_timx == TIM2)  ? RCC_APB1ENR_TIM2EN
                       : (p_timx == TIM3)  ? RCC_APB1ENR_TIM3EN
                       : (p_timx == TIM4)  ? RCC_APB1ENR_TIM4EN
@@ -693,7 +721,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                       : (p_timx == TIM14) ? RCC_APB1ENR_TIM14EN
                                           : 0;
     }
-    else if ((ENABLE == toggle) && (APB2_BUS == tim_bus)) {
+    else if ((ENABLE == toggle) && (APB2_BUS == tim_bus))
+    {
         RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
                       : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
                       : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
@@ -701,7 +730,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                       : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
                                           : 0;
     }
-    else if ((DISABLE == toggle) && (APB1_BUS == tim_bus)) {
+    else if ((DISABLE == toggle) && (APB1_BUS == tim_bus))
+    {
         RCC->APB1RSTR |= (p_timx == TIM2)  ? RCC_APB1RSTR_TIM2RST
                        : (p_timx == TIM3)  ? RCC_APB1RSTR_TIM3RST
                        : (p_timx == TIM4)  ? RCC_APB1RSTR_TIM4RST
@@ -714,7 +744,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                                            : 0;
     }
 
-    else if ((DISABLE == toggle) && (APB2_BUS == tim_bus)) {
+    else if ((DISABLE == toggle) && (APB2_BUS == tim_bus))
+    {
         RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
                       : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
                       : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
@@ -722,7 +753,8 @@ static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e
                       : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
                                           : 0;
     }
-    else {
+    else
+    {
         ASSERT(false);
     }
 }
@@ -731,7 +763,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 {
 
     uint32_t found_setting = false;
-    switch (unit) {
+    switch (unit)
+    {
         case TIM_UNIT_S:
             found_setting = true;
             break;
@@ -763,7 +796,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     uint8_t const FACTOR_3 = 3;
     uint8_t const FACTOR_2 = 2;
 
-    switch (unit) {
+    switch (unit)
+    {
         case TIM_UNIT_MHZ:
             time *= 1000;
             [[fallthrough]];
@@ -779,7 +813,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
             break;
     }
 
-    switch (unit) {
+    switch (unit)
+    {
         case TIM_UNIT_S:
             unit_in_seconds = 1;
             break;
@@ -804,7 +839,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     // This series of operations will result in a high prescaler value while maintaining accuracy.
 
     while (((clk_freq % FACTOR_5) == 0) && (((clk_freq / FACTOR_5) % unit_in_seconds) == 0)
-           && !check_overflow(p_timx, prescaler, FACTOR_5)) {
+           && !check_overflow(p_timx, prescaler, FACTOR_5))
+    {
         clk_freq /= FACTOR_5;
         prescaler *= FACTOR_5;
 
@@ -813,7 +849,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     }
 
     while (((clk_freq % FACTOR_3) == 0) && (((clk_freq / FACTOR_3) % unit_in_seconds) == 0)
-           && !check_overflow(p_timx, prescaler, FACTOR_3)) {
+           && !check_overflow(p_timx, prescaler, FACTOR_3))
+    {
         clk_freq /= FACTOR_3;
         prescaler *= FACTOR_3;
 
@@ -823,7 +860,8 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 
     while (((clk_freq % FACTOR_2) == 0) && (((clk_freq / FACTOR_2) % unit_in_seconds) == 0)
            && !check_overflow(p_timx, prescaler, FACTOR_2)
-           && (((clk_freq / (FACTOR_2 * unit_in_seconds)) * period) > 1)) {
+           && (((clk_freq / (FACTOR_2 * unit_in_seconds)) * period) > 1))
+    {
         clk_freq /= FACTOR_2;
         prescaler *= FACTOR_2;
 
@@ -843,16 +881,20 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
 {
     uint32_t max;
-    if ((p_timx == TIM2) || (p_timx == TIM5)) {
+    if ((p_timx == TIM2) || (p_timx == TIM5))
+    {
         max = UINT32_MAX;
     }
-    else {
+    else
+    {
         max = UINT16_MAX;
     }
-    if (check_num < (max / factor)) {
+    if (check_num < (max / factor))
+    {
         return false;
     }
-    else {
+    else
+    {
         return true;
     }
 }
@@ -861,7 +903,8 @@ static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t con
 {
     uint32_t arr_value = p_timx->ARR;
     uint32_t ccr;
-    if ((arr_value + 1) < 100) {
+    if ((arr_value + 1) < 100)
+    {
         ASSERT(false);
     }
     ccr = ((arr_value + 1) / 100) * duty_cycle;
@@ -870,17 +913,21 @@ static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t con
 
 static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 {
-    if ((p_timx == TIM6) || (p_timx == TIM7)) {
+    if ((p_timx == TIM6) || (p_timx == TIM7))
+    {
         return TIM_TYPE_BASIC;
     }
-    else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5)) {
+    else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5))
+    {
         return TIM_TYPE_GENERAL_2_5;
     }
     else if ((p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11) || (p_timx == TIM12) || (p_timx == TIM13)
-             || (p_timx == TIM14)) {
+             || (p_timx == TIM14))
+    {
         return TIM_TYPE_GENERAL_9_14;
     }
-    else if ((p_timx == TIM1) || (p_timx == TIM8)) {
+    else if ((p_timx == TIM1) || (p_timx == TIM8))
+    {
         return TIM_TYPE_ADVANCED;
     }
     return 0;
@@ -913,49 +960,64 @@ static void assert_tim_peri_param(tim_reg_def const *const p_timx)
 
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 {
-    if (p_timx == TIM1) {
+    if (p_timx == TIM1)
+    {
         return TIM1_INIT_NUM;
     }
-    else if (p_timx == TIM2) {
+    else if (p_timx == TIM2)
+    {
         return TIM2_INIT_NUM;
     }
-    else if (p_timx == TIM3) {
+    else if (p_timx == TIM3)
+    {
         return TIM3_INIT_NUM;
     }
-    else if (p_timx == TIM4) {
+    else if (p_timx == TIM4)
+    {
         return TIM4_INIT_NUM;
     }
-    else if (p_timx == TIM5) {
+    else if (p_timx == TIM5)
+    {
         return TIM5_INIT_NUM;
     }
-    else if (p_timx == TIM6) {
+    else if (p_timx == TIM6)
+    {
         return TIM6_INIT_NUM;
     }
-    else if (p_timx == TIM7) {
+    else if (p_timx == TIM7)
+    {
         return TIM7_INIT_NUM;
     }
-    else if (p_timx == TIM8) {
+    else if (p_timx == TIM8)
+    {
         return TIM8_INIT_NUM;
     }
-    else if (p_timx == TIM9) {
+    else if (p_timx == TIM9)
+    {
         return TIM9_INIT_NUM;
     }
-    else if (p_timx == TIM10) {
+    else if (p_timx == TIM10)
+    {
         return TIM10_INIT_NUM;
     }
-    else if (p_timx == TIM11) {
+    else if (p_timx == TIM11)
+    {
         return TIM11_INIT_NUM;
     }
-    else if (p_timx == TIM12) {
+    else if (p_timx == TIM12)
+    {
         return TIM12_INIT_NUM;
     }
-    else if (p_timx == TIM13) {
+    else if (p_timx == TIM13)
+    {
         return TIM13_INIT_NUM;
     }
-    else if (p_timx == TIM14) {
+    else if (p_timx == TIM14)
+    {
         return TIM14_INIT_NUM;
     }
-    else {
+    else
+    {
         ASSERT(0);
     }
     return 0;
