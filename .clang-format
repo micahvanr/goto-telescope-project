@@ -31,6 +31,7 @@ AlignConsecutiveAssignments: true
 AlignTrailingComments: Always
 AlignOperands: AlignAfterOperator 
 AlignEscapedNewlines: LeftWithLastLine
+IndentCaseLabels: true
 BreakBinaryOperations: Never
 BreakBeforeBinaryOperators: NonAssignment
 ReflowComments: Never

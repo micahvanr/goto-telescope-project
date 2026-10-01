@@ -732,24 +732,24 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 
     uint32_t found_setting = false;
     switch (unit) {
-    case TIM_UNIT_S:
-        found_setting = true;
-        break;
-    case TIM_UNIT_MS:
-        found_setting = true;
-        break;
-    case TIM_UNIT_US:
-        found_setting = true;
-        break;
-    case TIM_UNIT_HZ:
-        found_setting = true;
-        break;
-    case TIM_UNIT_KHZ:
-        found_setting = true;
-        break;
-    case TIM_UNIT_MHZ:
-        found_setting = true;
-        break;
+        case TIM_UNIT_S:
+            found_setting = true;
+            break;
+        case TIM_UNIT_MS:
+            found_setting = true;
+            break;
+        case TIM_UNIT_US:
+            found_setting = true;
+            break;
+        case TIM_UNIT_HZ:
+            found_setting = true;
+            break;
+        case TIM_UNIT_KHZ:
+            found_setting = true;
+            break;
+        case TIM_UNIT_MHZ:
+            found_setting = true;
+            break;
     }
     ASSERT(found_setting);
 
@@ -764,34 +764,34 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     uint8_t const FACTOR_2 = 2;
 
     switch (unit) {
-    case TIM_UNIT_MHZ:
-        time *= 1000;
-        [[fallthrough]];
-    case TIM_UNIT_KHZ:
-        time *= 1000;
-        [[fallthrough]];
-    case TIM_UNIT_HZ:
-        period = 1000000 / time;
-        unit   = TIM_UNIT_US;
-        break;
-    default:
-        period = time;
-        break;
+        case TIM_UNIT_MHZ:
+            time *= 1000;
+            [[fallthrough]];
+        case TIM_UNIT_KHZ:
+            time *= 1000;
+            [[fallthrough]];
+        case TIM_UNIT_HZ:
+            period = 1000000 / time;
+            unit   = TIM_UNIT_US;
+            break;
+        default:
+            period = time;
+            break;
     }
 
     switch (unit) {
-    case TIM_UNIT_S:
-        unit_in_seconds = 1;
-        break;
-    case TIM_UNIT_MS:
-        unit_in_seconds = 1000;
-        break;
-    case TIM_UNIT_US:
-        unit_in_seconds = 1000000;
-        break;
-    default:
-        ASSERT(false);
-        break;
+        case TIM_UNIT_S:
+            unit_in_seconds = 1;
+            break;
+        case TIM_UNIT_MS:
+            unit_in_seconds = 1000;
+            break;
+        case TIM_UNIT_US:
+            unit_in_seconds = 1000000;
+            break;
+        default:
+            ASSERT(false);
+            break;
     }
 
     clk_freq = rcc_get_timer_clock_freq_hz(tim_get_bus(p_timx));

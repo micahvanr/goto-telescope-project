@@ -26,7 +26,6 @@
 // NOTE: Constants names are fine
 // NOTE: All enums should have a type defined
 
-// TODO: Add IndentCaseLabels: true to clang-format.
 // TODO: Not all enums need to be typedefined
 
 // TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
@@ -51,50 +50,50 @@ int main(void)
     test_type_e test = RTC_TEST_TIMESTAMP;
     switch (test) {
 
-    // GPIO tests
-    case GPIO_TEST_BLINK_LED:
-    case GPIO_TEST_READ_WRITE:
-    case GPIO_TEST_IT:
-        gpio_tests(test);
-        break;
+        // GPIO tests
+        case GPIO_TEST_BLINK_LED:
+        case GPIO_TEST_READ_WRITE:
+        case GPIO_TEST_IT:
+            gpio_tests(test);
+            break;
 
-    // USART tests (tested with Arduino)
-    case USART_TEST_RXTX:
-    case USART_TEST_RXTX_IT:
-        usart_tests(test);
-        break;
+        // USART tests (tested with Arduino)
+        case USART_TEST_RXTX:
+        case USART_TEST_RXTX_IT:
+            usart_tests(test);
+            break;
 
-    // I2C tests - Change master/slave and transmit/receive options in I2C config header file
-    // (tested with Arduino)
-    case I2C_TEST_REG:
-    case I2C_TEST_IT:
-        i2c_tests(test);
-        break;
+        // I2C tests - Change master/slave and transmit/receive options in I2C config header file
+        // (tested with Arduino)
+        case I2C_TEST_REG:
+        case I2C_TEST_IT:
+            i2c_tests(test);
+            break;
 
-    // Timer tests
-    case TIMER_TEST_AUTO:
-    case TIMER_TEST_MANUAL:
-    case TIMER_TEST_FREQ:
-    case TIMER_TEST_DELAY:
-    case TIMER_TEST_OC_PWM:
-    case TIMER_TEST_BASIC_IT:
-    case TIMER_TEST_IC_IT:
-        timer_tests(test);
-        break;
+        // Timer tests
+        case TIMER_TEST_AUTO:
+        case TIMER_TEST_MANUAL:
+        case TIMER_TEST_FREQ:
+        case TIMER_TEST_DELAY:
+        case TIMER_TEST_OC_PWM:
+        case TIMER_TEST_BASIC_IT:
+        case TIMER_TEST_IC_IT:
+            timer_tests(test);
+            break;
 
-    case RTC_TEST_BASE:
-    case RTC_TEST_ALARM:
-    case RTC_TEST_TIMESTAMP:
-    case RTC_TEST_WAKEUP:
-        rtc_tests(test);
-        break;
+        case RTC_TEST_BASE:
+        case RTC_TEST_ALARM:
+        case RTC_TEST_TIMESTAMP:
+        case RTC_TEST_WAKEUP:
+            rtc_tests(test);
+            break;
 
-    // Misc tests
-    case MISC_TEST_ASSERT:
-    case MISC_TEST_GET_CLOCK:
-    case MISC_TEST_PRINTF:
-        misc_tests(test);
-        break;
+        // Misc tests
+        case MISC_TEST_ASSERT:
+        case MISC_TEST_GET_CLOCK:
+        case MISC_TEST_PRINTF:
+            misc_tests(test);
+            break;
     }
 
     ASSERT(false);

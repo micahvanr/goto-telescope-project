@@ -318,16 +318,16 @@ void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 {
     uint32_t temp_cr1 = p_usartx->CR1;
     switch (toggle) {
-    case ENABLE:
-        usart_config_it(p_usartx, ENABLE);
-        temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
-        p_usartx->CR1 = temp_cr1;
-        break;
-    case DISABLE:
-        temp_cr1 &=
-            ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
-        p_usartx->CR1 = temp_cr1;
-        break;
+        case ENABLE:
+            usart_config_it(p_usartx, ENABLE);
+            temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
+            p_usartx->CR1 = temp_cr1;
+            break;
+        case DISABLE:
+            temp_cr1 &=
+                ~(USART_CR1_RXNEIE | USART_CR1_TCIE | USART_CR1_TXEIE | USART_CR1_PEIE | USART_CR1_PCE | USART_CR1_UE);
+            p_usartx->CR1 = temp_cr1;
+            break;
     }
 
     if (p_usartx == USART1) {
@@ -366,39 +366,39 @@ void usart_it_handler(usart_handle *const p_usart_handle)
 
     switch (p_usart_handle->usart_it_data.mode) {
 
-    // Receive data
-    case USART_MODE_RX:
-        if ((status_reg & USART_SR_PE) || (status_reg & USART_SR_FE) || (status_reg & USART_SR_NF)
-            || (status_reg & USART_SR_ORE)) {
-            usart_callback(p_usart_handle, USART_EVENT_ERROR);
+        // Receive data
+        case USART_MODE_RX:
+            if ((status_reg & USART_SR_PE) || (status_reg & USART_SR_FE) || (status_reg & USART_SR_NF)
+                || (status_reg & USART_SR_ORE)) {
+                usart_callback(p_usart_handle, USART_EVENT_ERROR);
+                ASSERT(false);
+            }
+            if (p_usart_handle->p_usartx->SR & USART_SR_RXNE) {
+                recieve_data(p_usart_handle);
+            }
+            if (p_usart_handle->usart_it_data.txrx_length == 0) {
+                usart_config_it(p_usart_handle->p_usartx, DISABLE);
+                p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+                usart_callback(p_usart_handle, USART_EVENT_CMPLT);
+            }
+            break;
+
+        // Tranfer data
+        case USART_MODE_TX:
+            //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty.
+            if ((p_usart_handle->p_usartx->SR & USART_SR_TXE) && (p_usart_handle->usart_it_data.txrx_length != 0)) {
+                transfer_data(p_usart_handle);
+            }
+            if ((p_usart_handle->usart_it_data.txrx_length == 0) && (status_reg & USART_SR_TC)) {
+                usart_config_it(p_usart_handle->p_usartx, DISABLE);
+                p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
+                p_usart_handle->usart_it_data.status = USART_STATUS_READY;
+                usart_callback(p_usart_handle, USART_EVENT_CMPLT);
+            }
+
+            break;
+        default:
             ASSERT(false);
-        }
-        if (p_usart_handle->p_usartx->SR & USART_SR_RXNE) {
-            recieve_data(p_usart_handle);
-        }
-        if (p_usart_handle->usart_it_data.txrx_length == 0) {
-            usart_config_it(p_usart_handle->p_usartx, DISABLE);
-            p_usart_handle->usart_it_data.status = USART_STATUS_READY;
-            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
-        }
-        break;
-
-    // Tranfer data
-    case USART_MODE_TX:
-        //  Disable interrupts before reading transmit register so IT will not trigger again after it is empty.
-        if ((p_usart_handle->p_usartx->SR & USART_SR_TXE) && (p_usart_handle->usart_it_data.txrx_length != 0)) {
-            transfer_data(p_usart_handle);
-        }
-        if ((p_usart_handle->usart_it_data.txrx_length == 0) && (status_reg & USART_SR_TC)) {
-            usart_config_it(p_usart_handle->p_usartx, DISABLE);
-            p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
-            p_usart_handle->usart_it_data.status = USART_STATUS_READY;
-            usart_callback(p_usart_handle, USART_EVENT_CMPLT);
-        }
-
-        break;
-    default:
-        ASSERT(false);
     }
 }
 

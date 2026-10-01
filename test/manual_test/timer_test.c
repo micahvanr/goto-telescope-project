@@ -33,30 +33,30 @@ void timer_tests(test_type_e test)
     timer8_init();
 
     switch (test) {
-    case TIMER_TEST_AUTO:
-        test_timer_auto();
-        break;
-    case TIMER_TEST_MANUAL:
-        test_timer_manual();
-        break;
-    case TIMER_TEST_FREQ:
-        test_timer_freq();
-        break;
-    case TIMER_TEST_DELAY:
-        test_delay();
-        break;
-    case TIMER_TEST_OC_PWM:
-        test_oc_pwm();
-        break;
-    case TIMER_TEST_IC_IT:
-        test_ic_it();
-        break;
-    case TIMER_TEST_BASIC_IT:
-        test_it();
-        break;
+        case TIMER_TEST_AUTO:
+            test_timer_auto();
+            break;
+        case TIMER_TEST_MANUAL:
+            test_timer_manual();
+            break;
+        case TIMER_TEST_FREQ:
+            test_timer_freq();
+            break;
+        case TIMER_TEST_DELAY:
+            test_delay();
+            break;
+        case TIMER_TEST_OC_PWM:
+            test_oc_pwm();
+            break;
+        case TIMER_TEST_IC_IT:
+            test_ic_it();
+            break;
+        case TIMER_TEST_BASIC_IT:
+            test_it();
+            break;
 
-    default:
-        ASSERT(false);
+        default:
+            ASSERT(false);
     }
 
     UNUSED(test);

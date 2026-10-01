@@ -19,16 +19,16 @@ void usart_tests(test_type_e test)
     usart2_init();
 
     switch (test) {
-    // PD6 - RX
-    // PD5 - TX
-    case USART_TEST_RXTX:
-        test_usart_txrx();
-        break;
-    case USART_TEST_RXTX_IT:
-        test_usart_txrx_it();
-        break;
-    default:
-        ASSERT(false);
+        // PD6 - RX
+        // PD5 - TX
+        case USART_TEST_RXTX:
+            test_usart_txrx();
+            break;
+        case USART_TEST_RXTX_IT:
+            test_usart_txrx_it();
+            break;
+        default:
+            ASSERT(false);
     }
     ASSERT(false);
 }

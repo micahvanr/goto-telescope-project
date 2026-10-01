@@ -22,12 +22,12 @@ Note: None
 void exti_config_it(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        EXTI->IMR |= (1 << line_no);
-        break;
-    case DISABLE:
-        EXTI->IMR &= ~(1 << line_no);
-        break;
+        case ENABLE:
+            EXTI->IMR |= (1 << line_no);
+            break;
+        case DISABLE:
+            EXTI->IMR &= ~(1 << line_no);
+            break;
     }
 }
 
@@ -47,12 +47,12 @@ Note: None
 void exti_config_event(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        EXTI->EMR |= (1 << line_no);
-        break;
-    case DISABLE:
-        EXTI->EMR &= ~(1 << line_no);
-        break;
+        case ENABLE:
+            EXTI->EMR |= (1 << line_no);
+            break;
+        case DISABLE:
+            EXTI->EMR &= ~(1 << line_no);
+            break;
     }
 }
 
@@ -72,12 +72,12 @@ Note: None
 void exti_config_rising_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        EXTI->RTSR |= (1 << line_no);
-        break;
-    case DISABLE:
-        EXTI->RTSR &= ~(1 << line_no);
-        break;
+        case ENABLE:
+            EXTI->RTSR |= (1 << line_no);
+            break;
+        case DISABLE:
+            EXTI->RTSR &= ~(1 << line_no);
+            break;
     }
 }
 
@@ -97,12 +97,12 @@ Note: None
 void exti_config_falling_edge(exti_lines_e line_no, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        EXTI->FTSR |= (1 << line_no);
-        break;
-    case DISABLE:
-        EXTI->FTSR &= ~(1 << line_no);
-        break;
+        case ENABLE:
+            EXTI->FTSR |= (1 << line_no);
+            break;
+        case DISABLE:
+            EXTI->FTSR &= ~(1 << line_no);
+            break;
     }
 }
 

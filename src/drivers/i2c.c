@@ -448,14 +448,14 @@ void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e const toggle)
     uint32_t temp_cr2 = p_i2cx->CR2;
 
     switch (toggle) {
-    case ENABLE:
-        temp_cr2 |= I2C_CR2_ITBUFEN | I2C_CR2_ITEVTEN | I2C_CR2_ITERREN;
-        p_i2cx->CR2 = temp_cr2;
-        break;
-    case DISABLE:
-        temp_cr2 &= ~(I2C_CR2_ITBUFEN | I2C_CR2_ITERREN | I2C_CR2_ITEVTEN);
-        p_i2cx->CR2 = temp_cr2;
-        break;
+        case ENABLE:
+            temp_cr2 |= I2C_CR2_ITBUFEN | I2C_CR2_ITEVTEN | I2C_CR2_ITERREN;
+            p_i2cx->CR2 = temp_cr2;
+            break;
+        case DISABLE:
+            temp_cr2 &= ~(I2C_CR2_ITBUFEN | I2C_CR2_ITERREN | I2C_CR2_ITEVTEN);
+            p_i2cx->CR2 = temp_cr2;
+            break;
     }
 
     if (p_i2cx == I2C1) {
@@ -487,91 +487,92 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
     switch (p_i2c_handle->i2c_it_data.status) {
 
-    case I2C_STATUS_MASTER_TX:
-    case I2C_STATUS_MASTER_RX:
-        if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_SB) {
-            master_sb(p_i2c_handle);
-        }
-
-        if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_ADDR) {
-            master_addr(p_i2c_handle);
-        }
-
-        switch (p_i2c_handle->i2c_it_data.status) {
         case I2C_STATUS_MASTER_TX:
-            if ((p_i2c_handle->i2c_it_data.txrx_length == 0) && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_BTF)
-                && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE)) {
-                close_com(p_i2c_handle);
-                i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
-            }
-
-            else if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
-                send_byte(p_i2c_handle);
-            }
-            break;
-
         case I2C_STATUS_MASTER_RX:
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
-                if (p_i2c_handle->i2c_it_data.txrx_length == 2) {
-                    config_ack(p_i2c_handle->p_i2cx, DISABLE);
-                }
+            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_SB) {
+                master_sb(p_i2c_handle);
+            }
 
-                receive_byte(p_i2c_handle);
+            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_ADDR) {
+                master_addr(p_i2c_handle);
+            }
 
-                if (p_i2c_handle->i2c_it_data.txrx_length == 0) {
-                    close_com(p_i2c_handle);
-                    i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
-                }
+            switch (p_i2c_handle->i2c_it_data.status) {
+                case I2C_STATUS_MASTER_TX:
+                    if ((p_i2c_handle->i2c_it_data.txrx_length == 0) && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_BTF)
+                        && (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE)) {
+                        close_com(p_i2c_handle);
+                        i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
+                    }
+
+                    else if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE)
+                             && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
+                        send_byte(p_i2c_handle);
+                    }
+                    break;
+
+                case I2C_STATUS_MASTER_RX:
+                    if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
+                        if (p_i2c_handle->i2c_it_data.txrx_length == 2) {
+                            config_ack(p_i2c_handle->p_i2cx, DISABLE);
+                        }
+
+                        receive_byte(p_i2c_handle);
+
+                        if (p_i2c_handle->i2c_it_data.txrx_length == 0) {
+                            close_com(p_i2c_handle);
+                            i2c_callback(p_i2c_handle, I2C_EVENT_CMPLT);
+                        }
+                    }
+                    break;
+
+                default:
+                    ASSERT(false);
+                    break;
             }
             break;
-
-        default:
-            ASSERT(false);
-            break;
-        }
-        break;
-
-    case I2C_STATUS_SLAVE_TX:
-    case I2C_STATUS_SLAVE_RX:
-
-        if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_ADDR) {
-            slave_addr(p_i2c_handle);
-        }
-
-        switch (p_i2c_handle->i2c_it_data.status) {
 
         case I2C_STATUS_SLAVE_TX:
-
-            if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
-                send_byte(p_i2c_handle);
-            }
-
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_AF) {
-                clear_af(p_i2c_handle->p_i2cx);
-                close_com(p_i2c_handle);
-            }
-
-            break;
         case I2C_STATUS_SLAVE_RX:
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
-                receive_byte(p_i2c_handle);
+
+            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_ADDR) {
+                slave_addr(p_i2c_handle);
             }
 
-            if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_STOPF) {
-                clear_stopf(p_i2c_handle->p_i2cx);
-                close_com(p_i2c_handle);
+            switch (p_i2c_handle->i2c_it_data.status) {
+
+                case I2C_STATUS_SLAVE_TX:
+
+                    if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0)) {
+                        send_byte(p_i2c_handle);
+                    }
+
+                    if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_AF) {
+                        clear_af(p_i2c_handle->p_i2cx);
+                        close_com(p_i2c_handle);
+                    }
+
+                    break;
+                case I2C_STATUS_SLAVE_RX:
+                    if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_RXNE) {
+                        receive_byte(p_i2c_handle);
+                    }
+
+                    if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_STOPF) {
+                        clear_stopf(p_i2c_handle->p_i2cx);
+                        close_com(p_i2c_handle);
+                    }
+                    break;
+                default:
+                    ASSERT(false);
+                    break;
             }
+
             break;
+
         default:
             ASSERT(false);
             break;
-        }
-
-        break;
-
-    default:
-        ASSERT(false);
-        break;
     }
     UNUSED(dummy_read);
 }
@@ -621,41 +622,41 @@ static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle)
     p_i2c_handle->p_i2cx->CCR |= (p_i2c_handle->i2c_conf.speed_mode << I2C_CCR_F_S_POS);
 
     switch (p_i2c_handle->i2c_conf.speed_mode) {
-    case I2C_SPEED_MODE_STANDARD:
-        // Peripheral clock speed must be at leats 2Mhz in standard mode.
-        if (peripheral_clock_khz < 2000) {
-            ASSERT(false);
-        }
+        case I2C_SPEED_MODE_STANDARD:
+            // Peripheral clock speed must be at leats 2Mhz in standard mode.
+            if (peripheral_clock_khz < 2000) {
+                ASSERT(false);
+            }
 
-        // Set CCR
-        ccr_value = ((peripheral_clock_khz) / (2 * (desired_clock_khz)));
+            // Set CCR
+            ccr_value = ((peripheral_clock_khz) / (2 * (desired_clock_khz)));
 
-        // Set time rise value
-        trise_value |= ((I2C_MAX_RISE_SM_1000_NS / (1000000 / (peripheral_clock_khz))) + 1);
-        break;
-
-    case I2C_SPEED_MODE_FAST:
-        // Peripheral clock speed must be at leats 4Mhz in fast mode.
-        if (peripheral_clock_khz < 4000) {
-            ASSERT(false);
-        }
-
-        // Set duty cycle
-        p_i2c_handle->p_i2cx->CCR |= (p_i2c_handle->i2c_conf.fm_duty_cycle << I2C_CCR_DUTY_POS);
-
-        // Set CCR
-        switch (p_i2c_handle->i2c_conf.fm_duty_cycle) {
-        case I2C_FM_DUTY_2:
-            ccr_value = ((peripheral_clock_khz) / (3 * (desired_clock_khz)));
+            // Set time rise value
+            trise_value |= ((I2C_MAX_RISE_SM_1000_NS / (1000000 / (peripheral_clock_khz))) + 1);
             break;
-        case I2C_FM_DUTY_16_9:
-            ccr_value = ((peripheral_clock_khz) / (25 * (desired_clock_khz)));
-            break;
-        }
-        break;
 
-        // Set TRISE
-        trise_value |= ((I2C_MAX_RISE_FM_300_NS / (1000000 / (peripheral_clock_khz))) + 1);
+        case I2C_SPEED_MODE_FAST:
+            // Peripheral clock speed must be at leats 4Mhz in fast mode.
+            if (peripheral_clock_khz < 4000) {
+                ASSERT(false);
+            }
+
+            // Set duty cycle
+            p_i2c_handle->p_i2cx->CCR |= (p_i2c_handle->i2c_conf.fm_duty_cycle << I2C_CCR_DUTY_POS);
+
+            // Set CCR
+            switch (p_i2c_handle->i2c_conf.fm_duty_cycle) {
+                case I2C_FM_DUTY_2:
+                    ccr_value = ((peripheral_clock_khz) / (3 * (desired_clock_khz)));
+                    break;
+                case I2C_FM_DUTY_16_9:
+                    ccr_value = ((peripheral_clock_khz) / (25 * (desired_clock_khz)));
+                    break;
+            }
+            break;
+
+            // Set TRISE
+            trise_value |= ((I2C_MAX_RISE_FM_300_NS / (1000000 / (peripheral_clock_khz))) + 1);
     }
     p_i2c_handle->p_i2cx->TRISE &= ~(I2C_TRISE_TRISE_MASK << I2C_TRISE_TRISE_POS);
     p_i2c_handle->p_i2cx->TRISE = (trise_value & I2C_TRISE_TRISE_MASK);
@@ -685,17 +686,17 @@ static inline void send_address(i2c_reg_def *const p_i2cx, uint8_t const target_
 {
     // Clears SB and writes address.
     switch (i2c_status) {
-    case I2C_STATUS_MASTER_TX:
-    case I2C_STATUS_SLAVE_TX:
-        p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT);
-        break;
-    case I2C_STATUS_MASTER_RX:
-    case I2C_STATUS_SLAVE_RX:
-        p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT);
-        break;
+        case I2C_STATUS_MASTER_TX:
+        case I2C_STATUS_SLAVE_TX:
+            p_i2cx->DR = ((target_addr << 1) & ~I2C_READ_WRITE_BIT);
+            break;
+        case I2C_STATUS_MASTER_RX:
+        case I2C_STATUS_SLAVE_RX:
+            p_i2cx->DR = ((target_addr << 1) | I2C_READ_WRITE_BIT);
+            break;
 
-    default:
-        ASSERT(false);
+        default:
+            ASSERT(false);
     }
 }
 
@@ -710,12 +711,12 @@ static inline void clear_address_flag(i2c_reg_def const *const p_i2cx)
 static inline void config_ack(i2c_reg_def *const p_i2cx, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        p_i2cx->CR1 |= I2C_CR1_ACK;
-        break;
-    case DISABLE:
-        p_i2cx->CR1 &= ~I2C_CR1_ACK;
-        break;
+        case ENABLE:
+            p_i2cx->CR1 |= I2C_CR1_ACK;
+            break;
+        case DISABLE:
+            p_i2cx->CR1 &= ~I2C_CR1_ACK;
+            break;
     }
 }
 
@@ -740,11 +741,11 @@ static inline void close_com(i2c_handle *const p_i2c_handle)
     }
     i2c_config_it(p_i2c_handle->p_i2cx, DISABLE);
     switch (p_i2c_handle->i2c_it_data.status) {
-    case I2C_STATUS_SLAVE_RX:
-    case I2C_STATUS_SLAVE_TX:
-        config_ack(p_i2c_handle->p_i2cx, DISABLE);
-        break;
-    default:;
+        case I2C_STATUS_SLAVE_RX:
+        case I2C_STATUS_SLAVE_TX:
+            config_ack(p_i2c_handle->p_i2cx, DISABLE);
+            break;
+        default:;
     }
     p_i2c_handle->i2c_it_data.status      = I2C_STATUS_READY;
     p_i2c_handle->i2c_it_data.txrx_length = 0;
@@ -770,18 +771,18 @@ static inline void clear_af(i2c_reg_def *const p_i2cx)
 static inline void i2c_config_clock(i2c_reg_def const *const p_i2cx, togglable_e toggle)
 {
     switch (toggle) {
-    case ENABLE:
-        RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
-                      : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
-                      : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
-                                         : 0;
-        break;
-    case DISABLE:
-        RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
-                       : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
-                       : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
-                                          : 0;
-        break;
+        case ENABLE:
+            RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
+                          : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
+                          : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
+                                             : 0;
+            break;
+        case DISABLE:
+            RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
+                           : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
+                           : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
+                                              : 0;
+            break;
     }
 }
 
