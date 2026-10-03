@@ -324,6 +324,6 @@ void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e chann
 uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 bus_types tim_get_bus(tim_reg_def const *const p_timx);
 
-#endif // DRIVER_H
+#endif // TIM_H
 
 // *End of file*

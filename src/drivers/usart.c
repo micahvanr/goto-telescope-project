@@ -15,7 +15,6 @@ Notes: None
 #include "common.h"
 #include "nvic.h"
 #include "rcc.h"
-#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Private Constants

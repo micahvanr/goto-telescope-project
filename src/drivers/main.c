@@ -26,6 +26,9 @@
 // TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
 // TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
+// TODO: Add standard common phrases
+// TODO: Finish changing "no" to "num"
+// TODO: Move peripheral clock configuration to RCC peripheral
 
 int main(void)
 {
