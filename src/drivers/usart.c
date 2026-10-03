@@ -1,6 +1,7 @@
 /*****************************************************************************************
 File: usart.c
 Overview: Provides functions for initializing, configuring, and using the USART peripheral.
+Notes: None
 ******************************************************************************************/
 
 //} Includes

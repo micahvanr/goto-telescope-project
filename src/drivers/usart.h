@@ -1,6 +1,7 @@
 /*****************************************************************************************
 File: usart.h
 Overview: Provides functions for initializing, configuring, and using the USART peripheral.
+Notes: None
 ******************************************************************************************/
 
 #ifndef USART_H
