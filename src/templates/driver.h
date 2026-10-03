@@ -1,7 +1,9 @@
 /*****************************************************************************************
 File: module.h
 Overview: Description of the module's purpose.
-Notes: None
+Features:
+    List of features
+Notes: Additional notes that user might/should want to know
 ******************************************************************************************/
 
 #ifndef DRIVER_H

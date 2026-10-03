@@ -1,6 +1,9 @@
 /*****************************************************************************************
 File: usart.h
 Overview: Provides functions for initializing, configuring, and using the USART peripheral.
+Features:
+    Transmit (w/ interrupt capability)
+    Receive (w/ interrupt capability)
 Notes: None
 ******************************************************************************************/
 
