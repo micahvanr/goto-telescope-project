@@ -2,10 +2,9 @@
 File: tim.h
 Overview: Provides functions for initializing, configuring, and using the TIMER peripheral.
 Features:
-    Base time keeping
-    Input capture
-    Output compare
-    Interrupt capability
+    Base time keeping (w/ interrupt capability)
+    Input capture (w/ interrupt capability)
+    Output compare (w/ interrupt capability)
 Notes:
 - Basic Timers: TIM6 & TIM7
 - General Purpose Timers: TIM2 - TIM5

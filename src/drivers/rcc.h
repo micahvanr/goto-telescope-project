@@ -85,13 +85,6 @@ typedef enum : uint32_t {
 //=========================================//{
 
 typedef enum {
-    AHB1_BUS = 0,
-    AHB2_BUS = 1,
-    APB1_BUS = 3,
-    APB2_BUS = 4,
-} bus_types;
-
-typedef enum {
     RCC_MCO_PRE_1 = 1,
     RCC_MCO_PRE_2 = 2,
     RCC_MCO_PRE_3 = 3,
