@@ -1,20 +1,62 @@
+/*****************************************************************************************
+File: module.h
+Overview: Description of the module's purpose.
+Features:
+    List of features
+Notes: Additional notes that user might/should want to know
+******************************************************************************************/
+
 #ifndef RCC_H
 #define RCC_H
+
+//} Include Statements
+//=========================================//{
 
 #include "common.h"
 #include "stm32f4xx.h"
 
 //======================================================================================//}
-//                  Address Definitions
+//                  Public Constants
 //======================================================================================//{
+
+//} Address Definitions
+//=========================================//{
 
 typedef enum {
     RCC_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x3800U)),
 } rcc_base_addr_e;
 
-//======================================================================================//}
-//                  Peripheral Constants
-//======================================================================================//{
+//} Config Options (If multiple configs exist, name and separate them)
+//=========================================//{
+
+//} API Function Argument Options
+//=========================================//{
+
+typedef enum {
+    RCC_MCO_PRE_1 = 1,
+    RCC_MCO_PRE_2 = 2,
+    RCC_MCO_PRE_3 = 3,
+    RCC_MCO_PRE_4 = 4,
+    RCC_MCO_PRE_5 = 5,
+} rcc_mco_prescaler_e;
+
+typedef enum {
+    RCC_MCO1_HSI_SRC    = 0,
+    RCC_MCO1_LSE_SRC    = 1,
+    RCC_MCO1_HSE_SRC    = 2,
+    RCC_MCO1_PLL_SRC    = 3,
+    RCC_MCO2_SYSCLK_SRC = 4,
+    RCC_MCO2_PLLI2S_SRC = 5,
+    RCC_MCO2_HSE_SRC    = 6,
+    RCC_MCO2_PLL_SRC    = 7,
+} rcc_mco_clock_src_e;
+
+
+//} Callback Options
+//=========================================//{
+
+//} Interrupt Handler Constants
+//=========================================//{
 
 //} Misc. Constants
 //=========================================//{
@@ -81,27 +123,79 @@ typedef enum : uint32_t {
     RCC_RTC_HSE_PRE_31 = 0b11111,
 } rcc_rtc_hse_pre_e;
 
-//} API Function Argument Options
-//=========================================//{
 
-typedef enum {
-    RCC_MCO_PRE_1 = 1,
-    RCC_MCO_PRE_2 = 2,
-    RCC_MCO_PRE_3 = 3,
-    RCC_MCO_PRE_4 = 4,
-    RCC_MCO_PRE_5 = 5,
-} rcc_mco_prescaler_e;
+//======================================================================================//}
+//                  Structure Definitions
+//======================================================================================//{
 
-typedef enum {
-    RCC_MCO1_HSI_SRC    = 0,
-    RCC_MCO1_LSE_SRC    = 1,
-    RCC_MCO1_HSE_SRC    = 2,
-    RCC_MCO1_PLL_SRC    = 3,
-    RCC_MCO2_SYSCLK_SRC = 4,
-    RCC_MCO2_PLLI2S_SRC = 5,
-    RCC_MCO2_HSE_SRC    = 6,
-    RCC_MCO2_PLL_SRC    = 7,
-} rcc_mco_clock_src_e;
+// RCC Register Definition Structure
+typedef volatile struct {
+    uint32_t CR;          // clock control register                                        Offset: 0x0
+    uint32_t PLLCFGR;     // PLL configuration register                                    Offset: 0x4
+    uint32_t CFGR;        // clock configuration register                                  Offset: 0x8
+    uint32_t CIR;         // clock interrupt register                                      Offset: 0xC
+    uint32_t AHB1RSTR;    // AHB1 peripheral reset register                                Offset: 0x10
+    uint32_t AHB2RSTR;    // AHB2 peripheral reset register                                Offset: 0x14
+    uint32_t AHB3RSTR;    // AHB3 peripheral reset register                                Offset: 0x18
+    uint32_t reserved_1;  // Reserved 0x1C
+    uint32_t APB1RSTR;    // APB1 peripheral reset register                                Offset: 0x20
+    uint32_t APB2RSTR;    // APB2 peripheral reset register                                Offset: 0x24
+    uint32_t reserved_2;  // Reserved 0x28
+    uint32_t reserved_3;  // Reserved 0x2C
+    uint32_t AHB1ENR;     // AHB1 peripheral clock register                                Offset: 0x30
+    uint32_t AHB2ENR;     // AHB2 peripheral clock enable register                         Offset: 0x34
+    uint32_t AHB3ENR;     // AHB3 peripheral clock enable register                         Offset: 0x38
+    uint32_t reserved_4;  // Reserved 0x3C
+    uint32_t APB1ENR;     // APB1 peripheral clock enable register                         Offset: 0x40
+    uint32_t APB2ENR;     // APB2 peripheral clock enable register                         Offset: 0x44
+    uint32_t reserved_5;  // Reserved 0x48
+    uint32_t reserved_6;  // Reserved 0x4C
+    uint32_t AHB1LPENR;   // AHB1 peripheral clock enable in low power mode register       Offset: 0x50
+    uint32_t AHB2LPENR;   // AHB2 peripheral clock enable in low power mode register       Offset: 0x54
+    uint32_t AHB3LPENR;   // AHB3 peripheral clock enable in low power mode register       Offset: 0x58
+    uint32_t reserved_7;  // Reserved 0x5C
+    uint32_t APB1LPENR;   // APB1 peripheral clock enable in low power mode register       Offset: 0x60
+    uint32_t APB2LPENR;   // APB2 peripheral clock enabled in low power mode register      Offset: 0x64
+    uint32_t reserved_8;  // Reserved 0x68
+    uint32_t reserved_9;  // Reserved 0x6C
+    uint32_t BDCR;        // Backup domain control register                                Offset: 0x70
+    uint32_t CSR;         // clock control & status register                               Offset: 0x74
+    uint32_t reserved_10; // Reserved 0x78
+    uint32_t reserved_11; // Reserved 0x7C
+    uint32_t SSCGR;       // spread spectrum clock generation register                     Offset: 0x80
+    uint32_t PLLI2SCFGR;  // PLLI2S configuration register                                 Offset: 0x84
+} rcc_reg_def;
+
+//======================================================================================//}
+//                  Peripheral Structure Macros
+//======================================================================================//{
+
+#define RCC ((rcc_reg_def *) RCC_BASE_ADDR)
+
+//======================================================================================//}
+//                  Public Function Prototypes
+//======================================================================================//{
+
+void rcc_config_lsi(togglable_e toggle);
+bool rcc_lsi_is_rdy(void);
+
+uint32_t rcc_get_pll_freq_hz(void);
+uint32_t rcc_get_sys_clock_freq_hz(void);
+uint32_t rcc_get_bus_clock_freq_hz(bus_types bus);
+uint32_t rcc_get_timer_clock_freq_hz(bus_types bus);
+
+void rcc_config_rtc_clock(togglable_e toggle);
+void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel);
+void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre);
+uint32_t rcc_get_rtc_clock_freq_hz(void);
+
+void rcc_config_mco(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
+
+
+// *End of file*
+
+
+// TODO: Move to source file and create functions for clock config
 
 //======================================================================================//}
 //                  Register Constants
@@ -1113,73 +1207,6 @@ typedef enum : uint32_t {
 
 // clang-format on
 
-//======================================================================================//}
-//                  Structure Definitions
-//======================================================================================//{
-
-// RCC Register Definition Structure
-typedef volatile struct {
-    uint32_t CR;          // clock control register                                        Offset: 0x0
-    uint32_t PLLCFGR;     // PLL configuration register                                    Offset: 0x4
-    uint32_t CFGR;        // clock configuration register                                  Offset: 0x8
-    uint32_t CIR;         // clock interrupt register                                      Offset: 0xC
-    uint32_t AHB1RSTR;    // AHB1 peripheral reset register                                Offset: 0x10
-    uint32_t AHB2RSTR;    // AHB2 peripheral reset register                                Offset: 0x14
-    uint32_t AHB3RSTR;    // AHB3 peripheral reset register                                Offset: 0x18
-    uint32_t reserved_1;  // Reserved 0x1C
-    uint32_t APB1RSTR;    // APB1 peripheral reset register                                Offset: 0x20
-    uint32_t APB2RSTR;    // APB2 peripheral reset register                                Offset: 0x24
-    uint32_t reserved_2;  // Reserved 0x28
-    uint32_t reserved_3;  // Reserved 0x2C
-    uint32_t AHB1ENR;     // AHB1 peripheral clock register                                Offset: 0x30
-    uint32_t AHB2ENR;     // AHB2 peripheral clock enable register                         Offset: 0x34
-    uint32_t AHB3ENR;     // AHB3 peripheral clock enable register                         Offset: 0x38
-    uint32_t reserved_4;  // Reserved 0x3C
-    uint32_t APB1ENR;     // APB1 peripheral clock enable register                         Offset: 0x40
-    uint32_t APB2ENR;     // APB2 peripheral clock enable register                         Offset: 0x44
-    uint32_t reserved_5;  // Reserved 0x48
-    uint32_t reserved_6;  // Reserved 0x4C
-    uint32_t AHB1LPENR;   // AHB1 peripheral clock enable in low power mode register       Offset: 0x50
-    uint32_t AHB2LPENR;   // AHB2 peripheral clock enable in low power mode register       Offset: 0x54
-    uint32_t AHB3LPENR;   // AHB3 peripheral clock enable in low power mode register       Offset: 0x58
-    uint32_t reserved_7;  // Reserved 0x5C
-    uint32_t APB1LPENR;   // APB1 peripheral clock enable in low power mode register       Offset: 0x60
-    uint32_t APB2LPENR;   // APB2 peripheral clock enabled in low power mode register      Offset: 0x64
-    uint32_t reserved_8;  // Reserved 0x68
-    uint32_t reserved_9;  // Reserved 0x6C
-    uint32_t BDCR;        // Backup domain control register                                Offset: 0x70
-    uint32_t CSR;         // clock control & status register                               Offset: 0x74
-    uint32_t reserved_10; // Reserved 0x78
-    uint32_t reserved_11; // Reserved 0x7C
-    uint32_t SSCGR;       // spread spectrum clock generation register                     Offset: 0x80
-    uint32_t PLLI2SCFGR;  // PLLI2S configuration register                                 Offset: 0x84
-} rcc_reg_def;
-
-//======================================================================================//}
-//                  Peripheral Structure Macros
-//======================================================================================//{
-
-#define RCC ((rcc_reg_def *) RCC_BASE_ADDR)
-
-//======================================================================================//}
-//                  Peripheral Function APIs
-//======================================================================================//{
-
-void rcc_config_lsi(togglable_e toggle);
-bool rcc_lsi_is_rdy(void);
-
-uint32_t rcc_get_pll_freq_hz(void);
-uint32_t rcc_get_sys_clock_freq_hz(void);
-uint32_t rcc_get_bus_clock_freq_hz(bus_types bus);
-uint32_t rcc_get_timer_clock_freq_hz(bus_types bus);
-
-void rcc_config_rtc_clock(togglable_e toggle);
-void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel);
-void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre);
-uint32_t rcc_get_rtc_clock_freq_hz(void);
-
-void rcc_config_mco(rcc_mco_clock_src_e mco_clk_src, rcc_mco_prescaler_e mco_prescaler);
-
-#endif
+#endif // RCC_H
 
 // *End of file*
