@@ -1,3 +1,17 @@
+/*****************************************************************************************
+File: i2c.c
+Overview: Provides functions for initializing, configuring, and using the I2C peripheral.
+Features:
+    Master transmit (w/ interrupt capability)
+    Master receive (w/ interrupt capability)
+    Slave transmit (w/ interrupt capability)
+    Slave receive (w/ interrupt capability)
+Notes: None
+******************************************************************************************/
+
+//} Include Statements
+//=========================================//{
+
 #include "i2c.h"
 #include "assert_handler.h"
 #include "nvic.h"
@@ -5,7 +19,284 @@
 #include "stm32f4xx.h"
 
 //======================================================================================//}
-//                  Helper Function Prototypes
+//                  Private Constants
+//======================================================================================//{
+
+//} Initialization Handler Constants
+//=========================================//{
+
+// Init check enum
+typedef enum {
+    I2C1_INIT_NUM = 0,
+    I2C2_INIT_NUM = 1,
+    I2C3_INIT_NUM = 2,
+} i2c_init_port_num_e;
+
+typedef enum {
+    I2C_NOT_INITIALIZED = 0,
+    I2C_INITIALIZED     = 1,
+} i2c_init_check_e;
+
+//========================================================//}
+//          Register Constants
+//========================================================//{
+
+// clang-format off
+typedef enum : uint32_t {
+    I2C_CR1_SWRST_POS     = 15U,   // Software reset
+    I2C_CR1_ALERT_POS     = 13U,   // SMBus alert
+    I2C_CR1_PEC_POS       = 12U,   // Packet error checking
+    I2C_CR1_POS_POS       = 11U,   // Acknowledge/PEC Position (for data reception)
+    I2C_CR1_ACK_POS       = 10U,   // Acknowledge enable
+    I2C_CR1_STOP_POS      = 9U,    // Stop generation
+    I2C_CR1_START_POS     = 8U,    // Start generation
+    I2C_CR1_NOSTRETCH_POS = 7U,    // Clock stretching disable (Slave mode)
+    I2C_CR1_ENGC_POS      = 6U,    // General call enable
+    I2C_CR1_ENPEC_POS     = 5U,    // PEC enable
+    I2C_CR1_ENARP_POS     = 4U,    // ARP enable
+    I2C_CR1_SMBTYPE_POS   = 3U,    // SMBus type
+    I2C_CR1_SMBUS_POS     = 1U,    // SMBus mode
+    I2C_CR1_PE_POS        = 0U,    // Peripheral enable
+} i2c_cr1_pos_e;
+
+typedef enum : uint32_t {
+    I2C_CR1_SWRST     = (1U << I2C_CR1_SWRST_POS),       // Software reset
+    I2C_CR1_ALERT     = (1U << I2C_CR1_ALERT_POS),       // SMBus alert
+    I2C_CR1_PEC       = (1U << I2C_CR1_PEC_POS),         // Packet error checking
+    I2C_CR1_POS       = (1U << I2C_CR1_POS_POS),         // Acknowledge/PEC Position (for data reception)
+    I2C_CR1_ACK       = (1U << I2C_CR1_ACK_POS),         // Acknowledge enable
+    I2C_CR1_STOP      = (1U << I2C_CR1_STOP_POS),        // Stop generation
+    I2C_CR1_START     = (1U << I2C_CR1_START_POS),       // Start generation
+    I2C_CR1_NOSTRETCH = (1U << I2C_CR1_NOSTRETCH_POS),   // Clock stretching disable (Slave mode)
+    I2C_CR1_ENGC      = (1U << I2C_CR1_ENGC_POS),        // General call enable
+    I2C_CR1_ENPEC     = (1U << I2C_CR1_ENPEC_POS),       // PEC enable
+    I2C_CR1_ENARP     = (1U << I2C_CR1_ENARP_POS),       // ARP enable
+    I2C_CR1_SMBTYPE   = (1U << I2C_CR1_SMBTYPE_POS),     // SMBus type
+    I2C_CR1_SMBUS     = (1U << I2C_CR1_SMBUS_POS),       // SMBus mode
+    I2C_CR1_PE        = (1U << I2C_CR1_PE_POS),          // Peripheral enable
+} i2c_cr1_e;
+
+typedef enum : uint32_t {
+    I2C_CR1_SWRST_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_ALERT_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_PEC_MASK       = 0b1U,   // 1 bit(s)
+    I2C_CR1_POS_MASK       = 0b1U,   // 1 bit(s)
+    I2C_CR1_ACK_MASK       = 0b1U,   // 1 bit(s)
+    I2C_CR1_STOP_MASK      = 0b1U,   // 1 bit(s)
+    I2C_CR1_START_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_NOSTRETCH_MASK = 0b1U,   // 1 bit(s)
+    I2C_CR1_ENGC_MASK      = 0b1U,   // 1 bit(s)
+    I2C_CR1_ENPEC_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_ENARP_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_SMBTYPE_MASK   = 0b1U,   // 1 bit(s)
+    I2C_CR1_SMBUS_MASK     = 0b1U,   // 1 bit(s)
+    I2C_CR1_PE_MASK        = 0b1U,   // 1 bit(s)
+} i2c_cr1_mask_e;
+
+typedef enum : uint32_t {
+    I2C_CR2_LAST_POS    = 12U,   // DMA last transfer
+    I2C_CR2_DMAEN_POS   = 11U,   // DMA requests enable
+    I2C_CR2_ITBUFEN_POS = 10U,   // Buffer interrupt enable
+    I2C_CR2_ITEVTEN_POS = 9U,    // Event interrupt enable
+    I2C_CR2_ITERREN_POS = 8U,    // Error interrupt enable
+    I2C_CR2_FREQ_POS    = 0U,    // Peripheral clock frequency
+} i2c_cr2_pos_e;
+
+typedef enum : uint32_t {
+    I2C_CR2_LAST    = (1U << I2C_CR2_LAST_POS),      // DMA last transfer
+    I2C_CR2_DMAEN   = (1U << I2C_CR2_DMAEN_POS),     // DMA requests enable
+    I2C_CR2_ITBUFEN = (1U << I2C_CR2_ITBUFEN_POS),   // Buffer interrupt enable
+    I2C_CR2_ITEVTEN = (1U << I2C_CR2_ITEVTEN_POS),   // Event interrupt enable
+    I2C_CR2_ITERREN = (1U << I2C_CR2_ITERREN_POS),   // Error interrupt enable
+    I2C_CR2_FREQ    = (1U << I2C_CR2_FREQ_POS),      // Peripheral clock frequency
+} i2c_cr2_e;
+
+typedef enum : uint32_t {
+    I2C_CR2_LAST_MASK    = 0b1U,        // 1 bit(s)
+    I2C_CR2_DMAEN_MASK   = 0b1U,        // 1 bit(s)
+    I2C_CR2_ITBUFEN_MASK = 0b1U,        // 1 bit(s)
+    I2C_CR2_ITEVTEN_MASK = 0b1U,        // 1 bit(s)
+    I2C_CR2_ITERREN_MASK = 0b1U,        // 1 bit(s)
+    I2C_CR2_FREQ_MASK    = 0b111111U,   // 6 bit(s)
+} i2c_cr2_mask_e;
+
+typedef enum : uint32_t {
+    I2C_OAR1_ADDMODE_POS = 15U,   // Addressing mode (slave mode)
+    I2C_OAR1_ADD10_POS   = 8U,    // Interface address
+    I2C_OAR1_ADD7_POS    = 1U,    // Interface address
+    I2C_OAR1_ADD0_POS    = 0U,    // Interface address
+} i2c_oar1_pos_e;
+
+typedef enum : uint32_t {
+    I2C_OAR1_ADDMODE = (1U << I2C_OAR1_ADDMODE_POS),   // Addressing mode (slave mode)
+    I2C_OAR1_ADD10   = (1U << I2C_OAR1_ADD10_POS),     // Interface address
+    I2C_OAR1_ADD7    = (1U << I2C_OAR1_ADD7_POS),      // Interface address
+    I2C_OAR1_ADD0    = (1U << I2C_OAR1_ADD0_POS),      // Interface address
+} i2c_oar1_e;
+
+typedef enum : uint32_t {
+    I2C_OAR1_ADDMODE_MASK = 0b1U,         // 1 bit(s)
+    I2C_OAR1_ADD10_MASK   = 0b11U,        // 2 bit(s)
+    I2C_OAR1_ADD7_MASK    = 0b1111111U,   // 7 bit(s)
+    I2C_OAR1_ADD0_MASK    = 0b1U,         // 1 bit(s)
+} i2c_oar1_mask_e;
+
+typedef enum : uint32_t {
+    I2C_OAR2_ADD2_POS   = 1U,   // Interface address
+    I2C_OAR2_ENDUAL_POS = 0U,   // Dual addressing mode enable
+} i2c_oar2_pos_e;
+
+typedef enum : uint32_t {
+    I2C_OAR2_ADD2   = (1U << I2C_OAR2_ADD2_POS),     // Interface address
+    I2C_OAR2_ENDUAL = (1U << I2C_OAR2_ENDUAL_POS),   // Dual addressing mode enable
+} i2c_oar2_e;
+
+typedef enum : uint32_t {
+    I2C_OAR2_ADD2_MASK   = 0b1111111U,   // 7 bit(s)
+    I2C_OAR2_ENDUAL_MASK = 0b1U,         // 1 bit(s)
+} i2c_oar2_mask_e;
+
+typedef enum : uint32_t {
+    I2C_DR_DR_POS = 0U,   // 8-bit data register
+} i2c_dr_pos_e;
+
+typedef enum : uint32_t {
+    I2C_DR_DR = (1U << I2C_DR_DR_POS),   // 8-bit data register
+} i2c_dr_e;
+
+typedef enum : uint32_t {
+    I2C_DR_DR_MASK = 0b11111111U,   // 8 bit(s)
+} i2c_dr_mask_e;
+
+typedef enum : uint32_t {
+    I2C_SR1_SMBALERT_POS = 15U,   // SMBus alert
+    I2C_SR1_TIMEOUT_POS  = 14U,   // Timeout or Tlow error
+    I2C_SR1_PECERR_POS   = 12U,   // PEC Error in reception
+    I2C_SR1_OVR_POS      = 11U,   // Overrun/Underrun
+    I2C_SR1_AF_POS       = 10U,   // Acknowledge failure
+    I2C_SR1_ARLO_POS     = 9U,    // Arbitration lost (master mode)
+    I2C_SR1_BERR_POS     = 8U,    // Bus error
+    I2C_SR1_TXE_POS      = 7U,    // Data register empty (transmitters)
+    I2C_SR1_RXNE_POS     = 6U,    // Data register not empty (receivers)
+    I2C_SR1_STOPF_POS    = 4U,    // Stop detection (slave mode)
+    I2C_SR1_ADD10_POS    = 3U,    // 10-bit header sent (Master mode)
+    I2C_SR1_BTF_POS      = 2U,    // Byte transfer finished
+    I2C_SR1_ADDR_POS     = 1U,    // Address sent (master mode)/matched (slave mode)
+    I2C_SR1_SB_POS       = 0U,    // Start bit (Master mode)
+} i2c_sr1_pos_e;
+
+typedef enum : uint32_t {
+    I2C_SR1_SMBALERT = (1U << I2C_SR1_SMBALERT_POS),   // SMBus alert
+    I2C_SR1_TIMEOUT  = (1U << I2C_SR1_TIMEOUT_POS),    // Timeout or Tlow error
+    I2C_SR1_PECERR   = (1U << I2C_SR1_PECERR_POS),     // PEC Error in reception
+    I2C_SR1_OVR      = (1U << I2C_SR1_OVR_POS),        // Overrun/Underrun
+    I2C_SR1_AF       = (1U << I2C_SR1_AF_POS),         // Acknowledge failure
+    I2C_SR1_ARLO     = (1U << I2C_SR1_ARLO_POS),       // Arbitration lost (master mode)
+    I2C_SR1_BERR     = (1U << I2C_SR1_BERR_POS),       // Bus error
+    I2C_SR1_TXE      = (1U << I2C_SR1_TXE_POS),        // Data register empty (transmitters)
+    I2C_SR1_RXNE     = (1U << I2C_SR1_RXNE_POS),       // Data register not empty (receivers)
+    I2C_SR1_STOPF    = (1U << I2C_SR1_STOPF_POS),      // Stop detection (slave mode)
+    I2C_SR1_ADD10    = (1U << I2C_SR1_ADD10_POS),      // 10-bit header sent (Master mode)
+    I2C_SR1_BTF      = (1U << I2C_SR1_BTF_POS),        // Byte transfer finished
+    I2C_SR1_ADDR     = (1U << I2C_SR1_ADDR_POS),       // Address sent (master mode)/matched (slave mode)
+    I2C_SR1_SB       = (1U << I2C_SR1_SB_POS),         // Start bit (Master mode)
+} i2c_sr1_e;
+
+typedef enum : uint32_t {
+    I2C_SR1_SMBALERT_MASK = 0b1U,   // 1 bit(s)
+    I2C_SR1_TIMEOUT_MASK  = 0b1U,   // 1 bit(s)
+    I2C_SR1_PECERR_MASK   = 0b1U,   // 1 bit(s)
+    I2C_SR1_OVR_MASK      = 0b1U,   // 1 bit(s)
+    I2C_SR1_AF_MASK       = 0b1U,   // 1 bit(s)
+    I2C_SR1_ARLO_MASK     = 0b1U,   // 1 bit(s)
+    I2C_SR1_BERR_MASK     = 0b1U,   // 1 bit(s)
+    I2C_SR1_TXE_MASK      = 0b1U,   // 1 bit(s)
+    I2C_SR1_RXNE_MASK     = 0b1U,   // 1 bit(s)
+    I2C_SR1_STOPF_MASK    = 0b1U,   // 1 bit(s)
+    I2C_SR1_ADD10_MASK    = 0b1U,   // 1 bit(s)
+    I2C_SR1_BTF_MASK      = 0b1U,   // 1 bit(s)
+    I2C_SR1_ADDR_MASK     = 0b1U,   // 1 bit(s)
+    I2C_SR1_SB_MASK       = 0b1U,   // 1 bit(s)
+} i2c_sr1_mask_e;
+
+typedef enum : uint32_t {
+    I2C_SR2_PEC_POS        = 8U,   // acket error checking register
+    I2C_SR2_DUALF_POS      = 7U,   // Dual flag (Slave mode)
+    I2C_SR2_SMBHOST_POS    = 6U,   // SMBus host header (Slave mode)
+    I2C_SR2_SMBDEFAULT_POS = 5U,   // SMBus device default address (Slave mode)
+    I2C_SR2_GENCALL_POS    = 4U,   // General call address (Slave mode)
+    I2C_SR2_TRA_POS        = 2U,   // Transmitter/receiver
+    I2C_SR2_BUSY_POS       = 1U,   // Bus busy
+    I2C_SR2_MSL_POS        = 0U,   // Master/slave
+} i2c_sr2_pos_e;
+
+typedef enum : uint32_t {
+    I2C_SR2_PEC        = (1U << I2C_SR2_PEC_POS),          // acket error checking register
+    I2C_SR2_DUALF      = (1U << I2C_SR2_DUALF_POS),        // Dual flag (Slave mode)
+    I2C_SR2_SMBHOST    = (1U << I2C_SR2_SMBHOST_POS),      // SMBus host header (Slave mode)
+    I2C_SR2_SMBDEFAULT = (1U << I2C_SR2_SMBDEFAULT_POS),   // SMBus device default address (Slave mode)
+    I2C_SR2_GENCALL    = (1U << I2C_SR2_GENCALL_POS),      // General call address (Slave mode)
+    I2C_SR2_TRA        = (1U << I2C_SR2_TRA_POS),          // Transmitter/receiver
+    I2C_SR2_BUSY       = (1U << I2C_SR2_BUSY_POS),         // Bus busy
+    I2C_SR2_MSL        = (1U << I2C_SR2_MSL_POS),          // Master/slave
+} i2c_sr2_e;
+
+typedef enum : uint32_t {
+    I2C_SR2_PEC_MASK        = 0b11111111U,   // 8 bit(s)
+    I2C_SR2_DUALF_MASK      = 0b1U,          // 1 bit(s)
+    I2C_SR2_SMBHOST_MASK    = 0b1U,          // 1 bit(s)
+    I2C_SR2_SMBDEFAULT_MASK = 0b1U,          // 1 bit(s)
+    I2C_SR2_GENCALL_MASK    = 0b1U,          // 1 bit(s)
+    I2C_SR2_TRA_MASK        = 0b1U,          // 1 bit(s)
+    I2C_SR2_BUSY_MASK       = 0b1U,          // 1 bit(s)
+    I2C_SR2_MSL_MASK        = 0b1U,          // 1 bit(s)
+} i2c_sr2_mask_e;
+
+typedef enum : uint32_t {
+    I2C_CCR_F_S_POS  = 15U,   // I2C master mode selection
+    I2C_CCR_DUTY_POS = 14U,   // Fast mode duty cycle
+    I2C_CCR_CCR_POS  = 0U,    // Clock control register in Fast/Standard mode (Master mode)
+} i2c_ccr_pos_e;
+
+typedef enum : uint32_t {
+    I2C_CCR_F_S  = (1U << I2C_CCR_F_S_POS),    // I2C master mode selection
+    I2C_CCR_DUTY = (1U << I2C_CCR_DUTY_POS),   // Fast mode duty cycle
+    I2C_CCR_CCR  = (1U << I2C_CCR_CCR_POS),    // Clock control register in Fast/Standard mode (Master mode)
+} i2c_ccr_e;
+
+typedef enum : uint32_t {
+    I2C_CCR_F_S_MASK  = 0b1U,              // 1 bit(s)
+    I2C_CCR_DUTY_MASK = 0b1U,              // 1 bit(s)
+    I2C_CCR_CCR_MASK  = 0b111111111111U,   // 12 bit(s)
+} i2c_ccr_mask_e;
+
+typedef enum : uint32_t {
+    I2C_TRISE_TRISE_POS = 0U,   // Maximum rise time in Fast/Standard mode (Master mode)
+} i2c_trise_pos_e;
+
+typedef enum : uint32_t {
+    I2C_TRISE_TRISE = (1U << I2C_TRISE_TRISE_POS),   // Maximum rise time in Fast/Standard mode (Master mode)
+} i2c_trise_e;
+
+typedef enum : uint32_t {
+    I2C_TRISE_TRISE_MASK = 0b111111U,   // 6 bit(s)
+} i2c_trise_mask_e;
+
+// clang-format on
+
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
+
+// I2C1 = bit pos 0
+// I2C2 = bit pos 1
+// I2C3 = bit pos 2
+uint8_t g_i2c_port_init = 0;
+// If peripheral bit is 1, it is running. If 0, it is free.
+uint8_t g_i2c_port_status = 0;
+
+//======================================================================================//}
+//                  Private Function Prototypes
 //======================================================================================//{
 
 // Assert helper functions
@@ -38,19 +329,8 @@ static void master_addr(i2c_handle *const p_i2c_handle);
 static void slave_addr(i2c_handle const *const p_i2c_handle);
 
 //======================================================================================//}
-//                  Global Variables
+//                  Public Function Implementation
 //======================================================================================//{
-
-// I2C1 = bit pos 0
-// I2C2 = bit pos 1
-// I2C3 = bit pos 2
-uint8_t g_i2c_port_init = 0;
-// If peripheral bit is 1, it is running. If 0, it is free.
-uint8_t g_i2c_port_status = 0;
-
-//======================================================================================//
-//                  Peripheral Function API Implementation
-//======================================================================================//
 
 /***************************************************************************
 Function: i2c_init
@@ -501,7 +781,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
     switch (p_i2c_handle->i2c_it_data.status)
     {
-
         case I2C_STATUS_MASTER_TX:
         case I2C_STATUS_MASTER_RX:
             if (p_i2c_handle->p_i2cx->SR1 & I2C_SR1_SB)
@@ -537,7 +816,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
                         {
                             config_ack(p_i2c_handle->p_i2cx, DISABLE);
                         }
-
                         receive_byte(p_i2c_handle);
 
                         if (p_i2c_handle->i2c_it_data.txrx_length == 0)
@@ -564,7 +842,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
             switch (p_i2c_handle->i2c_it_data.status)
             {
-
                 case I2C_STATUS_SLAVE_TX:
 
                     if ((p_i2c_handle->p_i2cx->SR1 & I2C_SR1_TXE) && (p_i2c_handle->i2c_it_data.txrx_length != 0))
@@ -595,7 +872,6 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
                     ASSERT(false);
                     break;
             }
-
             break;
 
         default:
@@ -605,9 +881,10 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
     UNUSED(dummy_read);
 }
 
-//======================================================================================//
-//                  Helper Function Implementation
-//======================================================================================//
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
+
 static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const p_i2cx)
 {
     if (p_i2cx == I2C1)
