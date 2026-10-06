@@ -13,6 +13,7 @@ Notes: None
 //=========================================//{
 
 #include "stm32f4xx.h"
+#include "common.h"
 
 //======================================================================================//}
 //                  Public Constants
@@ -24,21 +25,6 @@ Notes: None
 typedef enum {
     SYSCFG_BASE_ADDR = ((APB2_BASE_ADDR) + (0x3800U)),
 } syscfg_base_addr_e;
-
-//} Config Options (If multiple configs exist, name and separate them)
-//=========================================//{
-
-//} API Function Argument/Return Options
-//=========================================//{
-
-//} Callback Options
-//=========================================//{
-
-//} Interrupt Handler Constants
-//=========================================//{
-
-//} Misc. Constants
-//=========================================//{
 
 //======================================================================================//}
 //                  Structure Definitions
