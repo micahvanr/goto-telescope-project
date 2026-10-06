@@ -1,5 +1,5 @@
 /*****************************************************************************************
-File: module.h
+File: module.c
 Overview: Description of the module's purpose.
 Features:
     List of features
