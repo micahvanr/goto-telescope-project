@@ -3,7 +3,7 @@ File: pwr.c
 Overview: Provides functions for using the PWR peripheral.
 Features:
     Disabling backup write protection
-Notes: 
+Notes: None
 ******************************************************************************************/
 
 //} Include Statements

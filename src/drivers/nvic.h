@@ -5,7 +5,7 @@ Overview: Provides functions for using the NVIC peripheral. Used to configure in
 Features:
     Configure interrupts
     Configure priority of interrupts
-Notes:
+Notes: None
 ******************************************************************************************/
 
 #ifndef NVIC_H

@@ -6,7 +6,7 @@ Features:
     Alarms (w/ interrupt capability)
     Timestamps (w/ interrupt capability)
     Wake-up (w/ interrupt capability)
-Notes:
+Notes: None
 ******************************************************************************************/
 
 #ifndef RTC_H

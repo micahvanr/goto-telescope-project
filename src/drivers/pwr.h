@@ -3,7 +3,7 @@ File: pwr.h
 Overview: Provides functions for using the PWR peripheral.
 Features:
     Disabling backup write protection
-Notes: 
+Notes: None
 ******************************************************************************************/
 
 #ifndef PWR_H

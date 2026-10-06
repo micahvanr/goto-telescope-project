@@ -2,7 +2,7 @@
 File: stm32f4xx.h
 Overview: Provide constants for the STM32F4xx MCu.
 Features:
-Notes: 
+Notes: None
 ******************************************************************************************/
 
 #include "stm32f4xx.h"
