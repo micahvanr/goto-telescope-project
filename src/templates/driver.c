@@ -3,7 +3,7 @@ File: module.c
 Overview: Description of the module's purpose.
 Features:
     List of features
-Notes: Additional notes that user might/should want to know
+Notes: Additional notes that user might/should want to know (None)
 ******************************************************************************************/
 
 //} Include Statements
