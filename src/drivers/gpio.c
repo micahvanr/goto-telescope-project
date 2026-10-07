@@ -15,10 +15,8 @@ Notes: None
 
 #include "gpio.h"
 #include "assert_handler.h"
-#include "exti.h"
 #include "nvic.h"
 #include "rcc.h"
-#include "stm32f4xx.h"
 #include "syscfg.h"
 
 //======================================================================================//}

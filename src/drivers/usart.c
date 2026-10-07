@@ -280,7 +280,6 @@ static void assert_usart_handle_param(usart_handle const *const p_usart_handle);
 static inline void set_usart_init_status(usart_reg_def const *const p_usartx);
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx);
 
-
 // General helper functions
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
 static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);

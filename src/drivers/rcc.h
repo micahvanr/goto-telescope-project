@@ -12,12 +12,12 @@ Notes: Additional notes that user might/should want to know
 //} Include Statements
 //=========================================//{
 
-#include "common.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "stm32f4xx.h"
 #include "tim.h"
 #include "usart.h"
+#include <stdbool.h>
 
 //======================================================================================//}
 //                  Public Constants

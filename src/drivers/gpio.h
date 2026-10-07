@@ -18,6 +18,7 @@ Notes: None
 
 #include "exti.h"
 #include "stm32f4xx.h"
+#include <stdint.h>
 
 //======================================================================================//}
 //                  Public Constants

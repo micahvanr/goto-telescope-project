@@ -16,7 +16,6 @@ Notes: None
 #include "assert_handler.h"
 #include "nvic.h"
 #include "rcc.h"
-#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Private Constants

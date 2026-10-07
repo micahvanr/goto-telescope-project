@@ -19,8 +19,8 @@ Notes: EXTI are connected to GPIO pins and other external sources.
 //} Include Statements
 //=========================================//{
 
-#include "common.h"
 #include "stm32f4xx.h"
+#include <stdint.h>
 
 //======================================================================================//}
 //                  Public Constants

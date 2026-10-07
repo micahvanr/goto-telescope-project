@@ -11,8 +11,6 @@ Notes: None
 
 #include "pwr.h"
 #include "common.h"
-#include "rcc.h"
-#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Private Constants

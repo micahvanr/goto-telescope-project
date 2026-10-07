@@ -6,7 +6,6 @@
 
 // clang-format off
 // Test functions
-#include "common.h"
 #include "rtc_test.h"
 #include "test_types.h"
 #include "gpio_test.h"
@@ -15,21 +14,20 @@
 #include "misc_test.h"
 #include "i2c_test.h"
 // clang-format on
+
 #include "assert_handler.h"
 #include "debug_tools.h"
-#include "gpio.h"
 #include "printf.h"
+#include <stdbool.h>
 
 // TODO: Add project roadmap using mermaid markdown
 // TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
-// TODO: Change config_x (enable/disable) to toggable_x
 // TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
 // TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
 // TODO: Change test functions: get rid of intermediate function.
 // TODO: Add standard common phrases
 // TODO: Finish changing "no" to "num"
-// TODO: Look into header files including other headers
 
 int main(void)
 {
