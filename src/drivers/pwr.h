@@ -44,7 +44,6 @@ typedef volatile struct {
 //                  Public Function Prototypes
 //======================================================================================//{
 
-void pwr_config_clock(togglable_e toggle);
 void pwr_disable_backup_write_prot(void);
 
 #endif // PWR_H

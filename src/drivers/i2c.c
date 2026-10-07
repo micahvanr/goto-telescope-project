@@ -308,8 +308,6 @@ static inline i2c_init_check_e get_i2c_init_status(i2c_reg_def const *const p_i2
 static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const p_i2cx);
 static void set_ccr_and_trise(i2c_handle const *const p_i2c_handle);
 
-static inline void i2c_config_clock(i2c_reg_def const *const p_i2cx, togglable_e toggle);
-
 static inline void generate_start_condition(i2c_reg_def *const p_i2cx);
 static inline void generate_stop_condition(i2c_reg_def *const p_i2cx);
 static inline void clear_start_flag(i2c_reg_def const *const p_i2cx);
@@ -349,7 +347,7 @@ void i2c_init(i2c_handle *const p_i2c_handle)
     // Initialize the port in the init variable.
     set_i2c_init_status(p_i2c_handle->p_i2cx);
     // Enable clock
-    i2c_config_clock(p_i2c_handle->p_i2cx, ENABLE);
+    rcc_i2c_togglable_clock(p_i2c_handle->p_i2cx, ENABLE);
 
     // Set peripheral clock frequency
     p_i2c_handle->p_i2cx->CR2 &= ~(I2C_CR2_FREQ_MASK << I2C_CR2_FREQ_POS);
@@ -417,7 +415,7 @@ Note: None
 ***************************************************************************/
 void i2c_reset(i2c_reg_def const *const p_i2cx)
 {
-    i2c_config_clock(p_i2cx, DISABLE);
+    rcc_i2c_togglable_clock(p_i2cx, DISABLE);
 }
 
 // NOTE: Might need to return success/fail incase the device never receives and ack.
@@ -1083,25 +1081,6 @@ static inline void clear_stopf(i2c_reg_def *const p_i2cx)
 static inline void clear_af(i2c_reg_def *const p_i2cx)
 {
     p_i2cx->SR1 &= ~I2C_SR1_AF;
-}
-
-static inline void i2c_config_clock(i2c_reg_def const *const p_i2cx, togglable_e toggle)
-{
-    switch (toggle)
-    {
-        case ENABLE:
-            RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
-                          : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
-                          : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
-                                             : 0;
-            break;
-        case DISABLE:
-            RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
-                           : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
-                           : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
-                                              : 0;
-            break;
-    }
 }
 
 static void master_sb(i2c_handle *const p_i2c_handle)

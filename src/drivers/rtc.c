@@ -856,12 +856,12 @@ void rtc_init(rtc_handler *const p_rtc_handler)
     uint8_t const UPDATE_ALLOWED = (1 << 6);
 
     // NOTE: PWR has to be disable backup write protection in order to write to certain parts of RCC
-    pwr_config_clock(ENABLE);
+    rcc_pwr_togglable_clock(ENABLE);
     pwr_disable_backup_write_prot();
 
     // RCC Config
     // Enable clock to RTC
-    rcc_config_rtc_clock(ENABLE);
+    rcc_rtc_togglable_clock(ENABLE);
 
     set_rtc_clock(p_rtc_handler->rtc_conf);
 
@@ -1541,7 +1541,7 @@ static void set_rtc_clock(rtc_config const rtc_conf)
     rcc_set_rtc_clk_src(rtc_conf.rtc_sel);
     if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI)
     {
-        rcc_config_lsi(ENABLE);
+        rcc_lsi_config(ENABLE);
         while (!rcc_lsi_is_rdy());
     }
     if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_HSE)

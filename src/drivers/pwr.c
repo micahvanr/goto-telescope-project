@@ -93,30 +93,6 @@ typedef enum : uint32_t {
 //======================================================================================//{
 
 /***************************************************************************
-Function: pwr_config_clock 
-Overview: Enables or disables the clock to the PWR peripheral.
-Parameters: 
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
-void pwr_config_clock(togglable_e toggle)
-{
-    switch (toggle)
-    {
-        case ENABLE:
-            RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-            break;
-        case DISABLE:
-            RCC->APB1ENR &= ~RCC_APB1ENR_PWREN;
-            break;
-    }
-}
-
-/***************************************************************************
 Function: pwr_disable_backup_write_prot
 Overview: Disables the write protection for the RTC Backup registers and backup SRAM.
 Parameters: 

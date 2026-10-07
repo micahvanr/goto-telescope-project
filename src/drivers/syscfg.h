@@ -49,7 +49,6 @@ typedef volatile struct {
 //                  Public Function Prototypes
 //======================================================================================//{
 
-void syscfg_config_clock(togglable_e toggle);
 void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle);
 
 #endif // SYSCFG_H

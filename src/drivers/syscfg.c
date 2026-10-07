@@ -147,28 +147,6 @@ typedef enum : uint32_t {
 //======================================================================================//{
 
 /***************************************************************************
-Function: syscfg_config_clock
-Overview: Enables or disables the SYSCFG clock inside RCC.
-Parameters: 
-    None
-Return: 
-    None
-Note: None
-***************************************************************************/
-void syscfg_config_clock(togglable_e toggle)
-{
-    switch (toggle)
-    {
-        case ENABLE:
-            RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-            break;
-        case DISABLE:
-            RCC->APB2ENR &= ~RCC_APB2ENR_SYSCFGEN;
-            break;
-    }
-}
-
-/***************************************************************************
 Function: syscfg_config_exti
 Overview: Configures the GPIO EXTI interrupt lines.
 Parameters: 

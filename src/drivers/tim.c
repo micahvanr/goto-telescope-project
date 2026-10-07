@@ -671,7 +671,6 @@ static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_c
 static void assert_tim_peri_param(tim_reg_def const *const p_timx);
 
 // General helper functions
-static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e toggle);
 static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit);
 static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t check_num, uint32_t factor);
 static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t duty_cycle);
@@ -748,7 +747,7 @@ void tim_init(tim_handle *const p_tim_handle)
 
     timer_type = get_tim_type(p_tim_handle->p_timx);
 
-    tim_config_clock(p_tim_handle->p_timx, ENABLE);
+    rcc_tim_togglable_clock(p_tim_handle->p_timx, ENABLE);
 
     // One pulse mode
     temp_cr1 &= ~(TIM_CR1_OPM);
@@ -877,7 +876,7 @@ Note: None
 ***************************************************************************/
 void tim_reset(tim_reg_def const *const p_timx)
 {
-    tim_config_clock(p_timx, DISABLE);
+    rcc_tim_togglable_clock(p_timx, DISABLE);
 }
 
 /***************************************************************************
@@ -1330,10 +1329,20 @@ uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const 
     return p_timx->CCR[channel];
 }
 
-//======================================================================================//}
-//                  Private Function Implementation
-//======================================================================================//{
-
+/***************************************************************************
+Function: tim_get_bus
+Overview: Gets the bus depending on the given timer peripheral
+Parameters: 
+    p_timx:
+        TIMx (1-14)
+Return: 
+    bus_types: 
+        AHB1_BUS       
+        AHB2_BUS
+        APB1_BUS
+        APB2_BUS
+Note: None
+***************************************************************************/
 bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
     // If TIMER peripheral on APB2
@@ -1349,60 +1358,9 @@ bus_types tim_get_bus(tim_reg_def const *const p_timx)
     }
 }
 
-static inline void tim_config_clock(tim_reg_def const *const p_timx, togglable_e toggle)
-{
-    bus_types const tim_bus = tim_get_bus(p_timx);
-
-    if ((ENABLE == toggle) && (APB1_BUS == tim_bus))
-    {
-        RCC->APB1ENR |= (p_timx == TIM2)  ? RCC_APB1ENR_TIM2EN
-                      : (p_timx == TIM3)  ? RCC_APB1ENR_TIM3EN
-                      : (p_timx == TIM4)  ? RCC_APB1ENR_TIM4EN
-                      : (p_timx == TIM5)  ? RCC_APB1ENR_TIM5EN
-                      : (p_timx == TIM6)  ? RCC_APB1ENR_TIM6EN
-                      : (p_timx == TIM7)  ? RCC_APB1ENR_TIM7EN
-                      : (p_timx == TIM12) ? RCC_APB1ENR_TIM12EN
-                      : (p_timx == TIM13) ? RCC_APB1ENR_TIM13EN
-                      : (p_timx == TIM14) ? RCC_APB1ENR_TIM14EN
-                                          : 0;
-    }
-    else if ((ENABLE == toggle) && (APB2_BUS == tim_bus))
-    {
-        RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
-                      : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
-                      : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
-                      : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
-                      : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
-                                          : 0;
-    }
-    else if ((DISABLE == toggle) && (APB1_BUS == tim_bus))
-    {
-        RCC->APB1RSTR |= (p_timx == TIM2)  ? RCC_APB1RSTR_TIM2RST
-                       : (p_timx == TIM3)  ? RCC_APB1RSTR_TIM3RST
-                       : (p_timx == TIM4)  ? RCC_APB1RSTR_TIM4RST
-                       : (p_timx == TIM5)  ? RCC_APB1RSTR_TIM5RST
-                       : (p_timx == TIM6)  ? RCC_APB1RSTR_TIM6RST
-                       : (p_timx == TIM7)  ? RCC_APB1RSTR_TIM7RST
-                       : (p_timx == TIM12) ? RCC_APB1RSTR_TIM12RST
-                       : (p_timx == TIM13) ? RCC_APB1RSTR_TIM13RST
-                       : (p_timx == TIM14) ? RCC_APB1RSTR_TIM14RST
-                                           : 0;
-    }
-
-    else if ((DISABLE == toggle) && (APB2_BUS == tim_bus))
-    {
-        RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
-                      : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
-                      : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
-                      : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
-                      : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
-                                          : 0;
-    }
-    else
-    {
-        ASSERT(false);
-    }
-}
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
 
 static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_unit_of_time_e unit)
 {

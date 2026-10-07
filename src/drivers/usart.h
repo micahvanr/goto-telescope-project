@@ -176,6 +176,8 @@ void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t le
 void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle);
 void usart_it_handler(usart_handle *const p_usart_handle);
 
+bus_types get_usart_bus(usart_reg_def const *const p_usartx);
+
 // User implement callback function to handle.
 void __weak usart_callback(usart_handle *p_usart_handle, usart_event_e event);
 

@@ -280,10 +280,8 @@ static void assert_usart_handle_param(usart_handle const *const p_usart_handle);
 static inline void set_usart_init_status(usart_reg_def const *const p_usartx);
 static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx);
 
-// General helper functions
-static inline void usart_config_clock(usart_reg_def const *const p_usartx, togglable_e toggle);
 
-static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx);
+// General helper functions
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
 static void set_baudrate(usart_reg_def *p_usartx, usart_oversampling_e oversampling_mode, usart_baudrate_e baudrate);
 
@@ -314,7 +312,7 @@ void usart_init(usart_handle *const p_usart_handle)
     set_usart_init_status(p_usart_handle->p_usartx);
 
     // Enable clock of USART peripheral.
-    usart_config_clock(p_usart_handle->p_usartx, ENABLE);
+    rcc_usart_togglable_clock(p_usart_handle->p_usartx, ENABLE);
 
     // Enable USART peripheral
     temp_cr1 |= USART_CR1_UE;
@@ -440,7 +438,7 @@ Note: None
 ***************************************************************************/
 void usart_reset(usart_reg_def const *const p_usartx)
 {
-    usart_config_clock(p_usartx, DISABLE);
+    rcc_usart_togglable_clock(p_usartx, DISABLE);
 }
 
 /***************************************************************************
@@ -700,11 +698,22 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
     p_usartx->DR = data;
 }
 
-//======================================================================================//}
-//                  Private Function Implementation
-//======================================================================================//{
-
-static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx)
+/***************************************************************************
+Function: usart_get_bus
+Overview: Gets the bus depending on the given usart peripheral
+Parameters: 
+    p_usartx: USART register peripheral to be written to.
+        USARTx (1, 2, 3, 6) or
+        UARTx (4, 5)
+Return: 
+    bus_types: 
+        AHB1_BUS       
+        AHB2_BUS
+        APB1_BUS
+        APB2_BUS
+Note: None
+***************************************************************************/
+bus_types get_usart_bus(usart_reg_def const *const p_usartx)
 {
     // If USART peripheral on APB1.
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5))
@@ -718,40 +727,9 @@ static inline bus_types get_usart_bus(usart_reg_def const *const p_usartx)
     }
 }
 
-static inline void usart_config_clock(usart_reg_def const *const p_usartx, togglable_e toggle)
-{
-    bus_types const usart_bus = get_usart_bus(p_usartx);
-
-    if ((ENABLE == toggle) && (APB1_BUS == usart_bus))
-    {
-
-        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
-                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
-                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
-                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
-                                             : 0;
-    }
-    else if ((ENABLE == toggle) && (APB2_BUS == usart_bus))
-    {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
-    }
-    else if ((DISABLE == toggle) && (APB1_BUS == usart_bus))
-    {
-        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
-                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
-                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
-                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
-                                              : 0;
-    }
-    else if ((DISABLE == toggle) && (APB2_BUS == usart_bus))
-    {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
-    }
-    else
-    {
-        ASSERT(false);
-    }
-}
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
 
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx)
 {

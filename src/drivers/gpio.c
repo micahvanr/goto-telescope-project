@@ -636,8 +636,6 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
 static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
 
-static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglable_e toggle);
-
 //======================================================================================//}
 //                  Public Function Implementation
 //======================================================================================//{
@@ -664,7 +662,7 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     set_gpio_init_status(p_gpio_handle->p_gpiox, pin_no);
 
     // Enable RCC clock for peripheral port.
-    gpio_config_clock(p_gpio_handle->p_gpiox, ENABLE);
+    rcc_gpio_togglable_clock(p_gpio_handle->p_gpiox, ENABLE);
 
     // Set alternate function mode
     // NOTE: Done before rest of config otherwise it may trigger undesired pin bouncing.
@@ -731,7 +729,7 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
 
     syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
-    syscfg_config_clock(ENABLE);
+    rcc_syscfg_togglable_clock(ENABLE);
 
     syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
 
@@ -991,19 +989,6 @@ static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p
     uint8_t pin_initialized = ((port_init & (1 << pin_no)) >> pin_no);
 
     return pin_initialized;
-}
-
-static inline void gpio_config_clock(gpio_reg_def const *const p_gpiox, togglable_e toggle)
-{
-    switch (toggle)
-    {
-        case ENABLE:
-            RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
-            break;
-        case DISABLE:
-            RCC->AHB1ENR &= ~(1 << map_gpio_ports_to_num(p_gpiox));
-            break;
-    }
 }
 
 // *End of file*
