@@ -627,8 +627,8 @@ volatile uint16_t g_gpio_pin_init[8] = {0};
 
 // Assert helper functions
 static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle);
-static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
-static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_no);
+static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_num);
+static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_num);
 
 // General helper functions
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
@@ -651,42 +651,42 @@ Note:
 ***************************************************************************/
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
-    pin_number_e pin_no = p_gpio_handle->gpio_conf.pin_no;
+    pin_number_e pin_num = p_gpio_handle->gpio_conf.pin_num;
 
     // Ensure handle structure values are valid.
     assert_gpio_handle_param(p_gpio_handle);
 
     // Initialize gpio pin init structure.
-    set_gpio_init_status(p_gpio_handle->p_gpiox, pin_no);
+    set_gpio_init_status(p_gpio_handle->p_gpiox, pin_num);
 
     // Enable RCC clock for peripheral port.
     rcc_gpio_togglable_clock(p_gpio_handle->p_gpiox, ENABLE);
 
     // Set alternate function mode
     // NOTE: Done before rest of config otherwise it may trigger undesired pin bouncing.
-    if (p_gpio_handle->gpio_conf.alt_fn_no != GPIO_ALT_FN_NA)
+    if (p_gpio_handle->gpio_conf.alt_fn_num != GPIO_ALT_FN_NA)
     {
         uint8_t afr_reg;
-        afr_reg = pin_no / 8;
-        p_gpio_handle->p_gpiox->AFR[afr_reg] &= ~(GPIO_AFRL_AFRL0_MASK << (4 * (pin_no % 8)));
-        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_no << (4 * (pin_no % 8)));
+        afr_reg = pin_num / 8;
+        p_gpio_handle->p_gpiox->AFR[afr_reg] &= ~(GPIO_AFRL_AFRL0_MASK << (4 * (pin_num % 8)));
+        p_gpio_handle->p_gpiox->AFR[afr_reg] |= (p_gpio_handle->gpio_conf.alt_fn_num << (4 * (pin_num % 8)));
     }
 
     // Set gpio mode
-    p_gpio_handle->p_gpiox->MODER &= ~(GPIO_MODER_MODER0_MASK << (2 * pin_no));
-    p_gpio_handle->p_gpiox->MODER |= (p_gpio_handle->gpio_conf.mode << (2 * pin_no));
+    p_gpio_handle->p_gpiox->MODER &= ~(GPIO_MODER_MODER0_MASK << (2 * pin_num));
+    p_gpio_handle->p_gpiox->MODER |= (p_gpio_handle->gpio_conf.mode << (2 * pin_num));
 
     // Set output type
-    p_gpio_handle->p_gpiox->OTYPER &= ~(GPIO_OTYPER_OT0_MASK << pin_no);
-    p_gpio_handle->p_gpiox->OTYPER |= (p_gpio_handle->gpio_conf.output_type << pin_no);
+    p_gpio_handle->p_gpiox->OTYPER &= ~(GPIO_OTYPER_OT0_MASK << pin_num);
+    p_gpio_handle->p_gpiox->OTYPER |= (p_gpio_handle->gpio_conf.output_type << pin_num);
 
     // Set output speed
-    p_gpio_handle->p_gpiox->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR0_MASK << (2 * pin_no));
-    p_gpio_handle->p_gpiox->OSPEEDR |= (p_gpio_handle->gpio_conf.output_speed << (2 * pin_no));
+    p_gpio_handle->p_gpiox->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR0_MASK << (2 * pin_num));
+    p_gpio_handle->p_gpiox->OSPEEDR |= (p_gpio_handle->gpio_conf.output_speed << (2 * pin_num));
 
     // Set pull up or pull down resistors
-    p_gpio_handle->p_gpiox->PUPDR &= ~(GPIO_PUPDR_PUPDR0_MASK << (2 * pin_no));
-    p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_no));
+    p_gpio_handle->p_gpiox->PUPDR &= ~(GPIO_PUPDR_PUPDR0_MASK << (2 * pin_num));
+    p_gpio_handle->p_gpiox->PUPDR |= (p_gpio_handle->gpio_conf.pullup_pulldown << (2 * pin_num));
 
     // Set interrupt mode
     if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA)
@@ -723,13 +723,13 @@ Note: None
 ***************************************************************************/
 void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
-    exti_lines_e exti_line_num = (exti_lines_e) p_gpio_handle->gpio_conf.pin_no;
+    exti_lines_e exti_line_num = (exti_lines_e) p_gpio_handle->gpio_conf.pin_num;
 
-    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
+    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
 
     rcc_syscfg_togglable_clock(ENABLE);
 
-    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_no, toggle);
+    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
 
     exti_config_it(exti_line_num, toggle);
 
@@ -773,7 +773,7 @@ Function: gpio_write
 Overview: Sets a pin on a given port to high or low.
 Parameters:
     p_gpiox: Register structure for the GPIO port.
-    pin_no: Pin number for to be changed.
+    pin_num: Pin number for to be changed.
         PIN_NUM_x (0-15)
     pin_level: Pin logic level.
         HIGH 
@@ -782,16 +782,16 @@ Return:
     None
 Note: None
 ***************************************************************************/
-void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_no, pin_logic_level_e const pin_level)
+void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_logic_level_e const pin_level)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
+    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
     switch (pin_level)
     {
         case HIGH:
-            p_gpiox->ODR |= (1 << pin_no);
+            p_gpiox->ODR |= (1 << pin_num);
             break;
         case LOW:
-            p_gpiox->ODR &= ~(1 << pin_no);
+            p_gpiox->ODR &= ~(1 << pin_num);
             break;
     }
 }
@@ -802,7 +802,7 @@ Overview: Reads a pin on a given port and returns high or low.
 Parameters:
     p_gpiox: Register structure for the GPIO port.
         GPIOx (A-H)
-    pin_no:
+    pin_num:
         PIN_NUM_x (0-15)
 Return: 
     pin_logic_level_e: Level of the port/pin read from.
@@ -810,10 +810,10 @@ Return:
         LOW
 Note: None
 ***************************************************************************/
-pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
+pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
-    return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_no));
+    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
+    return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_num));
 }
 
 /***************************************************************************
@@ -822,16 +822,16 @@ Overview: Toggles a pin on a given port.
 Parameters:
     p_gpiox: Register structure for the GPIO port.
         GPIOx (A-H)
-    pin_no:
+    pin_num:
         PIN_NUM_x (0-15)
 Return: 
     None
 Note: None
 ***************************************************************************/
-void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_no)
+void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_no) == GPIO_INITIALIZED);
-    p_gpiox->ODR ^= (1 << pin_no);
+    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
+    p_gpiox->ODR ^= (1 << pin_num);
 }
 
 //======================================================================================//}
@@ -855,7 +855,7 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
                                                       : false;
 
     // Alternate function check
-    switch (p_gpio_handle->gpio_conf.alt_fn_no) {
+    switch (p_gpio_handle->gpio_conf.alt_fn_num) {
     case GPIO_ALT_FN_0:  found_setting = true; break;
     case GPIO_ALT_FN_1:  found_setting = true; break;
     case GPIO_ALT_FN_2:  found_setting = true; break;
@@ -916,7 +916,7 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
 
     // Pin number check
     found_setting = false;
-    switch (p_gpio_handle->gpio_conf.pin_no) {
+    switch (p_gpio_handle->gpio_conf.pin_num) {
     case PIN_NUM_0:  found_setting = true; break;
     case PIN_NUM_1:  found_setting = true; break;
     case PIN_NUM_2:  found_setting = true; break;
@@ -974,17 +974,17 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
                                                                               : 0;
 }
 
-static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
+static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
-    g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)] |= (1 << pin_no);
+    g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)] |= (1 << pin_num);
 }
 
-static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_no)
+static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
     // Get port initialization pins from list.
     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)];
     // Mask the port to get the bit for the pin number.
-    uint8_t pin_initialized = ((port_init & (1 << pin_no)) >> pin_no);
+    uint8_t pin_initialized = ((port_init & (1 << pin_num)) >> pin_num);
 
     return pin_initialized;
 }

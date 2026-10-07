@@ -1876,11 +1876,11 @@ Note: None
 ***************************************************************************/
 static void printf_gpio_init()
 {
-    gpio_handle printf_tx_gpio      = {0};
-    printf_tx_gpio.p_gpiox          = PRINTF_USART_TX_PORT;
-    printf_tx_gpio.gpio_conf.pin_no = PRINTF_USART_TX_PIN;
+    gpio_handle printf_tx_gpio       = {0};
+    printf_tx_gpio.p_gpiox           = PRINTF_USART_TX_PORT;
+    printf_tx_gpio.gpio_conf.pin_num = PRINTF_USART_TX_PIN;
 
-    printf_tx_gpio.gpio_conf.alt_fn_no    = GPIO_ALT_FN_7;
+    printf_tx_gpio.gpio_conf.alt_fn_num   = GPIO_ALT_FN_7;
     printf_tx_gpio.gpio_conf.it_trigger   = GPIO_IT_NA;
     printf_tx_gpio.gpio_conf.mode         = GPIO_MODE_ALT_FN;
     printf_tx_gpio.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;

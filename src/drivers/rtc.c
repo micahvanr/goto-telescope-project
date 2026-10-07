@@ -15,7 +15,6 @@ Notes: None
 //=========================================//{
 #include "rtc.h"
 #include "assert_handler.h"
-#include "common.h"
 #include "exti.h"
 #include "nvic.h"
 #include "pwr.h"

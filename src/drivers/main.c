@@ -27,7 +27,6 @@
 // TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
 // TODO: Change test functions: get rid of intermediate function.
 // TODO: Add standard common phrases
-// TODO: Finish changing "no" to "num"
 
 int main(void)
 {

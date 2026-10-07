@@ -12,11 +12,11 @@ Note: Uses PA3
 ***************************************************************************/
 void debug_pin_init(void)
 {
-    gpio_handle debug_pin      = {0};
-    debug_pin.p_gpiox          = DEBUG_PIN_PORT;
-    debug_pin.gpio_conf.pin_no = DEBUG_PIN_NUM;
+    gpio_handle debug_pin       = {0};
+    debug_pin.p_gpiox           = DEBUG_PIN_PORT;
+    debug_pin.gpio_conf.pin_num = DEBUG_PIN_NUM;
 
-    debug_pin.gpio_conf.alt_fn_no    = GPIO_ALT_FN_NA;
+    debug_pin.gpio_conf.alt_fn_num   = GPIO_ALT_FN_NA;
     debug_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
     debug_pin.gpio_conf.mode         = GPIO_MODE_OUTPUT;
     debug_pin.gpio_conf.output_speed = GPIO_OSPEED_FAST;
@@ -50,11 +50,11 @@ Note: STM32F4Disc button is PA0
 ***************************************************************************/
 void debug_button_init(void)
 {
-    gpio_handle debug_button      = {0};
-    debug_button.p_gpiox          = DEBUG_BUTTON_PORT;
-    debug_button.gpio_conf.pin_no = DEBUG_BUTTUN_PIN_NUM;
+    gpio_handle debug_button       = {0};
+    debug_button.p_gpiox           = DEBUG_BUTTON_PORT;
+    debug_button.gpio_conf.pin_num = DEBUG_BUTTUN_PIN_NUM;
 
-    debug_button.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    debug_button.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     debug_button.gpio_conf.it_trigger      = GPIO_IT_NA;
     debug_button.gpio_conf.mode            = GPIO_MODE_INPUT;
     debug_button.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;

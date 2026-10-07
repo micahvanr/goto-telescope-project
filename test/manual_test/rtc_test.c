@@ -1,6 +1,5 @@
 #include "rtc_test.h"
 #include "assert_handler.h"
-#include "common.h"
 #include "debug_tools.h"
 #include "gpio.h"
 #include "printf.h"
@@ -9,7 +8,6 @@
 #include "stm32f4xx.h"
 #include "test_types.h"
 #include "tim.h"
-#include <time.h>
 
 enum {
     RTC_TEST_TIME = 30,
@@ -125,7 +123,7 @@ static void test_rtc_timestamp(void)
 
     gpio_handle timestamp_pin               = {0};
     timestamp_pin.p_gpiox                   = GPIOC;
-    timestamp_pin.gpio_conf.pin_no          = PIN_NUM_13;
+    timestamp_pin.gpio_conf.pin_num         = PIN_NUM_13;
     timestamp_pin.gpio_conf.mode            = GPIO_MODE_INPUT;
     timestamp_pin.gpio_conf.output_type     = GPIO_OPTYPE_OPEN_DRAIN;
     timestamp_pin.gpio_conf.pullup_pulldown = GPIO_PULL_UP;

@@ -3,6 +3,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "i2c_test_arduino/i2c_com_config.h"
+#include <stdbool.h>
 
 static void i2c1_gpio_init(void);
 static void i2c1_init(void);
@@ -75,18 +76,18 @@ static void i2c1_gpio_init(void)
     i2c1_pins.gpio_conf.mode         = GPIO_MODE_ALT_FN;
     i2c1_pins.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
 
-    i2c1_pins.gpio_conf.alt_fn_no       = GPIO_ALT_FN_4;
+    i2c1_pins.gpio_conf.alt_fn_num      = GPIO_ALT_FN_4;
     i2c1_pins.gpio_conf.output_type     = GPIO_OPTYPE_OPEN_DRAIN;
     i2c1_pins.gpio_conf.pullup_pulldown = GPIO_PULL_UP;
 
     // PB6 - SCL
-    i2c1_pins.p_gpiox          = GPIOB;
-    i2c1_pins.gpio_conf.pin_no = PIN_NUM_6;
+    i2c1_pins.p_gpiox           = GPIOB;
+    i2c1_pins.gpio_conf.pin_num = PIN_NUM_6;
     gpio_init(&i2c1_pins);
 
     // PB7 - SDA
-    i2c1_pins.p_gpiox          = GPIOB;
-    i2c1_pins.gpio_conf.pin_no = PIN_NUM_7;
+    i2c1_pins.p_gpiox           = GPIOB;
+    i2c1_pins.gpio_conf.pin_num = PIN_NUM_7;
     gpio_init(&i2c1_pins);
 }
 

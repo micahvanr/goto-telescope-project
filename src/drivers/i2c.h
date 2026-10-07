@@ -15,6 +15,7 @@ Notes: None
 //} Include Statements
 //=========================================//{
 
+#include "common.h"
 #include "stm32f4xx.h"
 #include <stdint.h>
 

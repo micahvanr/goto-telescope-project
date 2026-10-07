@@ -1662,7 +1662,7 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
     mco_gpio_pin.gpio_conf.mode            = GPIO_MODE_ALT_FN;
     mco_gpio_pin.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     mco_gpio_pin.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    mco_gpio_pin.gpio_conf.alt_fn_no       = GPIO_ALT_FN_0;
+    mco_gpio_pin.gpio_conf.alt_fn_num      = GPIO_ALT_FN_0;
 
     mco_gpio_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
     mco_gpio_pin.gpio_conf.output_speed = GPIO_OSPEED_MEDIUM;
@@ -1671,13 +1671,13 @@ static void init_mco_gpio_pin(rcc_mco_sel_e const mco_select)
     {
         case RCC_MCO1_SEL:
             // MCO1 - PA8
-            mco_gpio_pin.p_gpiox          = GPIOA;
-            mco_gpio_pin.gpio_conf.pin_no = PIN_NUM_8;
+            mco_gpio_pin.p_gpiox           = GPIOA;
+            mco_gpio_pin.gpio_conf.pin_num = PIN_NUM_8;
             break;
         case RCC_MCO2_SEL:
             // MCO2 - PC9
-            mco_gpio_pin.p_gpiox          = GPIOC;
-            mco_gpio_pin.gpio_conf.pin_no = PIN_NUM_9;
+            mco_gpio_pin.p_gpiox           = GPIOC;
+            mco_gpio_pin.gpio_conf.pin_num = PIN_NUM_9;
             break;
         default:
             ASSERT(false);

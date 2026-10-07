@@ -4,6 +4,7 @@
 #include "printf.h"
 #include "usart.h"
 #include "usart_test_arduino/usart_com_config.h"
+#include <stdbool.h>
 #include <string.h>
 
 static void usart_gpio_init(void);
@@ -37,19 +38,19 @@ void usart_tests(test_type_e test)
 static void usart_gpio_init(void)
 {
     gpio_handle gpio_usart           = {0};
-    gpio_usart.gpio_conf.alt_fn_no   = GPIO_ALT_FN_7;
+    gpio_usart.gpio_conf.alt_fn_num  = GPIO_ALT_FN_7;
     gpio_usart.gpio_conf.mode        = GPIO_MODE_ALT_FN;
     gpio_usart.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     gpio_usart.gpio_conf.it_trigger  = GPIO_IT_NA;
 
     // PD6 - RX
-    gpio_usart.p_gpiox          = GPIOD;
-    gpio_usart.gpio_conf.pin_no = PIN_NUM_6;
+    gpio_usart.p_gpiox           = GPIOD;
+    gpio_usart.gpio_conf.pin_num = PIN_NUM_6;
     gpio_init(&gpio_usart);
 
     // PD5 - TX
-    gpio_usart.p_gpiox          = GPIOD;
-    gpio_usart.gpio_conf.pin_no = PIN_NUM_5;
+    gpio_usart.p_gpiox           = GPIOD;
+    gpio_usart.gpio_conf.pin_num = PIN_NUM_5;
     gpio_init(&gpio_usart);
 }
 

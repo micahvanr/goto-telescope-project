@@ -15,7 +15,6 @@ Notes: None
 //} Include Statements
 //=========================================//{
 
-#include "common.h"
 #include "exti.h"
 #include "rcc.h"
 #include "stm32f4xx.h"
@@ -153,7 +152,7 @@ typedef enum {
     RTC_EXTI_NUM_ALARM     = EXTI_LINE_NUM_17,
     RTC_EXTI_NUM_WAKE_UP   = EXTI_LINE_NUM_22,
     RTC_EXTI_NUM_TIMESTAMP = EXTI_LINE_NUM_21,
-} rtc_exti_line_no_e;
+} rtc_exti_line_num_e;
 
 // Applications:
 // - RTC ISR ALARxF

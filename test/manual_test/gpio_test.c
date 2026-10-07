@@ -1,6 +1,7 @@
 #include "gpio_test.h"
 #include "assert_handler.h"
 #include "gpio.h"
+#include <stdbool.h>
 
 static void test_gpio_blink_led(void);
 static void test_gpio_read_write(void);
@@ -32,19 +33,19 @@ static void test_gpio_blink_led(void)
 
     // Create settings for PD15 (LED pin)
     gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_no          = PIN_NUM_15;
+    gpio_test.gpio_conf.pin_num         = PIN_NUM_15;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
 
     gpio_init(&gpio_test);
 
     while (1)
     {
-        gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no);
+        gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num);
         for (uint32_t i = 0; i < 500000; i++)
         {
         }
@@ -57,18 +58,18 @@ static void test_gpio_read_write(void)
 
     // Create settings for PA0 (Button pin)
     gpio_test.p_gpiox                   = GPIOA;
-    gpio_test.gpio_conf.pin_no          = PIN_NUM_0;
+    gpio_test.gpio_conf.pin_num         = PIN_NUM_0;
     gpio_test.gpio_conf.mode            = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
 
     // Create settings for PD15 (LED pin)
     gpio_test.p_gpiox               = GPIOD;
-    gpio_test.gpio_conf.pin_no      = PIN_NUM_15;
+    gpio_test.gpio_conf.pin_num     = PIN_NUM_15;
     gpio_test.gpio_conf.mode        = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     gpio_init(&gpio_test);
@@ -79,11 +80,11 @@ static void test_gpio_read_write(void)
         gpio_read_result         = gpio_read(GPIOA, PIN_NUM_0);
         if (gpio_read_result)
         {
-            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, HIGH);
+            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num, HIGH);
         }
         else
         {
-            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, LOW);
+            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num, LOW);
         }
         for (uint32_t i = 0; i < 500000; i++);
     }
@@ -95,18 +96,18 @@ static void test_gpio_it(void)
     gpio_handle gpio_test = {0};
 
     gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_no          = PIN_NUM_13;
+    gpio_test.gpio_conf.pin_num         = PIN_NUM_13;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
 
     // Create settings for PA0 (Button pin)
     gpio_test.p_gpiox              = GPIOA;
-    gpio_test.gpio_conf.pin_no     = PIN_NUM_0;
+    gpio_test.gpio_conf.pin_num    = PIN_NUM_0;
     gpio_test.gpio_conf.mode       = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.it_trigger = GPIO_IT_RT;
     gpio_init(&gpio_test);

@@ -115,12 +115,12 @@ typedef volatile struct {
 
 // Configuration definition (used to initialize and configure gpio port settings)
 typedef struct {
-    pin_number_e pin_no;                    // Default: PIN_NUM_0
+    pin_number_e pin_num;                   // Default: PIN_NUM_0
     gpio_modes_e mode;                      // Default: GPIO_MODE_INPUT
     gpio_output_type_e output_type;         // Default: GPIO_OPTYPE_PUSH_PULL
     gpio_output_speed_e output_speed;       // Default: GPIO_OSPEED_LOW
     gpio_pullup_pulldown_e pullup_pulldown; // Default: GPIO_PUPD_NO
-    gpio_alt_fn_e alt_fn_no;                // Default: GPIO_ALT_FN_0
+    gpio_alt_fn_e alt_fn_num;               // Default: GPIO_ALT_FN_0
     gpio_it_trigger_e it_trigger;           // Default: GPIO_IT_NA
 } gpio_config;
 
@@ -150,9 +150,9 @@ typedef struct {
 void gpio_init(gpio_handle *const p_gpio_handle);
 void gpio_reset(gpio_reg_def const *const p_gpiox);
 
-void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level);
-pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_no);
-void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_no);
+void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_num, pin_logic_level_e pin_level);
+pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_num);
+void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_num);
 
 void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e toggle);
 void gpio_it_handler(exti_lines_e exti_line);
