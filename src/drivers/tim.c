@@ -677,7 +677,7 @@ static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t chec
 static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t duty_cycle);
 static tim_type_e get_tim_type(tim_reg_def const *const p_timx);
 
-static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx);
+static inline uint8_t map_tim_to_num(tim_reg_def const *const p_timx);
 static inline void set_tim_init_status(tim_reg_def const *const p_timx);
 static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx);
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
@@ -1603,7 +1603,7 @@ static void assert_tim_peri_param(tim_reg_def const *const p_timx)
     // clang-format on
 }
 
-static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
+static inline uint8_t map_tim_to_num(tim_reg_def const *const p_timx)
 {
     if (p_timx == TIM1)
     {
@@ -1670,23 +1670,23 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 
 static inline void set_tim_init_status(tim_reg_def const *const p_timx)
 {
-    g_tim_peri_init |= (1 << map_tim_peri_to_num(p_timx));
+    g_tim_peri_init |= (1 << map_tim_to_num(p_timx));
 }
 
 static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx)
 {
-    return 0b1 & (g_tim_peri_init >> map_tim_peri_to_num(p_timx));
+    return 0b1 & (g_tim_peri_init >> map_tim_to_num(p_timx));
 }
 
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
-    g_tim_channel_init[map_tim_peri_to_num(p_timx)] |= (1 << channel);
+    g_tim_channel_init[map_tim_to_num(p_timx)] |= (1 << channel);
 }
 
 static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx,
                                                            tim_channel_sel_e const channel)
 {
-    return 0b1 & (g_tim_channel_init[map_tim_peri_to_num(p_timx)] >> channel);
+    return 0b1 & (g_tim_channel_init[map_tim_to_num(p_timx)] >> channel);
 }
 
 // *End of file*
