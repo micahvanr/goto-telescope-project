@@ -33,6 +33,18 @@ Notes: Additional notes that user might/should want to know (None)
 //                  Public Function Implementation
 //======================================================================================//{
 
+/***************************************************************************
+Function: 
+Overview: 
+Parameters: 
+    var name: brief overview
+        OPTIONS_x (x-x)
+Return: 
+    var type: brief overview
+        OPTIONS_x (x-x)
+Note: None
+***************************************************************************/
+
 //======================================================================================//}
 //                  Private Function Implementation
 //======================================================================================//{
