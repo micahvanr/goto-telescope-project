@@ -154,18 +154,27 @@ typedef enum {
 //=========================================//{
 
 typedef enum {
-    LED_GREEN_PIN  = 12,
-    LED_ORANGE_PIN = 13,
-    LED_RED_PIN    = 14,
-    LED_BLUE_PIN   = 15,
+    LED_GREEN_PIN   = PIN_NUM_12,
+    LED_ORANGE_PIN  = PIN_NUM_13,
+    LED_RED_PIN     = PIN_NUM_14,
+    LED_BLUE_PIN    = PIN_NUM_15,
+    USER_BUTTON_PIN = PIN_NUM_0,
 } hardware_pin_assignment_e;
+
+// Use constants because enums cannot have anything but a number as its value.
+#define LED_GREEN_PORT  GPIOD
+#define LED_ORANGE_PORT GPIOD
+#define LED_RED_PORT    GPIOD
+#define LED_BLUE_PORT   GPIOD
+
+#define USER_BUTTON_PORT GPIOA
 
 // Ports mapped to integers A->0, B->1, C->2... etc.
 typedef enum {
-    LED_GREEN_PORT  = 3u, // Port D
-    LED_ORANGE_PORT = 3u,
-    LED_RED_PORT    = 3u,
-    LED_BLUE_PORT   = 3u,
+    LED_GREEN_PORT_NUM  = 3U, // Port D
+    LED_ORANGE_PORT_NUM = 3U,
+    LED_RED_PORT_NUM    = 3U,
+    LED_BLUE_PORT_NUM   = 3U,
 } hardware_port_assignment_e;
 
 #endif // STM32F4XX_H
