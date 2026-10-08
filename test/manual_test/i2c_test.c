@@ -7,67 +7,8 @@
 
 static void i2c1_gpio_init(void);
 static void i2c1_init(void);
-static void test_i2c_master_transmit(void);
-static void test_i2c_slave_transmit(void);
-static void test_i2c_master_receive(void);
-static void test_i2c_slave_receive(void);
-static void test_i2c_master_transmit_it(void);
-static void test_i2c_slave_transmit_it(void);
-static void test_i2c_master_receive_it(void);
-static void test_i2c_slave_receive_it(void);
 
 i2c_handle g_i2c_handle = {0};
-
-void i2c_tests(test_type_e test)
-{
-    uint8_t test_mode = I2C_TEST_MODE;
-
-    i2c1_gpio_init();
-    i2c1_init();
-
-    // PB6 - SCL
-    // PB7 - SDA
-    if (test == I2C_TEST_REG)
-    {
-        switch (test_mode)
-        {
-            case I2C_TEST_STM_MASTER_TX:
-                test_i2c_master_transmit();
-                break;
-            case I2C_TEST_STM_MASTER_RX:
-                test_i2c_master_receive();
-                break;
-            case I2C_TEST_STM_SLAVE_TX:
-                test_i2c_slave_transmit();
-                break;
-            case I2C_TEST_STM_SLAVE_RX:
-                test_i2c_slave_receive();
-                break;
-        }
-    }
-    else if (test == I2C_TEST_IT)
-    {
-        switch (test_mode)
-        {
-            case I2C_TEST_STM_MASTER_TX:
-                test_i2c_master_transmit_it();
-                break;
-            case I2C_TEST_STM_MASTER_RX:
-                test_i2c_master_receive_it();
-                break;
-            case I2C_TEST_STM_SLAVE_TX:
-                test_i2c_slave_transmit_it();
-                break;
-            case I2C_TEST_STM_SLAVE_RX:
-                test_i2c_slave_receive_it();
-                break;
-        }
-    }
-    else
-    {
-        ASSERT(false);
-    }
-}
 
 static void i2c1_gpio_init(void)
 {
@@ -101,8 +42,11 @@ static void i2c1_init(void)
     i2c_init(&g_i2c_handle);
 }
 
-static void test_i2c_master_transmit(void)
+void test_i2c_master_transmit(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     uint8_t tx_data[] = "STM master transmit";
     uint8_t tx_len    = sizeof(tx_data) - 1;
 
@@ -113,8 +57,11 @@ static void test_i2c_master_transmit(void)
     }
 }
 
-static void test_i2c_slave_transmit(void)
+void test_i2c_slave_transmit(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     uint8_t tx_data[] = "STM slave transmit";
     uint8_t tx_len    = sizeof(tx_data) - 1;
 
@@ -124,8 +71,11 @@ static void test_i2c_slave_transmit(void)
     }
 }
 
-static void test_i2c_master_receive(void)
+void test_i2c_master_receive(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     uint8_t expected_string[] = "Arduino->STM";
     uint8_t rx_len            = sizeof(expected_string) - 1;
     uint8_t rx_data[32];
@@ -137,8 +87,11 @@ static void test_i2c_master_receive(void)
     }
 }
 
-static void test_i2c_slave_receive(void)
+void test_i2c_slave_receive(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     uint8_t expected_string[] = "Arduino->STM";
     uint8_t rx_len            = sizeof(expected_string) - 1;
     uint8_t rx_data[32];
@@ -148,8 +101,11 @@ static void test_i2c_slave_receive(void)
         i2c_slave_receive(I2C1, rx_data, rx_len);
     }
 }
-static void test_i2c_master_transmit_it(void)
+void test_i2c_master_transmit_it(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     static uint8_t tx_data[] = "STM master transmit";
     static uint8_t tx_len    = sizeof(tx_data) - 1;
 
@@ -159,8 +115,11 @@ static void test_i2c_master_transmit_it(void)
         for (uint32_t i = 0; i < 5000; i++);
     }
 }
-static void test_i2c_slave_transmit_it(void)
+void test_i2c_slave_transmit_it(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     static uint8_t tx_data[] = "STM slave transmit";
     static uint8_t tx_len    = sizeof(tx_data) - 1;
 
@@ -170,8 +129,11 @@ static void test_i2c_slave_transmit_it(void)
     }
 }
 
-static void test_i2c_master_receive_it(void)
+void test_i2c_master_receive_it(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     static uint8_t expected_string[] = "Arduino->STM";
     static uint8_t rx_len            = sizeof(expected_string) - 1;
     static uint8_t rx_data[32];
@@ -183,8 +145,11 @@ static void test_i2c_master_receive_it(void)
     }
 }
 
-static void test_i2c_slave_receive_it(void)
+void test_i2c_slave_receive_it(void)
 {
+    i2c1_gpio_init();
+    i2c1_init();
+
     static uint8_t expected_string[] = "Arduino->STM";
     static uint8_t rx_len            = sizeof(expected_string) - 1;
     static uint8_t rx_data[32];

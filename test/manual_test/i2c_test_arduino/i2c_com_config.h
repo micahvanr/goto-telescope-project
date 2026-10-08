@@ -1,5 +1,5 @@
-#ifndef USART_COM_CONFIG_H
-#define USART_COM_CONFIG_H
+#ifndef I2C_COM_CONFIG_H
+#define I2C_COM_CONFIG_H
 
 typedef enum {
     I2C_TEST_STM_MASTER_TX,

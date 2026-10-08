@@ -1,6 +1,4 @@
 #include "timer_test.h"
-#include "assert_handler.h"
-#include "common.h"
 #include "debug_tools.h"
 #include "gpio.h"
 #include "printf.h"
@@ -8,14 +6,6 @@
 #include "stm32f4xx.h"
 #include "tim.h"
 #include <stdint.h>
-
-static void test_timer_auto(void);
-static void test_timer_manual(void);
-static void test_timer_freq(void);
-static void test_delay(void);
-static void test_oc_pwm(void);
-static void test_ic_it(void);
-static void test_it(void);
 
 static void timer8_init(void);
 static void timer1_init(void);
@@ -26,42 +16,6 @@ uint32_t count_to_period(uint32_t count);
 
 tim_handle g_tim1_handle = {0};
 tim_handle g_tim8_handle = {0};
-
-void timer_tests(test_type_e test)
-{
-    timer1_init();
-    timer8_init();
-
-    switch (test)
-    {
-        case TIMER_TEST_AUTO:
-            test_timer_auto();
-            break;
-        case TIMER_TEST_MANUAL:
-            test_timer_manual();
-            break;
-        case TIMER_TEST_FREQ:
-            test_timer_freq();
-            break;
-        case TIMER_TEST_DELAY:
-            test_delay();
-            break;
-        case TIMER_TEST_OC_PWM:
-            test_oc_pwm();
-            break;
-        case TIMER_TEST_IC_IT:
-            test_ic_it();
-            break;
-        case TIMER_TEST_BASIC_IT:
-            test_it();
-            break;
-
-        default:
-            ASSERT(false);
-    }
-
-    UNUSED(test);
-}
 
 static void timer8_init(void)
 {
@@ -108,8 +62,10 @@ static void timer_ic_gpio_pin_init(void)
     gpio_init(&tim2_ch3_pin);
 }
 
-static void test_timer_auto(void)
+void test_timer_auto(void)
 {
+    timer1_init();
+
     g_tim1_handle.timing_conf.time = 100;
     g_tim1_handle.timing_conf.unit = TIM_UNIT_MS;
 
@@ -124,8 +80,10 @@ static void test_timer_auto(void)
         toggle_debug_pin();
     }
 }
-static void test_timer_manual(void)
+
+void test_timer_manual(void)
 {
+    timer1_init();
 
     g_tim1_handle.timing_conf.auto_reload = 10000;
     g_tim1_handle.timing_conf.prescaler   = 1600;
@@ -141,8 +99,10 @@ static void test_timer_manual(void)
     }
 }
 
-static void test_timer_freq(void)
+void test_timer_freq(void)
 {
+    timer1_init();
+
     g_tim1_handle.timing_conf.time = 1;
     g_tim1_handle.timing_conf.unit = TIM_UNIT_KHZ;
 
@@ -157,7 +117,7 @@ static void test_timer_freq(void)
     }
 }
 
-static void test_delay(void)
+void test_delay(void)
 {
     while (1)
     {
@@ -170,8 +130,10 @@ static void test_delay(void)
     }
 }
 
-static void test_oc_pwm(void)
+void test_oc_pwm(void)
 {
+    timer1_init();
+
     timer_oc_gpio_pin_init();
 
     g_tim1_handle.timing_conf.auto_reload = 10000;
@@ -196,8 +158,10 @@ static void test_oc_pwm(void)
     }
 }
 
-static void test_ic_it(void)
+void test_ic_it(void)
 {
+    timer8_init();
+
     timer_ic_gpio_pin_init();
 
     g_tim8_handle.timing_conf.auto_reload = 10000;
@@ -216,8 +180,10 @@ static void test_ic_it(void)
     while (1);
 }
 
-static void test_it(void)
+void test_it(void)
 {
+    timer1_init();
+
     g_tim1_handle.timing_conf.time = 100;
     g_tim1_handle.timing_conf.unit = TIM_UNIT_MS;
     tim_init(&g_tim1_handle);

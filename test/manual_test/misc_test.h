@@ -2,9 +2,10 @@
 #define MISC_TEST_H
 
 #include "printf.h"
-#include "test_types.h"
 
-void misc_tests(test_type_e test);
+void test_assert(void);
+void test_get_clock(void);
+void test_printf(void);
 
 #endif
 

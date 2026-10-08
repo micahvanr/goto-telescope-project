@@ -1,9 +1,9 @@
 #ifndef GPIO_TEST_H
 #define GPIO_TEST_H
 
-#include "test_types.h"
-
-void gpio_tests(test_type_e test);
+void test_gpio_blink_led(void);
+void test_gpio_read_write(void);
+void test_gpio_it(void);
 
 #endif
 

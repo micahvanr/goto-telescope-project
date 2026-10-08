@@ -9,31 +9,8 @@
 
 static void usart_gpio_init(void);
 static void usart2_init(void);
-static void test_usart_txrx(void);
-static void test_usart_txrx_it(void);
 
 usart_handle g_usart_test_handle = {0};
-
-void usart_tests(test_type_e test)
-{
-    usart_gpio_init();
-    usart2_init();
-
-    switch (test)
-    {
-        // PD6 - RX
-        // PD5 - TX
-        case USART_TEST_RXTX:
-            test_usart_txrx();
-            break;
-        case USART_TEST_RXTX_IT:
-            test_usart_txrx_it();
-            break;
-        default:
-            ASSERT(false);
-    }
-    ASSERT(false);
-}
 
 static void usart_gpio_init(void)
 {
@@ -66,8 +43,11 @@ static void usart2_init(void)
     usart_init(&g_usart_test_handle);
 }
 
-static void test_usart_txrx(void)
+void test_usart_txrx(void)
 {
+    usart_gpio_init();
+    usart2_init();
+
     uint8_t tx_data[] = "STM->Arduino";
     uint8_t tx_length = sizeof(tx_data) - 1;
 
@@ -94,8 +74,11 @@ static void test_usart_txrx(void)
     }
 }
 
-static void test_usart_txrx_it(void)
+void test_usart_txrx_it(void)
 {
+    usart_gpio_init();
+    usart2_init();
+
     static uint8_t tx_data[] = "STM->Arduino";
     static uint8_t tx_length = sizeof(tx_data) - 1;
 

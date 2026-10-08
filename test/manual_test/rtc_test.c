@@ -1,12 +1,10 @@
 #include "rtc_test.h"
-#include "assert_handler.h"
 #include "debug_tools.h"
 #include "gpio.h"
 #include "printf.h"
 #include "rcc.h"
 #include "rtc.h"
 #include "stm32f4xx.h"
-#include "test_types.h"
 #include "tim.h"
 
 enum {
@@ -17,32 +15,6 @@ rtc_handler g_rtc_handle = {0};
 
 static void standard_rtc_init(void);
 static void standard_output_rtc_data(void);
-
-static void test_rtc_base(void);
-static void test_rtc_alarm(void);
-static void test_rtc_timestamp(void);
-static void test_rtc_wakeup(void);
-
-void rtc_tests(test_type_e test)
-{
-    switch (test)
-    {
-        case RTC_TEST_BASE:
-            test_rtc_base();
-            break;
-        case RTC_TEST_ALARM:
-            test_rtc_alarm();
-            break;
-        case RTC_TEST_TIMESTAMP:
-            test_rtc_timestamp();
-            break;
-        case RTC_TEST_WAKEUP:
-            test_rtc_wakeup();
-            break;
-        default:
-            ASSERT(false);
-    }
-}
 
 static void standard_rtc_init(void)
 {
@@ -80,7 +52,7 @@ static void standard_output_rtc_data(void)
     printf_("Date: %d/%d/%d\n", g_rtc_handle.date_data.month, g_rtc_handle.date_data.date, g_rtc_handle.date_data.year);
 }
 
-static void test_rtc_base(void)
+void test_rtc_base(void)
 {
 
     while (1)
@@ -90,7 +62,7 @@ static void test_rtc_base(void)
     }
 }
 
-static void test_rtc_alarm(void)
+void test_rtc_alarm(void)
 {
     standard_rtc_init();
 
@@ -117,7 +89,7 @@ static void test_rtc_alarm(void)
     }
 }
 
-static void test_rtc_timestamp(void)
+void test_rtc_timestamp(void)
 {
     standard_rtc_init();
 
@@ -148,7 +120,7 @@ static void test_rtc_timestamp(void)
     }
 }
 
-static void test_rtc_wakeup(void)
+void test_rtc_wakeup(void)
 {
     standard_rtc_init();
 

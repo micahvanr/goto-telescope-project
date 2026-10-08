@@ -1,33 +1,8 @@
 #include "gpio_test.h"
-#include "assert_handler.h"
 #include "gpio.h"
 #include <stdbool.h>
 
-static void test_gpio_blink_led(void);
-static void test_gpio_read_write(void);
-static void test_gpio_it(void);
-
-void gpio_tests(test_type_e test)
-{
-    switch (test)
-    {
-        case GPIO_TEST_BLINK_LED:
-            test_gpio_blink_led();
-            break;
-        case GPIO_TEST_READ_WRITE:
-            test_gpio_read_write();
-            break;
-        case GPIO_TEST_IT:
-            test_gpio_it();
-            break;
-        default:
-            ASSERT(false);
-    }
-
-    while (1);
-}
-
-static void test_gpio_blink_led(void)
+void test_gpio_blink_led(void)
 {
     gpio_handle gpio_test = {0};
 
@@ -52,7 +27,7 @@ static void test_gpio_blink_led(void)
     }
 }
 
-static void test_gpio_read_write(void)
+void test_gpio_read_write(void)
 {
     gpio_handle gpio_test = {0};
 
@@ -90,7 +65,7 @@ static void test_gpio_read_write(void)
     }
 }
 
-static void test_gpio_it(void)
+void test_gpio_it(void)
 {
     // Create settings for PD13 (LED)
     gpio_handle gpio_test = {0};
