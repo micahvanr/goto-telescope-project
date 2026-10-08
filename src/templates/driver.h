@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: module.h
-Overview: Description of the module's purpose.
-Features:
-    List of features
-Notes: Additional notes that user might/should want to know (None)
-******************************************************************************************/
+//======================================================================================//{
+//  File: driver.c
+//  Overview: Description of the driver's purpose.
+//  Features:
+//      - List of features (should describe important functions)
+//  Notes: Additional notes that user might/should want to know. (None)
+//======================================================================================//}
 
 #ifndef DRIVER_H
 #define DRIVER_H

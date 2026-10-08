@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: module.c
-Overview: Description of the module's purpose.
-Features:
-    List of features
-Notes: Additional notes that user might/should want to know (None)
-******************************************************************************************/
+//======================================================================================//{
+//  File: driver.c
+//  Overview: Description of the driver's purpose.
+//  Features:
+//      - List of features (should describe important functions)
+//  Notes: Additional notes that user might/should want to know. (None)
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -33,17 +33,17 @@ Notes: Additional notes that user might/should want to know (None)
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: 
-Overview: 
-Parameters: 
-    var name: brief overview
-        OPTIONS_x (x-x)
-Return: 
-    var type: brief overview
-        OPTIONS_x (x-x)
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: foo
+//  Overview: Brief description of function
+//  Parameters: 
+//      var name: brief overview
+//          OPTIONS_x (x-x)
+//  Return: 
+//      var type: brief overview
+//          OPTIONS_x (x-x)
+//  Note: None
+//============================================================================//}
 
 //======================================================================================//}
 //                  Private Function Implementation
