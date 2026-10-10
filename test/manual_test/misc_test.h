@@ -1,7 +1,22 @@
+//======================================================================================//{
+//  File: misc_test.c
+//  Overview: Test miscellaneous functions that don't need their own seperate test file.
+//  Tests:
+//      - Assertion triggering
+//      - Get different bus clocks
+//      - Printf output
+//  Notes: None
+//======================================================================================//}
+
 #ifndef MISC_TEST_H
 #define MISC_TEST_H
 
-#include "printf.h"
+//} Includes
+//=========================================//{
+
+//======================================================================================//}
+//                  Public Test Function Prototypes
+//======================================================================================//{
 
 void test_assert(void);
 void test_get_clock(void);
