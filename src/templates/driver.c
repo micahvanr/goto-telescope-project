@@ -36,10 +36,10 @@
 //============================================================================//{
 //  Function: foo
 //  Overview: Brief description of function
-//  Parameters: 
+//  Parameters:
 //      var name: brief overview
 //          OPTIONS_x (x-x)
-//  Return: 
+//  Return:
 //      var type: brief overview
 //          OPTIONS_x (x-x)
 //  Note: None

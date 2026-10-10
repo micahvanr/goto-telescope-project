@@ -29,8 +29,8 @@
 //  Function: foo
 //  Overview: Brief description of function.
 //  Test goals:
-//      - List of test goals.
-//  Setup: 
+//      - List of test goals. (None)
+//  Setup:
 //      - List of items that need to be set up.
 //  Expectations: What should be expected from the test and how to test it.
 //  Note: None
