@@ -66,7 +66,7 @@ void test_gpio_blink_led(void)
 //          - Input mode
 //      - Get GPIO pin function
 //      - Set GPIO pin function
-//  Setup :
+//  Setup:
 //      None
 //  Expectations: When the button is pressed, the blue led should turn on. Otherwise
 //      it should be off.
@@ -113,11 +113,11 @@ void test_gpio_read_write(void)
 //============================================================================//{
 //  Function: test_gpio_it
 //  Overview: Toggle led when button is pressed using interrupts.
-//  Test goals: 
+//  Test goals:
 //      - Interrupt functionality
 //          - Interrupt handler
 //          - Interrupt trigger
-//  Setup : 
+//  Setup:
 //      None
 //  Expectations: The led should be toggled when the user button is pressed.
 //  Note: None
@@ -127,8 +127,8 @@ void test_gpio_it(void)
     // Create settings for PD13 (LED)
     gpio_handle gpio_test = {0};
 
-    gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_num         = PIN_NUM_13;
+    gpio_test.p_gpiox                   = LED_BLUE_PORT;
+    gpio_test.gpio_conf.pin_num         = (pin_number_e) LED_BLUE_PIN;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
@@ -138,8 +138,8 @@ void test_gpio_it(void)
     gpio_init(&gpio_test);
 
     // Create settings for PA0 (Button pin)
-    gpio_test.p_gpiox              = GPIOA;
-    gpio_test.gpio_conf.pin_num    = PIN_NUM_0;
+    gpio_test.p_gpiox              = USER_BUTTON_PORT;
+    gpio_test.gpio_conf.pin_num    = (pin_number_e) USER_BUTTON_PIN;
     gpio_test.gpio_conf.mode       = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.it_trigger = GPIO_IT_RT;
     gpio_init(&gpio_test);
