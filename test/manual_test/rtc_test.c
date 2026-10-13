@@ -1,3 +1,17 @@
+//======================================================================================//{
+//  File: rtc_test.c
+//  Overview: Tests some of the RTC functionality.
+//  Tests:
+//      - Base time keeping
+//      - Alarms
+//      - Timestamps
+//      - Wakeup
+//  Notes: None
+//======================================================================================//}
+
+//} Includes
+//=========================================//{
+
 #include "rtc_test.h"
 #include "debug_tools.h"
 #include "gpio.h"
@@ -7,64 +21,72 @@
 #include "stm32f4xx.h"
 #include "tim.h"
 
-enum {
+//======================================================================================//}
+//                  Private Constants
+//======================================================================================//{
+
+typedef enum {
     RTC_TEST_TIME = 30,
 } rtc_test_e;
 
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
+
 rtc_handler g_rtc_handle = {0};
 
-static void standard_rtc_init(void);
-static void standard_output_rtc_data(void);
+//======================================================================================//}
+//                  Private Function Prototypes
+//======================================================================================//{
 
-static void standard_rtc_init(void)
-{
-    g_rtc_handle.rtc_conf.rtc_sel = RCC_RTC_CLK_SRC_LSI;
+static void rtc_setup(void);
+static void output_rtc_data(void);
 
-    g_rtc_handle.date_data.date    = 1;
-    g_rtc_handle.date_data.month   = 1;
-    g_rtc_handle.date_data.year    = 26;
-    g_rtc_handle.date_data.weekday = RTC_WEEKDAY_THURSDAY;
+//======================================================================================//}
+//                  Public Test Function Implementation
+//======================================================================================//{
 
-    g_rtc_handle.time_data.time_format = RTC_TIME_FORMAT_12HR;
-    g_rtc_handle.time_data.time_am_pm  = RTC_TIME_PM;
-    g_rtc_handle.time_data.hours       = 11;
-    g_rtc_handle.time_data.minutes     = 59;
-    g_rtc_handle.time_data.seconds     = RTC_TEST_TIME;
-    rtc_init(&g_rtc_handle);
-}
-
-static void standard_output_rtc_data(void)
-{
-    uint8_t am_pm[]        = "AM";
-    g_rtc_handle.time_data = rtc_get_time_data();
-    g_rtc_handle.date_data = rtc_get_date_data();
-
-    if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM)
-    {
-        am_pm[0] = 'A';
-    }
-    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM)
-    {
-        am_pm[0] = 'P';
-    }
-    printf_("Time: %d:%d:%d %s\n", g_rtc_handle.time_data.hours, g_rtc_handle.time_data.minutes,
-            g_rtc_handle.time_data.seconds, am_pm);
-    printf_("Date: %d/%d/%d\n", g_rtc_handle.date_data.month, g_rtc_handle.date_data.date, g_rtc_handle.date_data.year);
-}
-
+//============================================================================//{
+//  Function: test_rtc_base
+//  Overview: Set RTC and output its data every second.
+//  Test goals:
+//      - RTC initialization
+//      - RTC counting
+//  Setup:
+//      - PA2 to logic analyer for printf.
+//      - PA3 to logic analyer for debug pin.
+//  Expectations: Use logic analyer to view printf. Every second the RTC data
+//      should be output.
+//  Note: Time between each output is not important. What is important is that the
+//      time is incrementing properly.
+//============================================================================//}
 void test_rtc_base(void)
 {
-
+    rtc_setup();
     while (1)
     {
         tim_delay(1, TIM_UNIT_S);
-        standard_output_rtc_data();
+        output_rtc_data();
     }
 }
 
+//============================================================================//{
+//  Function: test_rtc_alarm
+//  Overview: Set RTC and an alarm 3 seconds away.
+//  Test goals:
+//      - RTC alarm trigger and data
+//      - RTC interrupts with alarm
+//  Setup:
+//      - PA2 to logic analyer for printf.
+//      - PA3 to logic analyer for debug pin.
+//  Expectations: Use logic analyer to view printf. Output time information every
+//      second. Shortly after the 3rd or 4th time info output, there should be a
+//      statement saying "Alarm triggered".
+//  Note: None
+//============================================================================//}
 void test_rtc_alarm(void)
 {
-    standard_rtc_init();
+    rtc_setup();
 
     rtc_alarm_config alarm_conf = {0};
 
@@ -85,13 +107,28 @@ void test_rtc_alarm(void)
     while (1)
     {
         tim_delay(1, TIM_UNIT_S);
-        standard_output_rtc_data();
+        output_rtc_data();
     }
 }
 
+//============================================================================//{
+//  Function: test_rtc_timestamp
+//  Overview: Set RTC timestamp and trigger it with pin connected to button.
+//  Test goals:
+//      - RTC timestamp triggering and data
+//      - RTC interrupts with timestamps
+//  Setup:
+//      - PA2 to logic analyer for printf.
+//      - PA3 to logic analyer for debug pin.
+//      - Connect PC13 to push button switch. Connect other end of button to ground.
+//  Expectations: Use logic analyzer to view printf and optionally to PC13/button.
+//      When button is not pressed, PC13 line should be high. When button is pressed,
+//      PC13 line should be pulled low and the timestamp data should be recorded and output.
+//  Note: None
+//============================================================================//}
 void test_rtc_timestamp(void)
 {
-    standard_rtc_init();
+    rtc_setup();
 
     gpio_handle timestamp_pin               = {0};
     timestamp_pin.p_gpiox                   = GPIOC;
@@ -111,7 +148,7 @@ void test_rtc_timestamp(void)
     while (1)
     {
         tim_delay(1, TIM_UNIT_S);
-        standard_output_rtc_data();
+        output_rtc_data();
         if (rtc_timestamp_read_status() == RTC_TIMESTAMP_STATUS_TRIGGERED)
         {
             rtc_timestamp_clear_status();
@@ -120,9 +157,23 @@ void test_rtc_timestamp(void)
     }
 }
 
+//============================================================================//{
+//  Function: test_rtc_wakeup
+//  Overview: Set up RTC wakeup to wakeup every second.
+//  Test goals: 
+//      - RTC wakeup triggering
+//      - Wakeup triggers very closely to every second
+//      - RTC time output is accurate
+//      - RTC interrupts with wakeup
+//  Setup: 
+//      - PA2 to logic analyer for printf.
+//      - PA3 to logic analyer for debug pin.
+//  Expectations: Use logic analyer to view printf. 
+//  Note: Unlike other RTC tests here time accuracy between triggers is very important. 
+//============================================================================//}
 void test_rtc_wakeup(void)
 {
-    standard_rtc_init();
+    rtc_setup();
 
     rtc_wakeup_config wakeup_conf = {0};
     wakeup_conf.clk_sel           = RTC_WAKEUP_SPRE_CLK;
@@ -133,11 +184,53 @@ void test_rtc_wakeup(void)
 
     while (1)
     {
-        // standard_output_rtc_data();
     }
 }
 
-// Interrupts
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
+
+static void rtc_setup(void)
+{
+    g_rtc_handle.rtc_conf.rtc_sel = RCC_RTC_CLK_SRC_LSI;
+
+    g_rtc_handle.date_data.date    = 1;
+    g_rtc_handle.date_data.month   = 1;
+    g_rtc_handle.date_data.year    = 26;
+    g_rtc_handle.date_data.weekday = RTC_WEEKDAY_THURSDAY;
+
+    g_rtc_handle.time_data.time_format = RTC_TIME_FORMAT_12HR;
+    g_rtc_handle.time_data.time_am_pm  = RTC_TIME_PM;
+    g_rtc_handle.time_data.hours       = 11;
+    g_rtc_handle.time_data.minutes     = 59;
+    g_rtc_handle.time_data.seconds     = RTC_TEST_TIME;
+    rtc_init(&g_rtc_handle);
+}
+
+static void output_rtc_data(void)
+{
+    uint8_t am_pm[]        = "AM";
+    g_rtc_handle.time_data = rtc_get_time_data();
+    g_rtc_handle.date_data = rtc_get_date_data();
+
+    if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM)
+    {
+        am_pm[0] = 'A';
+    }
+    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM)
+    {
+        am_pm[0] = 'P';
+    }
+    printf_("Time: %d:%d:%d %s\n", g_rtc_handle.time_data.hours, g_rtc_handle.time_data.minutes,
+            g_rtc_handle.time_data.seconds, am_pm);
+    printf_("Date: %d/%d/%d\n", g_rtc_handle.date_data.month, g_rtc_handle.date_data.date, g_rtc_handle.date_data.year);
+}
+
+//======================================================================================//}
+//                  ISR Handlers
+//======================================================================================//{
+
 void TAMP_STAMP_IRQHandler(void)
 {
     rtc_time_data ts_time_data = {0};
@@ -152,7 +245,7 @@ void RTC_WKUP_IRQHandler(void)
 {
     toggle_debug_pin();
 
-    standard_output_rtc_data();
+    output_rtc_data();
 
     rtc_it_handler();
 }

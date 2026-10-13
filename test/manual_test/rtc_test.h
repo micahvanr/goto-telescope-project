@@ -1,3 +1,14 @@
+//======================================================================================//{
+//  File: rtc_test.c
+//  Overview: Tests some of the RTC functionality.
+//  Tests:
+//      - Base time keeping
+//      - Alarms
+//      - Timestamps
+//      - Wakeup
+//  Notes: None
+//======================================================================================//}
+
 #ifndef RTC_TEST_H
 #define RTC_TEST_H
 
