@@ -1,5 +1,26 @@
+//======================================================================================//{
+//  File: timer_test.h
+//  Overview: Tests some of the timer's functionality.
+//  Tests:
+//      - Auto setup
+//      - Manual setup
+//      - Frequency setup
+//      - Delay function
+//      - Output compare PWM
+//      - Input capture time difference (using interrupts)
+//      - Basic interrupt
+//  Notes:
+//======================================================================================//}
+
 #ifndef TIMER_TEST_H
 #define TIMER_TEST_H
+
+//} Includes
+//=========================================//{
+
+//======================================================================================//}
+//                  Public Test Function Prototypes
+//======================================================================================//{
 
 void test_timer_auto(void);
 void test_timer_manual(void);
