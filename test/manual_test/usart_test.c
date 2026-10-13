@@ -1,52 +1,75 @@
+//======================================================================================//{
+//  File: usart_test.c
+//  Overview: Test some of the USART functionality.
+//  Tests:
+//      - Transmit/receive (w/ interrupts)
+//  Notes: 
+//======================================================================================//}
+
+//} Includes
+//=========================================//{
+
 #include "usart_test.h"
 #include "assert_handler.h"
 #include "gpio.h"
 #include "printf.h"
+#include "stm32f4xx.h"
 #include "usart.h"
 #include "usart_test_arduino/usart_com_config.h"
 #include <stdbool.h>
 #include <string.h>
 
-static void usart_gpio_init(void);
-static void usart2_init(void);
+//======================================================================================//}
+//                  Private Constants
+//======================================================================================//{
+
+// WARNING: May need to change ISR and SCL/SDA pins depending on I2C port used.
+#define TEST_USART_PORT      USART2
+#define TEST_USART_GPIO_PORT GPIOD
+
+typedef enum {
+    TEST_USART_TX_PIN = PIN_NUM_5,
+    TEST_USART_RX_PIN = PIN_NUM_6,
+} test_usart_pins_e;
+
+//======================================================================================//}
+//                  Global Variables
+//======================================================================================//{
 
 usart_handle g_usart_test_handle = {0};
 
-static void usart_gpio_init(void)
-{
-    gpio_handle gpio_usart           = {0};
-    gpio_usart.gpio_conf.alt_fn_num  = GPIO_ALT_FN_7;
-    gpio_usart.gpio_conf.mode        = GPIO_MODE_ALT_FN;
-    gpio_usart.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
-    gpio_usart.gpio_conf.it_trigger  = GPIO_IT_NA;
+//======================================================================================//}
+//                  Private Function Prototypes
+//======================================================================================//{
 
-    // PD6 - RX
-    gpio_usart.p_gpiox           = GPIOD;
-    gpio_usart.gpio_conf.pin_num = PIN_NUM_6;
-    gpio_init(&gpio_usart);
+static void setup_usart_pin(void);
+static void setup_usart_port(void);
 
-    // PD5 - TX
-    gpio_usart.p_gpiox           = GPIOD;
-    gpio_usart.gpio_conf.pin_num = PIN_NUM_5;
-    gpio_init(&gpio_usart);
-}
+//======================================================================================//}
+//                  Public Test Function Implementation
+//======================================================================================//{
 
-static void usart2_init(void)
-{
-    g_usart_test_handle.p_usartx                     = USART2;
-    g_usart_test_handle.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
-    g_usart_test_handle.usart_conf.baudrate          = (usart_baudrate_e) USART_COM_SPEED;
-    g_usart_test_handle.usart_conf.parity_control    = USART_PARITY_CONTROL_DISABLE;
-    g_usart_test_handle.usart_conf.parity_select     = USART_PARITY_SEL_EVEN;
-    g_usart_test_handle.usart_conf.stop_bits         = USART_STOP_BITS_1;
-    g_usart_test_handle.usart_conf.word_length       = USART_WORD_LENGTH_8_DATA_BITS;
-    usart_init(&g_usart_test_handle);
-}
-
+//============================================================================//{
+//  Function: test_usart_txrx
+//  Overview: Initialize USART and transmit then receive data.
+//  Test goals: 
+//      - USART initialization
+//      - USART transmit
+//      - USART receive
+//  Setup: 
+//      - PD5 (TX) -> Arduino D0 (RX)
+//      - PD6 (RX) -> Arduino D1 (TX)
+//      - PD5 -> logic analyzer: read TX info
+//      - PD6 -> logic analyzer: read RX info
+//  Expectations: STM board should send length and data info, then Arduino should send back
+//      length and data info. Data will be compared to what is expect and assert will be triggered
+//      if incorrect.
+//  Note: None
+//============================================================================//}
 void test_usart_txrx(void)
 {
-    usart_gpio_init();
-    usart2_init();
+    setup_usart_pin();
+    setup_usart_port();
 
     uint8_t tx_data[] = "STM->Arduino";
     uint8_t tx_length = sizeof(tx_data) - 1;
@@ -74,10 +97,28 @@ void test_usart_txrx(void)
     }
 }
 
+//============================================================================//{
+//  Function: test_usart_txrx_it
+//  Overview: Initialize USART and transmit then receive data with interrupts.
+//  Test goals: 
+//      - USART initialization
+//      - USART transmit
+//      - USART receive
+//      - USART interrupts
+//  Setup: 
+//      - PD5 (TX) -> Arduino D0 (RX)
+//      - PD6 (RX) -> Arduino D1 (TX)
+//      - PD5 -> logic analyzer: read TX info
+//      - PD6 -> logic analyzer: read RX info
+//  Expectations: STM board should send length and data info, then Arduino should send back
+//      length and data info. Data will be compared to what is expect and assert will be triggered
+//      if incorrect.
+//  Note: None
+//============================================================================//}
 void test_usart_txrx_it(void)
 {
-    usart_gpio_init();
-    usart2_init();
+    setup_usart_pin();
+    setup_usart_port();
 
     static uint8_t tx_data[] = "STM->Arduino";
     static uint8_t tx_length = sizeof(tx_data) - 1;
@@ -104,7 +145,46 @@ void test_usart_txrx_it(void)
         for (uint32_t i = 0; i < 10000; i++);
     }
 }
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
 
+static void setup_usart_pin(void)
+{
+    gpio_handle gpio_usart           = {0};
+    gpio_usart.gpio_conf.alt_fn_num  = GPIO_ALT_FN_7;
+    gpio_usart.gpio_conf.mode        = GPIO_MODE_ALT_FN;
+    gpio_usart.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
+    gpio_usart.gpio_conf.it_trigger  = GPIO_IT_NA;
+
+    // PD6 - RX
+    gpio_usart.p_gpiox           = TEST_USART_GPIO_PORT;
+    gpio_usart.gpio_conf.pin_num = (pin_number_e) TEST_USART_RX_PIN;
+    gpio_init(&gpio_usart);
+
+    // PD5 - TX
+    gpio_usart.p_gpiox           = TEST_USART_GPIO_PORT;
+    gpio_usart.gpio_conf.pin_num = (pin_number_e) TEST_USART_TX_PIN;
+    gpio_init(&gpio_usart);
+}
+
+static void setup_usart_port(void)
+{
+    g_usart_test_handle.p_usartx                     = TEST_USART_PORT;
+    g_usart_test_handle.usart_conf.oversampling_mode = USART_OVERSAMPLING_16;
+    g_usart_test_handle.usart_conf.baudrate          = (usart_baudrate_e) USART_COM_SPEED;
+    g_usart_test_handle.usart_conf.parity_control    = USART_PARITY_CONTROL_DISABLE;
+    g_usart_test_handle.usart_conf.parity_select     = USART_PARITY_SEL_EVEN;
+    g_usart_test_handle.usart_conf.stop_bits         = USART_STOP_BITS_1;
+    g_usart_test_handle.usart_conf.word_length       = USART_WORD_LENGTH_8_DATA_BITS;
+    usart_init(&g_usart_test_handle);
+}
+
+//======================================================================================//}
+//                  ISR Handlers
+//======================================================================================//{
+
+// WARNING: May need to change ISR depending on USART port used.
 void USART2_IRQHandler(void)
 {
     usart_it_handler(&g_usart_test_handle);
