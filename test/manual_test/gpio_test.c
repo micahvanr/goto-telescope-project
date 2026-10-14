@@ -22,7 +22,7 @@
 
 //============================================================================//{
 //  Function: test_gpio_blink_led
-//  Overview: Blink led by toggling it periodically.
+//  Overview: Test GPIO toggle functionality by viewing led.
 //  Test goals:
 //      - GPIO initialization:
 //          - Push pull
@@ -60,7 +60,7 @@ void test_gpio_blink_led(void)
 
 //============================================================================//{
 //  Function: test_gpio_read_write
-//  Overview: Read button pin and turn on led if it is pressed, otherwise turn it off.
+//  Overview: Test GPIO read/write functionality by pressing button and viewing led.
 //  Test goals:
 //      - GPIO initialization
 //          - Input mode
@@ -112,7 +112,7 @@ void test_gpio_read_write(void)
 
 //============================================================================//{
 //  Function: test_gpio_it
-//  Overview: Toggle led when button is pressed using interrupts.
+//  Overview: Test GPIO interrupt by pressing button and viewing led.
 //  Test goals:
 //      - Interrupt functionality
 //          - Interrupt handler

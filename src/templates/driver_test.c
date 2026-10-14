@@ -27,12 +27,12 @@
 
 //============================================================================//{
 //  Function: foo
-//  Overview: Brief description of function.
+//  Overview: Brief description what is being tested and how/with what.
 //  Test goals:
-//      - List of test goals. (None)
+//      - Detailed list of test goals.
 //  Setup:
-//      - List of items that need to be set up.
-//  Expectations: What should be expected from the test and how to test it.
+//      - Detailed list of items that need to be set up and how they should be. (None)
+//  Expectations: What should be expected from the test.
 //  Note: None
 //============================================================================//}
 

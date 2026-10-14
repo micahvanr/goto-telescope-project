@@ -51,7 +51,7 @@ static void setup_usart_port(void);
 
 //============================================================================//{
 //  Function: test_usart_txrx
-//  Overview: Initialize USART and transmit then receive data.
+//  Overview: Test timer transmit and receive with Arduino and logic analyzer.
 //  Test goals: 
 //      - USART initialization
 //      - USART transmit
@@ -99,15 +99,15 @@ void test_usart_txrx(void)
 
 //============================================================================//{
 //  Function: test_usart_txrx_it
-//  Overview: Initialize USART and transmit then receive data with interrupts.
+//  Overview: Test timer transmit and receive interrupts with Arduino and logic analyzer.
 //  Test goals: 
 //      - USART initialization
 //      - USART transmit
 //      - USART receive
 //      - USART interrupts
 //  Setup: 
-//      - PD5 (TX) -> Arduino D0 (RX)
-//      - PD6 (RX) -> Arduino D1 (TX)
+//      - PD5 (TX) -> Arduino D0 (RX) via logic level converter
+//      - PD6 (RX) -> Arduino D1 (TX) via logic level converter
 //      - PD5 -> logic analyzer: read TX info
 //      - PD6 -> logic analyzer: read RX info
 //  Expectations: STM board should send length and data info, then Arduino should send back

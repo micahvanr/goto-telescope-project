@@ -22,7 +22,7 @@
 
 //============================================================================//{
 //  Function: test_assert
-//  Overview: Ensure asserts are triggered properly
+//  Overview: Test assert with debugger.
 //  Test goals:
 //      - Assert is not triggered when true or 1.
 //      - Assert is triggered when false or 0.
@@ -39,7 +39,7 @@ void test_assert(void)
 
 //============================================================================//{
 //  Function: test_get_clock
-//  Overview: Get the different bus clock frequencies
+//  Overview: Test get bus clock functionality with debugger.
 //  Test goals:
 //      - Get different bus clocks:
 //          - AHB1
@@ -47,7 +47,7 @@ void test_assert(void)
 //          - APB2
 //  Setup:
 //      None
-//  Expectations: With unchanged clocks, all 3 bus clocks should be 16Mhz.
+//  Expectations: With unmodified bus clocks, all 3 bus clocks should be 16Mhz.
 //  Note: None
 //============================================================================//}
 void test_get_clock(void)
@@ -55,6 +55,7 @@ void test_get_clock(void)
     uint32_t volatile ahb1_freq = rcc_get_bus_clock_freq_hz(AHB1_BUS);
     uint32_t volatile apb1_freq = rcc_get_bus_clock_freq_hz(APB1_BUS);
     uint32_t volatile apb2_freq = rcc_get_bus_clock_freq_hz(APB2_BUS);
+    BREAKPOINT();
     UNUSED(ahb1_freq);
     UNUSED(apb1_freq);
     UNUSED(apb2_freq);
@@ -62,11 +63,12 @@ void test_get_clock(void)
 
 //============================================================================//{
 //  Function: test_printf
-//  Overview: Use printf to output using USART.
+//  Overview: Test printf functionality with logic analyzer.
 //  Test goals:
 //      - Printing to USART with printf implementation.
+//      - Output data is correct
 //  Setup:
-//      - printf_init() must be called to initialize printf.
+//      - PA2 (defined in printf.h) -> logic analyzer
 //  Expectations: "Test" should be output on the USART TX pin. Use logic analyzer
 //      to view.
 //  Note: None

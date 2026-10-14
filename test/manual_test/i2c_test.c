@@ -51,15 +51,14 @@ static void i2c_port_setup(void);
 
 //============================================================================//{
 //  Function: test_i2c_master_transmit
-//  Overview: Transmit data as master on I2C bus.
+//  Overview: Test I2C master transmit with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as master and send data on bus.
+//      - Master transmission
+//      - Data is output correctly
+//      - Data is output fully
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Arduino terminal should output "Received:STM master transmit".
 //      Optionally use logic analyzer to view communication.
 //  Note: None
@@ -81,15 +80,14 @@ void test_i2c_master_transmit(void)
 
 //============================================================================//{
 //  Function: test_i2c_slave_transmit
-//  Overview: Transmit data as slave on I2C bus.
+//  Overview: Test I2C slave transmit with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as slave and send data on bus.
+//      - Slave transmission
+//      - Data is output correctly
+//      - Data is output fully
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Use Arduino terminal to trigger request from STM board. Arduino
 //      should output "Received:STM slave transmit".
 //      Optionally use logic analyzer to view communication.
@@ -111,15 +109,15 @@ void test_i2c_slave_transmit(void)
 
 //============================================================================//{
 //  Function: test_i2c_master_receive
-//  Overview: Receive data as master on I2C bus.
+//  Overview: Test I2C master receive with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as master and receive data on bus.
+//      - Master receiption
+//      - Data is received correctly
+//      - Data is received fully
+//      - Data is ACK'd correctly
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: STM board should run without triggering assert. Assert will trigger
 //      if the string received is not correct. Use logic analyzer to ensure proper
 //      communication.
@@ -148,15 +146,15 @@ void test_i2c_master_receive(void)
 
 //============================================================================//{
 //  Function: test_i2c_slave_receive
-//  Overview: Receive data as slave on I2C bus.
+//  Overview: Test I2C slave receive with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as slave and receive data on bus.
+//      - Slave receiption
+//      - Data is received correctly
+//      - Data is received fully
+//      - Data is ACK'd correctly
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Use Arduino terminal to trigger request from STM board.
 //      STM board should run without triggering assert. Assert will trigger
 //      if the string received is not correct. Use logic analyzer to ensure proper
@@ -185,16 +183,15 @@ void test_i2c_slave_receive(void)
 
 //============================================================================//{
 //  Function: test_i2c_master_transmit_it
-//  Overview: Transmit data as master on I2C bus using interrupts.
+//  Overview: Test I2C master transmit interrupts with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as master and send data on bus.
-//      - Use interrupts for communication.
+//      - Master transmission
+//      - Interrupt communication
+//      - Data is output correctly
+//      - Data is output fully
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Arduino terminal should output "Received:STM master transmit".
 //      Optionally use logic analyzer to view communication.
 //  Note: None
@@ -216,16 +213,15 @@ void test_i2c_master_transmit_it(void)
 
 //============================================================================//{
 //  Function: test_i2c_slave_transmit_it
-//  Overview: Transmit data as slave on I2C bus using interrupts.
+//  Overview: Test I2C slave transmit interrupts with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as slave and send data on bus.
-//      - Use interrupts for communication.
+//      - Slave transmission
+//      - Interrupt communication
+//      - Data is output correctly
+//      - Data is output fully
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Use Arduino terminal to trigger request from STM board. Arduino
 //      should output "Received:STM slave transmit".
 //      Optionally use logic analyzer to view communication.
@@ -247,16 +243,16 @@ void test_i2c_slave_transmit_it(void)
 
 //============================================================================//{
 //  Function: test_i2c_master_receive_it
-//  Overview: Receive data as master on I2C bus using interrupts.
+//  Overview: Test I2C master receive interrupts with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as master and receive data on bus.
-//      - Use interrupts for communication.
+//      - Master receiption
+//      - Interrupt communication
+//      - Data is received correctly
+//      - Data is received fully
+//      - Data is ACK'd correctly
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: STM board should run without triggering assert. Assert will trigger
 //      if the string received is not correct. Use logic analyzer to ensure proper
 //      communication.
@@ -280,16 +276,16 @@ void test_i2c_master_receive_it(void)
 
 //============================================================================//{
 //  Function: test_i2c_slave_receive_it
-//  Overview: Receive data as slave on I2C bus using interrupts.
+//  Overview: Test I2C slave receive interrupts with Arduino and logic analyzer.
 //  Test goals:
-//      - Act as slave and receive data on bus.
-//      - Use interrupts for communication.
+//      - Slave receiption
+//      - Interrupt communication
+//      - Data is received correctly
+//      - Data is received fully
+//      - Data is ACK'd correctly
 //  Setup: Reference constants for more info
-//      - PB6 -> SCL
-//      - PB7 -> SDA
-//      - Arduino with test code connected via logic level converter.
-//          - A5 -> SCL
-//          - A4 -> SDA
+//      - PB6 -> Arduino A5 (SCL) via logic level converter
+//      - PB7 -> Arduino A4 (SDA) via logic level converter
 //  Expectations: Use Arduino terminal to trigger request from STM board.
 //      STM board should run without triggering assert. Assert will trigger
 //      if the string received is not correct. Use logic analyzer to ensure proper

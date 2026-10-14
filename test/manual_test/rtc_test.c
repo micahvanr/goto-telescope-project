@@ -48,14 +48,15 @@ static void output_rtc_data(void);
 
 //============================================================================//{
 //  Function: test_rtc_base
-//  Overview: Set RTC and output its data every second.
+//  Overview: Test RTC base counting with logic analyzer.
 //  Test goals:
 //      - RTC initialization
 //      - RTC counting
+//      - Time switches from PM to AM after 12 PM.
 //  Setup:
-//      - PA2 to logic analyer for printf.
-//      - PA3 to logic analyer for debug pin.
-//  Expectations: Use logic analyer to view printf. Every second the RTC data
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
+//  Expectations: Use logic analyzer to view printf. Every second the RTC data
 //      should be output.
 //  Note: Time between each output is not important. What is important is that the
 //      time is incrementing properly.
@@ -72,17 +73,18 @@ void test_rtc_base(void)
 
 //============================================================================//{
 //  Function: test_rtc_alarm
-//  Overview: Set RTC and an alarm 3 seconds away.
+//  Overview: Test RTC alarm with logic analyzer.
 //  Test goals:
 //      - RTC alarm trigger and data
 //      - RTC interrupts with alarm
 //  Setup:
-//      - PA2 to logic analyer for printf.
-//      - PA3 to logic analyer for debug pin.
-//  Expectations: Use logic analyer to view printf. Output time information every
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
+//  Expectations: Use logic analyzer to view printf. Output time information every
 //      second. Shortly after the 3rd or 4th time info output, there should be a
 //      statement saying "Alarm triggered".
-//  Note: None
+//  Note: Time between each output is not important. What is important is that the
+//      time is incrementing properly.
 //============================================================================//}
 void test_rtc_alarm(void)
 {
@@ -113,18 +115,19 @@ void test_rtc_alarm(void)
 
 //============================================================================//{
 //  Function: test_rtc_timestamp
-//  Overview: Set RTC timestamp and trigger it with pin connected to button.
+//  Overview: Test RTC timestamp interrupt with logic analyzer and button.
 //  Test goals:
 //      - RTC timestamp triggering and data
 //      - RTC interrupts with timestamps
 //  Setup:
-//      - PA2 to logic analyer for printf.
-//      - PA3 to logic analyer for debug pin.
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
 //      - Connect PC13 to push button switch. Connect other end of button to ground.
 //  Expectations: Use logic analyzer to view printf and optionally to PC13/button.
 //      When button is not pressed, PC13 line should be high. When button is pressed,
 //      PC13 line should be pulled low and the timestamp data should be recorded and output.
-//  Note: None
+//  Note: Time between each output is not important. What is important is that the
+//      time is incrementing properly.
 //============================================================================//}
 void test_rtc_timestamp(void)
 {
@@ -159,16 +162,16 @@ void test_rtc_timestamp(void)
 
 //============================================================================//{
 //  Function: test_rtc_wakeup
-//  Overview: Set up RTC wakeup to wakeup every second.
+//  Overview: Test RTC wakeup interrupt with logic analyzer.
 //  Test goals: 
 //      - RTC wakeup triggering
 //      - Wakeup triggers very closely to every second
 //      - RTC time output is accurate
 //      - RTC interrupts with wakeup
 //  Setup: 
-//      - PA2 to logic analyer for printf.
-//      - PA3 to logic analyer for debug pin.
-//  Expectations: Use logic analyer to view printf. 
+//      - PA2 -> logic analyzer: read printf.
+//      - PA3 -> logic analyzer: read debug pin.
+//  Expectations: Use logic analyzer to view printf. 
 //  Note: Unlike other RTC tests here time accuracy between triggers is very important. 
 //============================================================================//}
 void test_rtc_wakeup(void)

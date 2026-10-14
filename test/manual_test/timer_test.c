@@ -55,13 +55,13 @@ uint32_t count_to_period(uint32_t count);
 
 //============================================================================//{
 //  Function: test_timer_auto
-//  Overview: Initialize timer with automatic timing and output on debug pin.
+//  Overview: Test timer auto set time functionality with logic analyzer.
 //  Test goals: 
 //      - Timer initialization
 //      - Auto time setup
 //  Setup: 
-//      - PA2 -> logic analyzer: read printf.
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should toggle roughly every 100 ms.
 //  Note: None
 //============================================================================//}
@@ -86,14 +86,13 @@ void test_timer_auto(void)
 
 //============================================================================//{
 //  Function: test_timer_manual
-//  Overview: Initialize timer with manual timing using auto reload (count value)
-//      and prescaler. Output on debug pin.
+//  Overview: Test timer manual set time functionality with logic analyzer.
 //  Test goals: 
-//      - Timer initialization
+//      - Timer initialization with auto reload (count value).
 //      - Manual time setup
 //  Setup: 
-//      - PA2 -> logic analyzer: read printf.
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should toggle every roughly 1 second.
 //  Note: None
 //============================================================================//}
@@ -117,13 +116,13 @@ void test_timer_manual(void)
 
 //============================================================================//{
 //  Function: test_timer_freq
-//  Overview: Initialize timer with frequency and output on debug pin.
+//  Overview: Test timer frequency time set with logic analyzer.
 //  Test goals: 
 //      - Timer initialization
 //      - Frequency timing setup
 //  Setup: 
-//      - PA2 -> logic analyzer: read printf.
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA2 -> logic analyzer: read printf
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should toggle to create a 1 khz frequency.
 //  Note: The frequency is how often it is toggled, not it's period.
 //============================================================================//}
@@ -147,11 +146,11 @@ void test_timer_freq(void)
 
 //============================================================================//{
 //  Function: test_timer_delay
-//  Overview: Use timer delay function to toggle debug pin every second.
+//  Overview: Test timer delay functionwith logic analyzer.
 //  Test goals: 
 //      - Timer delay function
 //  Setup: 
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should toggle every 1 second.
 //  Note: None
 //============================================================================//}
@@ -170,12 +169,12 @@ void test_delay(void)
 
 //============================================================================//{
 //  Function: test_oc_pwm
-//  Overview: Intialize timer with output compare in PWM mode to output a PWM signal.
+//  Overview: Test timer output compare PWM mode with logic analyzer.
 //  Test goals: 
-//      - Timer intialization with output compare
+//      - Timer initialization with output compare
 //      - Output compare PWM mode
 //  Setup: 
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should output a PWM signal with 75% duty cycle and a period of 1 second.
 //  Note: None
 //============================================================================//}
@@ -206,15 +205,17 @@ void test_oc_pwm(void)
 
 //============================================================================//{
 //  Function: test_ic_it
-//  Overview: Intialize timer with input capture and interrupts to get time difference.
+//  Overview: Test timer input capture interrupt with logic analyzer and Arduino.
 //  Test goals: 
-//      - Timer intialization with input capture
+//      - Timer initialization with input capture.
+//      - Timer difference between input captures.
 //  Setup: 
-//      - PA2 -> logic analyzer: read printf.
-//      - PA3 -> Arduino pin 0: get Arduino output
-//      - PA3 -> logic analyzer: view Arduino output
+//      - STM32:
+//          - PA2 -> logic analyzer: read printf
+//          - PA3 -> Arduino D0: get Arduino output
+//          - PA3 -> logic analyzer: view Arduino output
 //  Expectations: When pin is toggled, printf should output previous count, next count,
-//  and the difference. Difference should be the period in ms.
+//  and the difference. Difference should be the 100 ms.
 //  Note: None
 //============================================================================//}
 void test_ic_it(void)
@@ -241,11 +242,11 @@ void test_ic_it(void)
 
 //============================================================================//{
 //  Function: test_it
-//  Overview: Intialize timer with interrupts to toggle debug pin.
+//  Overview: Test timer interrupts with logic analyzer.
 //  Test goals: 
-//      - Timer intialization with interrupts
+//      - Timer initialization with interrupts
 //  Setup: 
-//      - PA3 -> logic analyzer: read debug pin.
+//      - PA3 -> logic analyzer: read debug pin
 //  Expectations: Debug pin should toggle roughly every 100 ms.
 //  Note: None
 //============================================================================//}

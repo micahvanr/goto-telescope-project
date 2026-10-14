@@ -26,13 +26,14 @@
 // TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
 // TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
-// TODO: Add comments to test functions explaining what is used, whats tested, and what is expected.
 // TODO: Add standard common phrases
+// TODO: Change function format from "=" to "-"
+// TODO: Change comment block format: both file and function comment blocks
 
 int main(void)
 {
     // NOTE: Change this variable to run the correct test
-    test_type_e test = RTC_TEST_TIMESTAMP;
+    test_type_e test = TIMER_TEST_FREQ;
 
     // NOTE: Change "I2C_TEST_MODE" constant to change I2C test mode further
     uint8_t i2c_test_mode = I2C_TEST_MODE;

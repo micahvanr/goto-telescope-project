@@ -63,17 +63,51 @@ functions that can be categorized. I prefer verb-noun function names as I find t
         * noun: *Optional.* What the action is being performed on or to. Necessary when what is being 
         manipulated requires more detail than just the module name.
 
-* Prefer to use the following verbs:
-    * get/set: Instead of read/write unless read/write makes a lot more sense.
-    * is_x: Used when returning bool. Is allowed to be after the noun as it makes more sense.
-    * clear
-    * config: Prefer to not use enable/disable_x as that increases code size. Instead use config_x 
-    with parameter to enable or disable the object.
-    * assert_**x**_param: Used putting assertions for parameters for **x** in seperate function.
+
+
+### Prefer to use the following verbs:
+* init
+* get/set: Instead of read/write unless read/write makes a lot more sense.
+* is_x: Used when returning bool. Is allowed to be after the noun as it makes more sense.
+* clear
+* togglable: Prefer to not use enable/disable_x as that increases code size. Instead use togglable_x 
+with parameter to enable or disable the object.
+* assert_**x**_param: Used putting assertions for parameters for **x** in seperate function.
+* setup: Only use this for test functions, differentiates between init.
 
 # Variables Rules
 
 # Statement Rules
+
+# Standard Comment Phrases
+* Sometimes comments from different sections have similar ideas, topics, or categories. For example, both 
+USART and GPIO have a funtion to initialize their peripheral. They will both have an "Overview" comment 
+section. Both of these should use the same phrase or sentence to stay consistent and clear. Below will contain
+a list of all standard phrases. 
+* The item in parentheses is what should change between comments, the rest should stay to be consistent. Parts
+of each phrase may be optional and are wrapped in brackets "\[optional\]".
+* Not all functions need to use a standard phrase but it should be used when there are multiple functions that perform
+similar actions or have similar ideas but are just performed on different objects. In addition, if there are only 
+a couple of functions that use similar ideas, they do not need to be added here and instead just refer to each other.
+This list is primarily for multi-file consistencies.
+
+## Driver Functions
+
+## Test Functions
+```C
+//============================================================================//{
+//  Overview: Initialize (object) [with (extra)] and/to (result).
+//  Overview: Tests (object) with/by (tool).
+//  Overview: What is being tested and how.
+//  Test goals: 
+//      - (object) initialization [with (extra)]
+//      - (object) (verb)
+//  Setup: 
+//      - (pin) -> (line/tool/pin)[: (reason)] [via x]
+//      - (pin) [(function)] -> (line/tool/pin) [(function)] [via x]
+//  Expectations: [When (action),] (object) should (action).
+//============================================================================//}
+```
 
 # Style
 ## Naming
