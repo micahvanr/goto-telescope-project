@@ -1876,9 +1876,9 @@ int fctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char 
 //============================================================================//{
 //  Function: printf_gpio_init
 //  Overview: Initialize the GPIO port for the USART TX pin
-//  Parameters: 
+//  Parameters:
 //      None
-//  Return: 
+//  Return:
 //      None
 //  Note: None
 //============================================================================//}
@@ -1900,9 +1900,9 @@ static void printf_gpio_init()
 //============================================================================//{
 //  Function: printf_init
 //  Overview: Initialize the USART peripheral for printf functionality
-//  Parameters: 
+//  Parameters:
 //      None
-//  Return: 
+//  Return:
 //      None
 //  Note: Uses USART2 and PA2
 //============================================================================//}

@@ -10,10 +10,10 @@
 //=========================================//{
 
 #include "assert_handler.h"
+#include "common.h"
 #include "gpio.h"
 #include "printf.h"
 #include "rcc.h"
-#include "common.h"
 
 //======================================================================================//}
 //                  Private Function Prototypes
