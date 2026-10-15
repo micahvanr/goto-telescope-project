@@ -18,10 +18,8 @@
 //                  Public Function Implementation
 //======================================================================================//{
 
-// TODO: Change name to "nvic_toggable_irq".
-
 //============================================================================//{
-//  Function: nvic_irq_config
+//  Function: nvic_toggable_irq
 //  Overview: Enable or disable the specified IRQ number inside the NVIC.
 //  Parameters:
 //      irq_num: IRQ number that needs to be enabled or disables.
@@ -32,7 +30,7 @@
 //  Return: None
 //  Note: None
 //============================================================================//}
-void nvic_irq_config(irq_number_e const irq_num, togglable_e const toggle)
+void nvic_toggable_irq(irq_number_e const irq_num, togglable_e const toggle)
 {
     uint32_t volatile *p_nvic_iser = (uint32_t *) NVIC_ISER_BASE_ADDR;
     uint32_t volatile *p_nvic_icer = (uint32_t *) NVIC_ICER_BASE_ADDR;

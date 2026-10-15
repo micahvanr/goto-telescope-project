@@ -61,7 +61,7 @@ typedef enum : uint32_t {
 //                  Public Function Prototypes
 //======================================================================================//{
 
-void nvic_irq_config(irq_number_e irq_num, togglable_e toggle);
+void nvic_toggable_irq(irq_number_e irq_num, togglable_e toggle);
 void nvim_set_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 
 #endif // NVIC_H

@@ -750,7 +750,7 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
             break;
     }
 
-    nvic_irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
+    nvic_toggable_irq(map_exti_to_irq_num(exti_line_num), ENABLE);
 }
 
 //============================================================================//{

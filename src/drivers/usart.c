@@ -597,27 +597,27 @@ void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 
     if (p_usartx == USART1)
     {
-        nvic_irq_config(USART1_IRQ_NUM_37, toggle);
+        nvic_toggable_irq(USART1_IRQ_NUM_37, toggle);
     }
     else if (p_usartx == USART2)
     {
-        nvic_irq_config(USART2_IRQ_NUM_38, toggle);
+        nvic_toggable_irq(USART2_IRQ_NUM_38, toggle);
     }
     else if (p_usartx == USART3)
     {
-        nvic_irq_config(USART3_IRQ_NUM_39, toggle);
+        nvic_toggable_irq(USART3_IRQ_NUM_39, toggle);
     }
     else if (p_usartx == UART4)
     {
-        nvic_irq_config(UART4_IRQ_NUM_52, toggle);
+        nvic_toggable_irq(UART4_IRQ_NUM_52, toggle);
     }
     else if (p_usartx == UART5)
     {
-        nvic_irq_config(UART5_IRQ_NUM_53, toggle);
+        nvic_toggable_irq(UART5_IRQ_NUM_53, toggle);
     }
     else if (p_usartx == USART6)
     {
-        nvic_irq_config(USART6_IRQ_NUM_71, toggle);
+        nvic_toggable_irq(USART6_IRQ_NUM_71, toggle);
     }
 }
 
