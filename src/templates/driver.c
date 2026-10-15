@@ -2,7 +2,7 @@
 //  File: driver.c
 //  Overview: Description of the driver's purpose.
 //  Features:
-//      - List of features (should describe important functions)
+//      List of features (should describe important functions)
 //  Notes: Additional notes that user might/should want to know. (None)
 //======================================================================================//}
 

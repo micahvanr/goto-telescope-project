@@ -6,10 +6,10 @@
 //      Input capture (w/ interrupt capability)
 //      Output compare (w/ interrupt capability)
 //  Notes:
-//      - Basic Timers: TIM6 & TIM7
-//      - General Purpose Timers: TIM2 - TIM5
-//      - General Purpose Timers: TIM9 - TIM14
-//      - Advanced Control Timers: TIM1 & TIM8
+//      Basic Timers: TIM6 & TIM7
+//      General Purpose Timers: TIM2 - TIM5
+//      General Purpose Timers: TIM9 - TIM14
+//      Advanced Control Timers: TIM1 & TIM8
 //======================================================================================//}
 
 //} Include Statements
