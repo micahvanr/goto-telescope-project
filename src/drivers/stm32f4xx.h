@@ -8,6 +8,11 @@
 #ifndef STM32F4XX_H
 #define STM32F4XX_H
 
+//} Include Statements
+//=========================================//{
+
+#include <stdint.h>
+
 //======================================================================================//}
 //                  Public Constants
 //======================================================================================//{
@@ -15,7 +20,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     APB1_BASE_ADDR = (0x40000000ul),
     APB2_BASE_ADDR = (0x40010000ul),
     AHB1_BASE_ADDR = (0x40020000ul),
@@ -25,7 +30,7 @@ typedef enum {
 //} General Constants
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     PIN_NUM_0  = 0,
     PIN_NUM_1  = 1,
     PIN_NUM_2  = 2,
@@ -44,17 +49,17 @@ typedef enum {
     PIN_NUM_15 = 15,
 } pin_number_e;
 
-typedef enum {
+typedef enum : uint8_t {
     HIGH = 1,
     LOW  = 0
 } pin_logic_level_e;
 
-typedef enum {
+typedef enum : uint8_t {
     ENABLE  = 1,
     DISABLE = 0,
 } togglable_e;
 
-typedef enum {
+typedef enum : uint8_t {
     AHB1_BUS = 0,
     AHB2_BUS = 1,
     APB1_BUS = 3,
@@ -65,7 +70,7 @@ typedef enum {
 //=========================================//{
 
 // Only adding IRQ numbers when they are needed.
-typedef enum {
+typedef enum : uint32_t {
     WWDG_IRQ_NUM_0                = 0,
     PVDPVD_IRQ_NUM_1              = 1,
     TAMP_STAMP_IRQ_NUM_2          = 2,
@@ -153,7 +158,7 @@ typedef enum {
 //} Hardware Constants
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     LED_GREEN_PIN   = PIN_NUM_12,
     LED_ORANGE_PIN  = PIN_NUM_13,
     LED_RED_PIN     = PIN_NUM_14,
@@ -170,7 +175,7 @@ typedef enum {
 #define USER_BUTTON_PORT GPIOA
 
 // Ports mapped to integers A->0, B->1, C->2... etc.
-typedef enum {
+typedef enum : uint8_t {
     LED_GREEN_PORT_NUM  = 3U, // Port D
     LED_ORANGE_PORT_NUM = 3U,
     LED_RED_PORT_NUM    = 3U,

@@ -26,7 +26,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_BASE_ADDR = ((APB1_BASE_ADDR) + (0x2800U))
 } rtc_base_addr_e;
 
@@ -35,21 +35,21 @@ typedef enum {
 
 // Applications:
 // - RTC CR FMT
-typedef enum {
+typedef enum : uint32_t {
     RTC_TIME_FORMAT_24HR = 0b0,
     RTC_TIME_FORMAT_12HR = 0b1,
 } rtc_time_format_e;
 
 // Applications:
 // - RTC TR PM
-typedef enum {
+typedef enum : uint32_t {
     RTC_TIME_AM = 0b0,
     RTC_TIME_PM = 0b1,
 } rtc_time_am_pm_e;
 
 // Applications:
 // - RTC DR WDU
-typedef enum {
+typedef enum : uint32_t {
     RTC_WEEKDAY_MONDAY    = 0b001,
     RTC_WEEKDAY_TUESDAY   = 0b010,
     RTC_WEEKDAY_WEDNESDAY = 0b011,
@@ -62,42 +62,42 @@ typedef enum {
 //} Alarm Config Options
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     RTC_ALARM_A_SEL,
     RTC_ALARM_B_SEL,
 } rtc_alarm_sel_e;
 
 // Applications:
 // - RTC ALRMxR MSK1
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_SECONDS_MATCH     = 0b0,
     RTC_ALARM_SECONDS_DONT_CARE = 0b1,
 } rtc_alarm_seconds_match_e;
 
 // Applications:
 // - RTC ALRMxR MSK2
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_MINUTES_MATCH     = 0b0,
     RTC_ALARM_MINUTES_DONT_CARE = 0b1,
 } rtc_alarm_minutes_match_e;
 
 // Applications:
 // - RTC ALRMxR MSK3
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_HOURS_MATCH     = 0b0,
     RTC_ALARM_HOURS_DONT_CARE = 0b1,
 } rtc_alarm_hours_match_e;
 
 // Applications:
 // - RTC ALRMxR MSK4
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_DATEDAY_MATCH     = 0b0,
     RTC_ALARM_DATEDAY_DONT_CARE = 0b1,
 } rtc_alarm_dateday_match_e;
 
 // Applications:
 // - RTC ALRMxR WDSEL
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_WEEKDAY_SEL_DATE    = 0b0,
     RTC_ALARM_WEEKDAY_SEL_WEEKDAY = 0b1,
 } rtc_alarm_daydate_sel_e;
@@ -105,7 +105,7 @@ typedef enum {
 //} API Function Argument/Return Options
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     RTC_IT_OPT_NA,
     RTC_IT_OPT_ALARM,
     RTC_IT_OPT_WAKEUP,
@@ -113,22 +113,22 @@ typedef enum {
     RTC_IT_OPT_TAMPER,
 } rtc_it_options_e;
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_AF1_SEL = 0b0,
     RTC_AF2_SEL = 0b1,
 } rtc_alt_fn_sel_e;
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_TIMESTAMP_EDGE_RISING  = 0b0,
     RTC_TIMESTAMP_EDGE_FALLING = 0b1,
 } rtc_timestamp_edge_e;
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_TIMESTAMP_STATUS_NOT_TRIGGERED = 0b0,
     RTC_TIMESTAMP_STATUS_TRIGGERED     = 0b1,
 } rtc_timestamp_status_e;
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_WAKEUP_RTC_CLK_DIV16      = 0b000,
     RTC_WAKEUP_RTC_CLK_DIV8       = 0b001,
     RTC_WAKEUP_RTC_CLK_DIV4       = 0b010,
@@ -137,7 +137,7 @@ typedef enum {
     RTC_WAKEUP_SPRE_CLK_EXTRA_BIT = 0b110, // Usually 1 hz + 2**16 is added to WUT counter value
 } rtc_wakeup_clk_sel_e;
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_WAKEUP_STATUS_NOT_TRIGGERED = 0b0,
     RTC_WAKEUP_STATUS_TRIGGERED     = 0b1,
 } rtc_wakeup_status_e;
@@ -148,7 +148,7 @@ typedef enum {
 // TODO: Add applications section for enums.
 // Register names or function names
 
-typedef enum {
+typedef enum : uint32_t {
     RTC_EXTI_NUM_ALARM     = EXTI_LINE_NUM_17,
     RTC_EXTI_NUM_WAKE_UP   = EXTI_LINE_NUM_22,
     RTC_EXTI_NUM_TIMESTAMP = EXTI_LINE_NUM_21,
@@ -156,7 +156,7 @@ typedef enum {
 
 // Applications:
 // - RTC ISR ALARxF
-typedef enum {
+typedef enum : uint32_t {
     RTC_ALARM_STATUS_NOT_TRIGGERED = 0b0,
     RTC_ALARM_STATUS_TRIGGERED     = 0b1,
 } rtc_alarm_status_e;

@@ -29,7 +29,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     EXTI_BASE_ADDR = ((APB2_BASE_ADDR) + (0x3C00U)),
 } exti_base_addr_e;
 

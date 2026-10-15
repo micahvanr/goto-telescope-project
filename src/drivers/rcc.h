@@ -40,7 +40,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     RCC_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x3800U)),
 } rcc_base_addr_e;
 
@@ -50,7 +50,7 @@ typedef enum {
 //} API Function Argument Options
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     RCC_MCO_PRE_1 = 1,
     RCC_MCO_PRE_2 = 2,
     RCC_MCO_PRE_3 = 3,
@@ -58,7 +58,7 @@ typedef enum {
     RCC_MCO_PRE_5 = 5,
 } rcc_mco_prescaler_e;
 
-typedef enum {
+typedef enum : uint8_t {
     RCC_MCO1_HSI_SRC    = 0,
     RCC_MCO1_LSE_SRC    = 1,
     RCC_MCO1_HSE_SRC    = 2,
@@ -79,14 +79,14 @@ typedef enum {
 //=========================================//{
 
 // TODO: Change frequencies for custom board when applicable.
-typedef enum {
+typedef enum : uint32_t {
     HSI_CLOCK_FREQ = 16000000,
     HSE_CLOCK_FREQ = 8000000, // Only for discovery board -> will need to be changed for custom board
     LSE_CLOCK_FREQ = 0,       // N/A for discover board
     LSI_CLOCK_FREQ = 32000,
 } clock_values_e;
 
-typedef enum {
+typedef enum : uint8_t {
     CLOCK_SRC_HSI = 0,
     CLOCK_SRC_HSE = 1,
     CLOCK_SRC_PLL = 2,
@@ -94,7 +94,7 @@ typedef enum {
     CLOCK_SRC_LSI = 4,
 } clock_sources_e;
 
-typedef enum {
+typedef enum : uint8_t {
     RCC_MCO1_SEL,
     RCC_MCO2_SEL,
 } rcc_mco_sel_e;

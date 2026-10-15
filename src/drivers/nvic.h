@@ -15,6 +15,7 @@
 //=========================================//{
 
 #include "stm32f4xx.h"
+#include "stdint.h"
 
 //======================================================================================//}
 //                  Public Constants
@@ -23,7 +24,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     NVIC_ISER_BASE_ADDR = (0xE000E100ul),
     NVIC_ICER_BASE_ADDR = (0xE000E180ul),
     NVIC_ISPR_BASE_ADDR = (0xE000E200ul),
@@ -36,7 +37,7 @@ typedef enum {
 //=========================================//{
 
 // Lower number means higher priority
-typedef enum {
+typedef enum : uint32_t {
     IRQ_PRIORITY_0                   = 0,
     IRQ_PRIORITY_1                   = 1,
     IRQ_PRIORITY_2                   = 2,

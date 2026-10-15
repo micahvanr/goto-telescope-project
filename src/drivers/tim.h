@@ -28,7 +28,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     TIM1_BASE_ADDR = ((APB2_BASE_ADDR) + (0x0000U)),
 
     TIM2_BASE_ADDR  = ((APB1_BASE_ADDR) + (0x0000U)),
@@ -51,7 +51,7 @@ typedef enum {
 //=========================================//{
 
 // Numbers used to select register
-typedef enum {
+typedef enum : uint8_t {
     TIM_CHANNEL_SEL_1 = 0,
     TIM_CHANNEL_SEL_2 = 1,
     TIM_CHANNEL_SEL_3 = 2,
@@ -59,23 +59,23 @@ typedef enum {
     TIM_CHANNEL_NA,
 } tim_channel_sel_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_ARR_PRELOAD_DI = 0b0, // Count value will count to this new value immediately.
     TIM_ARR_PRELOAD_EN = 0b1, // Count value will count to the new value after finishing what its counting to now.
 } tim_arr_preload_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_ONE_PULSE_MODE_DI = 0b0,
     TIM_ONE_PULSE_MODE_EN = 0b1,
 } tim_one_pulse_mode_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_CLK_SEL_INTERNAL         = 0b000,
     TIM_CLK_SEL_INTERNAL_TRIGGER = 0b110,
     TIM_CLK_SEL_EXTERNAL         = 0b111,
 } tim_clock_sel_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_TRIGGER_SEL_ITR0    = 0b000,
     TIM_TRIGGER_SEL_ITR1    = 0b001,
     TIM_TRIGGER_SEL_ITR2    = 0b010,
@@ -86,12 +86,12 @@ typedef enum {
     TIM_TRIGGER_SEL_ETRF    = 0b111,
 } tim_trigger_sel_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_CNT_DIR_UP   = 0b0,
     TIM_CNT_DIR_DOWN = 0b1,
 } tim_cnt_dir_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_ALIGN_EDGE              = 0b00,
     TIM_ALIGN_CENTER_IT_DOWN    = 0b01,
     TIM_ALIGN_CENTER_IT_UP      = 0b10,
@@ -102,26 +102,26 @@ typedef enum {
 //=========================================//{
 
 // DTS = dead-time and sampling clock (derived from CR1->CKD).
-typedef enum {
+typedef enum : uint32_t {
     TIM_DTS_FREQ_CLK_INT        = 0b00,
     TIM_DTS_FREQ_CLK_INT_MULT_2 = 0b01,
     TIM_DTS_FREQ_CLK_INT_MULT_4 = 0b10,
 } tim_dts_mult_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_INPUT_MAP_MAIN         = 0b01, // Input will match the channel number.
     TIM_INPUT_MAP_TI_ALTERNATE = 0b10, // Input will be the alternate channel number (either +- 1).
     TIM_INPUT_MAP_TRC          = 0b11,
 } tim_input_map_type_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_IC_PRESCALER_NA   = 0b00,
     TIM_IC_PRESCALER_2_EV = 0b01,
     TIM_IC_PRESCALER_4_EV = 0b10,
     TIM_IC_PRESCALER_8_EV = 0b11,
 } tim_ic_prescaler_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_IC_FILTER_NA            = 0b0000,
     TIM_IC_FILTER_FCLKINT_N2    = 0b0001,
     TIM_IC_FILTER_FCLKINT_N4    = 0b0010,
@@ -140,7 +140,7 @@ typedef enum {
     TIM_IC_FILTER_FDTS_DIV32_N8 = 0b1111,
 } tim_ic_filter_e;
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_IC_EDGE_DETECTION_RISING         = 0b00,
     TIM_IC_EDGE_DETECTION_FALLING        = 0b01,
     TIM_IC_EDGE_DETECTION_RISING_FALLING = 0b101, // Special case where the bits are not adjacent to eachother.
@@ -150,7 +150,7 @@ typedef enum {
 //=========================================//{
 
 // clang-format off
-typedef enum {
+typedef enum : uint32_t {
     TIM_OC_OPM_FROZEN         = 0b000, // Comparison between output compare register and counter has no effect on OCxREF.
     TIM_OC_OPM_EQ_ACTIVE      = 0b001, // Sets OCxREF active level on match.
     TIM_OC_OPM_EQ_INACTIVE    = 0b010, // Sets OCxREF inactive level on match.
@@ -162,7 +162,7 @@ typedef enum {
 } tim_oc_output_mode_e;
 // clang-format on
 
-typedef enum {
+typedef enum : uint32_t {
     TIM_OC_POL_ACTIVE_HIGH = 0,
     TIM_OC_POL_ACTIVE_LOW  = 1,
 } tim_oc_polarity_e;
@@ -170,7 +170,7 @@ typedef enum {
 //} API Function Argument/Return Options
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     // Cannot start from 0. When initializing a value of 0 is assumed to be uninitialized
     TIM_UNIT_S = 1, // Seconds
     TIM_UNIT_MS,    // Miliseconds
@@ -189,18 +189,18 @@ typedef enum {
 //} Misc. Constants
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     TIM_MAX_NUM_TIMERS = 14,
 } tim_gen_info_e;
 
-typedef enum {
+typedef enum : uint8_t {
     TIM_TYPE_BASIC,
     TIM_TYPE_GENERAL_2_5,
     TIM_TYPE_GENERAL_9_14,
     TIM_TYPE_ADVANCED,
 } tim_type_e;
 
-typedef enum {
+typedef enum : uint8_t {
     TIM_UPDATE_NA    = 0b0,
     TIM_UPDATE_FOUND = 0b1,
 } tim_status_e;

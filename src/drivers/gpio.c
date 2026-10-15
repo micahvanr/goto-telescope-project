@@ -27,7 +27,7 @@
 //} Initialization Handler Constants
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     GPIO_NOT_INITIALIZED = 0,
     GPIO_INITIALIZED     = 1,
 } gpio_init_check_e;

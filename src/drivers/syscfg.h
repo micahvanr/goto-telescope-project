@@ -22,7 +22,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     SYSCFG_BASE_ADDR = ((APB2_BASE_ADDR) + (0x3800U)),
 } syscfg_base_addr_e;
 

@@ -24,7 +24,6 @@
 
 // TODO: Add project roadmap using mermaid markdown
 // TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
-// TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
 // TODO: Think about removing handle struct
 

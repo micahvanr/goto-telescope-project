@@ -27,7 +27,7 @@
 //} Initialization Handler Constants
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     TIM1_INIT_NUM  = 0,
     TIM2_INIT_NUM  = 1,
     TIM3_INIT_NUM  = 2,
@@ -44,7 +44,7 @@ typedef enum {
     TIM14_INIT_NUM = 13,
 } tim_init_peri_num_e;
 
-typedef enum {
+typedef enum : uint8_t {
     TIM_NOT_INITIALIZED = 0,
     TIM_INITIALIZED     = 1,
 } tim_init_check_e;

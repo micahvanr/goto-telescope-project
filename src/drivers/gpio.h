@@ -27,7 +27,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     GPIOA_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x0000U)),
     GPIOB_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x0400U)),
     GPIOC_BASE_ADDR = ((AHB1_BASE_ADDR) + (0x0800U)),

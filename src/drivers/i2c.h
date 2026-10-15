@@ -26,7 +26,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     I2C1_BASE_ADDR = ((APB1_BASE_ADDR) + (0x5400U)),
     I2C2_BASE_ADDR = ((APB1_BASE_ADDR) + (0x5800U)),
     I2C3_BASE_ADDR = ((APB1_BASE_ADDR) + (0x5C00U)),
@@ -55,7 +55,7 @@ typedef enum : uint32_t {
 //} Callback Options
 //=========================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     I2C_STATUS_READY   = 0, // Default
     I2C_STATUS_RUNNING = 1, // Only to be used in setting/getting of global status variable
     I2C_STATUS_MASTER_TX,
@@ -64,7 +64,7 @@ typedef enum {
     I2C_STATUS_SLAVE_RX,
 } i2c_status_e;
 
-typedef enum {
+typedef enum : uint8_t {
     I2C_REPEATED_START_DISABLE = 0,
     I2C_REPEATED_START_ENABLE,
 } i2c_repeated_start_e;
@@ -73,13 +73,13 @@ typedef enum {
 //=========================================//{
 
 // Used for callbacks
-typedef enum {
+typedef enum : uint8_t {
     I2C_EVENT_CMPLT,
     I2C_EVENT_ERROR,
 } i2c_event_e;
 
 // Write = 0, read = 1
-typedef enum {
+typedef enum : uint8_t {
     I2C_READ_WRITE_BIT = (1 << 0),
 } i2c_read_write_bit_e;
 

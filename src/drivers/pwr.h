@@ -22,7 +22,7 @@
 //} Address Definitions
 //=========================================//{
 
-typedef enum {
+typedef enum : uint32_t {
     PWR_BASE_ADDR = ((APB1_BASE_ADDR) + (0x7000U))
 } pwr_base_addr_e;
 

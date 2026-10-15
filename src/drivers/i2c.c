@@ -25,13 +25,13 @@
 //=========================================//{
 
 // Init check enum
-typedef enum {
+typedef enum : uint32_t {
     I2C1_INIT_NUM = 0,
     I2C2_INIT_NUM = 1,
     I2C3_INIT_NUM = 2,
 } i2c_init_port_num_e;
 
-typedef enum {
+typedef enum : uint32_t {
     I2C_NOT_INITIALIZED = 0,
     I2C_INITIALIZED     = 1,
 } i2c_init_check_e;
