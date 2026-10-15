@@ -80,32 +80,69 @@ with parameter to enable or disable the object.
 # Statement Rules
 
 # Standard Comment Phrases
-* Sometimes comments from different sections have similar ideas, topics, or categories. For example, both 
-USART and GPIO have a funtion to initialize their peripheral. They will both have an "Overview" comment 
+* Sometimes comments from different sections have similar ideas, topics, or categories. For example, both
+USART and GPIO have a funtion to initialize their peripheral. They will both have an "Overview" comment
 section. Both of these should use the same phrase or sentence to stay consistent and clear. Below will contain
-a list of all standard phrases. 
+a list of all standard phrases.
+* This list also provides a broader more general format for how different comment sections might be worded
+to help consistency.
 * The item in parentheses is what should change between comments, the rest should stay to be consistent. Parts
 of each phrase may be optional and are wrapped in brackets "\[optional\]".
-* Not all functions need to use a standard phrase but it should be used when there are multiple functions that perform
-similar actions or have similar ideas but are just performed on different objects. In addition, if there are only 
-a couple of functions that use similar ideas, they do not need to be added here and instead just refer to each other.
-This list is primarily for multi-file consistencies.
+* Not all functions need to use a standard phrase or even follow the general format but it should be
+used when there are multiple functions that perform similar actions or have similar ideas but are
+just performed on different objects.
+* If there are only a couple of functions that use similar ideas, they do not need to be added
+to this list and instead just refer to other parts of the file. This list is primarily for multi-file consistencies.
+* Each list item will start more specific and get broader as you go down.
 
 ## Driver Functions
+```C
+//============================================================================//{
+//  Overview: Enable or disable interrupts for (object).
+//  Overview: Initialize the specified (object) according to settings in (object).
+//  Overview: Initialize the (object).
+//  Overview: (action) the specified (object) according to settings in (object).
+//  Overview: (action) the specified (object)'s (object).
+//  Overview: (action) with interrupts the (object).
+//  Overview: (action) the (object) from the specified (object).
+//  Overview: (action) the (object).
+//  Overview: Brief description of function
+
+//  Parameters:
+//      p_(object)_handle: Structure with the corresponding settings to configure the (object).
+//      (object)_conf: Structure with the corresponding settings to configure the (object).
+//      p_(object)x: (object) register structure macro.
+//      var name: brief overview
+//          OPTIONS_x (x-x)
+
+//  Return:
+//      var type: brief overview
+//          OPTIONS_x (x-x)
+
+//  Note: This function should be called by the applications IT handler.
+//============================================================================//}
+```
 
 ## Test Functions
 ```C
 //============================================================================//{
 //  Overview: Initialize (object) [with (extra)] and/to (result).
-//  Overview: Tests (object) with/by (tool).
+//  Overview: Test (object) with/by (tool).
 //  Overview: What is being tested and how.
-//  Test goals: 
+//  Overview: Brief description what is being tested and how/with what.
+
+//  Test goals:
 //      - (object) initialization [with (extra)]
-//      - (object) (verb)
-//  Setup: 
+//      - (object) (action)
+//      - Detailed list of test goals.
+
+//  Setup:
 //      - (pin) -> (line/tool/pin)[: (reason)] [via x]
 //      - (pin) [(function)] -> (line/tool/pin) [(function)] [via x]
+//      - Detailed list of items that need to be set up and how they should be. (None)
+
 //  Expectations: [When (action),] (object) should (action).
+//  Expectations: What should be expected from the test.
 //============================================================================//}
 ```
 
@@ -155,20 +192,20 @@ void this_is_a_function(void)
 ### Source File Comments
 * Before each function there should be a short function block. It should contain a brief overview, what parameters it has, the values those parameters can be, what it returns, and any notes. Use None if it nothing applies to that section.
 ``` C
-/***************************************************************************
-Function: gpio_write
-Overview: Sets a pin on a given port to high or low
-Parameters:
-    p_gpiox: Register structure for the GPIO port
-    pin_no: Pin number for to be changed
-        PIN_NO_x (0-15)
-    pin_level: Pin logic level
-        HIGH (1) 
-        LOW (0)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+// Function: gpio_write
+// Overview: Sets a pin on a given port to high or low
+// Parameters:
+//     p_gpiox: Register structure for the GPIO port
+//     pin_no: Pin number for to be changed
+//         PIN_NO_x (0-15)
+//     pin_level: Pin logic level
+//         HIGH 
+//         LOW
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_no, pin_logic_level_e pin_level)
 {
     // ... 
