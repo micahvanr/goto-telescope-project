@@ -30,6 +30,7 @@ be avoided but the ones listed in this table are okay to use.
 | num | number |
 | p_ | pointer (to) |
 | param | parameter |
+| pend | pending |
 | peri | peripheral | 
 | pre | prescaler |
 | pwr | power controller |
