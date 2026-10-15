@@ -26,10 +26,6 @@
 // TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
 // TODO: All enums should have an underlying type defined such as uint8_t or uint32_t
 
-// TODO: Add standard common phrases
-// TODO: Change function format from "=" to "-"
-// TODO: Change comment block format: both file and function comment blocks
-// TODO: Add layout to common/ directory
 // TODO: Think about removing handle struct
 
 int main(void)
