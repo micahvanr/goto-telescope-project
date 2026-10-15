@@ -17,6 +17,7 @@
 //=========================================//{
 
 #include "exti.h"
+#include "assert_handler.h"
 
 //======================================================================================//}
 //                  Private Constants
@@ -498,10 +499,14 @@ typedef enum : uint32_t {
 // clang-format on
 
 //======================================================================================//}
-//                  Public Function Implementation
+//                  Private Function Prototypes
 //======================================================================================//{
 
-// TODO: Add asserts to ensure line num correct
+static inline void assert_line_num_param(exti_lines_e line_num);
+
+//======================================================================================//}
+//                  Public Function Implementation
+//======================================================================================//{
 
 //============================================================================//{
 //  Function: exti_config_it
@@ -518,6 +523,7 @@ typedef enum : uint32_t {
 //============================================================================//}
 void exti_config_it(exti_lines_e line_num, togglable_e toggle)
 {
+    assert_line_num_param(line_num);
     switch (toggle)
     {
         case ENABLE:
@@ -544,6 +550,7 @@ void exti_config_it(exti_lines_e line_num, togglable_e toggle)
 //============================================================================//}
 void exti_config_event(exti_lines_e line_num, togglable_e toggle)
 {
+    assert_line_num_param(line_num);
     switch (toggle)
     {
         case ENABLE:
@@ -570,6 +577,7 @@ void exti_config_event(exti_lines_e line_num, togglable_e toggle)
 //============================================================================//}
 void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
 {
+    assert_line_num_param(line_num);
     switch (toggle)
     {
         case ENABLE:
@@ -596,6 +604,7 @@ void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
 //============================================================================//}
 void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle)
 {
+    assert_line_num_param(line_num);
     switch (toggle)
     {
         case ENABLE:
@@ -619,6 +628,7 @@ void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle)
 //============================================================================//}
 void exti_trigger_software_it_event(exti_lines_e line_num)
 {
+    assert_line_num_param(line_num);
     EXTI->SWIER |= (1 << line_num);
 }
 
@@ -636,6 +646,7 @@ void exti_trigger_software_it_event(exti_lines_e line_num)
 //============================================================================//}
 exti_pend_status_e exti_get_pending(exti_lines_e line_num)
 {
+    assert_line_num_param(line_num);
     return 0b1 & (EXTI->SWIER >> line_num);
 }
 
@@ -651,7 +662,17 @@ exti_pend_status_e exti_get_pending(exti_lines_e line_num)
 //============================================================================//}
 void exti_clear_pending(exti_lines_e line_num)
 {
+    assert_line_num_param(line_num);
     EXTI->PR |= (1 << line_num);
+}
+
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
+
+static inline void assert_line_num_param(exti_lines_e line_num)
+{
+    ASSERT((line_num >= EXTI_LINE_NUM_0) && (line_num <= EXTI_LINE_NUM_22));
 }
 
 // *End of file*
