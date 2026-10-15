@@ -83,6 +83,21 @@ Commit structure will follow [conventional commits](https://www.conventionalcomm
 * One change per commit:
     * Each commit should make one change or addition in order for them to be organized well and the commits will be clear.
 * Commits should build (if applicable):
+
+### Types
+Pulled from [Angular convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) and 
+conventional commits and modified slightly to match my use case:
+* fix: a commit of the type fix patches a bug in your codebase.
+* feat: a commit of the type feat introduces a new feature to the codebase.
+* build: Changes that affect the build system or external dependencies
+* ci: Changes to our CI configuration files and scripts
+* docs: Documentation only changes
+* feat: A new feature
+* fix: A bug fix
+* perf: A code change that improves performance
+* refactor: A code change that neither fixes a bug nor adds a feature
+* style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* test: Adding missing tests or correcting existing tests
 	
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
