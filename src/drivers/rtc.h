@@ -33,22 +33,16 @@ typedef enum : uint32_t {
 //} Config Options
 //=========================================//{
 
-// Applications:
-// - RTC CR FMT
 typedef enum : uint32_t {
     RTC_TIME_FORMAT_24HR = 0b0,
     RTC_TIME_FORMAT_12HR = 0b1,
 } rtc_time_format_e;
 
-// Applications:
-// - RTC TR PM
 typedef enum : uint32_t {
     RTC_TIME_AM = 0b0,
     RTC_TIME_PM = 0b1,
 } rtc_time_am_pm_e;
 
-// Applications:
-// - RTC DR WDU
 typedef enum : uint32_t {
     RTC_WEEKDAY_MONDAY    = 0b001,
     RTC_WEEKDAY_TUESDAY   = 0b010,
@@ -67,36 +61,26 @@ typedef enum : uint8_t {
     RTC_ALARM_B_SEL,
 } rtc_alarm_sel_e;
 
-// Applications:
-// - RTC ALRMxR MSK1
 typedef enum : uint32_t {
     RTC_ALARM_SECONDS_MATCH     = 0b0,
     RTC_ALARM_SECONDS_DONT_CARE = 0b1,
 } rtc_alarm_seconds_match_e;
 
-// Applications:
-// - RTC ALRMxR MSK2
 typedef enum : uint32_t {
     RTC_ALARM_MINUTES_MATCH     = 0b0,
     RTC_ALARM_MINUTES_DONT_CARE = 0b1,
 } rtc_alarm_minutes_match_e;
 
-// Applications:
-// - RTC ALRMxR MSK3
 typedef enum : uint32_t {
     RTC_ALARM_HOURS_MATCH     = 0b0,
     RTC_ALARM_HOURS_DONT_CARE = 0b1,
 } rtc_alarm_hours_match_e;
 
-// Applications:
-// - RTC ALRMxR MSK4
 typedef enum : uint32_t {
     RTC_ALARM_DATEDAY_MATCH     = 0b0,
     RTC_ALARM_DATEDAY_DONT_CARE = 0b1,
 } rtc_alarm_dateday_match_e;
 
-// Applications:
-// - RTC ALRMxR WDSEL
 typedef enum : uint32_t {
     RTC_ALARM_WEEKDAY_SEL_DATE    = 0b0,
     RTC_ALARM_WEEKDAY_SEL_WEEKDAY = 0b1,
@@ -145,17 +129,12 @@ typedef enum : uint32_t {
 //} Misc. Constants
 //=========================================//{
 
-// TODO: Add applications section for enums.
-// Register names or function names
-
 typedef enum : uint32_t {
     RTC_EXTI_NUM_ALARM     = EXTI_LINE_NUM_17,
     RTC_EXTI_NUM_WAKE_UP   = EXTI_LINE_NUM_22,
     RTC_EXTI_NUM_TIMESTAMP = EXTI_LINE_NUM_21,
 } rtc_exti_line_num_e;
 
-// Applications:
-// - RTC ISR ALARxF
 typedef enum : uint32_t {
     RTC_ALARM_STATUS_NOT_TRIGGERED = 0b0,
     RTC_ALARM_STATUS_TRIGGERED     = 0b1,

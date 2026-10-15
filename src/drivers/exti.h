@@ -62,8 +62,6 @@ typedef enum : uint32_t {
     EXTI_LINE_NUM_22 = 22,
 } exti_lines_e;
 
-// Applications:
-// - EXTI PR
 typedef enum : uint32_t {
     EXTI_PEND_STATUS_NOT_TRIGGERED = 0b0,
     EXTI_PEND_STATUS_TRIGGERED     = 0b1,
