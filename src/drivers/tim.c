@@ -686,23 +686,22 @@ static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *co
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: tim_delay 
-Overview: Creates a delay for a given amount of time.
-Parameters: 
-    time: Time for delay
-    unit: Unit of time
-        TIM_UNIT_S  
-        TIM_UNIT_MS 
-        TIM_UNIT_US 
-Return: 
-    None
-Note: Care should be taken when using us unit as the delay can be too short and 
-the software may not be able to keep up.
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_delay 
+//  Overview: Create a delay for a given amount of time.
+//  Parameters: 
+//      time: Time for delay
+//      unit: Unit of time
+//          TIM_UNIT_S  
+//          TIM_UNIT_MS 
+//          TIM_UNIT_US 
+//  Return: 
+//      None
+//  Note: Care should be taken when using us unit as the delay can be too short and 
+//  the software may not be able to keep up.
+//============================================================================//}
 void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
 {
-    // TODO: Move to seperate function?
     static uint8_t initialized = false;
     tim_handle delay_handler   = {0};
 
