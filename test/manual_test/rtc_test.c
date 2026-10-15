@@ -25,7 +25,7 @@
 //                  Private Constants
 //======================================================================================//{
 
-typedef enum {
+typedef enum : uint8_t {
     RTC_TEST_TIME = 30,
 } rtc_test_e;
 

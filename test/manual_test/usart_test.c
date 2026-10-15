@@ -27,7 +27,7 @@
 #define TEST_USART_PORT      USART2
 #define TEST_USART_GPIO_PORT GPIOD
 
-typedef enum {
+typedef enum : uint8_t {
     TEST_USART_TX_PIN = PIN_NUM_5,
     TEST_USART_RX_PIN = PIN_NUM_6,
 } test_usart_pins_e;

@@ -27,7 +27,7 @@
 #define TEST_I2C_PORT      I2C1
 #define TEST_I2C_GPIO_PORT GPIOB
 
-typedef enum {
+typedef enum : uint8_t {
     TEST_I2C_SCL_PIN = PIN_NUM_6,
     TEST_I2C_SDA_PIN = PIN_NUM_7,
 } test_i2c_pins_e;
