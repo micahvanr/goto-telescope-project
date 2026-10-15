@@ -1,12 +1,12 @@
-/*****************************************************************************************
-File: nvic.h
-Overview: Provides functions for using the NVIC peripheral. Used to configure interrupts in
-    the processor.
-Features:
-    Configure interrupts
-    Configure priority of interrupts
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: nvic.h
+//  Overview: Provides functions for using the NVIC peripheral. Used to configure interrupts in
+//      the processor.
+//  Features:
+//      Configure interrupts
+//      Configure priority of interrupts
+//  Notes: None
+//======================================================================================//{
 
 #ifndef NVIC_H
 #define NVIC_H
@@ -61,7 +61,7 @@ typedef enum {
 //======================================================================================//{
 
 void nvic_irq_config(irq_number_e irq_num, togglable_e toggle);
-void nvic_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
+void nvim_set_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 
 #endif // NVIC_H
 

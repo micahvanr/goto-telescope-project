@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: pwr.c
-Overview: Provides functions for using the PWR peripheral.
-Features:
-    Disabling backup write protection
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: pwr.c
+//  Overview: Provides functions for using the PWR peripheral.
+//  Features:
+//      Disabling backup write protection
+//  Notes: None
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -90,15 +90,15 @@ typedef enum : uint32_t {
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: pwr_disable_backup_write_prot
-Overview: Disables the write protection for the RTC Backup registers and backup SRAM.
-Parameters: 
-    None
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: pwr_disable_backup_write_prot
+//  Overview: Disable write protection for the RTC Backup registers and backup SRAM.
+//  Parameters:
+//      None
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void pwr_disable_backup_write_prot(void)
 {
     uint32_t dummy_read;

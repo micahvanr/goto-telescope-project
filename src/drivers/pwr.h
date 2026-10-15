@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: pwr.h
-Overview: Provides functions for using the PWR peripheral.
-Features:
-    Disabling backup write protection
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: pwr.h
+//  Overview: Provides functions for using the PWR peripheral.
+//  Features:
+//      Disabling backup write protection
+//  Notes: None
+//======================================================================================//}
 
 #ifndef PWR_H
 #define PWR_H

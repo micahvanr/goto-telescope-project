@@ -163,16 +163,16 @@ void test_rtc_timestamp(void)
 //============================================================================//{
 //  Function: test_rtc_wakeup
 //  Overview: Test RTC wakeup interrupt with logic analyzer.
-//  Test goals: 
+//  Test goals:
 //      - RTC wakeup triggering
 //      - Wakeup triggers very closely to every second
 //      - RTC time output is accurate
 //      - RTC interrupts with wakeup
-//  Setup: 
+//  Setup:
 //      - PA2 -> logic analyzer: read printf.
 //      - PA3 -> logic analyzer: read debug pin.
-//  Expectations: Use logic analyzer to view printf. 
-//  Note: Unlike other RTC tests here time accuracy between triggers is very important. 
+//  Expectations: Use logic analyzer to view printf.
+//  Note: Unlike other RTC tests here time accuracy between triggers is very important.
 //============================================================================//}
 void test_rtc_wakeup(void)
 {

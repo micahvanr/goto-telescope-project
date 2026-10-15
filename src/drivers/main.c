@@ -29,6 +29,8 @@
 // TODO: Add standard common phrases
 // TODO: Change function format from "=" to "-"
 // TODO: Change comment block format: both file and function comment blocks
+// TODO: Add layout to common/ directory
+// TODO: Think about removing handle struct
 
 int main(void)
 {

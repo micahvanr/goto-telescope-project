@@ -1,16 +1,16 @@
-/*****************************************************************************************
-File: tim.h
-Overview: Provides functions for initializing, configuring, and using the TIMER peripheral.
-Features:
-    Base time keeping (w/ interrupt capability)
-    Input capture (w/ interrupt capability)
-    Output compare (w/ interrupt capability)
-Notes:
-- Basic Timers: TIM6 & TIM7
-- General Purpose Timers: TIM2 - TIM5
-- General Purpose Timers: TIM9 - TIM14
-- Advanced Control Timers: TIM1 & TIM8
-******************************************************************************************/
+//======================================================================================//{
+//  File: tim.c
+//  Overview: Provides functions for initializing, configuring, and using the TIMER peripheral.
+//  Features:
+//      Base time keeping (w/ interrupt capability)
+//      Input capture (w/ interrupt capability)
+//      Output compare (w/ interrupt capability)
+//  Notes:
+//      - Basic Timers: TIM6 & TIM7
+//      - General Purpose Timers: TIM2 - TIM5
+//      - General Purpose Timers: TIM9 - TIM14
+//      - Advanced Control Timers: TIM1 & TIM8
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -726,15 +726,15 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
     tim_reset_status(delay_handler.p_timx);
 }
 
-/***************************************************************************
-Function: tim_init
-Overview: Initializes the TIMER peripheral inside the handle with the settings in the configuration structure.
-Parameters:
-    p_tim_handle: Structure with the corresponding settings to configure the TIMER peripheral.
-Return: 
-    None
-Note: Check handler's substructures for default values.
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_init
+//  Overview: Initialize the specified TIMER periperal according to settings in handle.
+//  Parameters:
+//      p_tim_handle: Structure with the corresponding settings to configure the TIMER peripheral.
+//  Return:
+//      None
+//  Note:
+//============================================================================//}
 void tim_init(tim_handle *const p_tim_handle)
 {
     tim_type_e timer_type;
@@ -864,31 +864,31 @@ static void assert_tim_handle_param(tim_handle const *const p_tim_handle)
     // clang-format on
 }
 
-/***************************************************************************
-Function: tim_reset 
-Overview: Resets the given timer.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_reset
+//  Overview: Reset the specified timer.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_reset(tim_reg_def const *const p_timx)
 {
     rcc_tim_togglable_clock(p_timx, DISABLE);
 }
 
-/***************************************************************************
-Function: tim_start
-Overview: Starts the counter on the given timer.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+// Function: tim_start
+// Overview: Start the counter on the given timer.
+// Parameters:
+//      p_TIMx: TIMER register structure macro.
+//         TIMx (1-14)
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void tim_start(tim_reg_def *const p_timx)
 {
     if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
@@ -898,16 +898,16 @@ void tim_start(tim_reg_def *const p_timx)
     p_timx->CR1 |= TIM_CR1_CEN;
 }
 
-/***************************************************************************
-Function: tim_start_it
-Overview: Starts the counter on the given timer with interrupts enabled.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+// Function: tim_start_it
+// Overview: Starts the counter on the specified timer with interrupts enabled.
+// Parameters:
+//      p_TIMx: TIMER register structure macro.
+//         TIMx (1-14)
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void tim_start_it(tim_reg_def *const p_timx)
 {
     if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
@@ -919,16 +919,16 @@ void tim_start_it(tim_reg_def *const p_timx)
     p_timx->CR1 |= TIM_CR1_CEN;
 }
 
-/***************************************************************************
-Function: tim_channel_start
-Overview: Enables the counter on the given timer.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_channel_start
+//  Overview: Enable the counter on the specified timer.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
@@ -941,16 +941,16 @@ void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channe
     p_timx->CCER |= 1 << ENABLE_REG_SHIFT;
 }
 
-/***************************************************************************
-Function: tim_channel_start
-Overview: Enables the counter on the given timer.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_channel_start
+//  Overview: Enable the counter on the specified timer.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
@@ -965,22 +965,22 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
     p_timx->CCER |= 1 << ENABLE_REG_SHIFT;
 }
 
-/***************************************************************************
-Function: tim_config_it
-Overview: Configures the given TIMER base peripheral and/or channel.
-Parameters: 
-    p_timx: TIMER peripheral structure.
-        TIMx (1-14)
-    channel: Channel to be configured.
-        TIM_CHANNEL_SEL_x (1-4)
-        TIM_CHANNEL_NA
-    toggle: 
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_config_it
+//  Overview: Enable or disable the specified TIMER peripheral and/or channel.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//      channel: Channel to be configured.
+//          TIM_CHANNEL_SEL_x (1-4)
+//          TIM_CHANNEL_NA
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1))
@@ -1036,17 +1036,19 @@ void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const chan
     }
 }
 
-/***************************************************************************
-Function: tim_ic_init 
-Overview: Initializes the TIMER input capture with the settings in the configuration structure.
-Parameters: 
-    p_timx: TIMER peripheral structure.
-        TIMx (1-14)
-    ic_config: Input capture configuration settings.
-Return: 
-    None
-Note: None
-***************************************************************************/
+// TODO: Finish changing format
+
+//============================================================================//{
+// Function: tim_ic_init
+// Overview: Initializes the TIMER input capture with the settings in the configuration structure.
+// Parameters:
+//      p_TIMx: TIMER register structure macro.
+//         TIMx (1-14)
+//     ic_config: Input capture configuration settings.
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 {
     // Either % the channel num and start from 1 or dont and start channel num from 0.
@@ -1149,17 +1151,17 @@ static void assert_tim_ic_config_param(tim_reg_def const *const p_timx, tim_ic_c
     // clang-format on
 }
 
-/***************************************************************************
-Function: tim_oc_init 
-Overview: Initializes the TIMER output compare with the settings in the configuration structure.
-Parameters: 
-    p_timx: TIMER peripheral structure.
-        TIMx (1-14)
-    oc_config: Output compare configuration settings.
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_oc_init
+//  Overview: Initialize the TIMER output compare according to the settings in the config structure.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//      oc_config: Output compare configuration settings.
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_oc_init(tim_reg_def *const p_timx, tim_oc_config const oc_config)
 {
     // Either % the channel num and start from 1 or dont and start channel num from 0.
@@ -1244,105 +1246,105 @@ static void assert_tim_oc_config_param(tim_reg_def const *const p_timx, tim_oc_c
     // clang-format on
 }
 
-/***************************************************************************
-Function: tim_read_status
-Overview: Reads the status update flag.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    tim_status_e: Status of timer:
-    TIM_UPDATE_NA
-    TIM_UPDATE_FOUND
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_read_status
+//  Overview: Get the specified timer's status update flag.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      tim_status_e: Status of timer:
+//      TIM_UPDATE_NA
+//      TIM_UPDATE_FOUND
+//  Note: None
+//============================================================================//}
 tim_status_e tim_read_status(tim_reg_def const *const p_timx)
 {
     return (tim_status_e) (p_timx->SR & TIM_SR_UIF);
 }
 
-/***************************************************************************
-Function: tim_reset_status
-Overview: Resets the status update flag for the timer.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_reset_status
+//  Overview: Reset the specified timer's status update flag.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_reset_status(tim_reg_def *const p_timx)
 {
     p_timx->SR &= ~TIM_SR_UIF;
 }
 
-/***************************************************************************
-Function: tim_read_channel_status
-Overview: Reads the status update flag.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-Return: 
-    tim_status_e: Status of timer:
-    TIM_UPDATE_NA
-    TIM_UPDATE_FOUND
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_read_channel_status
+//  Overview: Get the specified timer's status update flag.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      tim_status_e: Status of timer:
+//      TIM_UPDATE_NA
+//      TIM_UPDATE_FOUND
+//  Note: None
+//============================================================================//}
 tim_status_e tim_read_channel_status(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
     return (tim_status_e) ((p_timx->SR & (TIM_SR_CC1IF << channel)) >> TIM_SR_CC1IF_POS);
 }
 
-/***************************************************************************
-Function: tim_reset_status
-Overview: Resets the status update flag for the given channel.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-    channel: Channel to be configured.
-        TIM_CHANNEL_SEL_x (1-4)
-        TIM_CHANNEL_NA
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_reset_status
+//  Overview: Reset the specified channel's status update flag.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//      channel: Channel to be configured.
+//          TIM_CHANNEL_SEL_x (1-4)
+//          TIM_CHANNEL_NA
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void tim_reset_channel_status(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     p_timx->SR &= ~(TIM_SR_CC1IF << channel);
 }
 
-/***************************************************************************
-Function: tim_get_channel_ccr
-Overview: Gets the given TIMER's channel CCR value.
-Parameters: 
-    p_timx: TIMER peripheral
-        TIMx (1-14)
-    channel: Channel to be configured.
-        TIM_CHANNEL_SEL_x (1-4)
-        TIM_CHANNEL_NA
-Return: 
-    uint32_t: CCR value of channel.
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_get_channel_ccr
+//  Overview: Get the specified TIMER's channel capture/compare value.
+//  Parameters:
+//       p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//      channel: Channel to be configured.
+//          TIM_CHANNEL_SEL_x (1-4)
+//          TIM_CHANNEL_NA
+//  Return:
+//      uint32_t: CCR value of channel.
+//  Note: None
+//============================================================================//}
 uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const channel)
 {
     return p_timx->CCR[channel];
 }
 
-/***************************************************************************
-Function: tim_get_bus
-Overview: Gets the bus depending on the given timer peripheral
-Parameters: 
-    p_timx:
-        TIMx (1-14)
-Return: 
-    bus_types: 
-        AHB1_BUS       
-        AHB2_BUS
-        APB1_BUS
-        APB2_BUS
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: tim_get_bus
+//  Overview: Get the specified timer's bus.
+//  Parameters:
+//      p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      bus_types:
+//          AHB1_BUS
+//          AHB2_BUS
+//          APB1_BUS
+//          APB2_BUS
+//  Note: None
+//============================================================================//}
 bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
     // If TIMER peripheral on APB2

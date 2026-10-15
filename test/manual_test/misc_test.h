@@ -1,5 +1,5 @@
 //======================================================================================//{
-//  File: misc_test.c
+//  File: misc_test.h
 //  Overview: Test miscellaneous functions that don't need their own seperate test file.
 //  Tests:
 //      - Assertion triggering

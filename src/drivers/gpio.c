@@ -1,20 +1,21 @@
-/*****************************************************************************************
-File: gpio.c
-Overview: Provides functions for initializing, configuring, and using the GPIO peripheral.
-Features:
-    Configure pin according to settings 
-    Set pin state
-    Read pin state
-    Toggle pin state
-    Interrupt detection
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: gpio.c
+//  Overview: Provides functions for initializing, configuring, and using the GPIO peripheral.
+//  Features:
+//      Configure pin according to settings
+//      Set pin state
+//      Read pin state
+//      Toggle pin state
+//      Interrupt detection
+//  Notes: None
+//======================================================================================//{
 
 //} Include Statements
 //=========================================//{
 
 #include "gpio.h"
 #include "assert_handler.h"
+#include "exti.h"
 #include "nvic.h"
 #include "rcc.h"
 #include "syscfg.h"
@@ -638,17 +639,16 @@ static inline uint8_t map_exti_to_irq_num(exti_lines_e line_num);
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: gpio_init
-Overview: Takes a given GPIO handle structure and configures the drivers appropriately.
-Parameters:
-    p_gpio_handle: Structure with the corresponding settings to configure the GPIO pin.
-Return: 
-    None
-Note: 
-    The structure must be initialized with 0 before use to get the default value. 
-        Otherwise be sure to set every member element to a value.
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_init
+//  Overview: Initialize the specified GPIO port according to settings in handle.
+//  Parameters:
+//      p_gpio_handle: Structure with the corresponding settings to configure the GPIO pin.
+//  Return:
+//      None
+//  Note: The structure must be initialized with 0 before use to get the default value.
+//      Otherwise be sure to set every member element to a value.
+//============================================================================//}
 void gpio_init(gpio_handle *const p_gpio_handle)
 {
     pin_number_e pin_num = p_gpio_handle->gpio_conf.pin_num;
@@ -695,32 +695,33 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     }
 }
 
-/***************************************************************************
-Function: gpio_reset
-Overview: Takes a given GPIO port and resets it using the RCC.
-Parameters:
-    p_gpiox: Port register strucutre that needs to be reset.
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_reset
+//  Overview: Reset the specified GPIO port.
+//  Parameters:
+//      p_gpiox: GPIO register structure macro.
+//          GPIOx (A-H)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void gpio_reset(gpio_reg_def const *const p_gpiox)
 {
     RCC->AHB1ENR |= (1 << map_gpio_ports_to_num(p_gpiox));
 }
 
-/***************************************************************************
-Function: gpio_config_it
-Overview: Takes a given GPIO handle structure with the pin number within it and enables or disables the interrupt for it.
-Parameters:
-    p_gpio_handle: Structure with the corresponding settings to configure the GPIO port.
-    toggle: 
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_config_it
+//  Overview: Enable or disable interrupts for the specified GPIO port according to settings inside handle.
+//  Parameters:
+//      p_gpio_handle: Structure with the corresponding settings to configure the GPIO pin.
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
     exti_lines_e exti_line_num = (exti_lines_e) p_gpio_handle->gpio_conf.pin_num;
@@ -752,36 +753,36 @@ void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const to
     nvic_irq_config(map_exti_to_irq_num(exti_line_num), ENABLE);
 }
 
-/***************************************************************************
-Function: gpio_it_handler
-Overview: Function to be called inside application EXTI interrupt so it can clear the corresponding EXTI line.
-Parameters:
-    exti_line: EXTI line that needs to be cleared.
-        EXTI_LINE_NUM_x (0-22)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_it_handler
+//  Overview: Handle the specified EXTI line's interrupts.
+//  Parameters:
+//      exti_line: EXTI line that needs to be cleared.
+//          EXTI_LINE_NUM_x (0-22)
+//  Return:
+//      None
+//  Note: This function should be called by the applications IT handler.
+//============================================================================//}
 void gpio_it_handler(exti_lines_e const exti_line)
 {
-    // Clears the pending bit for the EXTI line in the EXTI register.
-    EXTI->PR |= (1 << exti_line);
+    exti_clear_pending(exti_line);
 }
 
-/***************************************************************************
-Function: gpio_write
-Overview: Sets a pin on a given port to high or low.
-Parameters:
-    p_gpiox: Register structure for the GPIO port.
-    pin_num: Pin number for to be changed.
-        PIN_NUM_x (0-15)
-    pin_level: Pin logic level.
-        HIGH 
-        LOW
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_write
+//  Overview: Set the specified pin high or low.
+//  Parameters:
+//      p_gpiox: GPIO register structure macro.
+//          GPIOx (A-H)
+//      pin_num:
+//          PIN_NUM_x (0-15)
+//      pin_level:
+//          HIGH
+//          LOW
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_logic_level_e const pin_level)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
@@ -796,38 +797,38 @@ void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_log
     }
 }
 
-/***************************************************************************
-Function: gpio_read
-Overview: Reads a pin on a given port and returns high or low.
-Parameters:
-    p_gpiox: Register structure for the GPIO port.
-        GPIOx (A-H)
-    pin_num:
-        PIN_NUM_x (0-15)
-Return: 
-    pin_logic_level_e: Level of the port/pin read from.
-        HIGH 
-        LOW
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_read
+//  Overview: Reads a pin on a given port and returns high or low.
+//  Parameters:
+//      p_gpiox: GPIO register structure macro.
+//          GPIOx (A-H)
+//      pin_num:
+//          PIN_NUM_x (0-15)
+//  Return:
+//      pin_logic_level_e:
+//          HIGH
+//          LOW
+//  Note: None
+//============================================================================//}
 pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
     return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_num));
 }
 
-/***************************************************************************
-Function: gpio_toggle
-Overview: Toggles a pin on a given port.
-Parameters:
-    p_gpiox: Register structure for the GPIO port.
-        GPIOx (A-H)
-    pin_num:
-        PIN_NUM_x (0-15)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: gpio_toggle
+//  Overview: Toggle the specified pin.
+//  Parameters:
+//      p_gpiox: GPIO register structure macro.
+//          GPIOx (A-H)
+//      pin_num:
+//          PIN_NUM_x (0-15)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_num)
 {
     ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);

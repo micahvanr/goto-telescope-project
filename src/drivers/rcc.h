@@ -1,10 +1,24 @@
-/*****************************************************************************************
-File: module.h
-Overview: Description of the module's purpose.
-Features:
-    List of features
-Notes: Additional notes that user might/should want to know
-******************************************************************************************/
+//======================================================================================//{
+//  File: rcc.h
+//  Overview: Provides functions for initializing, configuring, and using the RCC peripheral.
+//  Features:
+//      Enable or disable LSI
+//      Check if LSI is ready
+//      Enable or disable GPIO clock
+//      Enable or disable I2C clock
+//      Enable or disable PWR clock
+//      Enable or disable RTC clock
+//      Enable or disable SYSCFG clock
+//      Enable or disable TIM clock
+//      Enable or disable USART clock
+//      Get bus clock frequency
+//      Get timer bus clock frequency
+//      Get system clock frequency
+//      Get PLL clock frequency
+//      Configure RTC clock source and prescaler
+//      Configure MCO pin
+//  Notes: Additional notes that user might/should want to know
+//======================================================================================//}
 
 #ifndef RCC_H
 #define RCC_H

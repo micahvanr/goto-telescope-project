@@ -1,17 +1,17 @@
-/*****************************************************************************************
-File: exti.c
-Overview: Provides functions for initializing, configuring, and using the EXTI peripheral.
-    Used to configure GPIO interrupts and other external interrupts and events.
-Features:
-    Configure interrupts
-    Configure events
-    Configure rising edge
-    Configure falling edge
-    Trigger software interrupt events
-    Check pending status
-    Clear pending status
-Notes: EXTI are connected to GPIO pins and other external sources.
-******************************************************************************************/
+//======================================================================================//{
+//  File: exti.c
+//  Overview: Provides functions for initializing, configuring, and using the EXTI peripheral.
+//      Used to configure GPIO interrupts and other external interrupts and events.
+//  Features:
+//      Configure interrupts
+//      Configure events
+//      Configure rising edge
+//      Configure falling edge
+//      Trigger software interrupt events
+//      Check pending status
+//      Clear pending status
+//  Notes: EXTI are connected to GPIO pins and other external sources.
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -501,21 +501,21 @@ typedef enum : uint32_t {
 //                  Public Function Implementation
 //======================================================================================//{
 
-// TODO: Add asserts to ensure line no is correct
+// TODO: Add asserts to ensure line num correct
 
-/***************************************************************************
-Function: exti_config_it
-Overview: Enables or disable the interrupts for the specified EXTI line.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_config_it
+//  Overview: Enable or disable interrupts for the specified EXTI line.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void exti_config_it(exti_lines_e line_num, togglable_e toggle)
 {
     switch (toggle)
@@ -529,19 +529,19 @@ void exti_config_it(exti_lines_e line_num, togglable_e toggle)
     }
 }
 
-/***************************************************************************
-Function: exti_config_event
-Overview: Enables or disables the events for the specified EXTI line.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_config_event
+//  Overview: Enable or disable events for the specified EXTI line.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void exti_config_event(exti_lines_e line_num, togglable_e toggle)
 {
     switch (toggle)
@@ -555,19 +555,19 @@ void exti_config_event(exti_lines_e line_num, togglable_e toggle)
     }
 }
 
-/***************************************************************************
-Function: exti_config_rising_edge
-Overview: Enables or disables the rising edge trigger for the specified EXTI line.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+// Function: exti_config_rising_edge
+// Overview: Enable or disable rising edge trigger for the specified EXTI line.
+// Parameters:
+//     line_num:
+//         EXTI_LINE_NUM_x (0-22)
+//     toggle:
+//         ENABLE
+//         DISABLE
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
 {
     switch (toggle)
@@ -581,19 +581,19 @@ void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
     }
 }
 
-/***************************************************************************
-Function: exti_config_falling_edge
-Overview: Enables or disables the falling edge trigger for the specified EXTI line.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_config_falling_edge
+//  Overview: Enable or disable falling edge trigger for the specified EXTI line.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle)
 {
     switch (toggle)
@@ -607,48 +607,48 @@ void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle)
     }
 }
 
-/***************************************************************************
-Function: exti_trigger_software_it_event 
-Overview: Triggers a software interrupt/event for the specified EXTI line.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_trigger_software_it_event
+//  Overview: Trigger a software interrupt/event for the specified EXTI line.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void exti_trigger_software_it_event(exti_lines_e line_num)
 {
     EXTI->SWIER |= (1 << line_num);
 }
 
-/***************************************************************************
-Function: exti_get_pending 
-Overview: Returns whether the EXTI line has a pending trigger.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-Return: 
-    exti_pend_status_e 
-        EXTI_PEND_STATUS_NOT_TRIGGERED 
-        EXTI_PEND_STATUS_TRIGGERED     
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_get_pending
+//  Overview: Get the specified EXTI line's pending trigger status.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//  Return:
+//      exti_pend_status_e
+//          EXTI_PEND_STATUS_NOT_TRIGGERED
+//          EXTI_PEND_STATUS_TRIGGERED
+//  Note: None
+//============================================================================//}
 exti_pend_status_e exti_get_pending(exti_lines_e line_num)
 {
     return 0b1 & (EXTI->SWIER >> line_num);
 }
 
-/***************************************************************************
-Function: exti_clear_pending 
-Overview: Clears the specified EXTI line's pending trigger.
-Parameters: 
-    line_num:
-        EXTI_LINE_NUM_x (0-22)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: exti_clear_pending
+//  Overview: Clear the specified EXTI line's pending trigger.
+//  Parameters:
+//      line_num:
+//          EXTI_LINE_NUM_x (0-22)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void exti_clear_pending(exti_lines_e line_num)
 {
     EXTI->PR |= (1 << line_num);

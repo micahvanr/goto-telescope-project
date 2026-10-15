@@ -1,5 +1,5 @@
 //======================================================================================//{
-//  File: rtc_test.c
+//  File: rtc_test.h
 //  Overview: Tests some of the RTC functionality.
 //  Tests:
 //      - Base time keeping

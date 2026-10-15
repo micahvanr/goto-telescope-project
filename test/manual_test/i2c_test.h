@@ -1,5 +1,5 @@
 //======================================================================================//{
-//  File: i2c_test.c
+//  File: i2c_test.h
 //  Overview: Tests some of the I2C functionality.
 //  Tests:
 //      - Master/slave transmit/receive (w/ interrupts)

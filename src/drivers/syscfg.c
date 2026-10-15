@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: syscfg.c
-Overview: Provides functions for using the SYSCFG peripheral.
-Features:
-    EXTI interrupt configuration
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: syscfg.c
+//  Overview: Provides functions for using the SYSCFG peripheral.
+//  Features:
+//      EXTI interrupt configuration
+//  Notes: None
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -145,28 +145,21 @@ typedef enum : uint32_t {
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: syscfg_config_exti
-Overview: Configures the GPIO EXTI interrupt lines.
-Parameters: 
-    port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below.
-        GPIOA [0]
-        GPIOB [1]
-        GPIOC [2]
-        GPIOD [3]
-        GPIOE [4]
-        GPIOF [5]
-        GPIOG [6]
-        GPIOH [7]
-    exti_line: EXTI line number ie. the pin number of the GPIO pin.
-        0-15
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+// Function: syscfg_config_exti
+// Overview: Configures the GPIO EXTI interrupt lines.
+// Parameters:
+//     port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below.
+//         GPIOx (A-H) [0-7]
+//     exti_line: EXTI line number ie. the pin number of the GPIO pin.
+//         0-15
+//     toggle:
+//         ENABLE
+//         DISABLE
+// Return:
+//     None
+// Note: None
+//============================================================================//}
 void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
 {
     uint8_t reg_num = exti_line % 4;

@@ -1,13 +1,13 @@
-/*****************************************************************************************
-File: i2c.h
-Overview: Provides functions for initializing, configuring, and using the I2C peripheral.
-Features:
-    Master transmit (w/ interrupt capability)
-    Master receive (w/ interrupt capability)
-    Slave transmit (w/ interrupt capability)
-    Slave receive (w/ interrupt capability)
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: i2c.h
+//  Overview: Provides functions for initializing, configuring, and using the I2C peripheral.
+//  Features:
+//      Master transmit (w/ interrupt capability)
+//      Master receive (w/ interrupt capability)
+//      Slave transmit (w/ interrupt capability)
+//      Slave receive (w/ interrupt capability)
+//  Notes: None
+//======================================================================================//}
 
 #ifndef I2C_H
 #define I2C_H

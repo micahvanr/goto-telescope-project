@@ -1,13 +1,13 @@
-/*****************************************************************************************
-File: rtc.h
-Overview: Provides functions for initializing, configuring, and using the RTC peripheral.
-Features:
-    General time keeping
-    Alarms (w/ interrupt capability)
-    Timestamps (w/ interrupt capability)
-    Wake-up (w/ interrupt capability)
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: rtc.h
+//  Overview: Provides functions for initializing, configuring, and using the RTC peripheral.
+//  Features:
+//      General time keeping
+//      Alarms (w/ interrupt capability)
+//      Timestamps (w/ interrupt capability)
+//      Wake-up (w/ interrupt capability)
+//  Notes: None
+//======================================================================================//}
 
 #ifndef RTC_H
 #define RTC_H

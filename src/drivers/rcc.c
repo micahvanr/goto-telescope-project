@@ -1,10 +1,24 @@
-/*****************************************************************************************
-File: module.c
-Overview: Description of the module's purpose.
-Features:
-    List of features
-Notes: Additional notes that user might/should want to know
-******************************************************************************************/
+//======================================================================================//{
+//  File: rcc.c
+//  Overview: Provides functions for initializing, configuring, and using the RCC peripheral.
+//  Features:
+//      Enable or disable LSI
+//      Check if LSI is ready
+//      Enable or disable GPIO clock
+//      Enable or disable I2C clock
+//      Enable or disable PWR clock
+//      Enable or disable RTC clock
+//      Enable or disable SYSCFG clock
+//      Enable or disable TIM clock
+//      Enable or disable USART clock
+//      Get bus clock frequency
+//      Get timer bus clock frequency
+//      Get system clock frequency
+//      Get PLL clock frequency
+//      Configure RTC clock source and prescaler
+//      Configure MCO pin
+//  Notes: Additional notes that user might/should want to know
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -1039,17 +1053,17 @@ static void init_mco_gpio_pin(rcc_mco_sel_e mco_select);
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: rcc_lsi_config
-Overview: Enables or disables the LSI oscillator.
-Parameters: 
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_lsi_config
+//  Overview: Enable or disable the LSI oscillator.
+//  Parameters:
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_lsi_config(togglable_e toggle)
 {
     switch (toggle)
@@ -1063,34 +1077,34 @@ void rcc_lsi_config(togglable_e toggle)
     }
 }
 
-/***************************************************************************
-Function: rcc_lsi_is_rdy
-Overview: Checks if the LSI oscillator is ready.
-Parameters: 
-    None
-Return: 
-    true
-    false
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_lsi_is_rdy
+//  Overview: Check if the LSI oscillator is ready.
+//  Parameters:
+//      None
+//  Return:
+//      true
+//      false
+//  Note: None
+//============================================================================//}
 bool rcc_lsi_is_rdy(void)
 {
     return (RCC->CSR & RCC_CSR_LSIRDY) >> RCC_CSR_LSIRDY_POS;
 }
 
-/***************************************************************************
-Function: rcc_gpio_togglable_clock 
-Overview: Enables or disables the clock to the given GPIO peripheral.
-Parameters: 
-    p_gpiox: Register structure for the GPIO port.
-        GPIOx (A-H)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_gpio_togglable_clock
+//  Overview: Enable or disable clock to the specified GPIO peripheral.
+//  Parameters:
+//      p_gpiox: Register structure for the GPIO port.
+//          GPIOx (A-H)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_gpio_togglable_clock(gpio_reg_def const *const p_gpiox, togglable_e const toggle)
 {
 
@@ -1121,19 +1135,19 @@ void rcc_gpio_togglable_clock(gpio_reg_def const *const p_gpiox, togglable_e con
     }
 }
 
-/***************************************************************************
-Function: rcc_i2c_togglable_clock 
-Overview: Enables or disables the clock to the given I2C peripheral.
-Parameters: 
-    p_i2cx: Register structure for the I2C port.
-        I2Cx (1-3)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_i2c_togglable_clock
+//  Overview: Enable or disable clock to the specified I2C peripheral.
+//  Parameters:
+//      p_i2cx: Register structure for the I2C port.
+//          I2Cx (1-3)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_i2c_togglable_clock(i2c_reg_def const *const p_i2cx, togglable_e const toggle)
 {
 
@@ -1154,17 +1168,17 @@ void rcc_i2c_togglable_clock(i2c_reg_def const *const p_i2cx, togglable_e const 
     }
 }
 
-/***************************************************************************
-Function: rcc_pwr_togglable_clock 
-Overview: Enables or disables the clock to the PWR peripheral.
-Parameters: 
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_pwr_togglable_clock
+//  Overview: Enable or disable clock to the PWR peripheral.
+//  Parameters:
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_pwr_togglable_clock(togglable_e const toggle)
 {
     switch (toggle)
@@ -1178,15 +1192,15 @@ void rcc_pwr_togglable_clock(togglable_e const toggle)
     }
 }
 
-/***************************************************************************
-Function: rcc_rtc_togglable_clock
-Overview: Enables or disables the RTC clock.
-Parameters: 
-    None
-Return: 
-    None
-Note: Backup domain write protection must be disabled before this is allowed.
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_rtc_togglable_clock
+//  Overview: Enable or disable clock to the RTC peripheral.
+//  Parameters:
+//      None
+//  Return:
+//      None
+//  Note: Backup domain write protection must be disabled before this is allowed.
+//============================================================================//}
 void rcc_rtc_togglable_clock(togglable_e const toggle)
 {
     switch (toggle)
@@ -1200,17 +1214,17 @@ void rcc_rtc_togglable_clock(togglable_e const toggle)
     }
 }
 
-/***************************************************************************
-Function: rcc_syscfg_togglable_clock 
-Overview: Enables or disables the clock to the SYSCFG peripheral.
-Parameters: 
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_syscfg_togglable_clock
+//  Overview: Enable or disable clock to the SYSCFG peripheral.
+//  Parameters:
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_syscfg_togglable_clock(togglable_e const toggle)
 {
     switch (toggle)
@@ -1224,19 +1238,19 @@ void rcc_syscfg_togglable_clock(togglable_e const toggle)
     }
 }
 
-/***************************************************************************
-Function: rcc_tim_togglable_clock 
-Overview: Enables or disables the clock to the given TIM peripheral.
-Parameters: 
-    p_timx: Register structure for the TIM port.
-        TIMx (1-14)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_tim_togglable_clock
+//  Overview: Enable or disable clock to the specified TIM peripheral.
+//  Parameters:
+//      p_timx: Timer register structure macro.
+//          TIMx (1-14)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_tim_togglable_clock(tim_reg_def const *const p_timx, togglable_e const toggle)
 {
 
@@ -1293,20 +1307,20 @@ void rcc_tim_togglable_clock(tim_reg_def const *const p_timx, togglable_e const 
     }
 }
 
-/***************************************************************************
-Function: rcc_usart_togglable_clock 
-Overview: Enables or disables the clock to the given USART peripheral.
-Parameters: 
-    p_usartx: USART register peripheral to be written to.
-        USARTx (1, 2, 3, 6) or
-        UARTx (4, 5)
-    toggle:
-        ENABLE
-        DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_usart_togglable_clock
+//  Overview: Enable or disable clock to the specified USART peripheral.
+//  Parameters:
+//      p_usartx: USART register structure macro.
+//          USARTx (1, 2, 3, 6) or
+//          UARTx (4, 5)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_usart_togglable_clock(usart_reg_def const *const p_usartx, togglable_e const toggle)
 {
 
@@ -1343,15 +1357,15 @@ void rcc_usart_togglable_clock(usart_reg_def const *const p_usartx, togglable_e 
     }
 }
 
-/***************************************************************************
-Function: rcc_get_pll_freq_hz
-Overview: Gets the PLL clock frequency from the PLL register in RCC.
-Parameters:
-    None
-Return: 
-    PLL clock frequency (hz)
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_get_pll_freq_hz
+//  Overview: Get the PLL clock frequency.
+//  Parameters:
+//      None
+//  Return:
+//      PLL clock frequency (hz)
+//  Note: None
+//============================================================================//}
 uint32_t rcc_get_pll_freq_hz(void)
 {
     uint32_t rcc_pllcfgr_reg;
@@ -1399,15 +1413,15 @@ uint32_t rcc_get_pll_freq_hz(void)
     return pll_output_clk_freq;
 }
 
-/***************************************************************************
-Function: rcc_get_sys_clock_freq_hz
-Overview: Gets the system clock frequency depending on what the current clock source is.
-Parameters:
-    None
-Return: 
-    System clock frequency (hz)
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_get_sys_clock_freq_hz
+//  Overview: Get the system clock frequency.
+//  Parameters:
+//      None
+//  Return:
+//      System clock frequency (hz)
+//  Note: None
+//============================================================================//}
 uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL).
@@ -1429,19 +1443,19 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
     }
 }
 
-/***************************************************************************
-Function: rcc_get_bus_clock_freq_hz
-Overview: Gets the given bus clock frequency depending on what the system clock is and what the prescaler values are set to.
-Parameters:
-    bus: Different bus options to be returned.
-        AHB1_BUS
-        AHB2_BUS
-        APB1_BUS
-        APB2_BUS
-Return: 
-    Clock frequency (hz) for the given bus.
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_get_bus_clock_freq_hz
+//  Overview: Get the specified bus clock frequency.
+//  Parameters:
+//      bus: Different bus options to be returned.
+//          AHB1_BUS
+//          AHB2_BUS
+//          APB1_BUS
+//          APB2_BUS
+//  Return:
+//      Clock frequency (hz) for the given bus.
+//  Note: None
+//============================================================================//}
 uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 {
     uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
@@ -1495,17 +1509,17 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     }
 }
 
-/***************************************************************************
-Function: rcc_get_timer_clock_freq_hz
-Overview: Gets the clock frequency depending on the bus of the timer.
-Parameters:
-    bus: Different bus options to be returned.
-        APB1_BUS
-        APB2_BUS
-Return: 
-    Clock frequency (hz) for the timer, given the corresponding bus its on.
-Note: Use TIMER API function to get bus for timer.
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_get_timer_clock_freq_hz
+//  Overview: Get the timer clock frequency from the specified bus.
+//  Parameters:
+//      bus: Different bus options to be returned.
+//          APB1_BUS
+//          APB2_BUS
+//  Return:
+//      Clock frequency (hz) for the timer, given the corresponding bus its on.
+//  Note: Use TIMER API function to get bus for timer.
+//============================================================================//}
 uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
     uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
@@ -1532,19 +1546,19 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
     return bus_clock;
 }
 
-/***************************************************************************
-Function: rcc_sel_rtc_clk_src
-Overview: Sets the RTC clock source.
-Parameters: 
-    rtc_clk_sel: Clock source for RTC
-        RCC_BDCR_RTCSEL_NA 
-        RCC_BDCR_RTCSEL_LSE
-        RCC_BDCR_RTCSEL_LSI
-        RCC_BDCR_RTCSEL_HSE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_sel_rtc_clk_src
+//  Overview: Set the RTC clock source.
+//  Parameters:
+//      rtc_clk_sel: Clock source for RTC
+//          RCC_BDCR_RTCSEL_NA
+//          RCC_BDCR_RTCSEL_LSE
+//          RCC_BDCR_RTCSEL_LSI
+//          RCC_BDCR_RTCSEL_HSE
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel)
 {
     ASSERT((rtc_clk_sel == RCC_RTC_CLK_SRC_NA) || (rtc_clk_sel == RCC_RTC_CLK_SRC_LSE)
@@ -1554,17 +1568,17 @@ void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel)
     RCC->BDCR |= rtc_clk_sel << RCC_BDCR_RTCSEL0_POS;
 }
 
-/***************************************************************************
-Function: rcc_set_rtc_hse_clk_pre
-Overview: Sets the HSE clock prescaler for the RTC peripheral.
-Parameters: 
-    hse_pre: Prescaler to divide HSE by.
-        RCC_CFGR_RTCPRE_NA
-        RCC_CFGR_RTCPRE_x (2 - 31)
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_set_rtc_hse_clk_pre
+//  Overview: Set the HSE clock prescaler for the RTC peripheral.
+//  Parameters:
+//      hse_pre: Prescaler to divide HSE by.
+//          RCC_CFGR_RTCPRE_NA
+//          RCC_CFGR_RTCPRE_x (2 - 31)
+//  Return:
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre)
 {
     // NOTE: Fragile assert but much cleaner than checking against each enum value
@@ -1574,15 +1588,15 @@ void rcc_set_rtc_pre(rcc_rtc_hse_pre_e hse_pre)
     RCC->CFGR |= hse_pre << RCC_CFGR_RTCPRE_POS;
 }
 
-/***************************************************************************
-Function: rcc_get_rtc_clock_freq_hz
-Overview: Gets RTC clock frequency.
-Parameters: 
-    None
-Return: 
-    Clock frequency (hz) for the RTC peripheral.
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: rcc_get_rtc_clock_freq_hz
+//  Overview: Get RTC clock frequency.
+//  Parameters:
+//      None
+//  Return:
+//      Clock frequency (hz) for the RTC peripheral.
+//  Note: None
+//============================================================================//}
 uint32_t rcc_get_rtc_clock_freq_hz(void)
 {
     uint32_t rtc_clk_freq_hz      = 0;
@@ -1611,6 +1625,7 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
     return rtc_clk_freq_hz;
 }
 
+// TODO: Add function comment block
 void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 

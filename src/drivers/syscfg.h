@@ -1,10 +1,10 @@
-/*****************************************************************************************
-File: syscfg.h
-Overview: Provides functions for using the SYSCFG peripheral.
-Features:
-    EXTI interrupt configuration
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: syscfg.h
+//  Overview: Provides functions for using the SYSCFG peripheral.
+//  Features:
+//      EXTI interrupt configuration
+//  Notes: None
+//======================================================================================//}
 
 #ifndef SYSCFG_H
 #define SYSCFG_H

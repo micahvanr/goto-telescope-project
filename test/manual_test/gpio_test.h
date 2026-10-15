@@ -1,5 +1,5 @@
 //======================================================================================//{
-//  File: gpio_test.c
+//  File: gpio_test.h
 //  Overview: Tests some of the GPIO functionality.
 //  Tests:
 //      - Blink led by toggling

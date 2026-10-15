@@ -1,9 +1,9 @@
 //======================================================================================//{
-//  File: usart_test.c
+//  File: usart_test.h
 //  Overview: Test some of the USART functionality.
 //  Tests:
 //      - Transmit/receive (w/ interrupts)
-//  Notes: 
+//  Notes:
 //======================================================================================//}
 
 #ifndef USART_TEST_H

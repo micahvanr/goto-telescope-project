@@ -1,17 +1,17 @@
-/*****************************************************************************************
-File: exti.h
-Overview: Provides functions for initializing, configuring, and using the EXTI peripheral.
-    Used to configure GPIO interrupts and other external interrupts and events.
-Features:
-    Configure interrupts
-    Configure events
-    Configure rising edge
-    Configure falling edge
-    Trigger software interrupt events
-    Check pending status
-    Clear pending status
-Notes: EXTI are connected to GPIO pins and other external sources.
-******************************************************************************************/
+//======================================================================================//{
+//  File: exti.h
+//  Overview: Provides functions for initializing, configuring, and using the EXTI peripheral.
+//      Used to configure GPIO interrupts and other external interrupts and events.
+//  Features:
+//      Configure interrupts
+//      Configure events
+//      Configure rising edge
+//      Configure falling edge
+//      Trigger software interrupt events
+//      Check pending status
+//      Clear pending status
+//  Notes: EXTI are connected to GPIO pins and other external sources.
+//======================================================================================//}
 
 #ifndef EXTI_H
 #define EXTI_H

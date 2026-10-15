@@ -1,13 +1,13 @@
-/*****************************************************************************************
-File: i2c.c
-Overview: Provides functions for initializing, configuring, and using the I2C peripheral.
-Features:
-    Master transmit (w/ interrupt capability)
-    Master receive (w/ interrupt capability)
-    Slave transmit (w/ interrupt capability)
-    Slave receive (w/ interrupt capability)
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: i2c.c
+//  Overview: Provides functions for initializing, configuring, and using the I2C peripheral.
+//  Features:
+//      Master transmit (w/ interrupt capability)
+//      Master receive (w/ interrupt capability)
+//      Slave transmit (w/ interrupt capability)
+//      Slave receive (w/ interrupt capability)
+//  Notes: None
+//======================================================================================//}
 
 //} Include Statements
 //=========================================//{
@@ -329,15 +329,15 @@ static void slave_addr(i2c_handle const *const p_i2c_handle);
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: i2c_init
-Overview: Initializes the I2C peripheral inside the handle with the settings in the configuration structure.
-Parameters:
-    p_i2c_handle: Structure with the corresponding settings to configure the I2C peripheral.
-Return: 
-    None
-Note: 10-bit addressing not implemented.
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_init
+//  Overview: Initialize the specified I2C port according to settings in handle.
+//  Parameters:
+//      p_i2c_handle: Structure with the corresponding settings to configure the I2C peripheral.
+//  Return:
+//      None
+//  Note: 10-bit addressing not implemented.
+//======================================================================================//}
 void i2c_init(i2c_handle *const p_i2c_handle)
 {
     // Ensure handle structure values are valid.
@@ -403,15 +403,16 @@ static inline void assert_i2c_handle_param(i2c_handle const *const p_i2c_handle)
     // clang-format on
 }
 
-/***************************************************************************
-Function: i2c_reset
-Overview: disables the clock for the given i2c peripheral, resetting it.
-Parameters:
-    p_i2cx: I2C register peripheral to be reset.
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_reset
+//  Overview: Reset the specified I2C peripheral.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_reset(i2c_reg_def const *const p_i2cx)
 {
     rcc_i2c_togglable_clock(p_i2cx, DISABLE);
@@ -419,21 +420,22 @@ void i2c_reset(i2c_reg_def const *const p_i2cx)
 
 // NOTE: Might need to return success/fail incase the device never receives and ack.
 
-/***************************************************************************
-Function: i2c_master_transmit
-Overview: takes the role of master and transmits data.
-Parameters:
-	p_i2cx: I2C peripheral used to communicate.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be sent. Can be dereferenced variable or list.
-	length: Length of data being sent.
-	repeated_start: Whether the transmission will end with a stop signal.
-		I2C_REPEATED_START_ENABLE
-		I2C_REPEATED_START_DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_master_transmit
+//  Overview: Transmit data as master on bus.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be sent. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t const *p_data,
                          uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
@@ -473,21 +475,22 @@ void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, u
     }
 }
 
-/***************************************************************************
-Function: i2c_master_receive
-Overview: takes the role of master and receives data.
-Parameters:
-	p_i2cx: I2C peripheral used to communicate.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be recieved. Can be dereferenced variable or list.
-	length: Length of data being sent.
-	repeated_start: Whether the transmission will end with a stop signal.
-		I2C_REPEATED_START_ENABLE
-		I2C_REPEATED_START_DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_master_receive
+//  Overview: Receive data as master on bus.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be recieved. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t const target_addr, uint8_t *p_data, uint32_t const length,
                         i2c_repeated_start_e const repeated_start)
 {
@@ -532,18 +535,19 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t const target_addr, ui
     }
 }
 
-/***************************************************************************
-Function: i2c_slave_transmit
-Overview: takes the role of slave and transmits data.
-Parameters:
-	p_i2cx: I2C peripheral used to communicate.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be transmitted. Can be dereferenced variable or list.
-	length: Length of data being sent.
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_slave_transmit
+//  Overview: Transmit data as slave on bus.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be transmitted. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32_t const length)
 {
     ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
@@ -571,18 +575,19 @@ void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32
     config_ack(p_i2cx, DISABLE);
 }
 
-/***************************************************************************
-Function: i2c_slave_receive
-Overview: takes the role of slave and receives data.
-Parameters:
-	p_i2cx: I2C peripheral used to communicate.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be recieved. Can be dereferenced variable or list.
-	length: Length of data being sent.
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_slave_receive
+//  Overview: Receive data as slave on bus.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be recieved. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t const length)
 {
     ASSERT(get_i2c_init_status(p_i2cx) == I2C_INITIALIZED);
@@ -612,21 +617,21 @@ void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t cons
     config_ack(p_i2cx, DISABLE);
 }
 
-/***************************************************************************
-Function: i2c_master_transmit_it
-Overview: takes the role of master and transmits data using interrupts.
-Parameters:
-    p_i2c_handle: Structure with the settings and data for it handling.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be sent. Can be dereferenced variable or list.
-	length: Length of data being sent.
-	repeated_start: Whether the transmission will end with a stop signal.
-		I2C_REPEATED_START_ENABLE
-		I2C_REPEATED_START_DISABLE
-Return: 
-    None
-Note: None
-***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_master_transmit_it
+//  Overview: Receive data with interrupts as master on bus.
+//  Parameters:
+//      p_i2c_handle: Structure with the settings and data for it handling.
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be sent. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
                             uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
@@ -647,21 +652,21 @@ void i2c_master_transmit_it(i2c_handle *p_i2c_handle, uint8_t const target_addr,
     i2c_config_it(p_i2c_handle->p_i2cx, ENABLE);
 }
 
-/***************************************************************************
-Function: i2c_master_recieve_it
-Overview: takes the role of master and receives data using interrupts.
-Parameters:
-    p_i2c_handle: Structure with the settings and data for it handling.
-	target_addr: Address of device to communicate to.
-	p_data: Pointer to data that will be received. Can be dereferenced variable or list.
-	length: Expected length of data being received.
-	repeated_start: Whether the transmission will end with a stop signal.
-		I2C_REPEATED_START_ENABLE
-		I2C_REPEATED_START_DISABLE
-Return: 
-    None
-Note: None
- ***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_master_recieve_it
+//  Overview: Receive data with interrupts as master on bus.
+//  Parameters:
+//      p_i2c_handle: Structure with the settings and data for it handling.
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be received. Can be dereferenced variable or list.
+//  	length: Expected length of data being received.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, uint8_t *const p_data,
                            uint32_t const length, i2c_repeated_start_e const repeated_start)
 {
@@ -684,6 +689,21 @@ void i2c_master_receive_it(i2c_handle *p_i2c_handle, uint8_t const target_addr, 
     i2c_config_it(p_i2c_handle->p_i2cx, ENABLE);
 }
 
+//======================================================================================//{
+//  Function: i2c_slave_transmit_it
+//  Overview: Receive data with interrupts as slave on bus.
+//  Parameters:
+//      p_i2c_handle: Structure with the settings and data for it handling.
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be sent. Can be dereferenced variable or list.
+//  	length: Length of data being sent.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_slave_transmit_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data, uint32_t const length)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
@@ -701,6 +721,21 @@ void i2c_slave_transmit_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data
     i2c_config_it(p_i2c_handle->p_i2cx, ENABLE);
 }
 
+//======================================================================================//{
+//  Function: i2c_master_recieve_it
+//  Overview: Receive data with interrupts as master on bus.
+//  Parameters:
+//      p_i2c_handle: Structure with the settings and data for it handling.
+//  	target_addr: Address of device to communicate to.
+//  	p_data: Pointer to data that will be received. Can be dereferenced variable or list.
+//  	length: Expected length of data being received.
+//  	repeated_start: Whether the transmission will end with a stop signal.
+//  		I2C_REPEATED_START_ENABLE
+//  		I2C_REPEATED_START_DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_slave_receive_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data, uint32_t const length)
 {
     ASSERT(get_i2c_init_status(p_i2c_handle->p_i2cx) == I2C_INITIALIZED);
@@ -718,18 +753,19 @@ void i2c_slave_receive_it(i2c_handle *const p_i2c_handle, uint8_t *const p_data,
     i2c_config_it(p_i2c_handle->p_i2cx, ENABLE);
 }
 
-/***************************************************************************
-Function: i2c_config_it
-Overview: Controls interrupts for I2C peripheral.
-Parameters:
-	p_i2cx: I2C peripheral to be modified.
-    toggle: 
-        ENABLE (1)
-        DISABLE (0)
-Return: 
-    None
-Note: None
- ***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_config_it
+//  Overview: Enable or disable interrupts for I2C peripheral.
+//  Parameters:
+//      p_i2cx: I2C register structure macro.
+//          I2Cx (1-3)
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: None
+//======================================================================================//}
 void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e const toggle)
 {
     uint32_t temp_cr2 = p_i2cx->CR2;
@@ -760,18 +796,18 @@ void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e const toggle)
     }
 }
 
-/***************************************************************************
-Function: i2c_it_handler
-Overview: Handles interrupts for I2C peripheral.
-Parameters:
-	p_i2cx: I2C peripheral to be modified.
-    toggle: 
-        ENABLE (1)
-        DISABLE (0)
-Return: 
-    None
-Note: Should be called from the ISR function.
- ***************************************************************************/
+//======================================================================================//{
+//  Function: i2c_it_handler
+//  Overview: Handle interrupts for I2C peripheral.
+//  Parameters:
+//      p_i2c_handle: Structure with the settings and data for it handling.
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return:
+//      None
+//  Note: This function should be called by the applications IT handler.
+//======================================================================================//{
 void i2c_it_handler(i2c_handle *const p_i2c_handle)
 {
     uint32_t volatile dummy_read = 0;

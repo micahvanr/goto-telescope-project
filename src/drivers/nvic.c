@@ -1,12 +1,12 @@
-/*****************************************************************************************
-File: nvic.c
-Overview: Provides functions for using the NVIC peripheral. Used to configure interrupts in
-    the processor.
-Features:
-    Configure interrupts
-    Configure priority of interrupts
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: nvic.c
+//  Overview: Provides functions for using the NVIC peripheral. Used to configure interrupts in
+//      the processor.
+//  Features:
+//      Configure interrupts
+//      Configure priority of interrupts
+//  Notes: None
+//======================================================================================//{
 
 //} Include Statements
 //=========================================//{
@@ -18,18 +18,20 @@ Notes: None
 //                  Public Function Implementation
 //======================================================================================//{
 
-/***************************************************************************
-Function: nvic_irq_config
-Overview: Takes an IRQ number and enables or disables it inside the NVIC or processor of MCU.
-Parameters:
-    irq_num: IRQ number that needs to be enabled or disables.
-        See irq_number_e enum
-    toggle:
-        ENABLE
-        DISABLE
-Return: None
-Note: None
-***************************************************************************/
+// TODO: Change name to "nvic_toggable_irq".
+
+//============================================================================//{
+//  Function: nvic_irq_config
+//  Overview: Enable or disable the specified IRQ number inside the NVIC.
+//  Parameters:
+//      irq_num: IRQ number that needs to be enabled or disables.
+//          See irq_number_e enum
+//      toggle:
+//          ENABLE
+//          DISABLE
+//  Return: None
+//  Note: None
+//============================================================================//}
 void nvic_irq_config(irq_number_e const irq_num, togglable_e const toggle)
 {
     uint32_t volatile *p_nvic_iser = (uint32_t *) NVIC_ISER_BASE_ADDR;
@@ -51,17 +53,18 @@ void nvic_irq_config(irq_number_e const irq_num, togglable_e const toggle)
     }
 }
 
-/***************************************************************************
-Function: nvic_irq_priority
-Overview: Takes an IRQ number and configures the priority of the IRQ .
-Parameters:
-    irq_num: IRQ number to modify the priority of.
-    irq_pri: IRQ priority number -> lower number means higher priority.
-       IRQ_PRIORITY_x (0-15) 
-Return: None
-Note: Only 4 of the 8 bits are implemented in the stm32f4xx MCUs so 16 levels or priority.
-***************************************************************************/
-void nvic_irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
+//============================================================================//{
+//  Function: nvim_set_irq_priority
+//  Overview: .
+//  Parameters:
+//       irq_num: IRQ to modify the priority number.
+//           See irq_number_e enum
+//      irq_pri: IRQ priority number -> lower number means higher priority.
+//         IRQ_PRIORITY_x (0-15)
+//  Return: None
+//  Note: Only 4 of the 8 bits are implemented in the stm32f4xx MCUs so 16 levels or priority.
+//============================================================================//}
+void nvim_set_irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
 {
     uint32_t volatile *p_nvic_ipr = (uint32_t *) NVIC_IPR_BASE_ADDR;
 
@@ -72,8 +75,5 @@ void nvic_irq_priority(irq_number_e const irq_num, irq_priority_e const irq_pri)
     p_nvic_ipr += nvic_pri_reg;
     *p_nvic_ipr |= (irq_pri << nvic_shift_amount);
 }
-//======================================================================================//}
-//                  Private Function Implementation
-//======================================================================================//{
 
 // *End of file*

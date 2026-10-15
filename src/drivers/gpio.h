@@ -1,14 +1,14 @@
-/*****************************************************************************************
-File: gpio.h
-Overview: Provides functions for initializing, configuring, and using the GPIO peripheral.
-Features:
-    Configure pin according to settings 
-    Set pin state
-    Read pin state
-    Toggle pin state
-    Interrupt detection
-Notes: None
-******************************************************************************************/
+//======================================================================================//{
+//  File: gpio.h
+//  Overview: Provides functions for initializing, configuring, and using the GPIO peripheral.
+//  Features:
+//      Configure pin according to settings
+//      Set pin state
+//      Read pin state
+//      Toggle pin state
+//      Interrupt detection
+//  Notes: None
+//======================================================================================//{
 
 #ifndef GPIO_H
 #define GPIO_H
