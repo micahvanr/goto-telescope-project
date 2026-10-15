@@ -1625,7 +1625,23 @@ uint32_t rcc_get_rtc_clock_freq_hz(void)
     return rtc_clk_freq_hz;
 }
 
-// TODO: Add function comment block
+//============================================================================//{
+//  Function: rcc_config_mco
+//  Overview: Configure specified MCO pin/clock with specified prescaler.
+//  Parameters: 
+//      var name: Which MCO pin and clock source to pull from.
+//          RCC_MCO1_HSI_SRC   
+//          RCC_MCO1_LSE_SRC   
+//          RCC_MCO1_HSE_SRC   
+//          RCC_MCO1_PLL_SRC   
+//          RCC_MCO2_SYSCLK_SRC
+//          RCC_MCO2_PLLI2S_SRC
+//          RCC_MCO2_HSE_SRC   
+//          RCC_MCO2_PLL_SRC   
+//  Return: 
+//      None
+//  Note: None
+//============================================================================//}
 void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e const mco_prescaler)
 {
 
