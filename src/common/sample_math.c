@@ -1,4 +1,11 @@
-// Used to test unity testing framework and fake function framework
+//======================================================================================//{
+//  File: sample_math.c
+//  Overview: Sample math functions to test with unit testing frameworks.
+//  Features:
+//      Compute average
+//      Compute add
+//  Notes: Used to test unity testing framework and fake function framework
+//======================================================================================//}
 
 #include "sample_math.h"
 

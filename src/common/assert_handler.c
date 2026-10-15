@@ -1,10 +1,41 @@
+//======================================================================================//{
+//  File: assert_handler.c
+//  Overview: Provide ASSERT() function and handler with custom handling.
+//  Features:
+//      ASSERT(): Calls assert_handler() to perform fail safe.
+//  Notes: None
+//======================================================================================//}
+
+//} Include Statements
+//=========================================//{
+
 #include "assert_handler.h"
 #include "gpio.h"
 #include "printf.h"
 #include "rcc.h"
+#include "common.h"
+
+//======================================================================================//}
+//                  Private Function Prototypes
+//======================================================================================//{
 
 static void blink_led(void);
 
+//======================================================================================//}
+//                  Public Function Implementation
+//======================================================================================//{
+
+//============================================================================//{
+//  Function: foo
+//  Overview: Brief description of function
+//  Parameters:
+//      var name: brief overview
+//          OPTIONS_x (x-x)
+//  Return:
+//      var type: brief overview
+//          OPTIONS_x (x-x)
+//  Note: None
+//============================================================================//}
 // Function used by ASSERT() macro
 void assert_handler(void)
 {
@@ -16,6 +47,10 @@ void assert_handler(void)
 
     blink_led();
 }
+
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
 
 // Blink LED to signify error
 static void blink_led(void)

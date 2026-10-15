@@ -1,10 +1,18 @@
+//======================================================================================//{
+//  File: printf.c
+//  Overview: Provides printf functionality to print to USART.
+//  Features:
+//      Print to USART
+//  Notes: Copied from print in external/ directory
+//      Any changes from original will be marked with "NOTE:"
+//======================================================================================//}
 
-// NOTE: COPIED FROM PRINTF IN EXTERNAL DIR
-// ANY CHANGES WITH BE MARKED WITH "NOTE:"
+// NOTE: Include statements
 
-// NOTE:
 #include "gpio.h"
 #include "usart.h"
+
+// NOTE: Private function prototype
 
 static void printf_gpio_init();
 
@@ -1865,15 +1873,15 @@ int fctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char 
 
 // NOTE: All functions below this point have been added by myself
 
-/***************************************************************************
-Function: printf_gpio_init
-Overview: Initializes the GPIO ports for the USART TX pin
-Parameters: 
-    None
-Return: 
-    None
-Note: None
-***************************************************************************/
+//============================================================================//{
+//  Function: printf_gpio_init
+//  Overview: Initialize the GPIO port for the USART TX pin
+//  Parameters: 
+//      None
+//  Return: 
+//      None
+//  Note: None
+//============================================================================//}
 static void printf_gpio_init()
 {
     gpio_handle printf_tx_gpio       = {0};
@@ -1889,15 +1897,15 @@ static void printf_gpio_init()
     gpio_init(&printf_tx_gpio);
 }
 
-/***************************************************************************
-Function: printf_init
-Overview: Initializes the USART peripheral for printf functionality
-Parameters: 
-    None
-Return: 
-    None
-Note: Uses USART2 and PA2
-***************************************************************************/
+//============================================================================//{
+//  Function: printf_init
+//  Overview: Initialize the USART peripheral for printf functionality
+//  Parameters: 
+//      None
+//  Return: 
+//      None
+//  Note: Uses USART2 and PA2
+//============================================================================//}
 void printf_init()
 {
     printf_gpio_init();

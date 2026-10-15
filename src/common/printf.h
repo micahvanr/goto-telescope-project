@@ -1,6 +1,11 @@
-
-// NOTE: COPIED FROM PRINTF IN EXTERNAL DIR
-// ANY CHANGES WITH BE MARKED WITH "NOTE:"
+//======================================================================================//{
+//  File: printf.c
+//  Overview: Provides printf functionality to print to USART.
+//  Features:
+//      Print to USART
+//  Notes: Copied from print in external/ directory
+//      Any changes from original will be marked with "NOTE:"
+//======================================================================================//}
 
 // NOTE: Function prototypes
 
