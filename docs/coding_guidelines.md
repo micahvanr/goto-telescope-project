@@ -97,6 +97,15 @@ to this list and instead just refer to other parts of the file. This list is pri
 
 ## Driver Functions
 ```C
+//======================================================================================//{
+//  File: driver.c
+//  Overview: Provides functions for initializing, configuring, and using the (object) peripheral.
+//  Overview: Description of the driver's purpose.
+//  Features:
+//      - List of features (should describe important functions)
+//  Notes: Additional notes that user might/should want to know. (None)
+//======================================================================================//}
+
 //============================================================================//{
 //  Overview: Enable or disable interrupts for (object).
 //  Overview: Initialize the specified (object) according to settings in (object).
@@ -125,6 +134,15 @@ to this list and instead just refer to other parts of the file. This list is pri
 
 ## Test Functions
 ```C
+//======================================================================================//{
+//  File: driver_test.h
+//  Overview: Tests some of the (object) functionality.
+//  Overview: Description of the test driver's purpose.
+//  Tests:
+//      - List of tests (should describe test functions)
+//  Notes: Additional notes that user might/should want to know. (None)
+//======================================================================================//}
+
 //============================================================================//{
 //  Overview: Initialize (object) [with (extra)] and/to (result).
 //  Overview: Test (object) with/by (tool).
