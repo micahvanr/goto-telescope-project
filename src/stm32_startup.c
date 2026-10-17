@@ -218,7 +218,7 @@ uint32_t vectors[] __attribute__ ((section (".isr_vector"))) = {
 };
 
 void Default_Handler(void) {
-	while(1);
+    for(;;);
 }
 
 void Reset_Handler(void) {
