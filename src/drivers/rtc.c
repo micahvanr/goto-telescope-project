@@ -1440,7 +1440,7 @@ void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
 {
     RTC->CR |= RTC_CR_TSE;
 
-    if (timestamp_conf.it_opt == RTC_IT_OPT_TIMESTAMP)
+    if (RTC_IT_OPT_TIMESTAMP == timestamp_conf.it_opt)
     {
         RTC->CR |= RTC_CR_TSIE;
         rtc_config_it(timestamp_conf.it_opt, ENABLE);
@@ -1561,7 +1561,7 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
     RTC->WUTR &= ~RTC_WUTR_WUT_MASK;
     RTC->WUTR |= wakeup_conf.auto_reload_value;
 
-    if (wakeup_conf.it_opt == RTC_IT_OPT_WAKEUP)
+    if (RTC_IT_OPT_WAKEUP == wakeup_conf.it_opt)
     {
         RTC->CR |= RTC_CR_WUTIE;
         rtc_config_it(wakeup_conf.it_opt, ENABLE);
@@ -1650,12 +1650,12 @@ static void set_rtc_clock(rtc_config const rtc_conf)
     assert_rtc_config_param(rtc_conf);
 
     rcc_set_rtc_clk_src(rtc_conf.rtc_sel);
-    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_LSI)
+    if (RCC_RTC_CLK_SRC_LSI == rtc_conf.rtc_sel)
     {
         rcc_lsi_config(ENABLE);
         while (!rcc_lsi_is_rdy());
     }
-    if (rtc_conf.rtc_sel == RCC_RTC_CLK_SRC_HSE)
+    if (RCC_RTC_CLK_SRC_HSE == rtc_conf.rtc_sel)
     {
         rcc_set_rtc_pre(rtc_conf.rtc_pre);
     }
@@ -1854,14 +1854,14 @@ static void enable_alarm(rtc_alarm_sel_e const alarm_sel, togglable_e const it_t
     {
         case RTC_ALARM_A_SEL:
             RTC->CR |= RTC_CR_ALRAE;
-            if (it_toggle == ENABLE)
+            if (ENABLE == it_toggle)
             {
                 RTC->CR |= RTC_CR_ALRAIE;
             }
             break;
         case RTC_ALARM_B_SEL:
             RTC->CR |= RTC_CR_ALRBE;
-            if (it_toggle == ENABLE)
+            if (ENABLE == it_toggle)
             {
                 RTC->CR |= RTC_CR_ALRBIE;
             }
@@ -1892,14 +1892,14 @@ static void disable_alarm(rtc_alarm_sel_e const alarm_sel)
 
 static inline void assert_alarm_sel_param(rtc_alarm_sel_e alarm_sel)
 {
-    ASSERT((alarm_sel == RTC_ALARM_A_SEL) || (alarm_sel == RTC_ALARM_A_SEL));
+    ASSERT((RTC_ALARM_A_SEL == alarm_sel) || (RTC_ALARM_A_SEL == alarm_sel));
 }
 
 static inline void assert_it_opt_param(rtc_it_options_e it_option)
 {
-    ASSERT((it_option == RTC_IT_OPT_NA) || (it_option == RTC_IT_OPT_NA) || (it_option == RTC_IT_OPT_ALARM)
-           || (it_option == RTC_IT_OPT_WAKEUP) || (it_option == RTC_IT_OPT_TIMESTAMP)
-           || (it_option == RTC_IT_OPT_TAMPER));
+    ASSERT((RTC_IT_OPT_NA == it_option) || (RTC_IT_OPT_NA == it_option) || (RTC_IT_OPT_ALARM == it_option)
+           || (RTC_IT_OPT_WAKEUP == it_option) || (RTC_IT_OPT_TIMESTAMP == it_option)
+           || (RTC_IT_OPT_TAMPER == it_option));
 }
 
 static inline void assert_seconds_param(uint8_t const seconds)
@@ -1919,12 +1919,12 @@ static inline void assert_hours_param(uint8_t const hours)
 
 static inline void assert_am_pm_param(rtc_time_am_pm_e const am_pm)
 {
-    ASSERT((am_pm == RTC_TIME_AM) || (am_pm == RTC_TIME_PM));
+    ASSERT((RTC_TIME_AM == am_pm) || (RTC_TIME_PM == am_pm));
 }
 
 static inline void assert_time_format_param(rtc_time_format_e const time_format)
 {
-    ASSERT((time_format == RTC_TIME_FORMAT_12HR) || (time_format == RTC_TIME_FORMAT_24HR));
+    ASSERT((RTC_TIME_FORMAT_12HR == time_format) || (RTC_TIME_FORMAT_24HR == time_format));
 }
 
 static inline void assert_date_param(uint8_t const date)

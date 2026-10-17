@@ -1,8 +1,10 @@
-// #include "../common/assert_handler.h"
-// #include "gpio.h"
-// #include "rcc.h"
-// #include "stm32f4xx.h"
-// #include "usart.h"
+//======================================================================================//{
+//  File: main.c
+//  Overview: Main entry point of program. Currently runs tests.
+//  Features:
+//      - Run various tests
+//  Notes: None
+//======================================================================================//}
 
 // clang-format off
 // Test functions
@@ -22,12 +24,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// TODO: Add project roadmap using mermaid markdown
 // TODO: Add interrupt keyword to ISRs
 // TODO: Refactor linker script and startup code
-// TODO: Refactor ISRs to call into module implemented code and then call a callback 
+// TODO: Refactor ISRs to call into module implemented code and then call a callback
 // for any user input
+// TODO: 8.4 Change loops
 
+// TODO: Add project roadmap using mermaid markdown
 // TODO: Think about removing handle struct
 
 int main(void)

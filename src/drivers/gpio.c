@@ -785,7 +785,7 @@ void gpio_it_handler(exti_lines_e const exti_line)
 //============================================================================//}
 void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_logic_level_e const pin_level)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
+    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
     switch (pin_level)
     {
         case HIGH:
@@ -813,7 +813,7 @@ void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_log
 //============================================================================//}
 pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
+    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
     return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_num));
 }
 
@@ -831,7 +831,7 @@ pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e cons
 //============================================================================//}
 void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(get_gpio_init_status(p_gpiox, pin_num) == GPIO_INITIALIZED);
+    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
     p_gpiox->ODR ^= (1 << pin_num);
 }
 
@@ -845,14 +845,14 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
     uint8_t found_setting = false;
 
     // Peripheral check
-    found_setting = (p_gpio_handle->p_gpiox == GPIOA) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOB) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOC) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOD) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOE) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOF) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOG) ? true
-                  : (p_gpio_handle->p_gpiox == GPIOH) ? true
+    found_setting = (GPIOA == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOB == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOC == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOD == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOE == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOF == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOG == p_gpio_handle->p_gpiox) ? true
+                  : (GPIOH == p_gpio_handle->p_gpiox) ? true
                                                       : false;
 
     // Alternate function check
@@ -951,25 +951,25 @@ static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle)
 // Map GPIO ports to codes for setting GPIO interrupts and other functions.
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox)
 {
-    return (p_gpiox == GPIOA) ? 0
-         : (p_gpiox == GPIOB) ? 1
-         : (p_gpiox == GPIOC) ? 2
-         : (p_gpiox == GPIOD) ? 3
-         : (p_gpiox == GPIOE) ? 4
-         : (p_gpiox == GPIOF) ? 5
-         : (p_gpiox == GPIOG) ? 6
-         : (p_gpiox == GPIOH) ? 7
+    return (GPIOA == p_gpiox) ? 0
+         : (GPIOB == p_gpiox) ? 1
+         : (GPIOC == p_gpiox) ? 2
+         : (GPIOD == p_gpiox) ? 3
+         : (GPIOE == p_gpiox) ? 4
+         : (GPIOF == p_gpiox) ? 5
+         : (GPIOG == p_gpiox) ? 6
+         : (GPIOH == p_gpiox) ? 7
                               : 0;
 }
 
 // Map GPIO ports to codes for setting GPIO interrupts and other functions.
 static inline uint8_t map_exti_to_irq_num(exti_lines_e const line_num)
 {
-    return (line_num == EXTI_LINE_NUM_0)                                      ? EXTI0_IRQ_NUM_6
-         : (line_num == EXTI_LINE_NUM_1)                                      ? EXTI1_IRQ_NUM_7
-         : (line_num == EXTI_LINE_NUM_2)                                      ? EXTI2_IRQ_NUM_8
-         : (line_num == EXTI_LINE_NUM_3)                                      ? EXTI3_IRQ_NUM_9
-         : (line_num == EXTI_LINE_NUM_4)                                      ? EXTI3_IRQ_NUM_9
+    return (EXTI_LINE_NUM_0 == line_num)                                      ? EXTI0_IRQ_NUM_6
+         : (EXTI_LINE_NUM_1 == line_num)                                      ? EXTI1_IRQ_NUM_7
+         : (EXTI_LINE_NUM_2 == line_num)                                      ? EXTI2_IRQ_NUM_8
+         : (EXTI_LINE_NUM_3 == line_num)                                      ? EXTI3_IRQ_NUM_9
+         : (EXTI_LINE_NUM_4 == line_num)                                      ? EXTI3_IRQ_NUM_9
          : ((line_num >= EXTI_LINE_NUM_5) && (line_num <= EXTI_LINE_NUM_9))   ? EXTI9_5_IRQ_NUM_23
          : ((line_num >= EXTI_LINE_NUM_10) && (line_num <= EXTI_LINE_NUM_15)) ? EXTI15_10_IRQ_NUM_40
                                                                               : 0;

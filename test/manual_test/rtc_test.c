@@ -152,7 +152,7 @@ void test_rtc_timestamp(void)
     {
         tim_delay(1, TIM_UNIT_S);
         output_rtc_data();
-        if (rtc_timestamp_read_status() == RTC_TIMESTAMP_STATUS_TRIGGERED)
+        if (RTC_TIMESTAMP_STATUS_TRIGGERED == rtc_timestamp_read_status())
         {
             rtc_timestamp_clear_status();
             for (uint32_t i = 0; i < 5000; i++);
@@ -217,11 +217,11 @@ static void output_rtc_data(void)
     g_rtc_handle.time_data = rtc_get_time_data();
     g_rtc_handle.date_data = rtc_get_date_data();
 
-    if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_AM)
+    if (RTC_TIME_AM == g_rtc_handle.time_data.time_am_pm)
     {
         am_pm[0] = 'A';
     }
-    else if (g_rtc_handle.time_data.time_am_pm == RTC_TIME_PM)
+    else if (RTC_TIME_PM == g_rtc_handle.time_data.time_am_pm)
     {
         am_pm[0] = 'P';
     }
@@ -255,7 +255,7 @@ void RTC_WKUP_IRQHandler(void)
 
 void RTC_Alarm_IRQHandler(void)
 {
-    if (rtc_alarm_get_status(RTC_ALARM_A_SEL) == RTC_ALARM_STATUS_TRIGGERED)
+    if (RTC_ALARM_STATUS_TRIGGERED == rtc_alarm_get_status(RTC_ALARM_A_SEL))
     {
         printf_("Alarm triggered");
     }

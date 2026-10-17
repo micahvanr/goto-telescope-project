@@ -688,17 +688,17 @@ static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *co
 //======================================================================================//{
 
 //============================================================================//{
-//  Function: tim_delay 
+//  Function: tim_delay
 //  Overview: Create a delay for a given amount of time.
-//  Parameters: 
+//  Parameters:
 //      time: Time for delay
 //      unit: Unit of time
-//          TIM_UNIT_S  
-//          TIM_UNIT_MS 
-//          TIM_UNIT_US 
-//  Return: 
+//          TIM_UNIT_S
+//          TIM_UNIT_MS
+//          TIM_UNIT_US
+//  Return:
 //      None
-//  Note: Care should be taken when using us unit as the delay can be too short and 
+//  Note: Care should be taken when using us unit as the delay can be too short and
 //  the software may not be able to keep up.
 //============================================================================//}
 void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
@@ -707,7 +707,7 @@ void tim_delay(uint32_t const period, tim_unit_of_time_e const unit)
     tim_handle delay_handler   = {0};
 
     delay_handler.p_timx = DELAY_TIMER;
-    if (initialized == false)
+    if (false == initialized)
     {
         delay_handler.tim_conf.preload        = TIM_ARR_PRELOAD_EN;
         delay_handler.tim_conf.one_pulse_mode = TIM_ONE_PULSE_MODE_DI;
@@ -753,7 +753,7 @@ void tim_init(tim_handle *const p_tim_handle)
     temp_cr1 &= ~(TIM_CR1_OPM);
     temp_cr1 |= p_tim_handle->tim_conf.one_pulse_mode << TIM_CR1_OPM_POS;
 
-    if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5))
+    if ((TIM_TYPE_ADVANCED == timer_type) || (TIM_TYPE_GENERAL_2_5 == timer_type))
     {
         // Set direction
         temp_cr1 &= ~(TIM_CR1_DIR);
@@ -763,12 +763,12 @@ void tim_init(tim_handle *const p_tim_handle)
         temp_cr1 |= p_tim_handle->tim_conf.align_mode << TIM_CR1_CMS_POS;
     }
 
-    if ((timer_type == TIM_TYPE_ADVANCED) || (timer_type == TIM_TYPE_GENERAL_2_5)
-        || (timer_type == TIM_TYPE_GENERAL_9_14))
+    if ((TIM_TYPE_ADVANCED == timer_type) || (TIM_TYPE_GENERAL_2_5 == timer_type)
+        || (TIM_TYPE_GENERAL_9_14 == timer_type))
     {
         temp_smcr &= ~(TIM_SMCR_SMS_MASK << TIM_SMCR_SMS_POS);
         temp_smcr |= p_tim_handle->tim_conf.clock_sel << TIM_SMCR_SMS_POS;
-        if (p_tim_handle->tim_conf.clock_sel == TIM_CLK_SEL_EXTERNAL)
+        if (TIM_CLK_SEL_EXTERNAL == p_tim_handle->tim_conf.clock_sel)
         {
             temp_smcr &= ~(TIM_SMCR_TS_MASK << TIM_SMCR_TS_POS);
             temp_smcr |= p_tim_handle->tim_conf.trigger_sel << TIM_SMCR_TS_POS;
@@ -891,7 +891,7 @@ void tim_reset(tim_reg_def const *const p_timx)
 //============================================================================//}
 void tim_start(tim_reg_def *const p_timx)
 {
-    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
+    if (TIM_NOT_INITIALIZED == get_tim_init_status(p_timx))
     {
         ASSERT(false);
     }
@@ -910,7 +910,7 @@ void tim_start(tim_reg_def *const p_timx)
 //============================================================================//}
 void tim_start_it(tim_reg_def *const p_timx)
 {
-    if (get_tim_init_status(p_timx) == TIM_NOT_INITIALIZED)
+    if (TIM_NOT_INITIALIZED == get_tim_init_status(p_timx))
     {
         ASSERT(false);
     }
@@ -933,7 +933,7 @@ void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channe
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED)
+    if (TIM_NOT_INITIALIZED == get_tim_channel_init_status(p_timx, channel))
     {
         ASSERT(false);
     }
@@ -955,7 +955,7 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (get_tim_channel_init_status(p_timx, channel) == TIM_NOT_INITIALIZED)
+    if (TIM_NOT_INITIALIZED == get_tim_channel_init_status(p_timx, channel))
     {
         ASSERT(false);
     }
@@ -983,54 +983,54 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 //============================================================================//}
 void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
-    if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM1))
+    if ((channel != TIM_CHANNEL_NA) && (TIM1 == p_timx))
     {
         nvic_toggable_irq(TIM1_CC_IRQ_NUM_27, toggle);
         return;
     }
-    else if ((channel != TIM_CHANNEL_NA) && (p_timx == TIM8))
+    else if ((channel != TIM_CHANNEL_NA) && (TIM8 == p_timx))
     {
         nvic_toggable_irq(TIM8_CC_IRQ_NUM_46, toggle);
         return;
     }
 
-    if (p_timx == TIM9)
+    if (TIM9 == p_timx)
     {
         nvic_toggable_irq(TIM1_BRK_TIM9_IRQ_NUM_24, toggle);
     }
-    else if ((p_timx == TIM1) || (p_timx == TIM10))
+    else if ((TIM1 == p_timx) || (TIM10 == p_timx))
     {
         nvic_toggable_irq(TIM1_UP_TIM10_IRQ_NUM_25, toggle);
     }
-    else if (p_timx == TIM11)
+    else if (TIM11 == p_timx)
     {
         nvic_toggable_irq(TIM1_TRG_COM_TIM11_IRQ_NUM_26, toggle);
     }
-    else if (p_timx == TIM2)
+    else if (TIM2 == p_timx)
     {
         nvic_toggable_irq(TIM2_IRQ_NUM_28, toggle);
     }
-    else if (p_timx == TIM3)
+    else if (TIM3 == p_timx)
     {
         nvic_toggable_irq(TIM3_IRQ_NUM_29, toggle);
     }
-    else if (p_timx == TIM4)
+    else if (TIM4 == p_timx)
     {
         nvic_toggable_irq(TIM4_IRQ_NUM_30, toggle);
     }
-    else if (p_timx == TIM12)
+    else if (TIM12 == p_timx)
     {
         nvic_toggable_irq(TIM8_BRK_TIM12_IRQ_NUM_43, toggle);
     }
-    else if ((p_timx == TIM8) || (p_timx == TIM13))
+    else if ((TIM8 == p_timx) || (TIM13 == p_timx))
     {
         nvic_toggable_irq(TIM8_UP_TIM13_IRQ_NUM_44, toggle);
     }
-    else if (p_timx == TIM14)
+    else if (TIM14 == p_timx)
     {
         nvic_toggable_irq(TIM8_TRG_COM_TIM14_IRQ_NUM_45, toggle);
     }
-    else if (p_timx == TIM7)
+    else if (TIM7 == p_timx)
     {
         nvic_toggable_irq(TIM7_IRQ_NUM_55, toggle);
     }
@@ -1347,10 +1347,9 @@ bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
     bus_types tim_bus = 0;
     // If TIMER peripheral on APB2
-    if ((p_timx == TIM1) || (p_timx == TIM8) || (p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11))
+    if ((TIM1 == p_timx) || (TIM8 == p_timx) || (TIM9 == p_timx) || (TIM10 == p_timx) || (TIM11 == p_timx))
     {
         tim_bus = APB2_BUS;
-
     }
     // If TIMER peripheral on APB1
     else
@@ -1444,7 +1443,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
     // - The new count value is 0.
     // This series of operations will result in a high prescaler value while maintaining accuracy.
 
-    while (((clk_freq % FACTOR_5) == 0) && (((clk_freq / FACTOR_5) % unit_in_seconds) == 0)
+    while ((0 == (clk_freq % FACTOR_5)) && (0 == ((clk_freq / FACTOR_5) % unit_in_seconds))
            && !check_overflow(p_timx, prescaler, FACTOR_5))
     {
         clk_freq /= FACTOR_5;
@@ -1454,7 +1453,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
         count *= period;
     }
 
-    while (((clk_freq % FACTOR_3) == 0) && (((clk_freq / FACTOR_3) % unit_in_seconds) == 0)
+    while ((0 == (clk_freq % FACTOR_3)) && (0 == ((clk_freq / FACTOR_3) % unit_in_seconds))
            && !check_overflow(p_timx, prescaler, FACTOR_3))
     {
         clk_freq /= FACTOR_3;
@@ -1464,7 +1463,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
         count *= period;
     }
 
-    while (((clk_freq % FACTOR_2) == 0) && (((clk_freq / FACTOR_2) % unit_in_seconds) == 0)
+    while ((0 == (clk_freq % FACTOR_2)) && (0 == ((clk_freq / FACTOR_2) % unit_in_seconds))
            && !check_overflow(p_timx, prescaler, FACTOR_2)
            && (((clk_freq / (FACTOR_2 * unit_in_seconds)) * period) > 1))
     {
@@ -1488,7 +1487,7 @@ static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t cons
 {
     uint32_t max;
     bool b_is_overflow = false;
-    if ((p_timx == TIM2) || (p_timx == TIM5))
+    if ((TIM2 == p_timx) || (TIM5 == p_timx))
     {
         max = UINT32_MAX;
     }
@@ -1524,20 +1523,20 @@ static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 {
     tim_type_e tim_type = 0;
 
-    if ((p_timx == TIM6) || (p_timx == TIM7))
+    if ((TIM6 == p_timx) || (TIM7 == p_timx))
     {
         tim_type = TIM_TYPE_BASIC;
     }
-    else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5))
+    else if ((TIM2 == p_timx) || (TIM3 == p_timx) || (TIM4 == p_timx) || (TIM5 == p_timx))
     {
         tim_type = TIM_TYPE_GENERAL_2_5;
     }
-    else if ((p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11) || (p_timx == TIM12) || (p_timx == TIM13)
-             || (p_timx == TIM14))
+    else if ((TIM9 == p_timx) || (TIM10 == p_timx) || (TIM11 == p_timx) || (TIM12 == p_timx) || (TIM13 == p_timx)
+             || (TIM14 == p_timx))
     {
         tim_type = TIM_TYPE_GENERAL_9_14;
     }
-    else if ((p_timx == TIM1) || (p_timx == TIM8))
+    else if ((TIM1 == p_timx) || (TIM8 == p_timx))
     {
         tim_type = TIM_TYPE_ADVANCED;
     }
@@ -1550,20 +1549,20 @@ static void assert_tim_peri_param(tim_reg_def const *const p_timx)
     uint8_t found_setting = false;
 
     // Peripheral check
-    found_setting = (p_timx == TIM1)  ? true
-                  : (p_timx == TIM2)  ? true
-                  : (p_timx == TIM3)  ? true
-                  : (p_timx == TIM4)  ? true
-                  : (p_timx == TIM5)  ? true
-                  : (p_timx == TIM6)  ? true
-                  : (p_timx == TIM7)  ? true
-                  : (p_timx == TIM8)  ? true
-                  : (p_timx == TIM9)  ? true
-                  : (p_timx == TIM10) ? true
-                  : (p_timx == TIM11) ? true
-                  : (p_timx == TIM12) ? true
-                  : (p_timx == TIM13) ? true
-                  : (p_timx == TIM14) ? true
+    found_setting = (TIM1==  p_timx )  ? true
+                  : (TIM2==  p_timx )  ? true
+                  : (TIM3==  p_timx )  ? true
+                  : (TIM4==  p_timx )  ? true
+                  : (TIM5==  p_timx )  ? true
+                  : (TIM6==  p_timx )  ? true
+                  : (TIM7==  p_timx )  ? true
+                  : (TIM8==  p_timx )  ? true
+                  : (TIM9==  p_timx )  ? true
+                  : (TIM10==  p_timx ) ? true
+                  : (TIM11==  p_timx ) ? true
+                  : (TIM12==  p_timx ) ? true
+                  : (TIM13==  p_timx ) ? true
+                  : (TIM14==  p_timx ) ? true
                                       : false;
     ASSERT(found_setting);
     // clang-format on
@@ -1573,59 +1572,59 @@ static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 {
     uint8_t peri_num = 0;
 
-    if (p_timx == TIM1)
+    if (TIM1 == p_timx)
     {
         peri_num = TIM1_INIT_NUM;
     }
-    else if (p_timx == TIM2)
+    else if (TIM2 == p_timx)
     {
         peri_num = TIM2_INIT_NUM;
     }
-    else if (p_timx == TIM3)
+    else if (TIM3 == p_timx)
     {
         peri_num = TIM3_INIT_NUM;
     }
-    else if (p_timx == TIM4)
+    else if (TIM4 == p_timx)
     {
         peri_num = TIM4_INIT_NUM;
     }
-    else if (p_timx == TIM5)
+    else if (TIM5 == p_timx)
     {
         peri_num = TIM5_INIT_NUM;
     }
-    else if (p_timx == TIM6)
+    else if (TIM6 == p_timx)
     {
         peri_num = TIM6_INIT_NUM;
     }
-    else if (p_timx == TIM7)
+    else if (TIM7 == p_timx)
     {
         peri_num = TIM7_INIT_NUM;
     }
-    else if (p_timx == TIM8)
+    else if (TIM8 == p_timx)
     {
         peri_num = TIM8_INIT_NUM;
     }
-    else if (p_timx == TIM9)
+    else if (TIM9 == p_timx)
     {
         peri_num = TIM9_INIT_NUM;
     }
-    else if (p_timx == TIM10)
+    else if (TIM10 == p_timx)
     {
         peri_num = TIM10_INIT_NUM;
     }
-    else if (p_timx == TIM11)
+    else if (TIM11 == p_timx)
     {
         peri_num = TIM11_INIT_NUM;
     }
-    else if (p_timx == TIM12)
+    else if (TIM12 == p_timx)
     {
         peri_num = TIM12_INIT_NUM;
     }
-    else if (p_timx == TIM13)
+    else if (TIM13 == p_timx)
     {
         peri_num = TIM13_INIT_NUM;
     }
-    else if (p_timx == TIM14)
+    else if (TIM14 == p_timx)
     {
         peri_num = TIM14_INIT_NUM;
     }

@@ -1111,25 +1111,25 @@ void rcc_gpio_togglable_clock(gpio_reg_def const *const p_gpiox, togglable_e con
     switch (toggle)
     {
         case ENABLE:
-            RCC->AHB1ENR |= (p_gpiox == GPIOA) ? RCC_AHB1ENR_GPIOAEN
-                          : (p_gpiox == GPIOB) ? RCC_AHB1ENR_GPIOBEN
-                          : (p_gpiox == GPIOC) ? RCC_AHB1ENR_GPIOCEN
-                          : (p_gpiox == GPIOD) ? RCC_AHB1ENR_GPIODEN
-                          : (p_gpiox == GPIOE) ? RCC_AHB1ENR_GPIOEEN
-                          : (p_gpiox == GPIOF) ? RCC_AHB1ENR_GPIOFEN
-                          : (p_gpiox == GPIOG) ? RCC_AHB1ENR_GPIOGEN
-                          : (p_gpiox == GPIOH) ? RCC_AHB1ENR_GPIOHEN
+            RCC->AHB1ENR |= (GPIOA == p_gpiox) ? RCC_AHB1ENR_GPIOAEN
+                          : (GPIOB == p_gpiox) ? RCC_AHB1ENR_GPIOBEN
+                          : (GPIOC == p_gpiox) ? RCC_AHB1ENR_GPIOCEN
+                          : (GPIOD == p_gpiox) ? RCC_AHB1ENR_GPIODEN
+                          : (GPIOE == p_gpiox) ? RCC_AHB1ENR_GPIOEEN
+                          : (GPIOF == p_gpiox) ? RCC_AHB1ENR_GPIOFEN
+                          : (GPIOG == p_gpiox) ? RCC_AHB1ENR_GPIOGEN
+                          : (GPIOH == p_gpiox) ? RCC_AHB1ENR_GPIOHEN
                                                : 0;
             break;
         case DISABLE:
-            RCC->AHB1RSTR |= (p_gpiox == GPIOA) ? RCC_AHB1RSTR_GPIOARST
-                           : (p_gpiox == GPIOB) ? RCC_AHB1RSTR_GPIOBRST
-                           : (p_gpiox == GPIOC) ? RCC_AHB1RSTR_GPIOCRST
-                           : (p_gpiox == GPIOD) ? RCC_AHB1RSTR_GPIODRST
-                           : (p_gpiox == GPIOE) ? RCC_AHB1RSTR_GPIOERST
-                           : (p_gpiox == GPIOF) ? RCC_AHB1RSTR_GPIOFRST
-                           : (p_gpiox == GPIOG) ? RCC_AHB1RSTR_GPIOGRST
-                           : (p_gpiox == GPIOH) ? RCC_AHB1RSTR_GPIOHRST
+            RCC->AHB1RSTR |= (GPIOA == p_gpiox) ? RCC_AHB1RSTR_GPIOARST
+                           : (GPIOB == p_gpiox) ? RCC_AHB1RSTR_GPIOBRST
+                           : (GPIOC == p_gpiox) ? RCC_AHB1RSTR_GPIOCRST
+                           : (GPIOD == p_gpiox) ? RCC_AHB1RSTR_GPIODRST
+                           : (GPIOE == p_gpiox) ? RCC_AHB1RSTR_GPIOERST
+                           : (GPIOF == p_gpiox) ? RCC_AHB1RSTR_GPIOFRST
+                           : (GPIOG == p_gpiox) ? RCC_AHB1RSTR_GPIOGRST
+                           : (GPIOH == p_gpiox) ? RCC_AHB1RSTR_GPIOHRST
                                                 : 0;
             break;
     }
@@ -1154,15 +1154,15 @@ void rcc_i2c_togglable_clock(i2c_reg_def const *const p_i2cx, togglable_e const 
     switch (toggle)
     {
         case ENABLE:
-            RCC->APB1ENR |= (p_i2cx == I2C1) ? RCC_APB1ENR_I2C1EN
-                          : (p_i2cx == I2C2) ? RCC_APB1ENR_I2C2EN
-                          : (p_i2cx == I2C3) ? RCC_APB1ENR_I2C3EN
+            RCC->APB1ENR |= (I2C1 == p_i2cx) ? RCC_APB1ENR_I2C1EN
+                          : (I2C2 == p_i2cx) ? RCC_APB1ENR_I2C2EN
+                          : (I2C3 == p_i2cx) ? RCC_APB1ENR_I2C3EN
                                              : 0;
             break;
         case DISABLE:
-            RCC->APB1RSTR |= (p_i2cx == I2C1) ? RCC_APB1RSTR_I2C1RST
-                           : (p_i2cx == I2C2) ? RCC_APB1RSTR_I2C2RST
-                           : (p_i2cx == I2C3) ? RCC_APB1RSTR_I2C3RST
+            RCC->APB1RSTR |= (I2C1 == p_i2cx) ? RCC_APB1RSTR_I2C1RST
+                           : (I2C2 == p_i2cx) ? RCC_APB1RSTR_I2C2RST
+                           : (I2C3 == p_i2cx) ? RCC_APB1RSTR_I2C3RST
                                               : 0;
             break;
     }
@@ -1258,47 +1258,47 @@ void rcc_tim_togglable_clock(tim_reg_def const *const p_timx, togglable_e const 
 
     if ((ENABLE == toggle) && (APB1_BUS == tim_bus))
     {
-        RCC->APB1ENR |= (p_timx == TIM2)  ? RCC_APB1ENR_TIM2EN
-                      : (p_timx == TIM3)  ? RCC_APB1ENR_TIM3EN
-                      : (p_timx == TIM4)  ? RCC_APB1ENR_TIM4EN
-                      : (p_timx == TIM5)  ? RCC_APB1ENR_TIM5EN
-                      : (p_timx == TIM6)  ? RCC_APB1ENR_TIM6EN
-                      : (p_timx == TIM7)  ? RCC_APB1ENR_TIM7EN
-                      : (p_timx == TIM12) ? RCC_APB1ENR_TIM12EN
-                      : (p_timx == TIM13) ? RCC_APB1ENR_TIM13EN
-                      : (p_timx == TIM14) ? RCC_APB1ENR_TIM14EN
+        RCC->APB1ENR |= (TIM2 == p_timx)  ? RCC_APB1ENR_TIM2EN
+                      : (TIM3 == p_timx)  ? RCC_APB1ENR_TIM3EN
+                      : (TIM4 == p_timx)  ? RCC_APB1ENR_TIM4EN
+                      : (TIM5 == p_timx)  ? RCC_APB1ENR_TIM5EN
+                      : (TIM6 == p_timx)  ? RCC_APB1ENR_TIM6EN
+                      : (TIM7 == p_timx)  ? RCC_APB1ENR_TIM7EN
+                      : (TIM12 == p_timx) ? RCC_APB1ENR_TIM12EN
+                      : (TIM13 == p_timx) ? RCC_APB1ENR_TIM13EN
+                      : (TIM14 == p_timx) ? RCC_APB1ENR_TIM14EN
                                           : 0;
     }
     else if ((ENABLE == toggle) && (APB2_BUS == tim_bus))
     {
-        RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
-                      : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
-                      : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
-                      : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
-                      : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
+        RCC->APB2ENR |= (TIM1 == p_timx)  ? RCC_APB2ENR_TIM1EN
+                      : (TIM8 == p_timx)  ? RCC_APB2ENR_TIM8EN
+                      : (TIM9 == p_timx)  ? RCC_APB2ENR_TIM9EN
+                      : (TIM10 == p_timx) ? RCC_APB2ENR_TIM10EN
+                      : (TIM11 == p_timx) ? RCC_APB2ENR_TIM11EN
                                           : 0;
     }
     else if ((DISABLE == toggle) && (APB1_BUS == tim_bus))
     {
-        RCC->APB1RSTR |= (p_timx == TIM2)  ? RCC_APB1RSTR_TIM2RST
-                       : (p_timx == TIM3)  ? RCC_APB1RSTR_TIM3RST
-                       : (p_timx == TIM4)  ? RCC_APB1RSTR_TIM4RST
-                       : (p_timx == TIM5)  ? RCC_APB1RSTR_TIM5RST
-                       : (p_timx == TIM6)  ? RCC_APB1RSTR_TIM6RST
-                       : (p_timx == TIM7)  ? RCC_APB1RSTR_TIM7RST
-                       : (p_timx == TIM12) ? RCC_APB1RSTR_TIM12RST
-                       : (p_timx == TIM13) ? RCC_APB1RSTR_TIM13RST
-                       : (p_timx == TIM14) ? RCC_APB1RSTR_TIM14RST
+        RCC->APB1RSTR |= (TIM2 == p_timx)  ? RCC_APB1RSTR_TIM2RST
+                       : (TIM3 == p_timx)  ? RCC_APB1RSTR_TIM3RST
+                       : (TIM4 == p_timx)  ? RCC_APB1RSTR_TIM4RST
+                       : (TIM5 == p_timx)  ? RCC_APB1RSTR_TIM5RST
+                       : (TIM6 == p_timx)  ? RCC_APB1RSTR_TIM6RST
+                       : (TIM7 == p_timx)  ? RCC_APB1RSTR_TIM7RST
+                       : (TIM12 == p_timx) ? RCC_APB1RSTR_TIM12RST
+                       : (TIM13 == p_timx) ? RCC_APB1RSTR_TIM13RST
+                       : (TIM14 == p_timx) ? RCC_APB1RSTR_TIM14RST
                                            : 0;
     }
 
     else if ((DISABLE == toggle) && (APB2_BUS == tim_bus))
     {
-        RCC->APB2ENR |= (p_timx == TIM1)  ? RCC_APB2ENR_TIM1EN
-                      : (p_timx == TIM8)  ? RCC_APB2ENR_TIM8EN
-                      : (p_timx == TIM9)  ? RCC_APB2ENR_TIM9EN
-                      : (p_timx == TIM10) ? RCC_APB2ENR_TIM10EN
-                      : (p_timx == TIM11) ? RCC_APB2ENR_TIM11EN
+        RCC->APB2ENR |= (TIM1 == p_timx)  ? RCC_APB2ENR_TIM1EN
+                      : (TIM8 == p_timx)  ? RCC_APB2ENR_TIM8EN
+                      : (TIM9 == p_timx)  ? RCC_APB2ENR_TIM9EN
+                      : (TIM10 == p_timx) ? RCC_APB2ENR_TIM10EN
+                      : (TIM11 == p_timx) ? RCC_APB2ENR_TIM11EN
                                           : 0;
     }
     else
@@ -1329,27 +1329,27 @@ void rcc_usart_togglable_clock(usart_reg_def const *const p_usartx, togglable_e 
     if ((ENABLE == toggle) && (APB1_BUS == usart_bus))
     {
 
-        RCC->APB1ENR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
-                      : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
-                      : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
-                      : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
+        RCC->APB1ENR |= (USART2 == p_usartx) ? RCC_APB1ENR_USART2EN
+                      : (USART3 == p_usartx) ? RCC_APB1ENR_USART3EN
+                      : (UART4 == p_usartx)  ? RCC_APB1ENR_UART4EN
+                      : (UART5 == p_usartx)  ? RCC_APB1ENR_UART5EN
                                              : 0;
     }
     else if ((ENABLE == toggle) && (APB2_BUS == usart_bus))
     {
-        RCC->APB2ENR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
+        RCC->APB2ENR |= (USART1 == p_usartx) ? RCC_APB2ENR_USART1EN : (USART6 == p_usartx) ? RCC_APB2ENR_USART6EN : 0;
     }
     else if ((DISABLE == toggle) && (APB1_BUS == usart_bus))
     {
-        RCC->APB1RSTR |= (p_usartx == USART2) ? RCC_APB1ENR_USART2EN
-                       : (p_usartx == USART3) ? RCC_APB1ENR_USART3EN
-                       : (p_usartx == UART4)  ? RCC_APB1ENR_UART4EN
-                       : (p_usartx == UART5)  ? RCC_APB1ENR_UART5EN
+        RCC->APB1RSTR |= (USART2 == p_usartx) ? RCC_APB1ENR_USART2EN
+                       : (USART3 == p_usartx) ? RCC_APB1ENR_USART3EN
+                       : (UART4 == p_usartx)  ? RCC_APB1ENR_UART4EN
+                       : (UART5 == p_usartx)  ? RCC_APB1ENR_UART5EN
                                               : 0;
     }
     else if ((DISABLE == toggle) && (APB2_BUS == usart_bus))
     {
-        RCC->APB2RSTR |= (p_usartx == USART1) ? RCC_APB2ENR_USART1EN : (p_usartx == USART6) ? RCC_APB2ENR_USART6EN : 0;
+        RCC->APB2RSTR |= (USART1 == p_usartx) ? RCC_APB2ENR_USART1EN : (USART6 == p_usartx) ? RCC_APB2ENR_USART6EN : 0;
     }
     else
     {
@@ -1426,7 +1426,7 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
 {
     // Get active clock source (HSI/HSE/PLL).
     clock_sources_e clock_source = (clock_sources_e) ((RCC->CFGR >> RCC_CFGR_SWS0_POS) & RCC_CFGR_SWS0_MASK);
-    ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
+    ASSERT((CLOCK_SRC_HSI == clock_source) || (CLOCK_SRC_HSE == clock_source) || (CLOCK_SRC_PLL == clock_source));
 
     // Return clock depending on what the source is.
     uint32_t sys_clk_freq = 0;
@@ -1504,13 +1504,13 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
             apb1_ppre1_reg = ((RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK);
             apb1_prescaler = ((apb1_ppre1_reg & 0b100) != 0) ? apb_clock_prescaler[apb1_ppre1_reg & ~(0b100)] : 1;
             apb1_clock     = ahb_clock / apb1_prescaler;
-            bus_clk_freq = apb1_clock;
+            bus_clk_freq   = apb1_clock;
             break;
         case APB2_BUS:
             apb2_ppre2_reg = ((RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK);
             apb2_prescaler = ((apb2_ppre2_reg & 0b100) != 0) ? apb_clock_prescaler[apb2_ppre2_reg & ~(0b100)] : 1;
             apb2_clock     = ahb_clock / apb2_prescaler;
-            bus_clk_freq = apb2_clock;
+            bus_clk_freq   = apb2_clock;
             break;
 
         default:
@@ -1534,9 +1534,9 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 //============================================================================//}
 uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
-    uint32_t timer_bus_clock_freq          = rcc_get_bus_clock_freq_hz(bus);
-    uint8_t bus_prescaler       = 0;
-    uint8_t const APB_PRESCALER = 1 << 2;
+    uint32_t timer_bus_clock_freq = rcc_get_bus_clock_freq_hz(bus);
+    uint8_t bus_prescaler         = 0;
+    uint8_t const APB_PRESCALER   = 1 << 2;
 
     switch (bus)
     {
@@ -1573,8 +1573,8 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 //============================================================================//}
 void rcc_set_rtc_clk_src(rcc_rtc_clk_src_e rtc_clk_sel)
 {
-    ASSERT((rtc_clk_sel == RCC_RTC_CLK_SRC_NA) || (rtc_clk_sel == RCC_RTC_CLK_SRC_LSE)
-           || (rtc_clk_sel == RCC_RTC_CLK_SRC_LSI) || (rtc_clk_sel == RCC_RTC_CLK_SRC_HSE));
+    ASSERT((RCC_RTC_CLK_SRC_NA == rtc_clk_sel) || (RCC_RTC_CLK_SRC_LSE == rtc_clk_sel)
+           || (RCC_RTC_CLK_SRC_LSI == rtc_clk_sel) || (RCC_RTC_CLK_SRC_HSE == rtc_clk_sel));
 
     RCC->BDCR &= ~(RCC_BDCR_RTCSEL_MASK << RCC_BDCR_RTCSEL0_POS);
     RCC->BDCR |= rtc_clk_sel << RCC_BDCR_RTCSEL0_POS;
@@ -1665,7 +1665,7 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         case RCC_MCO1_HSE_SRC:
         case RCC_MCO1_PLL_SRC:
             RCC->CFGR |= (mco_clk_src << RCC_CFGR_MCO1_POS);
-            if (mco_prescaler == RCC_MCO_PRE_1)
+            if (RCC_MCO_PRE_1 == mco_prescaler)
             {
                 RCC->CFGR &= ~(RCC_CFGR_MCO1PRE_MASK << RCC_CFGR_MCO1PRE_POS);
             }
@@ -1680,7 +1680,7 @@ void rcc_config_mco(rcc_mco_clock_src_e const mco_clk_src, rcc_mco_prescaler_e c
         case RCC_MCO2_HSE_SRC:
         case RCC_MCO2_PLL_SRC:
             RCC->CFGR |= ((mco_clk_src - 4) << RCC_CFGR_MCO2_POS);
-            if (mco_prescaler == RCC_MCO_PRE_1)
+            if (RCC_MCO_PRE_1 == mco_prescaler)
             {
                 RCC->CFGR &= ~(RCC_CFGR_MCO2PRE_MASK << RCC_CFGR_MCO2PRE_POS);
             }
