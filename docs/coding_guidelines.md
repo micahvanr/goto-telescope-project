@@ -14,19 +14,20 @@ these rules in those sections. Any code that breaks these rules should have comm
 
 # General Rules
 ## Which C?
-* Exception: Do not alter or rename keyword except with the assert library. Including this add a lot of bloat
-and I prefer my own implementation.
+* Exception: "Preprocessor directive #define shall not be used to alter or rename any keyword or other aspect 
+of the programming language" except with the assert library. Including this add a lot of bloat and I prefer 
+my own implementation.
 
 ## Line Widths
-* Exception: Line Width should be limited to ~~80~~ 120: I will not be printing my code out and I'd prefer to 
-not have too many line breaks.
+* Exception: "The width of all lines in a program shall be limited to a maximum of 80 characters". I will not be 
+printing my code out and I'd prefer to not have too many line breaks so I will be using max 120 characters.
 
 ## Common Abbreviations
 See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
 
 # Comment Rules
-* Exception: Any line or block of code that exists specifically to increase the level of debug output information
-shall be surrounded by #ifndef NDEBUG ... #endif except in test code as that code will be used to debug and ensure
+* Exception: "Any line or block of code that exists specifically to increase the level of debug output information
+shall be surrounded by #ifndef NDEBUG ... #endif" except in test code as that code will be used to debug and ensure
 driver code runs as expected.
 * Code should be self documenting. Comments should not explain what is going on unless it is complex and requires 
 explaination. Comments should explain why something is necessary and sometimes how.
@@ -36,7 +37,7 @@ be used.
 
 # White Space Rules
 ## Blank Lines
-* Exception: No line of code shall contain more than one statement except with assertion statements to check parameters.
+* Exception: "No line of code shall contain more than one statement" except with assertion statements to check parameters.
 Breaking these statements up makes it more easier to read. Otherwise this rule remains intact.
 
 # Modules Rules
@@ -81,6 +82,9 @@ with parameter to enable or disable the object.
 # Variables Rules
 
 # Statement Rules
+## Switch Statements
+* Exception: "All switch statements shall contain a default block". I prefer to not include default 
+block so the compiler will warn when there are options from an enum that are not used.
 
 # Style
 ## Naming
