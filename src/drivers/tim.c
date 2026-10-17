@@ -19,6 +19,7 @@
 #include "assert_handler.h"
 #include "nvic.h"
 #include "rcc.h"
+#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Private Constants
@@ -879,14 +880,14 @@ void tim_reset(tim_reg_def const *const p_timx)
 }
 
 //============================================================================//{
-// Function: tim_start
-// Overview: Start the counter on the given timer.
-// Parameters:
-//      p_TIMx: TIMER register structure macro.
-//         TIMx (1-14)
-// Return:
-//     None
-// Note: None
+//  Function: tim_start
+//  Overview: Start the counter on the given timer.
+//  Parameters:
+//       p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
 //============================================================================//}
 void tim_start(tim_reg_def *const p_timx)
 {
@@ -898,14 +899,14 @@ void tim_start(tim_reg_def *const p_timx)
 }
 
 //============================================================================//{
-// Function: tim_start_it
-// Overview: Starts the counter on the specified timer with interrupts enabled.
-// Parameters:
-//      p_TIMx: TIMER register structure macro.
-//         TIMx (1-14)
-// Return:
-//     None
-// Note: None
+//  Function: tim_start_it
+//  Overview: Starts the counter on the specified timer with interrupts enabled.
+//  Parameters:
+//       p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//  Return:
+//      None
+//  Note: None
 //============================================================================//}
 void tim_start_it(tim_reg_def *const p_timx)
 {
@@ -1036,15 +1037,15 @@ void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const chan
 }
 
 //============================================================================//{
-// Function: tim_ic_init
-// Overview: Initializes the TIMER input capture with the settings in the configuration structure.
-// Parameters:
-//      p_TIMx: TIMER register structure macro.
-//         TIMx (1-14)
-//     ic_config: Input capture configuration settings.
-// Return:
-//     None
-// Note: None
+//  Function: tim_ic_init
+//  Overview: Initializes the TIMER input capture with the settings in the configuration structure.
+//  Parameters:
+//       p_TIMx: TIMER register structure macro.
+//          TIMx (1-14)
+//      ic_config: Input capture configuration settings.
+//  Return:
+//      None
+//  Note: None
 //============================================================================//}
 void tim_ic_init(tim_reg_def *const p_timx, tim_ic_config const ic_config)
 {
@@ -1344,17 +1345,20 @@ uint32_t tim_get_channel_ccr(tim_reg_def *const p_timx, tim_channel_sel_e const 
 //============================================================================//}
 bus_types tim_get_bus(tim_reg_def const *const p_timx)
 {
+    bus_types tim_bus = 0;
     // If TIMER peripheral on APB2
     if ((p_timx == TIM1) || (p_timx == TIM8) || (p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11))
     {
-        return APB2_BUS;
+        tim_bus = APB2_BUS;
 
-        // If TIMER peripheral on APB1
     }
+    // If TIMER peripheral on APB1
     else
     {
-        return APB1_BUS;
+        tim_bus = APB1_BUS;
     }
+
+    return tim_bus;
 }
 
 //======================================================================================//}
@@ -1483,6 +1487,7 @@ static void set_prescaler_count(tim_reg_def *const p_timx, uint32_t time, tim_un
 static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t const check_num, uint32_t const factor)
 {
     uint32_t max;
+    bool b_is_overflow = false;
     if ((p_timx == TIM2) || (p_timx == TIM5))
     {
         max = UINT32_MAX;
@@ -1493,12 +1498,14 @@ static inline bool check_overflow(tim_reg_def const *const p_timx, uint32_t cons
     }
     if (check_num < (max / factor))
     {
-        return false;
+        b_is_overflow = false;
     }
     else
     {
-        return true;
+        b_is_overflow = true;
     }
+
+    return b_is_overflow;
 }
 
 static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t const duty_cycle)
@@ -1515,24 +1522,26 @@ static inline uint32_t get_ccr_pwm(tim_reg_def const *const p_timx, uint32_t con
 
 static tim_type_e get_tim_type(tim_reg_def const *const p_timx)
 {
+    tim_type_e tim_type = 0;
+
     if ((p_timx == TIM6) || (p_timx == TIM7))
     {
-        return TIM_TYPE_BASIC;
+        tim_type = TIM_TYPE_BASIC;
     }
     else if ((p_timx == TIM2) || (p_timx == TIM3) || (p_timx == TIM4) || (p_timx == TIM5))
     {
-        return TIM_TYPE_GENERAL_2_5;
+        tim_type = TIM_TYPE_GENERAL_2_5;
     }
     else if ((p_timx == TIM9) || (p_timx == TIM10) || (p_timx == TIM11) || (p_timx == TIM12) || (p_timx == TIM13)
              || (p_timx == TIM14))
     {
-        return TIM_TYPE_GENERAL_9_14;
+        tim_type = TIM_TYPE_GENERAL_9_14;
     }
     else if ((p_timx == TIM1) || (p_timx == TIM8))
     {
-        return TIM_TYPE_ADVANCED;
+        tim_type = TIM_TYPE_ADVANCED;
     }
-    return 0;
+    return tim_type;
 }
 
 static void assert_tim_peri_param(tim_reg_def const *const p_timx)
@@ -1562,67 +1571,69 @@ static void assert_tim_peri_param(tim_reg_def const *const p_timx)
 
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx)
 {
+    uint8_t peri_num = 0;
+
     if (p_timx == TIM1)
     {
-        return TIM1_INIT_NUM;
+        peri_num = TIM1_INIT_NUM;
     }
     else if (p_timx == TIM2)
     {
-        return TIM2_INIT_NUM;
+        peri_num = TIM2_INIT_NUM;
     }
     else if (p_timx == TIM3)
     {
-        return TIM3_INIT_NUM;
+        peri_num = TIM3_INIT_NUM;
     }
     else if (p_timx == TIM4)
     {
-        return TIM4_INIT_NUM;
+        peri_num = TIM4_INIT_NUM;
     }
     else if (p_timx == TIM5)
     {
-        return TIM5_INIT_NUM;
+        peri_num = TIM5_INIT_NUM;
     }
     else if (p_timx == TIM6)
     {
-        return TIM6_INIT_NUM;
+        peri_num = TIM6_INIT_NUM;
     }
     else if (p_timx == TIM7)
     {
-        return TIM7_INIT_NUM;
+        peri_num = TIM7_INIT_NUM;
     }
     else if (p_timx == TIM8)
     {
-        return TIM8_INIT_NUM;
+        peri_num = TIM8_INIT_NUM;
     }
     else if (p_timx == TIM9)
     {
-        return TIM9_INIT_NUM;
+        peri_num = TIM9_INIT_NUM;
     }
     else if (p_timx == TIM10)
     {
-        return TIM10_INIT_NUM;
+        peri_num = TIM10_INIT_NUM;
     }
     else if (p_timx == TIM11)
     {
-        return TIM11_INIT_NUM;
+        peri_num = TIM11_INIT_NUM;
     }
     else if (p_timx == TIM12)
     {
-        return TIM12_INIT_NUM;
+        peri_num = TIM12_INIT_NUM;
     }
     else if (p_timx == TIM13)
     {
-        return TIM13_INIT_NUM;
+        peri_num = TIM13_INIT_NUM;
     }
     else if (p_timx == TIM14)
     {
-        return TIM14_INIT_NUM;
+        peri_num = TIM14_INIT_NUM;
     }
     else
     {
         ASSERT(0);
     }
-    return 0;
+    return peri_num;
 }
 
 static inline void set_tim_init_status(tim_reg_def const *const p_timx)

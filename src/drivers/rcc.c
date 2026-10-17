@@ -1429,18 +1429,24 @@ uint32_t rcc_get_sys_clock_freq_hz(void)
     ASSERT((clock_source == CLOCK_SRC_HSI) || (clock_source == CLOCK_SRC_HSE) || (clock_source == CLOCK_SRC_PLL));
 
     // Return clock depending on what the source is.
+    uint32_t sys_clk_freq = 0;
     switch (clock_source)
     {
         case CLOCK_SRC_HSI:
-            return HSI_CLOCK_FREQ;
+            sys_clk_freq = HSI_CLOCK_FREQ;
+            break;
         case CLOCK_SRC_HSE:
-            return HSE_CLOCK_FREQ;
+            sys_clk_freq = HSE_CLOCK_FREQ;
+            break;
         case CLOCK_SRC_PLL:
-            return rcc_get_pll_freq_hz();
+            sys_clk_freq = rcc_get_pll_freq_hz();
+            break;
         default:
+            sys_clk_freq = 0;
             ASSERT(false);
-            return 0;
     }
+
+    return sys_clk_freq;
 }
 
 //============================================================================//{
@@ -1461,7 +1467,8 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     uint16_t const ahb_clock_prescaler[] = {2, 4, 8, 16, 64, 128, 256, 512};
     uint16_t const apb_clock_prescaler[] = {2, 4, 8, 16};
 
-    uint32_t sysclock_freq;
+    uint32_t sys_clk_freq;
+    uint32_t bus_clk_freq;
 
     // Highspeed = AHB
     // Lowspeed = APB
@@ -1479,34 +1486,39 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
     // Calculate different clocks (AHB1/AHB2/APB1/APB2) from prescalers.
 
     // Get active system clock source (HSI/HSE/PLL) - Use function to get the clock for that source.
-    sysclock_freq = rcc_get_sys_clock_freq_hz();
+    sys_clk_freq = rcc_get_sys_clock_freq_hz();
 
     // Calculate AHB clock
     ahb_prescaler = ((RCC->CFGR >> RCC_CFGR_HPRE_POS) & RCC_CFGR_HPRE_MASK);
     // If 4th bit is 1, select prescaler, otherwise the prescaler is 1.
     ahb_prescaler = ((ahb_prescaler & 0b1000) != 0) ? ahb_clock_prescaler[ahb_prescaler & ~(0b1000)] : 1;
-    ahb_clock     = sysclock_freq / ahb_prescaler;
+    ahb_clock     = sys_clk_freq / ahb_prescaler;
 
     switch (bus)
     {
         case AHB1_BUS:
         case AHB2_BUS:
-            return ahb_clock;
+            bus_clk_freq = ahb_clock;
+            break;
         case APB1_BUS:
             apb1_ppre1_reg = ((RCC->CFGR >> RCC_CFGR_PPRE1_POS) & RCC_CFGR_PPRE1_MASK);
             apb1_prescaler = ((apb1_ppre1_reg & 0b100) != 0) ? apb_clock_prescaler[apb1_ppre1_reg & ~(0b100)] : 1;
             apb1_clock     = ahb_clock / apb1_prescaler;
-            return apb1_clock;
+            bus_clk_freq = apb1_clock;
+            break;
         case APB2_BUS:
             apb2_ppre2_reg = ((RCC->CFGR >> RCC_CFGR_PPRE2_POS) & RCC_CFGR_PPRE2_MASK);
             apb2_prescaler = ((apb2_ppre2_reg & 0b100) != 0) ? apb_clock_prescaler[apb2_ppre2_reg & ~(0b100)] : 1;
             apb2_clock     = ahb_clock / apb2_prescaler;
-            return apb2_clock;
+            bus_clk_freq = apb2_clock;
+            break;
 
         default:
+            bus_clk_freq = 0;
             ASSERT(false);
-            return 0;
     }
+
+    return bus_clk_freq;
 }
 
 //============================================================================//{
@@ -1522,7 +1534,7 @@ uint32_t rcc_get_bus_clock_freq_hz(bus_types const bus)
 //============================================================================//}
 uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 {
-    uint32_t bus_clock          = rcc_get_bus_clock_freq_hz(bus);
+    uint32_t timer_bus_clock_freq          = rcc_get_bus_clock_freq_hz(bus);
     uint8_t bus_prescaler       = 0;
     uint8_t const APB_PRESCALER = 1 << 2;
 
@@ -1540,10 +1552,10 @@ uint32_t rcc_get_timer_clock_freq_hz(bus_types const bus)
 
     if (bus_prescaler & APB_PRESCALER)
     {
-        return 2 * bus_clock;
+        timer_bus_clock_freq *= 2;
     }
 
-    return bus_clock;
+    return timer_bus_clock_freq;
 }
 
 //============================================================================//{

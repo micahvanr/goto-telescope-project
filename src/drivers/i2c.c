@@ -920,23 +920,25 @@ void i2c_it_handler(i2c_handle *const p_i2c_handle)
 
 static inline i2c_init_port_num_e map_i2c_ports_to_num(i2c_reg_def const *const p_i2cx)
 {
+    i2c_init_port_num_e port_num = 0;
     if (p_i2cx == I2C1)
     {
-        return I2C1_INIT_NUM;
+        port_num = I2C1_INIT_NUM;
     }
     else if (p_i2cx == I2C2)
     {
-        return I2C2_INIT_NUM;
+        port_num = I2C2_INIT_NUM;
     }
     else if (p_i2cx == I2C3)
     {
-        return I2C3_INIT_NUM;
+        port_num = I2C3_INIT_NUM;
     }
     else
     {
         ASSERT(0);
     }
-    return 0;
+
+    return port_num;
 }
 
 static inline void set_i2c_init_status(i2c_reg_def const *const p_i2cx)

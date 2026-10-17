@@ -15,6 +15,7 @@
 #include "common.h"
 #include "nvic.h"
 #include "rcc.h"
+#include "stm32f4xx.h"
 
 //======================================================================================//}
 //                  Private Constants
@@ -717,16 +718,19 @@ void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const dat
 //============================================================================//}
 bus_types get_usart_bus(usart_reg_def const *const p_usartx)
 {
+    bus_types usart_bus = 0;
     // If USART peripheral on APB1.
     if ((p_usartx == USART2) || (p_usartx == USART3) || (p_usartx == UART4) || (p_usartx == UART5))
     {
-        return APB1_BUS;
+        usart_bus = APB1_BUS;
     }
     // If USART peripheral on APB2.
     else
     {
-        return APB2_BUS;
+        usart_bus = APB2_BUS;
     }
+
+    return usart_bus;
 }
 
 //======================================================================================//}
@@ -735,35 +739,37 @@ bus_types get_usart_bus(usart_reg_def const *const p_usartx)
 
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx)
 {
+    usart_init_port_num_e port_num = 0;
     if (p_usartx == USART1)
     {
-        return USART1_INIT_NUM;
+        port_num =  USART1_INIT_NUM;
     }
     else if (p_usartx == USART2)
     {
-        return USART2_INIT_NUM;
+        port_num = USART2_INIT_NUM;
     }
     else if (p_usartx == USART3)
     {
-        return USART3_INIT_NUM;
+        port_num = USART3_INIT_NUM;
     }
     else if (p_usartx == UART4)
     {
-        return UART4_INIT_NUM;
+        port_num = UART4_INIT_NUM;
     }
     else if (p_usartx == UART5)
     {
-        return UART5_INIT_NUM;
+        port_num = UART5_INIT_NUM;
     }
     else if (p_usartx == USART6)
     {
-        return USART6_INIT_NUM;
+        port_num = USART6_INIT_NUM;
     }
     else
     {
         ASSERT(0);
     }
-    return 0;
+
+    return port_num;
 }
 
 static inline void set_usart_init_status(usart_reg_def const *const p_usartx)

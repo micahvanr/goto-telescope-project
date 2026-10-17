@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 // TODO: Add project roadmap using mermaid markdown
-// TODO: Add b_ to boolean variables
 // TODO: Add interrupt keyword to ISRs
 // TODO: Refactor linker script and startup code
 // TODO: Refactor ISRs to call into module implemented code and then call a callback 
