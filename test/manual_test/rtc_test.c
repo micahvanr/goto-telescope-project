@@ -155,7 +155,7 @@ void test_rtc_timestamp(void)
         if (RTC_TIMESTAMP_STATUS_TRIGGERED == rtc_timestamp_read_status())
         {
             rtc_timestamp_clear_status();
-            for (uint32_t i = 0; i < 5000; i++);
+            for (uint32_t tick = 0; tick < 5000; tick++);
         }
     }
 }

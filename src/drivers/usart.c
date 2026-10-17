@@ -463,7 +463,7 @@ void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32
     ASSERT(USART_INITIALIZED == get_usart_init_status(p_usartx));
     p_usartx->CR1 |= USART_CR1_TE;
 
-    for (uint32_t i = 0; i < length; i++)
+    for (uint32_t data_pos = 0; data_pos < length; data_pos++)
     {
         while (!(p_usartx->SR & USART_SR_TXE));
         p_usartx->DR = *p_data;
@@ -492,7 +492,7 @@ void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t cons
     ASSERT(USART_INITIALIZED == get_usart_init_status(p_usartx));
     p_usartx->CR1 |= USART_CR1_RE;
 
-    for (uint32_t i = 0; i < length; i++)
+    for (uint32_t data_pos = 0; data_pos < length; data_pos++)
     {
         while (!(p_usartx->SR & USART_SR_RXNE));
         *p_data = p_usartx->DR;

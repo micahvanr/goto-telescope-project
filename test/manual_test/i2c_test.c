@@ -74,7 +74,7 @@ void test_i2c_master_transmit(void)
     while (1)
     {
         i2c_master_transmit(TEST_I2C_PORT, I2C_ARDUINO_ADDR, tx_data, tx_len, I2C_REPEATED_START_DISABLE);
-        for (uint32_t i = 0; i < 5000; i++);
+        for (uint32_t tick = 0; tick < 5000; tick++);
     }
 }
 
@@ -140,7 +140,7 @@ void test_i2c_master_receive(void)
         {
             ASSERT(false);
         }
-        for (uint32_t i = 0; i < 5000; i++);
+        for (uint32_t tick = 0; tick < 5000; tick++);
     }
 }
 
@@ -207,7 +207,7 @@ void test_i2c_master_transmit_it(void)
     while (1)
     {
         i2c_master_transmit_it(&g_i2c_handle, I2C_ARDUINO_ADDR, tx_data, tx_len, I2C_REPEATED_START_DISABLE);
-        for (uint32_t i = 0; i < 5000; i++);
+        for (uint32_t tick = 0; tick < 5000; tick++);
     }
 }
 
@@ -270,7 +270,7 @@ void test_i2c_master_receive_it(void)
     while (1)
     {
         i2c_master_receive_it(&g_i2c_handle, I2C_ARDUINO_ADDR, rx_data, rx_len, I2C_REPEATED_START_DISABLE);
-        for (uint32_t i = 0; i < 5000; i++);
+        for (uint32_t tick = 0; tick < 5000; tick++);
     }
 }
 

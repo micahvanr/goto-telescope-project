@@ -79,7 +79,7 @@ static void blink_led(void)
     while (1)
     {
         *p_gpio_led_reg ^= (1 << LED_RED_PIN);
-        for (uint32_t i = 0; i < 1000000; i++)
+        for (uint32_t tick = 0; tick < 1000000; tick++)
         {
         }
     }

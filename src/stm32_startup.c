@@ -227,7 +227,7 @@ void Reset_Handler(void) {
 	
 	uint8_t *pDst = (uint8_t*) &_sdata; // SRAM
 	uint8_t *pSrc = (uint8_t*) &_la_data; // Flash
-	for (uint32_t i = 0; i < size; i++) 
+	for (uint32_t pos = 0; pos < size; pos++) 
 	{
 		*pDst++ = *pSrc++;
 	}
@@ -235,7 +235,7 @@ void Reset_Handler(void) {
 	// Init the .bss section to zero in SRAM
 	size = (uint32_t)&_ebss - (uint32_t)&_sbss;
 	pDst = (uint8_t*) &_sbss;
-	for (uint32_t i = 0; i < size; i++) 
+	for (uint32_t pos = 0; pos < size; pos++) 
 	{
 		*pDst++ = 0;
 	}

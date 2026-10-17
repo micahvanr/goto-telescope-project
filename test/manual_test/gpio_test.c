@@ -52,7 +52,7 @@ void test_gpio_blink_led(void)
     while (1)
     {
         gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num);
-        for (uint32_t i = 0; i < 500000; i++)
+        for (uint32_t tick = 0; tick < 500000; tick++)
         {
         }
     }
@@ -106,7 +106,7 @@ void test_gpio_read_write(void)
         {
             gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num, LOW);
         }
-        for (uint32_t i = 0; i < 500000; i++);
+        for (uint32_t tick = 0; tick < 500000; tick++);
     }
 }
 
@@ -158,7 +158,7 @@ void EXTI0_IRQHandler(void)
 
     gpio_it_handler(EXTI_LINE_NUM_0);
 
-    for (uint32_t i = 0; i < 500000; i++);
+    for (uint32_t tick = 0; tick < 500000; tick++);
 }
 
 // *End of file*

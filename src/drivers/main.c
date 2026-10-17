@@ -28,7 +28,6 @@
 // TODO: Refactor linker script and startup code
 // TODO: Refactor ISRs to call into module implemented code and then call a callback
 // for any user input
-// TODO: 8.4 Change loops
 
 // TODO: Add project roadmap using mermaid markdown
 // TODO: Think about removing handle struct

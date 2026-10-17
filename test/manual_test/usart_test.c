@@ -93,7 +93,7 @@ void test_usart_txrx(void)
         {
             ASSERT(false);
         }
-        for (uint32_t i = 0; i < 10000; i++);
+        for (uint32_t tick = 0; tick < 10000; tick++);
     }
 }
 
@@ -142,7 +142,7 @@ void test_usart_txrx_it(void)
         {
             ASSERT(false);
         }
-        for (uint32_t i = 0; i < 10000; i++);
+        for (uint32_t tick = 0; tick < 10000; tick++);
     }
 }
 //======================================================================================//}

@@ -78,7 +78,7 @@ void test_printf(void)
     while (1)
     {
         printf_("Test");
-        for (uint32_t i = 0; i < 50000; i++);
+        for (uint32_t tick = 0; tick < 50000; tick++);
     }
 }
 

@@ -457,13 +457,13 @@ void i2c_master_transmit(i2c_reg_def *const p_i2cx, uint8_t const target_addr, u
     clear_address_flag(p_i2cx);
 
     // Send data
-    for (uint32_t i = length; i > 0; i--)
+    for (uint32_t data_pos = length; data_pos > 0; data_pos--)
     {
         while (!(p_i2cx->SR1 & I2C_SR1_TXE));
         p_i2cx->DR = *p_data;
         p_data++;
         // If last byte send stop.
-        if (1 == i)
+        if (1 == data_pos)
         {
             while (!(p_i2cx->SR1 & I2C_SR1_TXE));
             while (!(p_i2cx->SR1 & I2C_SR1_BTF));
@@ -518,9 +518,9 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t const target_addr, ui
 
     clear_address_flag(p_i2cx);
 
-    for (uint32_t i = length; i > 0; i--)
+    for (uint32_t data_pos = length; data_pos > 0; data_pos--)
     {
-        if (1 == i)
+        if (1 == data_pos)
         {
             config_ack(p_i2cx, DISABLE);
         }
@@ -528,7 +528,7 @@ void i2c_master_receive(i2c_reg_def *const p_i2cx, uint8_t const target_addr, ui
         *p_data = p_i2cx->DR;
         p_data++;
 
-        if ((1 == i) && (I2C_REPEATED_START_DISABLE == repeated_start))
+        if ((1 == data_pos) && (I2C_REPEATED_START_DISABLE == repeated_start))
         {
             generate_stop_condition(p_i2cx);
         }
@@ -562,7 +562,7 @@ void i2c_slave_transmit(i2c_reg_def *const p_i2cx, uint8_t const *p_data, uint32
     clear_address_flag(p_i2cx);
 
     // Send data
-    for (uint32_t i = length; i > 0; i--)
+    for (uint32_t data_pos = length; data_pos > 0; data_pos--)
     {
         while (!(p_i2cx->SR1 & I2C_SR1_TXE));
         p_i2cx->DR = *p_data;
@@ -602,7 +602,7 @@ void i2c_slave_receive(i2c_reg_def *const p_i2cx, uint8_t *p_data, uint32_t cons
     clear_address_flag(p_i2cx);
 
     // Receive data
-    for (uint32_t i = length; i > 0; i--)
+    for (uint32_t data_pos = length; data_pos > 0; data_pos--)
     {
         while (!(p_i2cx->SR1 & I2C_SR1_RXNE));
         *p_data = p_i2cx->DR;
