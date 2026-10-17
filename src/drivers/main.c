@@ -23,7 +23,11 @@
 #include <stdint.h>
 
 // TODO: Add project roadmap using mermaid markdown
-// TODO: 2.1 Barr C - Add #ifndef NDEBUG #endif to code specifically for debug info
+// TODO: Add b_ to boolean variables
+// TODO: Add interrupt keyword to ISRs
+// TODO: Refactor linker script and startup code
+// TODO: Refactor ISRs to call into module implemented code and then call a callback 
+// for any user input
 
 // TODO: Think about removing handle struct
 

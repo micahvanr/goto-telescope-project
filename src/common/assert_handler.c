@@ -39,11 +39,15 @@ static void blink_led(void);
 // Function used by ASSERT() macro
 void assert_handler(void)
 {
+#ifndef NDEBUG
+
     // TODO: Turn off telescope motors
     printf_("ASSERT TRIGGERED");
 
     // Breakpoint
     BREAKPOINT();
+
+#endif
 
     blink_led();
 }

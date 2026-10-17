@@ -25,6 +25,9 @@ not have too many line breaks.
 See [common_abbreviations.md](common_abbreviations.md) file for table of all abbreviations.
 
 # Comment Rules
+* Exception: Any line or block of code that exists specifically to increase the level of debug output information
+shall be surrounded by #ifndef NDEBUG ... #endif except in test code as that code will be used to debug and ensure
+driver code runs as expected.
 * Code should be self documenting. Comments should not explain what is going on unless it is complex and requires 
 explaination. Comments should explain why something is necessary and sometimes how.
 * Use "//" for single and multi line comments except for function comment blocks.
