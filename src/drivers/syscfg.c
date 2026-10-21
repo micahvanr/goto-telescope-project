@@ -146,7 +146,7 @@ typedef enum : uint32_t {
 //======================================================================================//{
 
 //============================================================================//{
-// Function: syscfg_config_exti
+// Function: syscfg_toggable_exti
 // Overview: Configures the GPIO EXTI interrupt lines.
 // Parameters:
 //     port_num: Number attributed to GPIO port. Use map_gpio_ports_to_num to retreive number or use map below.
@@ -160,7 +160,7 @@ typedef enum : uint32_t {
 //     None
 // Note: None
 //============================================================================//}
-void syscfg_config_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
+void syscfg_toggable_exti(uint8_t port_num, uint8_t exti_line, togglable_e toggle)
 {
     uint8_t reg_num = exti_line % 4;
     // shift amount is exti x width multiplied by 0-3.

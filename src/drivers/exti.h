@@ -86,10 +86,10 @@ typedef volatile struct {
 //                  Public Function Prototypes
 //======================================================================================//{
 
-void exti_config_it(exti_lines_e line_num, togglable_e toggle);
-void exti_config_event(exti_lines_e line_num, togglable_e toggle);
-void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle);
-void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle);
+void exti_toggable_it(exti_lines_e line_num, togglable_e toggle);
+void exti_toggable_event(exti_lines_e line_num, togglable_e toggle);
+void exti_toggable_rising_edge(exti_lines_e line_num, togglable_e toggle);
+void exti_toggable_falling_edge(exti_lines_e line_num, togglable_e toggle);
 void exti_trigger_software_it_event(exti_lines_e line_num);
 bool exti_is_pending(exti_lines_e line_num);
 void exti_clear_pending(exti_lines_e line_num);

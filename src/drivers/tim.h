@@ -315,7 +315,7 @@ void tim_start_it(tim_reg_def *const p_timx);
 void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e channel);
 
-void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e channel, togglable_e toggle);
+void tim_toggable_it(tim_reg_def const *const p_timx, tim_channel_sel_e channel, togglable_e toggle);
 
 tim_status_e tim_read_status(tim_reg_def const *const p_timx);
 void tim_reset_status(tim_reg_def *const p_timx);

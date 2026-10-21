@@ -523,7 +523,7 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
     p_usart_handle->usart_it_data.txrx_buffer = p_data;
     p_usart_handle->usart_it_data.mode        = USART_MODE_TX;
 
-    usart_config_it(p_usart_handle->p_usartx, ENABLE);
+    usart_toggable_it(p_usart_handle->p_usartx, ENABLE);
 }
 
 //============================================================================//{
@@ -557,11 +557,11 @@ void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data,
         p_usart_handle->p_usartx->CR1 |= USART_CR1_PCE;
     }
 
-    usart_config_it(p_usart_handle->p_usartx, ENABLE);
+    usart_toggable_it(p_usart_handle->p_usartx, ENABLE);
 }
 
 //============================================================================//{
-//  Function: usart_config_it
+//  Function: usart_toggable_it
 //  Overview: Enable or disable the specified USART peripheral's interrupts.
 //  Parameters:
 //      p_usartx: USART register structure macro.
@@ -574,13 +574,13 @@ void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data,
 //      None
 //  Note: None
 //============================================================================//}
-void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle)
+void usart_toggable_it(usart_reg_def *const p_usartx, togglable_e const toggle)
 {
     uint32_t temp_cr1 = p_usartx->CR1;
     switch (toggle)
     {
         case ENABLE:
-            usart_config_it(p_usartx, ENABLE);
+            usart_toggable_it(p_usartx, ENABLE);
             temp_cr1 |= USART_CR1_UE | USART_CR1_TXEIE | USART_CR1_TCIE | USART_CR1_PEIE;
             p_usartx->CR1 = temp_cr1;
             break;
@@ -652,7 +652,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             }
             if (0 == p_usart_handle->usart_it_data.txrx_length)
             {
-                usart_config_it(p_usart_handle->p_usartx, DISABLE);
+                usart_toggable_it(p_usart_handle->p_usartx, DISABLE);
                 p_usart_handle->usart_it_data.status = USART_STATUS_READY;
                 usart_callback(p_usart_handle, USART_EVENT_CMPLT);
             }
@@ -667,7 +667,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
             }
             if ((0 == p_usart_handle->usart_it_data.txrx_length) && (status_reg & USART_SR_TC))
             {
-                usart_config_it(p_usart_handle->p_usartx, DISABLE);
+                usart_toggable_it(p_usart_handle->p_usartx, DISABLE);
                 p_usart_handle->p_usartx->CR1 &= ~USART_CR1_UE;
                 p_usart_handle->usart_it_data.status = USART_STATUS_READY;
                 usart_callback(p_usart_handle, USART_EVENT_CMPLT);

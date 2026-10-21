@@ -175,7 +175,7 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
 void usart_receive_it(usart_handle *p_usart_handle, uint8_t *p_data, uint32_t length);
 
 // Interrupt handling
-void usart_config_it(usart_reg_def *const p_usartx, togglable_e const toggle);
+void usart_toggable_it(usart_reg_def *const p_usartx, togglable_e const toggle);
 void usart_it_handler(usart_handle *const p_usart_handle);
 
 bus_types get_usart_bus(usart_reg_def const *const p_usartx);

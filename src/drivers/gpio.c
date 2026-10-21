@@ -683,7 +683,7 @@ void gpio_init(gpio_handle *const p_gpio_handle)
     // Set interrupt mode
     if (p_gpio_handle->gpio_conf.it_trigger != GPIO_IT_NA)
     {
-        gpio_config_it(p_gpio_handle, ENABLE);
+        gpio_toggable_it(p_gpio_handle, ENABLE);
     }
 }
 
@@ -703,7 +703,7 @@ void gpio_reset(gpio_reg_def const *const p_gpiox)
 }
 
 //============================================================================//{
-//  Function: gpio_config_it
+//  Function: gpio_toggable_it
 //  Overview: Enable or disable interrupts for the specified GPIO port according to settings inside handle.
 //  Parameters:
 //      p_gpio_handle: Structure with the corresponding settings to configure the GPIO pin.
@@ -714,29 +714,29 @@ void gpio_reset(gpio_reg_def const *const p_gpiox)
 //      None
 //  Note: None
 //============================================================================//}
-void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
+void gpio_toggable_it(gpio_handle const *const p_gpio_handle, togglable_e const toggle)
 {
     exti_lines_e exti_line_num = (exti_lines_e) p_gpio_handle->gpio_conf.pin_num;
 
-    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
+    syscfg_toggable_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
 
     rcc_syscfg_togglable_clock(ENABLE);
 
-    syscfg_config_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
+    syscfg_toggable_exti(map_gpio_ports_to_num(p_gpio_handle->p_gpiox), p_gpio_handle->gpio_conf.pin_num, toggle);
 
-    exti_config_it(exti_line_num, toggle);
+    exti_toggable_it(exti_line_num, toggle);
 
     switch (p_gpio_handle->gpio_conf.it_trigger)
     {
         case GPIO_IT_RT:
-            exti_config_rising_edge(exti_line_num, toggle);
+            exti_toggable_rising_edge(exti_line_num, toggle);
             break;
         case GPIO_IT_FT:
-            exti_config_falling_edge(exti_line_num, toggle);
+            exti_toggable_falling_edge(exti_line_num, toggle);
             break;
         case GPIO_IT_RFT:
-            exti_config_falling_edge(exti_line_num, toggle);
-            exti_config_rising_edge(exti_line_num, toggle);
+            exti_toggable_falling_edge(exti_line_num, toggle);
+            exti_toggable_rising_edge(exti_line_num, toggle);
             break;
         case GPIO_IT_NA:
             break;

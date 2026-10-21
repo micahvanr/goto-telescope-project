@@ -1084,7 +1084,7 @@ void rtc_alarm_set(rtc_alarm_config const alarm_conf)
 
     enable_alarm(alarm_sel, alarm_conf.it_toggle);
 
-    rtc_config_it(RTC_IT_OPT_ALARM, alarm_conf.it_toggle);
+    rtc_toggable_it(RTC_IT_OPT_ALARM, alarm_conf.it_toggle);
 }
 
 //============================================================================//{
@@ -1380,7 +1380,7 @@ bool rtc_alarm_is_triggered(rtc_alarm_sel_e const alarm_sel)
 }
 
 //============================================================================//{
-//  Function: rtc_config_it
+//  Function: rtc_toggable_it
 //  Overview: Enable or disable the specified RTC related interrupt.
 //  Parameters:
 //      it_opt: RTC interrupt options.
@@ -1395,27 +1395,27 @@ bool rtc_alarm_is_triggered(rtc_alarm_sel_e const alarm_sel)
 //      None
 //  Note: None
 //============================================================================//}
-void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle)
+void rtc_toggable_it(rtc_it_options_e it_opt, togglable_e toggle)
 {
     assert_it_opt_param(it_opt);
 
     switch (it_opt)
     {
         case RTC_IT_OPT_ALARM:
-            exti_config_it((exti_lines_e) RTC_EXTI_NUM_ALARM, toggle);
-            exti_config_rising_edge((exti_lines_e) RTC_EXTI_NUM_ALARM, toggle);
+            exti_toggable_it((exti_lines_e) RTC_EXTI_NUM_ALARM, toggle);
+            exti_toggable_rising_edge((exti_lines_e) RTC_EXTI_NUM_ALARM, toggle);
             nvic_toggable_irq(RTC_ALARM_IRQ_NUM_41, toggle);
             break;
 
         case RTC_IT_OPT_WAKEUP:
-            exti_config_it((exti_lines_e) RTC_EXTI_NUM_WAKE_UP, toggle);
-            exti_config_rising_edge((exti_lines_e) RTC_EXTI_NUM_WAKE_UP, toggle);
+            exti_toggable_it((exti_lines_e) RTC_EXTI_NUM_WAKE_UP, toggle);
+            exti_toggable_rising_edge((exti_lines_e) RTC_EXTI_NUM_WAKE_UP, toggle);
             nvic_toggable_irq(RTC_WKUP_IRQ_NUM_3, toggle);
             break;
 
         case RTC_IT_OPT_TIMESTAMP:
-            exti_config_it((exti_lines_e) RTC_EXTI_NUM_TIMESTAMP, toggle);
-            exti_config_rising_edge((exti_lines_e) RTC_EXTI_NUM_TIMESTAMP, toggle);
+            exti_toggable_it((exti_lines_e) RTC_EXTI_NUM_TIMESTAMP, toggle);
+            exti_toggable_rising_edge((exti_lines_e) RTC_EXTI_NUM_TIMESTAMP, toggle);
             nvic_toggable_irq(TAMP_STAMP_IRQ_NUM_2, toggle);
             break;
 
@@ -1443,7 +1443,7 @@ void rtc_timestamp_init(rtc_timestamp_config timestamp_conf)
     if (RTC_IT_OPT_TIMESTAMP == timestamp_conf.it_opt)
     {
         RTC->CR |= RTC_CR_TSIE;
-        rtc_config_it(timestamp_conf.it_opt, ENABLE);
+        rtc_toggable_it(timestamp_conf.it_opt, ENABLE);
     }
 
     // Map TIMESTAMP to AF
@@ -1564,7 +1564,7 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
     if (RTC_IT_OPT_WAKEUP == wakeup_conf.it_opt)
     {
         RTC->CR |= RTC_CR_WUTIE;
-        rtc_config_it(wakeup_conf.it_opt, ENABLE);
+        rtc_toggable_it(wakeup_conf.it_opt, ENABLE);
     }
 
     rtc_wakeup_clear_status();

@@ -910,7 +910,7 @@ void tim_start_it(tim_reg_def *const p_timx)
         ASSERT(false);
     }
     p_timx->DIER |= TIM_DIER_UIE;
-    tim_config_it(p_timx, TIM_CHANNEL_NA, ENABLE);
+    tim_toggable_it(p_timx, TIM_CHANNEL_NA, ENABLE);
     p_timx->CR1 |= TIM_CR1_CEN;
 }
 
@@ -955,13 +955,13 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
         ASSERT(false);
     }
 
-    tim_config_it(p_timx, channel, ENABLE);
+    tim_toggable_it(p_timx, channel, ENABLE);
     p_timx->DIER |= TIM_DIER_CC1IE << channel;
     p_timx->CCER |= 1 << ENABLE_REG_SHIFT;
 }
 
 //============================================================================//{
-//  Function: tim_config_it
+//  Function: tim_toggable_it
 //  Overview: Enable or disable the specified TIMER peripheral and/or channel.
 //  Parameters:
 //      p_TIMx: TIMER register structure macro.
@@ -976,7 +976,7 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 //      None
 //  Note: None
 //============================================================================//}
-void tim_config_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
+void tim_toggable_it(tim_reg_def const *const p_timx, tim_channel_sel_e const channel, togglable_e const toggle)
 {
     if ((channel != TIM_CHANNEL_NA) && (TIM1 == p_timx))
     {

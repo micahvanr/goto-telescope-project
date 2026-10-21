@@ -154,7 +154,7 @@ void gpio_write(gpio_reg_def *p_gpiox, pin_number_e pin_num, pin_logic_level_e p
 pin_logic_level_e gpio_read(gpio_reg_def const *p_gpiox, pin_number_e pin_num);
 void gpio_toggle(gpio_reg_def *p_gpiox, pin_number_e pin_num);
 
-void gpio_config_it(gpio_handle const *const p_gpio_handle, togglable_e toggle);
+void gpio_toggable_it(gpio_handle const *const p_gpio_handle, togglable_e toggle);
 void gpio_it_handler(exti_lines_e exti_line);
 
 #endif // GPIO_H

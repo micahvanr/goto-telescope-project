@@ -509,7 +509,7 @@ static inline void assert_line_num_param(exti_lines_e line_num);
 //======================================================================================//{
 
 //============================================================================//{
-//  Function: exti_config_it
+//  Function: exti_toggable_it
 //  Overview: Enable or disable interrupts for the specified EXTI line.
 //  Parameters:
 //      line_num:
@@ -521,7 +521,7 @@ static inline void assert_line_num_param(exti_lines_e line_num);
 //      None
 //  Note: None
 //============================================================================//}
-void exti_config_it(exti_lines_e line_num, togglable_e toggle)
+void exti_toggable_it(exti_lines_e line_num, togglable_e toggle)
 {
     assert_line_num_param(line_num);
     switch (toggle)
@@ -536,7 +536,7 @@ void exti_config_it(exti_lines_e line_num, togglable_e toggle)
 }
 
 //============================================================================//{
-//  Function: exti_config_event
+//  Function: exti_toggable_event
 //  Overview: Enable or disable events for the specified EXTI line.
 //  Parameters:
 //      line_num:
@@ -548,7 +548,7 @@ void exti_config_it(exti_lines_e line_num, togglable_e toggle)
 //      None
 //  Note: None
 //============================================================================//}
-void exti_config_event(exti_lines_e line_num, togglable_e toggle)
+void exti_toggable_event(exti_lines_e line_num, togglable_e toggle)
 {
     assert_line_num_param(line_num);
     switch (toggle)
@@ -563,7 +563,7 @@ void exti_config_event(exti_lines_e line_num, togglable_e toggle)
 }
 
 //============================================================================//{
-// Function: exti_config_rising_edge
+// Function: exti_toggable_rising_edge
 // Overview: Enable or disable rising edge trigger for the specified EXTI line.
 // Parameters:
 //     line_num:
@@ -575,7 +575,7 @@ void exti_config_event(exti_lines_e line_num, togglable_e toggle)
 //     None
 // Note: None
 //============================================================================//}
-void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
+void exti_toggable_rising_edge(exti_lines_e line_num, togglable_e toggle)
 {
     assert_line_num_param(line_num);
     switch (toggle)
@@ -590,7 +590,7 @@ void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
 }
 
 //============================================================================//{
-//  Function: exti_config_falling_edge
+//  Function: exti_toggable_falling_edge
 //  Overview: Enable or disable falling edge trigger for the specified EXTI line.
 //  Parameters:
 //      line_num:
@@ -602,7 +602,7 @@ void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle)
 //      None
 //  Note: None
 //============================================================================//}
-void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle)
+void exti_toggable_falling_edge(exti_lines_e line_num, togglable_e toggle)
 {
     assert_line_num_param(line_num);
     switch (toggle)
