@@ -977,9 +977,9 @@ static inline bool is_gpio_initialized(gpio_reg_def const *const p_gpiox, pin_nu
     // Get port initialization pins from list.
     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)];
     // Mask the port to get the bit for the pin number.
-    uint8_t pin_initialized = ((port_init & (1 << pin_num)) >> pin_num);
+    bool is_pin_initialized = ((port_init & (1 << pin_num)) >> pin_num);
 
-    return pin_initialized;
+    return is_pin_initialized;
 }
 
 // *End of file*

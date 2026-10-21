@@ -1366,17 +1366,17 @@ bool rtc_alarm_is_triggered(rtc_alarm_sel_e const alarm_sel)
 {
     assert_alarm_sel_param(alarm_sel);
 
-    bool b_alarm_status = false;
+    bool b_is_alarm_triggered = false;
     switch (alarm_sel)
     {
         case RTC_ALARM_A_SEL:
-            b_alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
+            b_is_alarm_triggered = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
             break;
         case RTC_ALARM_B_SEL:
-            b_alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK);
+            b_is_alarm_triggered = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK);
             break;
     }
-    return b_alarm_status;
+    return b_is_alarm_triggered;
 }
 
 //============================================================================//{
