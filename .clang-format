@@ -37,4 +37,5 @@ LineEnding: LF
 BreakBinaryOperations: Never
 MaxEmptyLinesToKeep: 1
 BreakBeforeBinaryOperators: NonAssignment
+IndentPPDirectives: AfterHash
 ReflowComments: Never

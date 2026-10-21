@@ -1645,8 +1645,7 @@ static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, 
     g_tim_channel_init[map_tim_peri_to_num(p_timx)] |= (1 << channel);
 }
 
-static inline bool is_tim_channel_initialized(tim_reg_def const *const p_timx,
-                                                           tim_channel_sel_e const channel)
+static inline bool is_tim_channel_initialized(tim_reg_def const *const p_timx, tim_channel_sel_e const channel)
 {
     return 0b1 & (g_tim_channel_init[map_tim_peri_to_num(p_timx)] >> channel);
 }

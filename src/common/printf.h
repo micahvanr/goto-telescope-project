@@ -15,6 +15,7 @@ void printf_init(void);
 #define PRINTF_USART_TX_PORT GPIOA
 #define PRINTF_USART_TX_PIN  PIN_NUM_2
 
+// clang-format off
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
  *             2021-2024, Haifa, Palestine/Israel
@@ -253,5 +254,7 @@ int vfctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char
 #endif
 
 #endif /* PRINTF_H_ */
+
+// clang-format on
 
 // *End of file*

@@ -16,6 +16,8 @@
 
 static void printf_gpio_init();
 
+// clang-format off
+
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
  *             2021-2024, Haifa, Palestine/Israel
@@ -1870,6 +1872,8 @@ int fctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char 
     va_end(args);
     return ret;
 }
+
+// clang-format off
 
 // NOTE: All functions below this point have been added by myself
 
