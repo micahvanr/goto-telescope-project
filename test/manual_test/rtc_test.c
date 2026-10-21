@@ -231,10 +231,10 @@ static void output_rtc_data(void)
 }
 
 //======================================================================================//}
-//                  ISR Handlers
+//                  Interrupt Service Routines (ISRs)
 //======================================================================================//{
 
-void TAMP_STAMP_IRQHandler(void)
+void tamp_stamp_isr(void)
 {
     rtc_time_data ts_time_data = {0};
     ts_time_data               = rtc_timestamp_read_time();
@@ -244,7 +244,7 @@ void TAMP_STAMP_IRQHandler(void)
     toggle_debug_pin();
 }
 
-void RTC_WKUP_IRQHandler(void)
+void rtc_wkup_isr(void)
 {
     toggle_debug_pin();
 
@@ -253,7 +253,7 @@ void RTC_WKUP_IRQHandler(void)
     rtc_it_handler();
 }
 
-void RTC_Alarm_IRQHandler(void)
+void rtc_alarm_isr(void)
 {
     if (RTC_ALARM_STATUS_TRIGGERED == rtc_alarm_get_status(RTC_ALARM_A_SEL))
     {

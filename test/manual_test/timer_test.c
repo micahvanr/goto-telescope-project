@@ -327,10 +327,10 @@ uint32_t count_to_period(uint32_t count)
 }
 
 //======================================================================================//}
-//                  ISR Handlers
+//                  Interrupt Service Routines (ISRs)
 //======================================================================================//{
 
-void TIM8_CC_IRQHandler(void)
+void tim8_cc_isr(void)
 {
     uint32_t curr_value;
     static uint32_t prev_value = 0;
@@ -356,7 +356,7 @@ void TIM8_CC_IRQHandler(void)
     tim_reset_status(g_cc_tim_handle.p_timx);
 }
 
-void TIM1_UP_TIM10_IRQHandler(void)
+void tim1_up_tim10_isr(void)
 {
     toggle_debug_pin();
     tim_reset_status(g_tim_handle.p_timx);

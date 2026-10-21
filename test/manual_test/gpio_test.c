@@ -148,11 +148,11 @@ void test_gpio_it(void)
 }
 
 //======================================================================================//}
-//                  ISR Handlers
+//                  Interrupt Service Routines (ISRs)
 //======================================================================================//{
 
 // Toggle GPIO pin
-void EXTI0_IRQHandler(void)
+void __ISR exti0_isr(void)
 {
     gpio_toggle(GPIOD, PIN_NUM_13);
 

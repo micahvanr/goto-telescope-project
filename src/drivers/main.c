@@ -24,20 +24,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// TODO: Add interrupt keyword to ISRs
-// TODO: Refactor linker script and startup code
-// TODO: Refactor ISRs to call into module implemented code and then call a callback
-// for any user input
+// TODO: Refactor linker script and startup code.
+// TODO: Change get status functions to bool functions.
 
-// TODO: Add project roadmap using mermaid markdown
-// TODO: Think about removing handle struct
+// TODO: Add project roadmap using mermaid markdown.
+// TODO: Think about removing handle struct.
 
 int main(void)
 {
-    // NOTE: Change this variable to run the correct test
+    // NOTE: Change this variable to run the correct test.
     test_type_e test = TIMER_TEST_FREQ;
 
-    // NOTE: Change "I2C_TEST_MODE" constant to change I2C test mode further
+    // NOTE: Change "I2C_TEST_MODE" constant to change I2C test mode further.
     uint8_t i2c_test_mode = I2C_TEST_MODE;
 
     // Uses USART2 and PA2 - change inside printf.h
@@ -47,7 +45,7 @@ int main(void)
     debug_pin_init();
     debug_button_init();
 
-    // NOTE: Uncomment line below if you want to run the program after button press
+    // NOTE: Uncomment line below if you want to run the program after button press.
     // while(!read_debug_button());
 
     printf_(" ");

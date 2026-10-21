@@ -344,16 +344,16 @@ static void i2c_port_setup(void)
 }
 
 //======================================================================================//}
-//                  ISR Handlers
+//                  Interrupt Service Routines (ISRs)
 //======================================================================================//{
 
 // WARNING: May need to change ISR depending on I2C port used.
-void I2C1_EV_IRQHandler()
+void i2c1_ev_isr()
 {
     i2c_it_handler(&g_i2c_handle);
 }
 
-void I2C1_ER_IRQHandler()
+void i2c1_er_isr()
 {
     ASSERT(false);
 }

@@ -18,7 +18,8 @@
     } while (0)
 
 #define UNUSED(x) (void) (x)
-#define __weak    __attribute__((weak))
+#define __WEAK    __attribute__((weak))
+#define __ISR     __attribute__((interrupt))
 
 #endif
 

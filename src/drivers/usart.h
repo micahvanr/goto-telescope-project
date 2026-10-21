@@ -181,7 +181,7 @@ void usart_it_handler(usart_handle *const p_usart_handle);
 bus_types get_usart_bus(usart_reg_def const *const p_usartx);
 
 // User implement callback function to handle.
-void __weak usart_callback(usart_handle *p_usart_handle, usart_event_e event);
+void __WEAK usart_callback(usart_handle *p_usart_handle, usart_event_e event);
 
 #endif // USART_H
 

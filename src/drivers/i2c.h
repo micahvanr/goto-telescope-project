@@ -163,7 +163,7 @@ void i2c_config_it(i2c_reg_def *const p_i2cx, togglable_e toggle);
 void i2c_it_handler(i2c_handle *const p_i2c_handle);
 
 // User implement callback function to handle
-void __weak i2c_callback(i2c_handle *p_i2c_handle, i2c_event_e event);
+void __WEAK i2c_callback(i2c_handle *p_i2c_handle, i2c_event_e event);
 
 #endif // I2C_H
 

@@ -181,11 +181,11 @@ static void setup_usart_port(void)
 }
 
 //======================================================================================//}
-//                  ISR Handlers
+//                  Interrupt Service Routines (ISRs)
 //======================================================================================//{
 
 // WARNING: May need to change ISR depending on USART port used.
-void USART2_IRQHandler(void)
+void __ISR usart2_isr(void)
 {
     usart_it_handler(&g_usart_test_handle);
 }
