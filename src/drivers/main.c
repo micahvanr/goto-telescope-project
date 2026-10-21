@@ -25,7 +25,6 @@
 #include <stdint.h>
 
 // TODO: Refactor linker script and startup code.
-// TODO: Change get status functions to bool functions.
 
 // TODO: Add project roadmap using mermaid markdown.
 // TODO: Think about removing handle struct.
