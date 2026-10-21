@@ -33,7 +33,7 @@ driver code runs as expected.
 * Code should be self documenting. Comments should not explain what is going on unless it is complex and requires 
 explaination. Comments should explain why something is necessary and sometimes how.
 * Use "//" for single and multi line comments.
-* See [standard_commend_phrases.md](standard_commend_phrases.md) file for list of standard phrases that might
+* See [standard_comment_phrases.md](standard_comment_phrases.md) file for list of standard phrases that might
 be used.
 
 # White Space Rules
