@@ -121,11 +121,6 @@ typedef enum : uint32_t {
     RTC_WAKEUP_SPRE_CLK_EXTRA_BIT = 0b110, // Usually 1 hz + 2**16 is added to WUT counter value
 } rtc_wakeup_clk_sel_e;
 
-typedef enum : uint32_t {
-    RTC_WAKEUP_STATUS_NOT_TRIGGERED = 0b0,
-    RTC_WAKEUP_STATUS_TRIGGERED     = 0b1,
-} rtc_wakeup_status_e;
-
 //} Misc. Constants
 //=========================================//{
 
@@ -134,11 +129,6 @@ typedef enum : uint32_t {
     RTC_EXTI_NUM_WAKE_UP   = EXTI_LINE_NUM_22,
     RTC_EXTI_NUM_TIMESTAMP = EXTI_LINE_NUM_21,
 } rtc_exti_line_num_e;
-
-typedef enum : uint32_t {
-    RTC_ALARM_STATUS_NOT_TRIGGERED = 0b0,
-    RTC_ALARM_STATUS_TRIGGERED     = 0b1,
-} rtc_alarm_status_e;
 
 //======================================================================================//}
 //                  Structure Definitions
@@ -256,7 +246,7 @@ void rtc_alarm_set_hours(rtc_alarm_sel_e alarm_sel, uint8_t hours, rtc_alarm_hou
 void rtc_alarm_set_date(rtc_alarm_sel_e alarm_sel, uint8_t date, rtc_alarm_dateday_match_e date_match);
 void rtc_alarm_set_day(rtc_alarm_sel_e alarm_sel, rtc_weekdays_e weekday, rtc_alarm_dateday_match_e date_match);
 void rtc_alarm_set_am_pm(rtc_alarm_sel_e alarm_sel, uint8_t am_pm);
-rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e alarm_sel);
+bool rtc_alarm_is_triggered(rtc_alarm_sel_e alarm_sel);
 
 void rtc_config_it(rtc_it_options_e it_opt, togglable_e toggle);
 
@@ -267,7 +257,7 @@ rtc_date_data rtc_timestamp_read_date(void);
 rtc_time_data rtc_timestamp_read_time(void);
 
 void rtc_wakeup_init(rtc_wakeup_config wakeup_conf);
-rtc_wakeup_status_e rtc_wakeup_get_status(void);
+bool rtc_wakeup_is_triggered(void);
 void rtc_wakeup_clear_status(void);
 
 void rtc_it_handler(void);

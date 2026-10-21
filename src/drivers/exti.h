@@ -63,11 +63,6 @@ typedef enum : uint32_t {
     EXTI_LINE_NUM_22 = 22,
 } exti_lines_e;
 
-typedef enum : uint32_t {
-    EXTI_PEND_STATUS_NOT_TRIGGERED = 0b0,
-    EXTI_PEND_STATUS_TRIGGERED     = 0b1,
-} exti_pend_status_e;
-
 //======================================================================================//}
 //                  Structure Definitions
 //======================================================================================//{
@@ -96,7 +91,7 @@ void exti_config_event(exti_lines_e line_num, togglable_e toggle);
 void exti_config_rising_edge(exti_lines_e line_num, togglable_e toggle);
 void exti_config_falling_edge(exti_lines_e line_num, togglable_e toggle);
 void exti_trigger_software_it_event(exti_lines_e line_num);
-exti_pend_status_e exti_get_pending(exti_lines_e line_num);
+bool exti_is_pending(exti_lines_e line_num);
 void exti_clear_pending(exti_lines_e line_num);
 
 void __WEAK exti_isr_callback(exti_lines_e line_num);

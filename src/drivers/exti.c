@@ -633,18 +633,17 @@ void exti_trigger_software_it_event(exti_lines_e line_num)
 }
 
 //============================================================================//{
-//  Function: exti_get_pending
+//  Function: exti_is_pending
 //  Overview: Get the specified EXTI line's pending trigger status.
 //  Parameters:
 //      line_num:
 //          EXTI_LINE_NUM_x (0-22)
 //  Return:
-//      exti_pend_status_e
-//          EXTI_PEND_STATUS_NOT_TRIGGERED
-//          EXTI_PEND_STATUS_TRIGGERED
+//      true
+//      false
 //  Note: None
 //============================================================================//}
-exti_pend_status_e exti_get_pending(exti_lines_e line_num)
+bool exti_is_pending(exti_lines_e line_num)
 {
     assert_line_num_param(line_num);
     return 0b1 & (EXTI->SWIER >> line_num);

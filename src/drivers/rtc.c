@@ -1350,7 +1350,7 @@ void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
 }
 
 //============================================================================//{
-//  Function: rtc_alarm_get_status
+//  Function: rtc_alarm_is_triggered
 //  Overview: Get the specified alarm's status.
 //  Parameters:
 //      alarm_sel:
@@ -1362,21 +1362,21 @@ void rtc_alarm_set_am_pm(rtc_alarm_sel_e const alarm_sel, uint8_t const am_pm)
 //          RTC_ALARM_STATUS_MATCH
 //  Note: None
 //============================================================================//}
-rtc_alarm_status_e rtc_alarm_get_status(rtc_alarm_sel_e const alarm_sel)
+bool rtc_alarm_is_triggered(rtc_alarm_sel_e const alarm_sel)
 {
     assert_alarm_sel_param(alarm_sel);
 
-    rtc_alarm_status_e alarm_status = RTC_ALARM_STATUS_NOT_TRIGGERED;
+    bool b_alarm_status = false;
     switch (alarm_sel)
     {
         case RTC_ALARM_A_SEL:
-            alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
+            b_alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRAF_POS) & RTC_ISR_ALRAF_MASK);
             break;
         case RTC_ALARM_B_SEL:
-            alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK);
+            b_alarm_status = 0b1 & ((RTC->ISR >> RTC_ISR_ALRBF_POS) & RTC_ISR_ALRBF_MASK);
             break;
     }
-    return alarm_status;
+    return b_alarm_status;
 }
 
 //============================================================================//{
@@ -1573,17 +1573,16 @@ void rtc_wakeup_init(rtc_wakeup_config wakeup_conf)
 }
 
 //============================================================================//{
-//  Function: rtc_wakeup_get_status
+//  Function: rtc_wakeup_is_triggered
 //  Overview: Read the status of the wakeup.
 //  Parameters:
 //      None
 //  Return:
-//      rtc_wakeup_status_e:
-//          RTC_WAKEUP_STATUS_NOT_TRIGGERED
-//          RTC_WAKEUP_STATUS_TRIGGERED
+//      true
+//      false
 //  Note: None
 //============================================================================//}
-rtc_wakeup_status_e rtc_wakeup_get_status(void)
+bool rtc_wakeup_is_triggered(void)
 {
     return ((RTC->ISR >> RTC_ISR_WUTF_POS) & RTC_ISR_WUTF_MASK);
 }

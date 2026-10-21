@@ -24,14 +24,6 @@
 //                  Private Constants
 //======================================================================================//{
 
-//} Initialization Handler Constants
-//=========================================//{
-
-typedef enum : uint32_t {
-    GPIO_NOT_INITIALIZED = 0,
-    GPIO_INITIALIZED     = 1,
-} gpio_init_check_e;
-
 //========================================================//}
 //          Register Constants
 //========================================================//{
@@ -629,7 +621,7 @@ volatile uint16_t g_gpio_pin_init[8] = {0};
 // Assert helper functions
 static void assert_gpio_handle_param(gpio_handle const *const p_gpio_handle);
 static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_num);
-static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e pin_num);
+static inline bool is_gpio_initialized(gpio_reg_def const *const p_gpiox, pin_number_e pin_num);
 
 // General helper functions
 static inline uint8_t map_gpio_ports_to_num(gpio_reg_def const *const p_gpiox);
@@ -785,7 +777,7 @@ void gpio_it_handler(exti_lines_e const exti_line)
 //============================================================================//}
 void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_logic_level_e const pin_level)
 {
-    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
+    ASSERT(is_gpio_initialized(p_gpiox, pin_num));
     switch (pin_level)
     {
         case HIGH:
@@ -813,7 +805,7 @@ void gpio_write(gpio_reg_def *const p_gpiox, pin_number_e const pin_num, pin_log
 //============================================================================//}
 pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
+    ASSERT(is_gpio_initialized(p_gpiox, pin_num));
     return (pin_logic_level_e) (p_gpiox->IDR & (1 << pin_num));
 }
 
@@ -831,7 +823,7 @@ pin_logic_level_e gpio_read(gpio_reg_def const *const p_gpiox, pin_number_e cons
 //============================================================================//}
 void gpio_toggle(gpio_reg_def *const p_gpiox, pin_number_e const pin_num)
 {
-    ASSERT(GPIO_INITIALIZED == get_gpio_init_status(p_gpiox, pin_num));
+    ASSERT(is_gpio_initialized(p_gpiox, pin_num));
     p_gpiox->ODR ^= (1 << pin_num);
 }
 
@@ -980,7 +972,7 @@ static inline void set_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_n
     g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)] |= (1 << pin_num);
 }
 
-static inline gpio_init_check_e get_gpio_init_status(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
+static inline bool is_gpio_initialized(gpio_reg_def const *const p_gpiox, pin_number_e const pin_num)
 {
     // Get port initialization pins from list.
     uint16_t port_init = g_gpio_pin_init[map_gpio_ports_to_num(p_gpiox)];

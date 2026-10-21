@@ -255,7 +255,7 @@ void rtc_wkup_isr(void)
 
 void rtc_alarm_isr(void)
 {
-    if (RTC_ALARM_STATUS_TRIGGERED == rtc_alarm_get_status(RTC_ALARM_A_SEL))
+    if (rtc_alarm_is_triggered(RTC_ALARM_A_SEL))
     {
         printf_("Alarm triggered");
     }

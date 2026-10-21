@@ -45,11 +45,6 @@ typedef enum : uint8_t {
     TIM14_INIT_NUM = 13,
 } tim_init_peri_num_e;
 
-typedef enum : uint8_t {
-    TIM_NOT_INITIALIZED = 0,
-    TIM_INITIALIZED     = 1,
-} tim_init_check_e;
-
 //========================================================//}
 //          Register Constants
 //========================================================//{
@@ -679,9 +674,9 @@ static tim_type_e get_tim_type(tim_reg_def const *const p_timx);
 
 static inline uint8_t map_tim_peri_to_num(tim_reg_def const *const p_timx);
 static inline void set_tim_init_status(tim_reg_def const *const p_timx);
-static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx);
+static inline bool is_tim_initialized(tim_reg_def const *const p_timx);
 static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
-static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
+static inline bool is_tim_channel_initialized(tim_reg_def const *const p_timx, tim_channel_sel_e channel);
 
 //======================================================================================//}
 //                  Public Function Implementation
@@ -891,7 +886,7 @@ void tim_reset(tim_reg_def const *const p_timx)
 //============================================================================//}
 void tim_start(tim_reg_def *const p_timx)
 {
-    if (TIM_NOT_INITIALIZED == get_tim_init_status(p_timx))
+    if (!is_tim_initialized(p_timx))
     {
         ASSERT(false);
     }
@@ -910,7 +905,7 @@ void tim_start(tim_reg_def *const p_timx)
 //============================================================================//}
 void tim_start_it(tim_reg_def *const p_timx)
 {
-    if (TIM_NOT_INITIALIZED == get_tim_init_status(p_timx))
+    if (!is_tim_initialized(p_timx))
     {
         ASSERT(false);
     }
@@ -933,7 +928,7 @@ void tim_channel_start(tim_reg_def *const p_timx, tim_channel_sel_e const channe
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (TIM_NOT_INITIALIZED == get_tim_channel_init_status(p_timx, channel))
+    if (!is_tim_channel_initialized(p_timx, channel))
     {
         ASSERT(false);
     }
@@ -955,7 +950,7 @@ void tim_channel_start_it(tim_reg_def *const p_timx, tim_channel_sel_e const cha
 {
     uint8_t const ENABLE_REG_SHIFT = (channel * 4);
 
-    if (TIM_NOT_INITIALIZED == get_tim_channel_init_status(p_timx, channel))
+    if (!is_tim_channel_initialized(p_timx, channel))
     {
         ASSERT(false);
     }
@@ -1640,7 +1635,7 @@ static inline void set_tim_init_status(tim_reg_def const *const p_timx)
     g_tim_peri_init |= (1 << map_tim_peri_to_num(p_timx));
 }
 
-static inline tim_init_check_e get_tim_init_status(tim_reg_def const *const p_timx)
+static inline bool is_tim_initialized(tim_reg_def const *const p_timx)
 {
     return 0b1 & (g_tim_peri_init >> map_tim_peri_to_num(p_timx));
 }
@@ -1650,7 +1645,7 @@ static inline void set_tim_channel_init_status(tim_reg_def const *const p_timx, 
     g_tim_channel_init[map_tim_peri_to_num(p_timx)] |= (1 << channel);
 }
 
-static inline tim_init_check_e get_tim_channel_init_status(tim_reg_def const *const p_timx,
+static inline bool is_tim_channel_initialized(tim_reg_def const *const p_timx,
                                                            tim_channel_sel_e const channel)
 {
     return 0b1 & (g_tim_channel_init[map_tim_peri_to_num(p_timx)] >> channel);

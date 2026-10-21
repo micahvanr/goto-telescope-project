@@ -33,11 +33,6 @@ typedef enum : uint8_t {
     USART6_INIT_NUM = 5,
 } usart_init_port_num_e;
 
-typedef enum : uint8_t {
-    USART_NOT_INITIALIZED = 0,
-    USART_INITIALIZED     = 1,
-} usart_init_check_e;
-
 //========================================================//}
 //          Register Constants
 //========================================================//{
@@ -279,7 +274,7 @@ uint8_t g_usart_port_init = 0;
 // Assert helper functions
 static void assert_usart_handle_param(usart_handle const *const p_usart_handle);
 static inline void set_usart_init_status(usart_reg_def const *const p_usartx);
-static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx);
+static inline bool is_usart_initialized(usart_reg_def const *const p_usartx);
 
 // General helper functions
 static inline usart_init_port_num_e map_usart_ports_to_num(usart_reg_def const *const p_usartx);
@@ -460,7 +455,7 @@ void usart_reset(usart_reg_def const *const p_usartx)
 //============================================================================//}
 void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32_t const length)
 {
-    ASSERT(USART_INITIALIZED == get_usart_init_status(p_usartx));
+    ASSERT(is_usart_initialized(p_usartx));
     p_usartx->CR1 |= USART_CR1_TE;
 
     for (uint32_t data_pos = 0; data_pos < length; data_pos++)
@@ -489,7 +484,7 @@ void usart_transmit(usart_reg_def *const p_usartx, uint8_t const *p_data, uint32
 //============================================================================//}
 void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t const length)
 {
-    ASSERT(USART_INITIALIZED == get_usart_init_status(p_usartx));
+    ASSERT(is_usart_initialized(p_usartx));
     p_usartx->CR1 |= USART_CR1_RE;
 
     for (uint32_t data_pos = 0; data_pos < length; data_pos++)
@@ -517,7 +512,7 @@ void usart_receive(usart_reg_def *const p_usartx, uint8_t *p_data, uint32_t cons
 //============================================================================//}
 void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
-    ASSERT(USART_INITIALIZED == get_usart_init_status(p_usart_handle->p_usartx));
+    ASSERT(is_usart_initialized(p_usart_handle->p_usartx));
 
     // Wait until usart is available (blocking).
     while (USART_STATUS_RUNNING == p_usart_handle->usart_it_data.status);
@@ -546,7 +541,7 @@ void usart_transmit_it(usart_handle *const p_usart_handle, uint8_t *const p_data
 //============================================================================//}
 void usart_receive_it(usart_handle *const p_usart_handle, uint8_t *const p_data, uint32_t const length)
 {
-    ASSERT(USART_INITIALIZED == get_usart_init_status(p_usart_handle->p_usartx));
+    ASSERT(is_usart_initialized(p_usart_handle->p_usartx));
 
     // Wait until usart is available (blocking).
     while (USART_STATUS_RUNNING == p_usart_handle->usart_it_data.status);
@@ -698,7 +693,7 @@ void usart_it_handler(usart_handle *const p_usart_handle)
 //============================================================================//}
 void usart_transmit_single_byte(usart_reg_def *const p_usartx, uint8_t const data)
 {
-    ASSERT(USART_INITIALIZED == get_usart_init_status(p_usartx));
+    ASSERT(is_usart_initialized(p_usartx));
     p_usartx->CR1 |= USART_CR1_TE;
 
     while (!(p_usartx->SR & USART_SR_TXE));
@@ -781,7 +776,7 @@ static inline void set_usart_init_status(usart_reg_def const *const p_usartx)
     g_usart_port_init |= (1 << map_usart_ports_to_num(p_usartx));
 }
 
-static inline usart_init_check_e get_usart_init_status(usart_reg_def const *const p_usartx)
+static inline bool is_usart_initialized(usart_reg_def const *const p_usartx)
 {
     return 0b1 & (g_usart_port_init >> map_usart_ports_to_num(p_usartx));
 }
