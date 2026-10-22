@@ -45,15 +45,14 @@ Breaking these statements up makes it more easier to read. Otherwise this rule r
 ## Header Files
 * Header files should be in the general format of: comment block, include statements, constants, public structures, 
 and public function prototypes.
-* See [Header File Layout](#header-file-layout) for driver specific layout.
 
 ## Source Files
 * Source files should be in the general format of: comment block, include statements, constants, private structures, 
     private global variables, private function prototypes, public function implementation, and private function implementation.
-* See [Source File Layout](#source-file-layout) for driver specific layout.
 
 ## File Templates
-See [templates/](../src/templates/) to view specific source and header file templates.
+See [templates/](../src/templates/) to view specific source and header file templates. This also
+includes the layout that should be followed for each file.
 
 # Data Type Rules
 
