@@ -34,3 +34,6 @@ void _write(void) {
 void _write_r(void) {
     ASSERT(false);
 }
+
+// *End of file*
+

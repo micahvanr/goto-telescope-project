@@ -33,16 +33,16 @@ Based on the pitchfork layout
 
 | Directory| Description|
 |-------------------|-----------------------------------------------------------------------|
-| build/| Build output (object files + executables)|
-| docs/| Documentation (ex. coding standards, images)|
-| external/| External dependencies|
-| src/| Source files (.c/.h) contains linker script and startup file|
-| src/app/| Source files for application layer|
-| src/bsp/| Source files for other modules and chips (board support package layer)|
-| src/drivers/| Source files for drivers layer|
-| src/common/| Source files for code that drivers and app use|
-| test/| Makefile with test source files |
-| tools/| Any tools used such as dockerfile and unit testing frameworks|
+| build/ | Build output (object files + executables) |
+| docs/ | Documentation (ex. coding standards, images) |
+| external/ | External dependencies |
+| src/ | Source files (.c/.h) contains linker script and startup file|
+| src/app/ | Source files for application layer |
+| src/bsp/ | Source files for other modules and chips (board support package layer) |
+| src/drivers/ | Source files for drivers layer |
+| src/common/ | Source files for code that drivers and app use |
+| test/ | Makefile with test source files |
+| tools/ | Any tools used such as dockerfile and unit testing frameworks |
 
 ## Build
 The way I will be building the project is through a Makefile and by using a compile commands generator (Bear in this case).
@@ -83,6 +83,21 @@ Commit structure will follow [conventional commits](https://www.conventionalcomm
 * One change per commit:
     * Each commit should make one change or addition in order for them to be organized well and the commits will be clear.
 * Commits should build (if applicable):
+
+### Types
+Pulled from [Angular convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) and 
+conventional commits and modified slightly to match my use case:
+* fix: a commit of the type fix patches a bug in your codebase.
+* feat: a commit of the type feat introduces a new feature to the codebase.
+* build: Changes that affect the build system or external dependencies
+* ci: Changes to our CI configuration files and scripts
+* docs: Documentation only changes
+* feat: A new feature
+* fix: A bug fix
+* perf: A code change that improves performance
+* refactor: A code change that neither fixes a bug nor adds a feature
+* style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* test: Adding missing tests or correcting existing tests
 	
 ## Code formatter
 Clang is used to format the code and keep it consistent. 
@@ -97,7 +112,10 @@ Cppcheck is a static analysis tool for C/C++ that will detect more bugs and poss
 WIP
 
 ## Project roadmap
-WIP 
+* This project roadmap will provide a plan of the main things that need to be added. It may not be complete and may change whenever needed.
+* First core goal: get a handheld controller working that calculates celestial objects' current positions and outputs them onto
+an LCD screen.
+<img src="/docs/Telescope Project Roadmap.png">
 
 ## Project screens
 <img src="/docs/Telescope Project Screens.png">

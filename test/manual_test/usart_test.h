@@ -1,8 +1,21 @@
+//======================================================================================//{
+//  File: usart_test.h
+//  Overview: Test some of the USART functionality.
+//  Tests:
+//      - Transmit/receive (w/ interrupts)
+//  Notes:
+//======================================================================================//}
+
 #ifndef USART_TEST_H
 #define USART_TEST_H
 
-#include "test_types.h"
+//======================================================================================//}
+//                  Public Test Function Prototypes
+//======================================================================================//{
 
-void usart_tests(test_type_e test);
+void test_usart_txrx(void);
+void test_usart_txrx_it(void);
 
 #endif
+
+// *End of file*

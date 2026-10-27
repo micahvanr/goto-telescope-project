@@ -6,28 +6,36 @@ BreakBeforeBraces: Custom
 BraceWrapping:
     AfterFunction: true
     AfterCaseLabel: false
-    AfterControlStatement: Never
+    AfterControlStatement: Always
     AfterEnum: false
     AfterStruct: false
     BeforeWhile: false
     IndentBraces: false
-
+    BeforeElse: true
 AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowAllParametersOfDeclarationOnNextLine: false
 AlignConsecutiveShortCaseStatements: 
     Enabled: true
     AcrossEmptyLines: true
     AcrossComments: true
     AlignCaseColons: false
-AllowAllParametersOfDeclarationOnNextLine: false
 AlignConsecutiveMacros: true
 AlignConsecutiveAssignments: true
 AlignTrailingComments: Always
 AlignOperands: AlignAfterOperator 
 AlignEscapedNewlines: LeftWithLastLine
+AlignAfterOpenBracket: true
+IndentCaseLabels: true
+SpaceAfterCStyleCast: true
+LineEnding: LF
 BreakBinaryOperations: Never
+MaxEmptyLinesToKeep: 1
 BreakBeforeBinaryOperators: NonAssignment
+IndentPPDirectives: AfterHash
 ReflowComments: Never

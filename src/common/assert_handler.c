@@ -1,31 +1,70 @@
+//======================================================================================//{
+//  File: assert_handler.c
+//  Overview: Provide ASSERT() function and handler with custom handling.
+//  Features:
+//      ASSERT(): Calls assert_handler() to perform fail safe.
+//  Notes: None
+//======================================================================================//}
+
+//} Include Statements
+//=========================================//{
+
 #include "assert_handler.h"
+#include "common.h"
 #include "gpio.h"
 #include "printf.h"
 #include "rcc.h"
 
+//======================================================================================//}
+//                  Private Function Prototypes
+//======================================================================================//{
+
 static void blink_led(void);
 
+//======================================================================================//}
+//                  Public Function Implementation
+//======================================================================================//{
+
+//============================================================================//{
+//  Function: foo
+//  Overview: Brief description of function
+//  Parameters:
+//      var name: brief overview
+//          OPTIONS_x (x-x)
+//  Return:
+//      var type: brief overview
+//          OPTIONS_x (x-x)
+//  Note: None
+//============================================================================//}
 // Function used by ASSERT() macro
 void assert_handler(void)
 {
+#ifndef NDEBUG
+
     // TODO: Turn off telescope motors
     printf_("ASSERT TRIGGERED");
 
     // Breakpoint
     BREAKPOINT();
 
+#endif
+
     blink_led();
 }
+
+//======================================================================================//}
+//                  Private Function Implementation
+//======================================================================================//{
 
 // Blink LED to signify error
 static void blink_led(void)
 {
     // Blink LED
-    uint32_t *p_rcc_ahb1enr  = (uint32_t *)(RCC_BASE_ADDR + 0x30);
-    uint32_t *p_gpio_led_reg = (uint32_t *)(GPIOA_BASE_ADDR + ((LED_RED_PORT) * 0x0400));
+    uint32_t *p_rcc_ahb1enr  = (uint32_t *) (RCC_BASE_ADDR + 0x30);
+    uint32_t *p_gpio_led_reg = (uint32_t *) (GPIOA_BASE_ADDR + ((LED_RED_PORT_NUM) * 0x0400));
 
     // Enable clock on led port
-    *p_rcc_ahb1enr |= (1 << LED_RED_PORT);
+    *p_rcc_ahb1enr |= (1 << LED_RED_PORT_NUM);
 
     // Configure led port
     // Mode Register
@@ -37,8 +76,13 @@ static void blink_led(void)
     p_gpio_led_reg += 4; // Move to offset 0x14 - Output data register
 
     // Toggle LED
-    while (1) {
+    while (1)
+    {
         *p_gpio_led_reg ^= (1 << LED_RED_PIN);
-        for (uint32_t i = 0; i < 1000000; i++) {}
+        for (uint32_t tick = 0; tick < 1000000; tick++)
+        {
+        }
     }
 }
+
+// *End of file*

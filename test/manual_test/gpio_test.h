@@ -1,8 +1,24 @@
+//======================================================================================//{
+//  File: gpio_test.h
+//  Overview: Tests some of the GPIO functionality.
+//  Tests:
+//      - Blink led by toggling
+//      - Turn on led if button is pressed
+//      - Toggle led when button is pressed using interrupts
+//  Notes: None
+//======================================================================================//}
+
 #ifndef GPIO_TEST_H
 #define GPIO_TEST_H
 
-#include "test_types.h"
+//======================================================================================//}
+//                  Public Test Function Prototypes
+//======================================================================================//{
 
-void gpio_tests(test_type_e test);
+void test_gpio_blink_led(void);
+void test_gpio_read_write(void);
+void test_gpio_it(void);
 
 #endif
+
+// *End of file*

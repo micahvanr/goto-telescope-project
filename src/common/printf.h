@@ -1,6 +1,11 @@
-
-// NOTE: COPIED FROM PRINTF IN EXTERNAL DIR
-// ANY CHANGES WITH BE MARKED WITH "NOTE:"
+//======================================================================================//{
+//  File: printf.c
+//  Overview: Provides printf functionality to print to USART.
+//  Features:
+//      Print to USART
+//  Notes: Copied from print in external/ directory
+//      Any changes from original will be marked with "NOTE:"
+//======================================================================================//}
 
 // NOTE: Function prototypes
 
@@ -8,8 +13,9 @@ void printf_init(void);
 
 #define PRINTF_USART         USART2
 #define PRINTF_USART_TX_PORT GPIOA
-#define PRINTF_USART_TX_PIN  PIN_NO_2
+#define PRINTF_USART_TX_PIN  PIN_NUM_2
 
+// clang-format off
 /**
  * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
  *             2021-2024, Haifa, Palestine/Israel
@@ -248,3 +254,7 @@ int vfctprintf(void (*out)(char c, void *extra_arg), void *extra_arg, const char
 #endif
 
 #endif /* PRINTF_H_ */
+
+// clang-format on
+
+// *End of file*

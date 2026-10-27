@@ -1,22 +1,34 @@
+//======================================================================================//{
+//  File: debug_tools.c
+//  Overview: Provide functions that are helpful in debugging.
+//  Features:
+//      Debug pin
+//      Debug button
+//  Notes:
+//======================================================================================//}
+
+//} Include Statements
+//=========================================//{
+
 #include "debug_tools.h"
 #include "gpio.h"
 
-/***************************************************************************
-Function: debug_pin_init
-Overview: Initializes the debug GPIO pin (defined in header)
-Parameters: 
-    None
-Return: 
-    None
-Note: Uses PA3
-***************************************************************************/
+//============================================================================//{
+//  Function: debug_pin_init
+//  Overview: Initialize the debug GPIO pin (defined in header)
+//  Parameters:
+//      None
+//  Return:
+//      None
+//  Note: Uses PA3
+//============================================================================//}
 void debug_pin_init(void)
 {
-    gpio_handle debug_pin      = {0};
-    debug_pin.p_gpiox          = DEBUG_PIN_PORT;
-    debug_pin.gpio_conf.pin_no = DEBUG_PIN_NO;
+    gpio_handle debug_pin       = {0};
+    debug_pin.p_gpiox           = DEBUG_PIN_PORT;
+    debug_pin.gpio_conf.pin_num = DEBUG_PIN_NUM;
 
-    debug_pin.gpio_conf.alt_fn_no    = GPIO_ALT_FN_NA;
+    debug_pin.gpio_conf.alt_fn_num   = GPIO_ALT_FN_NA;
     debug_pin.gpio_conf.it_trigger   = GPIO_IT_NA;
     debug_pin.gpio_conf.mode         = GPIO_MODE_OUTPUT;
     debug_pin.gpio_conf.output_speed = GPIO_OSPEED_FAST;
@@ -25,36 +37,36 @@ void debug_pin_init(void)
     gpio_init(&debug_pin);
 }
 
-/***************************************************************************
-Function: toggle_debug_pin
-Overview: Toggles the debug pin (defined in header)
-Parameters:
-    None
-Return: 
-    None
-Note: Uses PA3
-***************************************************************************/
+//============================================================================//{
+//  Function: toggle_debug_pin
+//  Overview: Toggle the debug pin (defined in header)
+//  Parameters:
+//      None
+//  Return:
+//      None
+//  Note: Uses PA3
+//============================================================================//}
 void toggle_debug_pin(void)
 {
-    gpio_toggle(DEBUG_PIN_PORT, DEBUG_PIN_NO);
+    gpio_toggle(DEBUG_PIN_PORT, DEBUG_PIN_NUM);
 }
 
-/***************************************************************************
-Function: debug_button_init
-Overview: Initializes the debug button GPIO pin (defined in header)
-Parameters: 
-    None
-Return: 
-    None
-Note: STM32F4Disc button is PA0
-***************************************************************************/
+//============================================================================//{
+//  Function: debug_button_init
+//  Overview: Initialize the debug button GPIO pin (defined in header)
+//  Parameters:
+//      None
+//  Return:
+//      None
+//  Note: STM32F4Disc button is PA0
+//============================================================================//}
 void debug_button_init(void)
 {
-    gpio_handle debug_button      = {0};
-    debug_button.p_gpiox          = DEBUG_BUTTON_PORT;
-    debug_button.gpio_conf.pin_no = DEBUG_BUTTUN_PIN_NO;
+    gpio_handle debug_button       = {0};
+    debug_button.p_gpiox           = DEBUG_BUTTON_PORT;
+    debug_button.gpio_conf.pin_num = DEBUG_BUTTUN_PIN_NUM;
 
-    debug_button.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    debug_button.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     debug_button.gpio_conf.it_trigger      = GPIO_IT_NA;
     debug_button.gpio_conf.mode            = GPIO_MODE_INPUT;
     debug_button.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
@@ -62,20 +74,22 @@ void debug_button_init(void)
     gpio_init(&debug_button);
 }
 
-/***************************************************************************
-Function: read_debug_button
-Overview: Reads the pin that is connected to the button on the Discovery board 
-Parameters:
-    None
-Return: 
-    pin_logic_level_e: Level of the pin connected to the button
-        HIGH (1) 
-        LOW (0)
-Note: Connected to pull down resistor:
-    Button pressed -> returns 1
-    Button not pressed -> returns 0
-***************************************************************************/
+//============================================================================//{
+//  Function: read_debug_button
+//  Overview: Read the pin that is connected to the button on the Discovery board
+//  Parameters:
+//      None
+//  Return:
+//      pin_logic_level_e: Level of the pin connected to the button
+//          HIGH
+//          LOW
+//  Note: Connected to pull down resistor:
+//      Button pressed -> returns 1
+//      Button not pressed -> returns 0
+//============================================================================//}
 pin_logic_level_e read_debug_button(void)
 {
-    return gpio_read(DEBUG_BUTTON_PORT, DEBUG_BUTTUN_PIN_NO);
+    return gpio_read(DEBUG_BUTTON_PORT, DEBUG_BUTTUN_PIN_NUM);
 }
+
+// *End of file*

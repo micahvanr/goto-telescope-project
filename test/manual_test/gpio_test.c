@@ -1,97 +1,145 @@
+//======================================================================================//{
+//  File: gpio_test.c
+//  Overview: Tests some of the GPIO functionality.
+//  Tests:
+//      - Blink led by toggling
+//      - Turn on led if button is pressed
+//      - Toggle led when button is pressed using interrupts
+//  Notes: None
+//======================================================================================//}
+
+//} Includes
+//=========================================//{
+
 #include "gpio_test.h"
-#include "assert_handler.h"
 #include "gpio.h"
+#include "stm32f4xx.h"
+#include <stdbool.h>
 
-static void test_gpio_blink_led(void);
-static void test_gpio_read_write(void);
-static void test_gpio_it(void);
+//======================================================================================//}
+//                  Public Test Function Implementation
+//======================================================================================//{
 
-void gpio_tests(test_type_e test)
-{
-    switch (test) {
-    case GPIO_TEST_BLINK_LED:  test_gpio_blink_led(); break;
-    case GPIO_TEST_READ_WRITE: test_gpio_read_write(); break;
-    case GPIO_TEST_IT:         test_gpio_it(); break;
-    default:                   ASSERT(false);
-    }
-
-    while (1);
-}
-
-static void test_gpio_blink_led(void)
+//============================================================================//{
+//  Function: test_gpio_blink_led
+//  Overview: Test GPIO toggle functionality by viewing led.
+//  Test goals:
+//      - GPIO initialization:
+//          - Push pull
+//          - Output mode
+//          - Pin num 15
+//      - Toggle GPIO pin function
+//  Setup:
+//      None
+//  Expectations: Blue led should be toggled repeatedly relatively quickly.
+//  Note: None
+//============================================================================//}
+void test_gpio_blink_led(void)
 {
     gpio_handle gpio_test = {0};
 
-    // Create settings for PD15 (LED pin)
-    gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_no          = PIN_NO_15;
+    gpio_test.p_gpiox                   = LED_BLUE_PORT;
+    gpio_test.gpio_conf.pin_num         = (pin_number_e) LED_BLUE_PIN;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
 
     gpio_init(&gpio_test);
 
-    while (1) {
-        gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no);
-        for (uint32_t i = 0; i < 500000; i++) {}
+    while (1)
+    {
+        gpio_toggle(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num);
+        for (uint32_t tick = 0; tick < 500000; tick++)
+        {
+        }
     }
 }
 
-static void test_gpio_read_write(void)
+//============================================================================//{
+//  Function: test_gpio_read_write
+//  Overview: Test GPIO read/write functionality by pressing button and viewing led.
+//  Test goals:
+//      - GPIO initialization
+//          - Input mode
+//      - Get GPIO pin function
+//      - Set GPIO pin function
+//  Setup:
+//      None
+//  Expectations: When the button is pressed, the blue led should turn on. Otherwise
+//      it should be off.
+//  Note: None
+//============================================================================//}
+void test_gpio_read_write(void)
 {
     gpio_handle gpio_test = {0};
 
     // Create settings for PA0 (Button pin)
-    gpio_test.p_gpiox                   = GPIOA;
-    gpio_test.gpio_conf.pin_no          = PIN_NO_0;
+    gpio_test.p_gpiox                   = USER_BUTTON_PORT;
+    gpio_test.gpio_conf.pin_num         = (pin_number_e) USER_BUTTON_PIN;
     gpio_test.gpio_conf.mode            = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
 
     // Create settings for PD15 (LED pin)
-    gpio_test.p_gpiox               = GPIOD;
-    gpio_test.gpio_conf.pin_no      = PIN_NO_15;
+    gpio_test.p_gpiox               = LED_BLUE_PORT;
+    gpio_test.gpio_conf.pin_num     = (pin_number_e) LED_BLUE_PIN;
     gpio_test.gpio_conf.mode        = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type = GPIO_OPTYPE_PUSH_PULL;
     gpio_init(&gpio_test);
 
-    while (1) {
+    while (1)
+    {
         uint8_t gpio_read_result = 0;
-        gpio_read_result         = gpio_read(GPIOA, PIN_NO_0);
-        if (gpio_read_result) {
-            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, HIGH);
-        } else {
-            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_no, LOW);
+        gpio_read_result         = gpio_read(GPIOA, PIN_NUM_0);
+        if (gpio_read_result)
+        {
+            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num, HIGH);
         }
-        for (uint32_t i = 0; i < 500000; i++);
+        else
+        {
+            gpio_write(gpio_test.p_gpiox, gpio_test.gpio_conf.pin_num, LOW);
+        }
+        for (uint32_t tick = 0; tick < 500000; tick++);
     }
 }
 
-static void test_gpio_it(void)
+//============================================================================//{
+//  Function: test_gpio_it
+//  Overview: Test GPIO interrupt by pressing button and viewing led.
+//  Test goals:
+//      - Interrupt functionality
+//          - Interrupt handler
+//          - Interrupt trigger
+//  Setup:
+//      None
+//  Expectations: The led should be toggled when the user button is pressed.
+//  Note: None
+//============================================================================//}
+void test_gpio_it(void)
 {
     // Create settings for PD13 (LED)
     gpio_handle gpio_test = {0};
 
-    gpio_test.p_gpiox                   = GPIOD;
-    gpio_test.gpio_conf.pin_no          = PIN_NO_13;
+    gpio_test.p_gpiox                   = LED_BLUE_PORT;
+    gpio_test.gpio_conf.pin_num         = (pin_number_e) LED_BLUE_PIN;
     gpio_test.gpio_conf.mode            = GPIO_MODE_OUTPUT;
     gpio_test.gpio_conf.output_type     = GPIO_OPTYPE_PUSH_PULL;
     gpio_test.gpio_conf.output_speed    = GPIO_OSPEED_MEDIUM;
     gpio_test.gpio_conf.pullup_pulldown = GPIO_PUPD_NO;
-    gpio_test.gpio_conf.alt_fn_no       = GPIO_ALT_FN_NA;
+    gpio_test.gpio_conf.alt_fn_num      = GPIO_ALT_FN_NA;
     gpio_test.gpio_conf.it_trigger      = GPIO_IT_NA;
     gpio_init(&gpio_test);
 
     // Create settings for PA0 (Button pin)
-    gpio_test.p_gpiox              = GPIOA;
-    gpio_test.gpio_conf.pin_no     = PIN_NO_0;
+    gpio_test.p_gpiox              = USER_BUTTON_PORT;
+    gpio_test.gpio_conf.pin_num    = (pin_number_e) USER_BUTTON_PIN;
     gpio_test.gpio_conf.mode       = GPIO_MODE_INPUT;
     gpio_test.gpio_conf.it_trigger = GPIO_IT_RT;
     gpio_init(&gpio_test);
@@ -99,11 +147,18 @@ static void test_gpio_it(void)
     while (1);
 }
 
-void EXTI0_IRQHandler(void)
+//======================================================================================//}
+//                  Interrupt Service Routines (ISRs)
+//======================================================================================//{
+
+// Toggle GPIO pin
+void __ISR exti0_isr(void)
 {
-    gpio_toggle(GPIOD, PIN_NO_13);
+    gpio_toggle(GPIOD, PIN_NUM_13);
 
-    for (uint32_t i = 0; i < 500000; i++);
+    gpio_it_handler(EXTI_LINE_NUM_0);
 
-    gpio_it_handler(EXTI_LINE_NO_0);
+    for (uint32_t tick = 0; tick < 500000; tick++);
 }
+
+// *End of file*

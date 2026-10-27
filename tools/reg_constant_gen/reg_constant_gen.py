@@ -151,7 +151,7 @@ def bit_out(reg, generic_peri_name):
 
 def reg_struct_out(peri, generic_peri_name):
     with open(output_file, "a") as f:
-        print("typedef __vo struct {", file=f)
+        print("typedef volatile struct {", file=f)
 
         previous_offset = 0
         reserved_num = 0

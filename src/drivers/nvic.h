@@ -1,13 +1,30 @@
+//======================================================================================//{
+//  File: nvic.h
+//  Overview: Provides functions for using the NVIC peripheral. Used to configure interrupts in
+//      the processor.
+//  Features:
+//      Configure interrupts
+//      Configure priority of interrupts
+//  Notes: None
+//======================================================================================//{
+
 #ifndef NVIC_H
 #define NVIC_H
 
+//} Include Statements
+//=========================================//{
+
+#include "stdint.h"
 #include "stm32f4xx.h"
 
 //======================================================================================//}
-//                  Address Definitions
+//                  Public Constants
 //======================================================================================//{
 
-typedef enum {
+//} Address Definitions
+//=========================================//{
+
+typedef enum : uint32_t {
     NVIC_ISER_BASE_ADDR = (0xE000E100ul),
     NVIC_ICER_BASE_ADDR = (0xE000E180ul),
     NVIC_ISPR_BASE_ADDR = (0xE000E200ul),
@@ -16,15 +33,11 @@ typedef enum {
     NVIC_IPR_BASE_ADDR  = (0xE000E400ul),
 } nvic_base_addr_e;
 
-//======================================================================================//}
-//                  Peripheral Constants
-//======================================================================================//{
-
 //} Misc. Constants
 //=========================================//{
 
 // Lower number means higher priority
-typedef enum {
+typedef enum : uint32_t {
     IRQ_PRIORITY_0                   = 0,
     IRQ_PRIORITY_1                   = 1,
     IRQ_PRIORITY_2                   = 2,
@@ -44,35 +57,13 @@ typedef enum {
     IRQ_NUM_PRIORITY_BITS_IMPLMENTED = 4,
 } irq_priority_e;
 
-//} Initialization Handler Constants
-//=========================================//{
-
-//} Interrupt Handler Constants
-//=========================================//{
-
-//} API Function Argument/Return Options
-//=========================================//{
-
-//} Config Options
-//=========================================//{
-
 //======================================================================================//}
-//                  Register Constants
+//                  Public Function Prototypes
 //======================================================================================//{
 
-//======================================================================================//}
-//                  Structure Definitions
-//======================================================================================//{
+void nvic_toggable_irq(irq_number_e irq_num, togglable_e toggle);
+void nvim_set_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
 
-//======================================================================================//}
-//                  Peripheral Structure Macros
-//======================================================================================//{
+#endif // NVIC_H
 
-//======================================================================================//}
-//                  Function API Prototypes
-//======================================================================================//{
-
-void nvic_irq_config(irq_number_e irq_num, togglable_e toggle);
-void nvic_irq_priority(irq_number_e irq_num, irq_priority_e irq_pri);
-
-#endif
+// *End of file*

@@ -1,7 +1,9 @@
 #ifndef TEST_TYPES_H
 #define TEST_TYPES_H
 
-typedef enum {
+#include <stdint.h>
+
+typedef enum : uint8_t {
     // GPIO tests options
     GPIO_TEST_BLINK_LED,
     GPIO_TEST_READ_WRITE,
@@ -34,3 +36,5 @@ typedef enum {
 } test_type_e;
 
 #endif
+
+// *End of file*
