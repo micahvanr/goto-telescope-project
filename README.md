@@ -112,7 +112,10 @@ Cppcheck is a static analysis tool for C/C++ that will detect more bugs and poss
 WIP
 
 ## Project roadmap
-WIP 
+* This project roadmap will provide a plan of the main things that need to be added. It may not be complete and may change whenever needed.
+* First core goal: get a handheld controller working that calculates celestial objects' current positions and outputs them onto
+an LCD screen.
+<img src="/docs/Telescope Project Roadmap.png">
 
 ## Project screens
 <img src="/docs/Telescope Project Screens.png">
